@@ -1,2 +1,2 @@
-# gandalf.api
-Fraud shall not pass!
+# Gandalf
+### You shall not pass
