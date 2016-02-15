@@ -19,11 +19,14 @@ $app->group(
     [
         'prefix' => 'api/v1',
         'namespace' => 'App\Http\Controllers',
-        'middleware' => ['auth']
+//        'middleware' => ['auth']
     ],
     function ($app) {
         /** @var Laravel\Lumen\Application $app */
-        $app->post('/rules', ['uses' => 'UserController@rules']);
-        $app->post('/check', ['uses' => 'UserController@check']);
+        $app->get('/decisions', ['uses' => 'DecisionsController@index']);
+        $app->post('/decisions', ['uses' => 'DecisionsController@set']);
+
+        $app->get('/scoring/history', ['uses' => 'ScoringController@history']);
+        $app->post('/scoring/check', ['uses' => 'ScoringController@check']);
     }
 );

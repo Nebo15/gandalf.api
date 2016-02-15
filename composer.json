@@ -14,7 +14,8 @@
         "fzaninotto/faker": "~1.4",
         "phpunit/phpunit": "~4.0",
         "sokil/php-mongo-migrator": "dev-master",
-        "squizlabs/php_codesniffer": "2.*"
+        "squizlabs/php_codesniffer": "2.*",
+        "barryvdh/laravel-ide-helper": "^2.1"
     },
     "autoload": {
         "psr-4": {

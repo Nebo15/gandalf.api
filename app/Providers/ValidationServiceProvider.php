@@ -6,11 +6,9 @@ use Illuminate\Support\Facades\Validator;
 
 class ValidationServiceProvider extends ServiceProvider
 {
-
     public function boot()
     {
-//        Validator::extend('conditionsStruct', 'App\Validators\ScoringStructValidator@conditionsTypes');
-//        Validator::extend('rulesStruct', 'App\Validators\ScoringStructValidator@rules');
+        Validator::extend('decisionStruct', 'App\Validators\DecisionStructValidator@decision');
     }
 
     public function register()

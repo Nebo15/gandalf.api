@@ -3,7 +3,7 @@
 require_once __DIR__.'/../vendor/autoload.php';
 
 try {
-    (new Dotenv\Dotenv(__DIR__.'/../'))->load();
+    (new Dotenv\Dotenv(__DIR__ . '/../'))->load();
 } catch (Dotenv\Exception\InvalidPathException $e) {
     //
 }
@@ -20,13 +20,16 @@ try {
 */
 
 $app = new Laravel\Lumen\Application(
-    realpath(__DIR__.'/../')
+    realpath(__DIR__ . '/../')
 );
 
- $app->withFacades();
+$app->register('Jenssegers\Mongodb\MongodbServiceProvider');
 
- $app->withEloquent();
+$app->withFacades();
 
+$app->withEloquent();
+
+$app->configure('database');
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
@@ -59,13 +62,13 @@ $app->singleton(
 |
 */
 
- $app->middleware([
+$app->middleware([
     App\Http\Middleware\JsonMiddleware::class
- ]);
+]);
 
- $app->routeMiddleware([
-     'auth' => App\Http\Middleware\Authenticate::class,
- ]);
+$app->routeMiddleware([
+//     'auth' => App\Http\Middleware\Authenticate::class,
+]);
 
 /*
 |--------------------------------------------------------------------------
@@ -78,8 +81,9 @@ $app->singleton(
 |
 */
 
-$app->register(App\Providers\AuthServiceProvider::class);
+//$app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\ValidationServiceProvider::class);
+$app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 
@@ -95,7 +99,7 @@ $app->register(App\Providers\ValidationServiceProvider::class);
 */
 
 $app->group(['namespace' => 'App\Http\Controllers'], function ($app) {
-    require __DIR__.'/../app/Http/routes.php';
+    require __DIR__ . '/../app/Http/routes.php';
 });
 
 return $app;
