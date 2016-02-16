@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\ConditionType::insert($data);
 
         \App\Models\Decision::create([
+            'default_decision' => 'approve',
             'fields' => [
                 [
                     "alias" => "borrowers_phone_name",

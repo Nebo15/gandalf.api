@@ -7,16 +7,14 @@
 
 namespace App\Services;
 
-use App\Models\Base;
-use App\Models\Condition;
 use App\Models\Decision;
+use App\Models\Condition;
 use App\Models\ScoringHistory;
 use App\Repositories\DecisionRepository;
 use Illuminate\Contracts\Validation\ValidationException;
 
 class Scoring
 {
-    private $matcher;
     private $decisionRepository;
 
     public function __construct(DecisionRepository $decisionRepository)
@@ -32,61 +30,67 @@ class Scoring
             throw new ValidationException($validator);
         }
 
-        foreach ($decision->rules as $rule) {
+        # crooked nail. Maybe you should write your own ODM?
+        $scoring_data = [
+            'default_decision' => $decision->default_decision,
+            'fields' => $decision->fields()->toArray(),
+            'rules' => [],
+            'request' => $values
+        ];
+        /** @var \App\Models\Rule $rule */
+        foreach ($decision->rules()->get() as $rule) {
+            $scoring_rule = [
+                'decision' => $rule->decision,
+                'description' => $rule->description,
+                'conditions' => []
+            ];
             $conditions_matched = true;
-            foreach ($rule['conditions'] as $condition) {
-                $this->checkCondition($condition, $values[$condition['field_alias']]);
-                if (!$condition['matched']) {
+            foreach ($rule->conditions as $condition) {
+                $this->checkCondition($condition, $values[$condition->field_alias]);
+                if (!$condition->matched) {
                     $conditions_matched = false;
                 }
+                $scoring_rule['conditions'][] = $condition->getAttributes();
             }
-            $rule['result'] = $conditions_matched ? $rule['decision'] : null;
+            $scoring_rule['result'] = $conditions_matched ? $rule->decision : null;
+            $scoring_data['rules'][] = $scoring_rule;
         }
 
-        return $this->createHistory($decision, $values);
+        return ScoringHistory::create($scoring_data);
     }
 
-    private function createHistory(Decision $decision, $values)
+    private function checkCondition(Condition $condition, $value)
     {
-        $data = $decision->toArray();
-        $data['request'] = $values;
-        unset($data[Base::PRIMARY_KEY]);
-
-        return ScoringHistory::create($data);
-    }
-
-    private function checkCondition(&$condition, $value)
-    {
-        switch ($condition['condition']) {
+        switch ($condition->condition) {
             case '$eq':
-                $matched = $condition['value'] === $value;
+                $matched = $condition->value === $value;
                 break;
             case '$ne':
-                $matched = $condition['value'] !== $value;
+                $matched = $condition->value !== $value;
                 break;
             case '$gt':
-                $matched = $condition['value'] > $value;
+                $matched = $condition->value > $value;
                 break;
             case '$gte':
-                $matched = $condition['value'] >= $value;
+                $matched = $condition->value >= $value;
                 break;
             case '$lt':
-                $matched = $condition['value'] < $value;
+                $matched = $condition->value < $value;
                 break;
             case '$lte':
-                $matched = $condition['value'] <= $value;
+                $matched = $condition->value <= $value;
                 break;
             case '$in':
-                $matched = in_array($value, array_map('trim', explode(',', $condition['value'])));
+                $matched = in_array($value, array_map('trim', explode(',', $condition->value)));
                 break;
             case '$nin':
-                $matched = !in_array($value, array_map('trim', explode(',', $condition['value'])));
+                $matched = !in_array($value, array_map('trim', explode(',', $condition->value)));
                 break;
             default:
-                throw new \Exception('Undefined condition rule ' . $condition['condition']);
+                throw new \Exception('Undefined condition rule ' . $condition->condition);
         }
 
-        $condition['matched'] = $matched;
+        $condition->matched = $matched;
     }
 
     private function createValidationRules(Decision $decision)
@@ -94,7 +98,7 @@ class Scoring
         $rules = [];
         if ($fields = $decision->fields) {
             foreach ($fields as $item) {
-                $rules[$item['alias']] = 'required' . $this->getValidationRuleByType($item['type']);
+                $rules[$item->alias] = 'required' . $this->getValidationRuleByType($item->type);
             }
         }
 

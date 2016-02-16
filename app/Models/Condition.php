@@ -15,7 +15,7 @@ namespace App\Models;
  * @property string $value
  * @property bool $matched
  */
-class Condition
+class Condition extends Base
 {
-
+    protected $visible = ['field_alias', 'condition', 'value'];
 }

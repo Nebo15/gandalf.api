@@ -16,7 +16,12 @@ namespace App\Models;
  * @property Condition[] $conditions
  *
  */
-class Rule
+class Rule extends Base
 {
+    protected $visible = ['decision', 'description'];
 
+    public function conditions()
+    {
+        return $this->embedsMany('App\Models\Condition');
+    }
 }

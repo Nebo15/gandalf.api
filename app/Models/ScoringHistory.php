@@ -7,7 +7,26 @@
 
 namespace App\Models;
 
+/**
+ * Class ScoringHistory
+ * @package App\Models
+ * @property string $default_decision
+ * @property Rule[] $rules
+ * @property Field[] $fields
+ */
 class ScoringHistory extends Base
 {
+    protected $visible = ['_id', 'fields', 'rules', 'default_decision', self::CREATED_AT, self::UPDATED_AT];
 
+    protected $fillable = ['fields', 'rules', 'default_decision'];
+
+    public function rules()
+    {
+        return $this->embedsMany('App\Models\Rule');
+    }
+
+    public function fields()
+    {
+        return $this->embedsMany('App\Models\Field');
+    }
 }

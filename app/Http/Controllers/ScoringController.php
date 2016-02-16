@@ -14,9 +14,11 @@ use App\Http\Services\Response;
 
 class ScoringController extends Controller
 {
-    public function history(Response $response)
+    public function history(Request $request, Response $response)
     {
-        return $response->json(ScoringHistory::paginate()->toArray());
+        $size = $request->get('size') > 0 ? $request->get('size') : 20;
+
+        return $response->jsonPaginator(ScoringHistory::paginate($size));
     }
 
     public function check(Request $request, Response $response, Scoring $scoring)

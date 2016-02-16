@@ -10,12 +10,23 @@ namespace App\Models;
 /**
  * Class Decision
  * @package App\Models
- * @property array $fields
+ * @property string $default_decision
  * @property Rule[] $rules
+ * @property Field[] $fields
  */
 class Decision extends Base
 {
-    protected $visible = ['_id', 'fields', 'rules'];
+    protected $visible = ['_id', 'fields', 'rules', 'default_decision'];
 
-    protected $fillable = ['fields', 'rules'];
+    protected $fillable = ['fields', 'rules', 'default_decision'];
+
+    public function rules()
+    {
+        return $this->embedsMany('App\Models\Rule');
+    }
+
+    public function fields()
+    {
+        return $this->embedsMany('App\Models\Field');
+    }
 }
