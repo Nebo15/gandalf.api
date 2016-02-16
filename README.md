@@ -8,7 +8,7 @@
 #### GET /decisions
 
 ```shell
-$ curl https://gandalf.api/api/v1/decisions
+$ curl http://gandalf.api/api/v1/decisions
 ```
 
 ```json
@@ -83,7 +83,7 @@ Params:
 
 
 ```shell
-$ curl -d'{"decision": DECISION_TABLE }' https://gandalf.api/api/v1/decisions
+$ curl -d'{"decision": DECISION_TABLE }' http://gandalf.api/api/v1/decisions
 ```
 
 ```json
@@ -165,7 +165,31 @@ All fields are required!
 
 
 ```shell
-$ curl -d'{"decision": DECISION_TABLE }' https://gandalf.api/api/v1/decisions
+$ curl -d'{"borrowers_phone_name": "test", "contact_person_phone_verification": "Life"}' 
+http://gandalf.api/api/v1/scoring/check
+```
+```json
+{
+    "meta": {
+    "code": 200
+},
+    "data": [
+        {   
+            "_id": "56c32f02a60ad689060041a9",
+            "final_decision": "approve",
+            "rules": [
+                {
+                    "description": "my rule",
+                    "result": null
+                },
+                {
+                    "description": "another rule",
+                    "result": "approve"
+                }
+            ]
+        }
+    ]
+}
 ```
 
 ### Get scoring history
@@ -178,7 +202,7 @@ Params:
 * `page` - **integer**, page
 
 ```shell
-$ curl https://gandalf.api/api/v1/scoring/history
+$ curl http://gandalf.api/api/v1/scoring/history
 ```
 
 ```json
@@ -188,7 +212,7 @@ $ curl https://gandalf.api/api/v1/scoring/history
     },
     "data": [
         {
-            "_id": "56c32f02a60ad689060041a9"
+            "_id": "56c32f02a60ad689060041a9",
             "default_decision": "approve",
             "fields": [
                 {

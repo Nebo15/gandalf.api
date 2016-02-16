@@ -37,6 +37,8 @@ class Scoring
             'rules' => [],
             'request' => $values
         ];
+        $final_decision = null;
+
         /** @var \App\Models\Rule $rule */
         foreach ($decision->rules()->get() as $rule) {
             $scoring_rule = [
@@ -49,14 +51,19 @@ class Scoring
                 $this->checkCondition($condition, $values[$condition->field_alias]);
                 if (!$condition->matched) {
                     $conditions_matched = false;
+
+                } elseif (!$final_decision) {
+                    $final_decision = $rule->decision;
                 }
                 $scoring_rule['conditions'][] = $condition->getAttributes();
             }
+
             $scoring_rule['result'] = $conditions_matched ? $rule->decision : null;
             $scoring_data['rules'][] = $scoring_rule;
         }
+        $scoring_data['final_decision'] = $final_decision;
 
-        return ScoringHistory::create($scoring_data);
+        return ScoringHistory::create($scoring_data)->shortApiView();
     }
 
     private function checkCondition(Condition $condition, $value)
