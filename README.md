@@ -214,6 +214,7 @@ $ curl http://gandalf.api/api/v1/scoring/history
         {
             "_id": "56c32f02a60ad689060041a9",
             "default_decision": "approve",
+            "final_decision": "approve",
             "fields": [
                 {
                     "alias": "borrowers_phone_name",
