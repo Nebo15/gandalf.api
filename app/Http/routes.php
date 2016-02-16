@@ -26,7 +26,8 @@ $app->group(
         $app->get('/decisions', ['uses' => 'DecisionsController@index']);
         $app->put('/decisions', ['uses' => 'DecisionsController@set']);
 
-        $app->get('/scoring/history', ['uses' => 'ScoringController@history']);
+        $app->get('/scoring', ['uses' => 'ScoringController@history']);
+        $app->get('/scoring/{id}', ['uses' => 'ScoringController@item']);
         $app->post('/scoring/check', ['uses' => 'ScoringController@check']);
     }
 );

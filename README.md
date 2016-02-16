@@ -194,7 +194,7 @@ http://gandalf.api/api/v1/scoring/check
 
 ### Get scoring history
 
-#### GET /scoring/history
+#### GET /scoring
 
 Params:
 
@@ -202,7 +202,7 @@ Params:
 * `page` - **integer**, page
 
 ```shell
-$ curl http://gandalf.api/api/v1/scoring/history
+$ curl http://gandalf.api/api/v1/scoring
 ```
 
 ```json
@@ -282,6 +282,88 @@ $ curl http://gandalf.api/api/v1/scoring/history
         "total": 1,
         "current_page": 1,
         "last_page": 1
+    }
+}
+```
+
+### Get scoring result by id
+
+#### GET /scoring/{id}
+
+```shell
+$ curl http://gandalf.api/api/v1/scoring/56c32f02a60ad689060041a9
+```
+
+```json
+{
+    "meta": {
+        "code": 200
+    },
+    "data":
+    {
+        "_id": "56c32f02a60ad689060041a9",
+        "default_decision": "approve",
+        "final_decision": "approve",
+        "fields": [
+            {
+                "alias": "borrowers_phone_name",
+                "title": "Borrowers Phone Name",
+                "source": "request",
+                "type": "string"
+            },
+            {
+                "alias": "contact_person_phone_verification",
+                "title": "Contact person phone verification",
+                "source": "request",
+                "type": "bool"
+            }
+        ],
+        "rules": [
+            {
+                "decision": "approve",
+                "description": "my",
+                "result": null,
+                "conditions": [
+                    {
+                        "field_alias": "borrowers_phone_name",
+                        "condition": "$eq",
+                        "value": "Vodaphone",
+                        "matched": true
+                    },
+                    {
+                        "field_alias": "contact_person_phone_verification",
+                        "condition": "$eq",
+                        "value": "true",
+                        "matched": false
+                    }
+                ]
+            },
+            {
+                "decision": "decline",
+                "description": "new",
+                "result": null,
+                "conditions": [
+                    {
+                        "field_alias": "borrowers_phone_name",
+                        "condition": "$eq",
+                        "value": "Life",
+                        "matched": false
+                    },
+                    {
+                        "field_alias": "contact_person_phone_verification",
+                        "condition": "$eq",
+                        "value": "true",
+                        "matched": false
+                    }
+                ]
+            }
+        ],
+        "request": {
+            "borrowers_phone_name": "Vodaphone",
+            "contact_person_phone_verification": 123
+        },
+        "updated_at": "2016-02-16 14:15:30",
+        "created_at": "2016-02-16 14:15:30",
     }
 }
 ```

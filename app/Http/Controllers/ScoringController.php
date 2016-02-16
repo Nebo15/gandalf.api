@@ -14,6 +14,11 @@ use App\Http\Services\Response;
 
 class ScoringController extends Controller
 {
+    public function item($id, Response $response)
+    {
+        return $response->json(ScoringHistory::findById($id)->toArray());
+    }
+
     public function history(Request $request, Response $response)
     {
         $size = $request->get('size');
