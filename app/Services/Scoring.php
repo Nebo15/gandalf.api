@@ -61,7 +61,8 @@ class Scoring
             $scoring_rule['result'] = $conditions_matched ? $rule->decision : null;
             $scoring_data['rules'][] = $scoring_rule;
         }
-        $scoring_data['final_decision'] = $final_decision;
+
+        $scoring_data['final_decision'] = $final_decision ?: $decision->default_decision;
 
         return ScoringHistory::create($scoring_data)->shortApiView();
     }

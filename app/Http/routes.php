@@ -17,15 +17,25 @@ $app->get('/', function () use ($app) {
 
 $app->group(
     [
-        'prefix' => 'api/v1',
+        'prefix' => 'api/v1/admin',
         'namespace' => 'App\Http\Controllers',
-    //        'middleware' => ['auth']
+        'middleware' => ['auth.user']
     ],
     function ($app) {
         /** @var Laravel\Lumen\Application $app */
-        $app->get('/decisions', ['uses' => 'DecisionsController@index']);
-        $app->put('/decisions', ['uses' => 'DecisionsController@set']);
+        $app->get('/tables', ['uses' => 'DecisionsController@index']);
+        $app->put('/tables', ['uses' => 'DecisionsController@set']);
+    }
+);
 
+$app->group(
+    [
+        'prefix' => 'api/v1',
+        'namespace' => 'App\Http\Controllers',
+        'middleware' => ['auth.user']
+    ],
+    function ($app) {
+        /** @var Laravel\Lumen\Application $app */
         $app->get('/scoring', ['uses' => 'ScoringController@history']);
         $app->get('/scoring/{id}', ['uses' => 'ScoringController@item']);
         $app->post('/scoring/check', ['uses' => 'ScoringController@check']);

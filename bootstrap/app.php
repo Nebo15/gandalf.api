@@ -30,6 +30,7 @@ $app->withFacades();
 $app->withEloquent();
 
 $app->configure('database');
+$app->configure('tokens');
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
@@ -67,7 +68,8 @@ $app->middleware([
 ]);
 
 $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
+    'auth.user' => App\Http\Middleware\AuthTokenUser::class,
+    'auth.admin' => App\Http\Middleware\AuthTokenAdmin::class,
 ]);
 
 /*
@@ -81,7 +83,6 @@ $app->routeMiddleware([
 |
 */
 
-//$app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\ValidationServiceProvider::class);
 $app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 // $app->register(App\Providers\AppServiceProvider::class);
