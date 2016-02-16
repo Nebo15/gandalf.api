@@ -16,9 +16,9 @@ class ScoringController extends Controller
 {
     public function history(Request $request, Response $response)
     {
-        $size = $request->get('size') > 0 ? $request->get('size') : 20;
+        $size = $request->get('size');
 
-        return $response->jsonPaginator(ScoringHistory::paginate($size));
+        return $response->jsonPaginator(ScoringHistory::paginate($size > 0 ? intval($size) : 20));
     }
 
     public function check(Request $request, Response $response, Scoring $scoring)

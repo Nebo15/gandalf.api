@@ -16,9 +16,9 @@ namespace App\Models;
  */
 class ScoringHistory extends Base
 {
-    protected $visible = ['_id', 'fields', 'rules', 'default_decision', self::CREATED_AT, self::UPDATED_AT];
+    protected $visible = ['_id', 'request', 'fields', 'rules', 'default_decision', self::CREATED_AT, self::UPDATED_AT];
 
-    protected $fillable = ['fields', 'rules', 'default_decision'];
+    protected $fillable = ['fields', 'request', 'rules', 'default_decision'];
 
     public function rules()
     {
