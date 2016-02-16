@@ -12,14 +12,14 @@
 */
 
 $app->get('/', function () use ($app) {
-    return $app->version();
+    return response('ok');
 });
 
 $app->group(
     [
         'prefix' => 'api/v1',
         'namespace' => 'App\Http\Controllers',
-//        'middleware' => ['auth']
+    //        'middleware' => ['auth']
     ],
     function ($app) {
         /** @var Laravel\Lumen\Application $app */

@@ -7,11 +7,12 @@
 
 namespace App\Services;
 
+use App\Models\Base;
 use App\Models\Condition;
 use App\Models\Decision;
+use App\Models\ScoringHistory;
 use App\Repositories\DecisionRepository;
-use Coduo\PHPMatcher\Factory\SimpleFactory;
-
+use Illuminate\Contracts\Validation\ValidationException;
 
 class Scoring
 {
@@ -21,31 +22,71 @@ class Scoring
     public function __construct(DecisionRepository $decisionRepository)
     {
         $this->decisionRepository = $decisionRepository;
-        $this->matcher = (new SimpleFactory)->createMatcher();
     }
 
     public function check($values)
     {
         $decision = $this->decisionRepository->getDecision();
-        Validator::make($values, $this->createValidationRules($decision));
+        $validator = \Validator::make($values, $this->createValidationRules($decision));
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
+        }
 
         foreach ($decision->rules as $rule) {
-            $conditions_matched = false;
-            foreach ($rule->conditions as $condition) {
-                $this->checkCondition($condition->condition, $values[$condition->field_alias]);
+            $conditions_matched = true;
+            foreach ($rule['conditions'] as $condition) {
+                $this->checkCondition($condition, $values[$condition['field_alias']]);
+                if (!$condition['matched']) {
+                    $conditions_matched = false;
+                }
             }
-            $rule->result = $conditions_matched ? $rule->decision : null;
+            $rule['result'] = $conditions_matched ? $rule['decision'] : null;
         }
+
+        return $this->createHistory($decision, $values);
     }
 
-    /**
-     * @param Condition $condition
-     * @param $value
-     */
-    private function checkCondition($condition, $value)
+    private function createHistory(Decision $decision, $values)
     {
-        $this->matcher->startsWith();
-        $condition->matched = true;
+        $data = $decision->toArray();
+        $data['request'] = $values;
+        unset($data[Base::PRIMARY_KEY]);
+
+        return ScoringHistory::create($data);
+    }
+
+    private function checkCondition(&$condition, $value)
+    {
+        switch ($condition['condition']) {
+            case '$eq':
+                $matched = $condition['value'] === $value;
+                break;
+            case '$ne':
+                $matched = $condition['value'] !== $value;
+                break;
+            case '$gt':
+                $matched = $condition['value'] > $value;
+                break;
+            case '$gte':
+                $matched = $condition['value'] >= $value;
+                break;
+            case '$lt':
+                $matched = $condition['value'] < $value;
+                break;
+            case '$lte':
+                $matched = $condition['value'] <= $value;
+                break;
+            case '$in':
+                $matched = in_array($value, array_map('trim', explode(',', $condition['value'])));
+                break;
+            case '$nin':
+                $matched = !in_array($value, array_map('trim', explode(',', $condition['value'])));
+                break;
+            default:
+                throw new \Exception('Undefined condition rule ' . $condition['condition']);
+        }
+
+        $condition['matched'] = $matched;
     }
 
     private function createValidationRules(Decision $decision)
@@ -53,7 +94,7 @@ class Scoring
         $rules = [];
         if ($fields = $decision->fields) {
             foreach ($fields as $item) {
-                $rules[$item->field_alias] = 'required|' . $this->getValidationRuleByType($item->type);
+                $rules[$item['alias']] = 'required' . $this->getValidationRuleByType($item['type']);
             }
         }
 
@@ -64,6 +105,6 @@ class Scoring
     {
         # ToDo: write code
 
-        return 'string';
+        return '';
     }
 }
