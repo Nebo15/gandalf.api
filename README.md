@@ -13,57 +13,57 @@ $ curl https://gandalf.api/api/v1/decisions
 
 ```json
 {
-    meta: {
-    code: 200
+    "meta": {
+    "code": 200
 },
-    data: [
+    "data": [
         {   
-            _id: "56c31536a60ad644060041af",
-            default_decision: "approve",
-            fields: [
+            "_id": "56c31536a60ad644060041af",
+            "default_decision": "approve",
+            "fields": [
                 {
-                    alias: "borrowers_phone_name",
-                    title: "Borrowers Phone Name",
-                    source: "request",
-                    type: "string"
+                    "alias": "borrowers_phone_name",
+                    "title": "Borrowers Phone Name",
+                    "source": "request",
+                    "type": "string"
                 },
                 {
-                    alias: "contact_person_phone_verification",
-                    title: "Contact person phone verification",
-                    source: "request",
-                    type: "bool"
+                    "alias": "contact_person_phone_verification",
+                    "title": "Contact person phone verification",
+                    "source": "request",
+                    "type": "bool"
                 }
             ],
-            rules: [
+            "rules": [
                 {
-                    decision: "approve",
-                    description: "my",
-                    conditions: [
+                    "decision": "approve",
+                    "description": "my",
+                    "conditions": [
                         {
-                            field_alias: "borrowers_phone_name",
-                            condition: "$eq",
-                            value: "Vodaphone"
+                            "field_alias": "borrowers_phone_name",
+                            "condition": "$eq",
+                            "value": "Vodaphone"
                         },
                         {
-                            field_alias: "contact_person_phone_verification",
-                            condition: "$eq",
-                            value: "true"
+                            "field_alias": "contact_person_phone_verification",
+                            "condition": "$eq",
+                            "value": "true"
                         }
                     ]
                 },
                 {
-                    decision: "decline",
-                    description: "new",
-                    conditions: [
+                    "decision": "decline",
+                    "description": "new",
+                    "conditions": [
                         {
-                            field_alias: "borrowers_phone_name",
-                            condition: "$eq",
-                            value: "Life"
+                            "field_alias": "borrowers_phone_name",
+                            "condition": "$eq",
+                            "value": "Life"
                         },
                         {
-                            field_alias: "contact_person_phone_verification",
-                            condition: "$eq",
-                            value: "true"
+                            "field_alias": "contact_person_phone_verification",
+                            "condition": "$eq",
+                            "value": "true"
                         }
                     ]
                 }
@@ -88,57 +88,57 @@ $ curl -d'{"decision": DECISION_TABLE }' https://gandalf.api/api/v1/decisions
 
 ```json
 {
-    meta: {
-    code: 200
+    "meta": {
+    "code": 200
 },
-    data: [
+    "data": [
         {   
-            _id: "56c31536a60ad644060041af",
-            default_decision: "approve",
-            fields: [
+            "_id": "56c31536a60ad644060041af",
+            "default_decision": "approve",
+            "fields": [
                 {
-                    alias: "borrowers_phone_name",
-                    title: "Borrowers Phone Name",
-                    source: "request",
-                    type: "string"
+                    "alias": "borrowers_phone_name",
+                    "title": "Borrowers Phone Name",
+                    "source": "request",
+                    "type": "string"
                 },
                 {
-                    alias: "contact_person_phone_verification",
-                    title: "Contact person phone verification",
-                    source: "request",
-                    type: "bool"
+                    "alias": "contact_person_phone_verification",
+                    "title": "Contact person phone verification",
+                    "source": "request",
+                    "type": "bool"
                 }
             ],
-            rules: [
+            "rules": [
                 {
-                    decision: "approve",
-                    description: "my",
-                    conditions: [
+                    "decision": "approve",
+                    "description": "my",
+                    "conditions": [
                         {
-                            field_alias: "borrowers_phone_name",
-                            condition: "$eq",
-                            value: "Vodaphone"
+                            "field_alias": "borrowers_phone_name",
+                            "condition": "$eq",
+                            "value": "Vodaphone"
                         },
                         {
-                            field_alias: "contact_person_phone_verification",
-                            condition: "$eq",
-                            value: "true"
+                            "field_alias": "contact_person_phone_verification",
+                            "condition": "$eq",
+                            "value": "true"
                         }
                     ]
                 },
                 {
-                    decision: "decline",
-                    description: "new",
-                    conditions: [
+                    "decision": "decline",
+                    "description": "new",
+                    "conditions": [
                         {
-                            field_alias: "borrowers_phone_name",
-                            condition: "$eq",
-                            value: "Life"
+                            "field_alias": "borrowers_phone_name",
+                            "condition": "$eq",
+                            "value": "Life"
                         },
                         {
-                            field_alias: "contact_person_phone_verification",
-                            condition: "$eq",
-                            value: "true"
+                            "field_alias": "contact_person_phone_verification",
+                            "condition": "$eq",
+                            "value": "true"
                         }
                     ]
                 }
