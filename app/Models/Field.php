@@ -10,7 +10,7 @@ namespace App\Models;
 /**
  * Class Field
  * @package App\Models
- * @property string $alias
+ * @property string $key
  * @property string $title
  * @property string $source
  * @property string $type

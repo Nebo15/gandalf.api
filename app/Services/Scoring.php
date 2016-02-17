@@ -22,9 +22,9 @@ class Scoring
         $this->decisionRepository = $decisionRepository;
     }
 
-    public function check($values)
+    public function check($id, $values)
     {
-        $decision = $this->decisionRepository->getDecision();
+        $decision = Decision::findById($id);
         $validator = \Validator::make($values, $this->createValidationRules($decision));
         if ($validator->fails()) {
             throw new ValidationException($validator);
@@ -42,29 +42,29 @@ class Scoring
         /** @var \App\Models\Rule $rule */
         foreach ($decision->rules()->get() as $rule) {
             $scoring_rule = [
-                'decision' => $rule->decision,
+                'than' => $rule->than,
                 'description' => $rule->description,
                 'conditions' => []
             ];
             $conditions_matched = true;
             foreach ($rule->conditions as $condition) {
-                $this->checkCondition($condition, $values[$condition->field_alias]);
+                $this->checkCondition($condition, $values[$condition->field_key]);
                 if (!$condition->matched) {
                     $conditions_matched = false;
 
                 } elseif (!$final_decision) {
-                    $final_decision = $rule->decision;
+                    $final_decision = $rule->than;
                 }
                 $scoring_rule['conditions'][] = $condition->getAttributes();
             }
 
-            $scoring_rule['result'] = $conditions_matched ? $rule->decision : null;
+            $scoring_rule['decision'] = $conditions_matched ? $rule->than : null;
             $scoring_data['rules'][] = $scoring_rule;
         }
 
         $scoring_data['final_decision'] = $final_decision ?: $decision->default_decision;
 
-        return DecisionHistory::create($scoring_data)->shortApiView();
+        return DecisionHistory::create($scoring_data)->toConsumerArray();
     }
 
     private function checkCondition(Condition $condition, $value)
@@ -106,7 +106,7 @@ class Scoring
         $rules = [];
         if ($fields = $decision->fields) {
             foreach ($fields as $item) {
-                $rules[$item->alias] = 'required' . $this->getValidationRuleByType($item->type);
+                $rules[$item->key] = 'required' . $this->getValidationRuleByType($item->type);
             }
         }
 

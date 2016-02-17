@@ -39,13 +39,13 @@ class DatabaseSeeder extends Seeder
             'default_decision' => 'approve',
             'fields' => [
                 [
-                    "alias" => "borrowers_phone_name",
+                    "key" => "borrowers_phone_name",
                     "title" => "Borrowers Phone Name",
                     "source" => "request",
                     "type" => "string",
                 ],
                 [
-                    "alias" => "contact_person_phone_verification",
+                    "key" => "contact_person_phone_verification",
                     "title" => "Contact person phone verification",
                     "source" => "request",
                     "type" => "bool",
@@ -53,34 +53,34 @@ class DatabaseSeeder extends Seeder
             ],
             'rules' => [
                 [
-                    'decision' => 'approve',
+                    'than' => 'approve',
                     'description' => 'my',
                     'conditions' => [
                         [
-                            'field_alias' => 'borrowers_phone_name',
+                            'field_key' => 'borrowers_phone_name',
                             'condition' => '$eq',
                             'value' => 'Vodaphone'
 
                         ],
                         [
-                            'field_alias' => 'contact_person_phone_verification',
+                            'field_key' => 'contact_person_phone_verification',
                             'condition' => '$eq',
                             'value' => 'true'
                         ],
                     ]
                 ],
                 [
-                    'decision' => 'decline',
+                    'than' => 'decline',
                     'description' => 'new',
                     'conditions' => [
                         [
-                            'field_alias' => 'borrowers_phone_name',
+                            'field_key' => 'borrowers_phone_name',
                             'condition' => '$eq',
                             'value' => 'Life'
 
                         ],
                         [
-                            'field_alias' => 'contact_person_phone_verification',
+                            'field_key' => 'contact_person_phone_verification',
                             'condition' => '$eq',
                             'value' => 'true'
                         ],

@@ -11,11 +11,16 @@ class DecisionStructValidator
 {
     public function decision($attribute, $value)
     {
-        if (!is_array($value) or !isset($value['fields']) or !isset($value['rules']) or !is_array($value['rules'])) {
+        if (!is_array($value)
+            or !isset($value['default_decision'])
+            or !isset($value['fields'])
+            or !isset($value['rules'])
+            or !is_array($value['rules'])
+        ) {
             return false;
         }
 
-        $fields = ['title', 'alias', 'type', 'source'];
+        $fields = ['title', 'key', 'type', 'source'];
         foreach ($value['fields'] as $request_field) {
             foreach ($fields as $field) {
                 if (!array_key_exists($field, $request_field)) {
@@ -24,12 +29,12 @@ class DecisionStructValidator
             }
         }
 
-        $table_aliases = array_map(function ($value) {
-            return $value['alias'];
+        $table_fields_keys = array_map(function ($value) {
+            return $value['key'];
         }, $value['fields']);
 
         $rules_fields = ['decision', 'description', 'conditions'];
-        $condition_fields = ['field_alias', 'condition', 'value'];
+        $condition_fields = ['field_key', 'condition', 'value'];
 
         foreach ($value['rules'] as $item) {
             if (!is_array($item)) {
@@ -54,7 +59,7 @@ class DecisionStructValidator
                     if (!array_key_exists($table_field, $condition)) {
                         return false;
                     }
-                    if (!in_array($condition['field_alias'], $table_aliases)) {
+                    if (!in_array($condition['field_key'], $table_fields_keys)) {
                         return false;
                     }
                 }

@@ -68,7 +68,7 @@ $app->middleware([
 ]);
 
 $app->routeMiddleware([
-    'auth.user' => App\Http\Middleware\AuthTokenUser::class,
+    'auth.consumer' => App\Http\Middleware\AuthTokenConsumer::class,
     'auth.admin' => App\Http\Middleware\AuthTokenAdmin::class,
 ]);
 

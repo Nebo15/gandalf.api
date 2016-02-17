@@ -22,9 +22,12 @@ class Response extends LumenResponse
         return $this->setStatusCode($code)->setContent($respond);
     }
 
-    public function jsonPaginator(LengthAwarePaginator $paginator, array $meta = [])
+    public function jsonPaginator(LengthAwarePaginator $paginator, array $meta = [], callable $map = null)
     {
-        return $this->json($paginator->getCollection()->toArray(), 200, $meta, [
+        $collection = $paginator->getCollection();
+        $content = $map ? $collection->map($map) : $collection->toArray();
+
+        return $this->json($content, 200, $meta, [
             'size' => $paginator->perPage(),
             'total' => $paginator->total(),
             'current_page' => $paginator->currentPage(),

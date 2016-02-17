@@ -12,7 +12,7 @@ namespace App\Models;
  * @package App\Models
  * @property string $decision
  * @property string $description
- * @property string $result
+ * @property string $than
  * @property Condition[] $conditions
  *
  */

@@ -19,7 +19,7 @@ class DecisionsController extends Controller
 
     public function index(Request $request)
     {
-        return $this->response->json($this->decisionRepository->all($request->get('size')));
+        return $this->response->jsonPaginator($this->decisionRepository->all($request->get('size')));
     }
 
     public function get($id)
@@ -32,7 +32,8 @@ class DecisionsController extends Controller
         $this->validate($request, ['decision' => 'required|decisionStruct']);
 
         return $this->response->json(
-            $this->decisionRepository->create($request->get('decision'))
+            $this->decisionRepository->create($request->get('decision')),
+            Response::HTTP_CREATED
         );
     }
 
@@ -54,7 +55,7 @@ class DecisionsController extends Controller
 
     public function history(Request $request)
     {
-        return $this->response->json($this->decisionRepository->history($request->get('size')));
+        return $this->response->jsonPaginator($this->decisionRepository->history($request->get('size')));
     }
 
     public function historyItem($id)

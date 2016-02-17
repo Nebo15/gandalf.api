@@ -1,200 +1,277 @@
 # Gandalf
-### Frodo shall not pass
+### Fraud shall not pass
 
 ## Decision table
 
-### Get decision table
+### List
 
-#### GET /decisions
+#### GET /admin/tables
 
 ```shell
-$ curl http://gandalf.api/api/v1/decisions
+$ curl http://gandalf.api/api/v1/admin/tables
 ```
 
 ```json
 {
     "meta": {
-    "code": 200
-},
+        "code": 200
+    },
     "data": [
         {   
             "_id": "56c31536a60ad644060041af",
-            "default_decision": "approve",
-            "fields": [
-                {
-                    "alias": "borrowers_phone_name",
-                    "title": "Borrowers Phone Name",
-                    "source": "request",
-                    "type": "string"
-                },
-                {
-                    "alias": "contact_person_phone_verification",
-                    "title": "Contact person phone verification",
-                    "source": "request",
-                    "type": "bool"
-                }
-            ],
-            "rules": [
-                {
-                    "decision": "approve",
-                    "description": "my",
-                    "conditions": [
-                        {
-                            "field_alias": "borrowers_phone_name",
-                            "condition": "$eq",
-                            "value": "Vodaphone"
-                        },
-                        {
-                            "field_alias": "contact_person_phone_verification",
-                            "condition": "$eq",
-                            "value": "true"
-                        }
-                    ]
-                },
-                {
-                    "decision": "decline",
-                    "description": "new",
-                    "conditions": [
-                        {
-                            "field_alias": "borrowers_phone_name",
-                            "condition": "$eq",
-                            "value": "Life"
-                        },
-                        {
-                            "field_alias": "contact_person_phone_verification",
-                            "condition": "$eq",
-                            "value": "true"
-                        }
-                    ]
-                }
-            ]
+            "title": "My decision table",
+            "description": "Some cool table",
+            "default_decision": "approve"
+        },
+        {   
+            "_id": "12c31536a67ad644060041ba",
+            "title": "Yet another decision table",
+            "description": "Very cool table",
+            "default_decision": "decline"
         }
     ]
 }
 ```
 
+### Create decision table
 
-#### PUT /decisions
+#### POST /admin/table/{id}
+
+Create decision table.
+Params:
+
+ * `decision` - full decision table with title, description, default_decision, fields, rules, conditions. 
+
+
+```shell
+$ curl -d'{"decision": DECISION_TABLE }' http://gandalf.api/api/v1/admin/tables/56c31536a60ad644060041af
+```
+
+```json
+{
+    "meta": {
+        "code": 200
+    },
+    "data": {   
+        "_id": "56c31536a60ad644060041af",
+        "default_decision": "approve",
+        "fields": [
+            {
+                "key": "borrowers_phone_name",
+                "title": "Borrowers Phone Name",
+                "source": "request",
+                "type": "string"
+            },
+            {
+                "key": "contact_person_phone_verification",
+                "title": "Contact person phone verification",
+                "source": "request",
+                "type": "bool"
+            }
+        ],
+        "rules": [
+            {
+                "than": "approve",
+                "description": "my",
+                "conditions": [
+                    {
+                        "field_key": "borrowers_phone_name",
+                        "condition": "$eq",
+                        "value": "Vodaphone"
+                    },
+                    {
+                        "field_key": "contact_person_phone_verification",
+                        "condition": "$eq",
+                        "value": "true"
+                    }
+                ]
+            },
+            {
+                "than": "decline",
+                "description": "new",
+                "conditions": [
+                    {
+                        "field_key": "borrowers_phone_name",
+                        "condition": "$eq",
+                        "value": "Life"
+                    },
+                    {
+                        "field_key": "contact_person_phone_verification",
+                        "condition": "$eq",
+                        "value": "true"
+                    }
+                ]
+            }
+        ]
+    }
+}
+```
+
+### Get decision table
+
+#### GET /admin/tables/{id}
+
+```shell
+$ curl http://gandalf.api/api/v1/admin/tables/56c31536a60ad644060041af
+```
+
+```json
+{
+    "meta": {
+        "code": 200
+    },
+    "data": {   
+        "_id": "56c31536a60ad644060041af",
+        "title": "My decision table",
+        "description": "Some cool table",
+        "default_decision": "approve",
+        "fields": [
+            {
+                "key": "borrowers_phone_name",
+                "title": "Borrowers Phone Name",
+                "source": "request",
+                "type": "string"
+            },
+            {
+                "key": "contact_person_phone_verification",
+                "title": "Contact person phone verification",
+                "source": "request",
+                "type": "bool"
+            }
+        ],
+        "rules": [
+            {
+                "than": "approve",
+                "description": "my",
+                "conditions": [
+                    {
+                        "field_key": "borrowers_phone_name",
+                        "condition": "$eq",
+                        "value": "Vodaphone"
+                    },
+                    {
+                        "field_key": "contact_person_phone_verification",
+                        "condition": "$eq",
+                        "value": "true"
+                    }
+                ]
+            },
+            {
+                "than": "decline",
+                "description": "new",
+                "conditions": [
+                    {
+                        "field_key": "borrowers_phone_name",
+                        "condition": "$eq",
+                        "value": "Life"
+                    },
+                    {
+                        "field_key": "contact_person_phone_verification",
+                        "condition": "$eq",
+                        "value": "true"
+                    }
+                ]
+            }
+        ]
+    }
+}
+```
+
+### Update decision table
+
+#### PUT /admin/table/{id}
 
 Update decision table.
 Params:
 
- * `decision` - full decision table with fields, rules, conditions. 
+ * `decision` - full decision table with title, description, default_decision, fields, rules, conditions. 
 
 
 ```shell
-$ curl -d'{"decision": DECISION_TABLE }' http://gandalf.api/api/v1/decisions
+$ curl -X PUT -d'{"decision": DECISION_TABLE }' http://gandalf.api/api/v1/admin/tables/56c31536a60ad644060041af
 ```
 
 ```json
 {
     "meta": {
-    "code": 200
-},
-    "data": [
-        {   
-            "_id": "56c31536a60ad644060041af",
-            "default_decision": "approve",
-            "fields": [
-                {
-                    "alias": "borrowers_phone_name",
-                    "title": "Borrowers Phone Name",
-                    "source": "request",
-                    "type": "string"
-                },
-                {
-                    "alias": "contact_person_phone_verification",
-                    "title": "Contact person phone verification",
-                    "source": "request",
-                    "type": "bool"
-                }
-            ],
-            "rules": [
-                {
-                    "decision": "approve",
-                    "description": "my",
-                    "conditions": [
-                        {
-                            "field_alias": "borrowers_phone_name",
-                            "condition": "$eq",
-                            "value": "Vodaphone"
-                        },
-                        {
-                            "field_alias": "contact_person_phone_verification",
-                            "condition": "$eq",
-                            "value": "true"
-                        }
-                    ]
-                },
-                {
-                    "decision": "decline",
-                    "description": "new",
-                    "conditions": [
-                        {
-                            "field_alias": "borrowers_phone_name",
-                            "condition": "$eq",
-                            "value": "Life"
-                        },
-                        {
-                            "field_alias": "contact_person_phone_verification",
-                            "condition": "$eq",
-                            "value": "true"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
+        "code": 200
+    },
+    "data": {   
+        "_id": "56c31536a60ad644060041af",
+        "default_decision": "approve",
+        "fields": [
+            {
+                "key": "borrowers_phone_name",
+                "title": "Borrowers Phone Name",
+                "source": "request",
+                "type": "string"
+            },
+            {
+                "key": "contact_person_phone_verification",
+                "title": "Contact person phone verification",
+                "source": "request",
+                "type": "bool"
+            }
+        ],
+        "rules": [
+            {
+                "decision": "approve",
+                "description": "my",
+                "conditions": [
+                    {
+                        "field_key": "borrowers_phone_name",
+                        "condition": "$eq",
+                        "value": "Vodaphone"
+                    },
+                    {
+                        "field_key": "contact_person_phone_verification",
+                        "condition": "$eq",
+                        "value": "true"
+                    }
+                ]
+            },
+            {
+                "decision": "decline",
+                "description": "new",
+                "conditions": [
+                    {
+                        "field_key": "borrowers_phone_name",
+                        "condition": "$eq",
+                        "value": "Life"
+                    },
+                    {
+                        "field_key": "contact_person_phone_verification",
+                        "condition": "$eq",
+                        "value": "true"
+                    }
+                ]
+            }
+        ]
+    }
 }
 ```
 
-## Scoring
+### Delete decision table
 
-### Check
-
-#### POST /scoring/check
-
-Check params from request with decision table.
-POST params it's an associative array (dictionary) whose keys are the values of `fields.alias` from decision table.
-
-For decision table, that you can see in example above, you should pass two params:
- * `borrowers_phone_name`
- * `contact_person_phone_verification`
-
-All fields are required!
-
+#### Delete /admin/table/{id}
 
 ```shell
-$ curl -d'{"borrowers_phone_name": "test", "contact_person_phone_verification": "Life"}' 
-http://gandalf.api/api/v1/scoring/check
+$ curl -X DELETE http://gandalf.api/api/v1/admin/tables/56c31536a60ad644060041af
 ```
+
 ```json
 {
     "meta": {
-    "code": 200
-},
-    "data": [
-        {   
-            "_id": "56c32f02a60ad689060041a9",
-            "final_decision": "approve",
-            "rules": [
-                {
-                    "description": "my rule",
-                    "result": null
-                },
-                {
-                    "description": "another rule",
-                    "result": "approve"
-                }
-            ]
-        }
-    ]
+        "code": 200
+    }
 }
 ```
 
-### Get scoring history
+## Decisions
 
-#### GET /scoring
+### Decisions history for admin 
+
+#### GET admin/tables/decisions
 
 Params:
 
@@ -202,7 +279,7 @@ Params:
 * `page` - **integer**, page
 
 ```shell
-$ curl http://gandalf.api/api/v1/scoring
+$ curl http://gandalf.api/api/v1/admin/tables/decisions
 ```
 
 ```json
@@ -217,13 +294,13 @@ $ curl http://gandalf.api/api/v1/scoring
             "final_decision": "approve",
             "fields": [
                 {
-                    "alias": "borrowers_phone_name",
+                    "key": "borrowers_phone_name",
                     "title": "Borrowers Phone Name",
                     "source": "request",
                     "type": "string"
                 },
                 {
-                    "alias": "contact_person_phone_verification",
+                    "key": "contact_person_phone_verification",
                     "title": "Contact person phone verification",
                     "source": "request",
                     "type": "bool"
@@ -231,18 +308,18 @@ $ curl http://gandalf.api/api/v1/scoring
             ],
             "rules": [
                 {
-                    "decision": "approve",
+                    "than": "approve",
                     "description": "my",
-                    "result": null,
+                    "decision": null,
                     "conditions": [
                         {
-                            "field_alias": "borrowers_phone_name",
+                            "field_key": "borrowers_phone_name",
                             "condition": "$eq",
                             "value": "Vodaphone",
                             "matched": true
                         },
                         {
-                            "field_alias": "contact_person_phone_verification",
+                            "field_key": "contact_person_phone_verification",
                             "condition": "$eq",
                             "value": "true",
                             "matched": false
@@ -250,18 +327,18 @@ $ curl http://gandalf.api/api/v1/scoring
                     ]
                 },
                 {
-                    "decision": "decline",
+                    "than": "decline",
                     "description": "new",
-                    "result": null,
+                    "decision": null,
                     "conditions": [
                         {
-                            "field_alias": "borrowers_phone_name",
+                            "field_key": "borrowers_phone_name",
                             "condition": "$eq",
                             "value": "Life",
                             "matched": false
                         },
                         {
-                            "field_alias": "contact_person_phone_verification",
+                            "field_key": "contact_person_phone_verification",
                             "condition": "$eq",
                             "value": "true",
                             "matched": false
@@ -286,12 +363,12 @@ $ curl http://gandalf.api/api/v1/scoring
 }
 ```
 
-### Get scoring result by id
+### Decision history item by id for admin 
 
-#### GET /scoring/{id}
+#### GET admin/tables/{id}/decisions
 
 ```shell
-$ curl http://gandalf.api/api/v1/scoring/56c32f02a60ad689060041a9
+$ curl http://gandalf.api/api/v1/admin/tables/56c32f02a60ad689060041a9/decisions
 ```
 
 ```json
@@ -299,20 +376,19 @@ $ curl http://gandalf.api/api/v1/scoring/56c32f02a60ad689060041a9
     "meta": {
         "code": 200
     },
-    "data":
-    {
+    "data": {
         "_id": "56c32f02a60ad689060041a9",
         "default_decision": "approve",
         "final_decision": "approve",
         "fields": [
             {
-                "alias": "borrowers_phone_name",
+                "key": "borrowers_phone_name",
                 "title": "Borrowers Phone Name",
                 "source": "request",
                 "type": "string"
             },
             {
-                "alias": "contact_person_phone_verification",
+                "key": "contact_person_phone_verification",
                 "title": "Contact person phone verification",
                 "source": "request",
                 "type": "bool"
@@ -320,18 +396,18 @@ $ curl http://gandalf.api/api/v1/scoring/56c32f02a60ad689060041a9
         ],
         "rules": [
             {
-                "decision": "approve",
+                "than": "approve",
                 "description": "my",
-                "result": null,
+                "decision": null,
                 "conditions": [
                     {
-                        "field_alias": "borrowers_phone_name",
+                        "field_key": "borrowers_phone_name",
                         "condition": "$eq",
                         "value": "Vodaphone",
                         "matched": true
                     },
                     {
-                        "field_alias": "contact_person_phone_verification",
+                        "field_key": "contact_person_phone_verification",
                         "condition": "$eq",
                         "value": "true",
                         "matched": false
@@ -339,18 +415,18 @@ $ curl http://gandalf.api/api/v1/scoring/56c32f02a60ad689060041a9
                 ]
             },
             {
-                "decision": "decline",
+                "than": "decline",
                 "description": "new",
-                "result": null,
+                "decision": null,
                 "conditions": [
                     {
-                        "field_alias": "borrowers_phone_name",
+                        "field_key": "borrowers_phone_name",
                         "condition": "$eq",
                         "value": "Life",
                         "matched": false
                     },
                     {
-                        "field_alias": "contact_person_phone_verification",
+                        "field_key": "contact_person_phone_verification",
                         "condition": "$eq",
                         "value": "true",
                         "matched": false
@@ -364,6 +440,136 @@ $ curl http://gandalf.api/api/v1/scoring/56c32f02a60ad689060041a9
         },
         "updated_at": "2016-02-16 14:15:30",
         "created_at": "2016-02-16 14:15:30",
+    }
+}
+```
+
+### Check
+
+#### POST /tables/{id}/check
+
+Check params from request with decision table.
+POST params it's an associative array (dictionary) whose keys are the values of `fields.key` from decision table.
+
+For decision table, that you can see in example above, you should pass two params:
+ * `borrowers_phone_name`
+ * `contact_person_phone_verification`
+
+All fields are required!
+
+
+```shell
+$ curl -d'{"borrowers_phone_name": "test", "contact_person_phone_verification": "Life"}' 
+http://gandalf.api/api/v1/tables/56c32f02a60ad689060041a9/check
+```
+```json
+{
+    "meta": {
+        "code": 200
+    },
+    "data": [
+        {   
+            "_id": "56c32f02a60ad689060041a9",
+            "final_decision": "approve",
+            "rules": [
+                {
+                    "description": "my rule",
+                    "decision": null
+                },
+                {
+                    "description": "another rule",
+                    "decision": "approve"
+                }
+            ]
+        }
+    ]
+}
+```
+
+### Get all decisions history
+
+#### GET /tables/decisions
+
+Params:
+
+* `size` - **integer**, items per page, default 20
+* `page` - **integer**, page
+
+```shell
+$ curl http://gandalf.api/api/v1/tables/decisions
+```
+```json
+{
+    "meta": {
+        "code": 200
+    },
+    "data": [
+        {   
+            "_id": "56c32f02a60ad689060041a9",
+            "final_decision": "approve",
+            "rules": [
+                {
+                    "description": "my rule",
+                    "decision": null
+                },
+                {
+                    "description": "another rule",
+                    "decision": "approve"
+                }
+            ]
+        },
+        {   
+            "_id": "23c32f02a60ad689060041h5",
+            "final_decision": "decline",
+            "rules": [
+                {
+                    "description": "my rule",
+                    "decision": "decline"
+                },
+                {
+                    "description": "another rule",
+                    "decision": null
+                }
+            ]
+        }
+    ],
+    "paginate": {
+        "size": 20,
+        "total": 1,
+        "current_page": 1,
+        "last_page": 1
+    }
+}
+```
+
+
+
+### Get decision history by id
+
+#### GET /tables/{id}/decisions
+
+```shell
+$ curl http://gandalf.api/api/v1/tables/56c32f02a60ad689060041a9/decisions
+```
+
+```json
+{
+    "meta": {
+        "code": 200
+    },
+    "data": {   
+        "_id": "56c32f02a60ad689060041a9",
+        "final_decision": "approve",
+        "rules": [
+            {
+                "description": "my rule",
+                "decision": null
+            },
+            {
+                "description": "another rule",
+                "decision": "approve"
+            }
+        ]
     }
 }
 ```

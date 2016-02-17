@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 use App\Services\Scoring;
 use Illuminate\Http\Request;
 use App\Http\Services\Response;
+use App\Models\DecisionHistory;
 use App\Repositories\DecisionRepository;
 
 class ConsumerController extends Controller
@@ -23,15 +24,19 @@ class ConsumerController extends Controller
         $this->decisionRepository = $decision;
     }
 
-    public function check(Request $request, Scoring $scoring)
+    public function check(Request $request, Scoring $scoring, $id)
     {
-        return $this->response->json($scoring->check($request->all()));
+        return $this->response->json($scoring->check($id, $request->all()));
     }
 
     public function decisions(Request $request)
     {
         return $this->response->jsonPaginator(
-            $this->decisionRepository->consumerHistory($request->get('size'))
+            $this->decisionRepository->consumerHistory($request->get('size')),
+            [],
+            function (DecisionHistory $decisionHistory) {
+                return $decisionHistory->toConsumerArray();
+            }
         );
     }
 

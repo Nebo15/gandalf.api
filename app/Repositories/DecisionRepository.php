@@ -49,16 +49,11 @@ class DecisionRepository
 
     public function consumerHistory($size = null)
     {
-
+        return DecisionHistory::paginate(intval($size));
     }
 
     public function consumerHistoryItem($id)
     {
-        return DecisionHistory::findById($id)->shortApiView();
-    }
-
-    public function getDecision()
-    {
-        return Decision::first();
+        return DecisionHistory::findById($id)->toConsumerArray();
     }
 }

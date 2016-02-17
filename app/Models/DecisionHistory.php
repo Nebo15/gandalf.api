@@ -12,10 +12,12 @@ namespace App\Models;
  * @package App\Models
  * @property string $default_decision
  * @property string $final_decision
+ * @property array $request
  * @property Rule[] $rules
  * @property Field[] $fields
  * @method static DecisionHistory findById($id)
  * @method DecisionHistory save(array $options = [])
+ * @method static \Illuminate\Pagination\LengthAwarePaginator paginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null)
  */
 class DecisionHistory extends Base
 {
@@ -44,15 +46,15 @@ class DecisionHistory extends Base
         return $this->embedsMany('App\Models\Field');
     }
 
-    public function shortApiView()
+    public function toConsumerArray()
     {
         return [
             '_id' => $this->getId(),
             'final_decision' => $this->final_decision,
-            'rules' => $this->rules()->get()->filter(function (Rule $rule) {
-
-                return ['description' => $rule->description, 'result' => $rule->result];
-            })
+            'request' => $this->request,
+            'rules' => $this->rules()->get()->map(function (Rule $rule) {
+                return ['description' => $rule->description, 'decision' => $rule->decision];
+            })->toArray()
         ];
     }
 }

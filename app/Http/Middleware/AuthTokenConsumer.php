@@ -11,7 +11,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Access\AuthorizationException;
 
-class AuthTokenUser
+class AuthTokenConsumer
 {
     public function handle(Request $request, Closure $next)
     {
