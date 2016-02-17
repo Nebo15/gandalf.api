@@ -8,26 +8,55 @@
 namespace App\Repositories;
 
 use App\Models\Decision;
+use App\Models\DecisionHistory;
 
 class DecisionRepository
 {
-    public function all()
+    public function all($size = null)
     {
-        return Decision::all()->toArray();
+        return Decision::paginate(intval($size));
     }
 
-    public function update($values)
+    public function get($id)
     {
-        $decision = $this->getDecision();
-        $decision->fill($values)->save();
-
-        return $decision->toArray();
+        return Decision::findById($id)->toArray();
     }
 
+    public function create($values)
+    {
+        return Decision::create($values)->toArray();
+    }
 
-    /**
-     * @return Decision
-     */
+    public function update($id, $values)
+    {
+        return Decision::findById($id)->fill($values)->save()->toArray();
+    }
+
+    public function delete($id)
+    {
+        return Decision::findById($id)->delete();
+    }
+
+    public function history($size = null)
+    {
+        return DecisionHistory::paginate(intval($size));
+    }
+
+    public function historyItem($id)
+    {
+        return DecisionHistory::findById($id)->toArray();
+    }
+
+    public function consumerHistory($size = null)
+    {
+
+    }
+
+    public function consumerHistoryItem($id)
+    {
+        return DecisionHistory::findById($id)->shortApiView();
+    }
+
     public function getDecision()
     {
         return Decision::first();

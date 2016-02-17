@@ -8,14 +8,16 @@
 namespace App\Models;
 
 /**
- * Class ScoringHistory
+ * Class DecisionHistory
  * @package App\Models
  * @property string $default_decision
  * @property string $final_decision
  * @property Rule[] $rules
  * @property Field[] $fields
+ * @method static DecisionHistory findById($id)
+ * @method DecisionHistory save(array $options = [])
  */
-class ScoringHistory extends Base
+class DecisionHistory extends Base
 {
     protected $visible = [
         '_id',
@@ -29,6 +31,8 @@ class ScoringHistory extends Base
     ];
 
     protected $fillable = ['fields', 'request', 'rules', 'default_decision', 'final_decision'];
+
+    protected $perPage = 20;
 
     public function rules()
     {

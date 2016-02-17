@@ -9,7 +9,7 @@ namespace App\Services;
 
 use App\Models\Decision;
 use App\Models\Condition;
-use App\Models\ScoringHistory;
+use App\Models\DecisionHistory;
 use App\Repositories\DecisionRepository;
 use Illuminate\Contracts\Validation\ValidationException;
 
@@ -64,7 +64,7 @@ class Scoring
 
         $scoring_data['final_decision'] = $final_decision ?: $decision->default_decision;
 
-        return ScoringHistory::create($scoring_data)->shortApiView();
+        return DecisionHistory::create($scoring_data)->shortApiView();
     }
 
     private function checkCondition(Condition $condition, $value)

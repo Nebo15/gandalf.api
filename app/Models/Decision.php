@@ -13,12 +13,16 @@ namespace App\Models;
  * @property string $default_decision
  * @property Rule[] $rules
  * @property Field[] $fields
+ * @method static Decision findById($id)
+ * @method Decision save(array $options = [])
  */
 class Decision extends Base
 {
     protected $visible = ['_id', 'fields', 'rules', 'default_decision'];
 
     protected $fillable = ['fields', 'rules', 'default_decision'];
+
+    protected $perPage = 20;
 
     public function rules()
     {
