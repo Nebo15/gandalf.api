@@ -23,6 +23,8 @@ class DecisionHistory extends Base
 {
     protected $visible = [
         '_id',
+        'title',
+        'description',
         'request',
         'fields',
         'rules',
@@ -32,7 +34,7 @@ class DecisionHistory extends Base
         self::UPDATED_AT
     ];
 
-    protected $fillable = ['fields', 'request', 'rules', 'default_decision', 'final_decision'];
+    protected $fillable = ['title', 'description', 'fields', 'request', 'rules', 'default_decision', 'final_decision'];
 
     protected $perPage = 20;
 

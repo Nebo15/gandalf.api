@@ -32,6 +32,8 @@ class Scoring
 
         # crooked nail. Maybe you should write your own ODM?
         $scoring_data = [
+            'title' => $decision->title,
+            'description' => $decision->description,
             'default_decision' => $decision->default_decision,
             'fields' => $decision->fields()->toArray(),
             'rules' => [],

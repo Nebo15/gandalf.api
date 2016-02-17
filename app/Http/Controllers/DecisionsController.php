@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Services\Response;
 use App\Repositories\DecisionRepository;
+use App\Http\Traits\ValidatesRequestsCatcher;
 
 class DecisionsController extends Controller
 {
+    use ValidatesRequestsCatcher;
+
     private $decisionRepository;
     private $response;
 
@@ -29,20 +32,20 @@ class DecisionsController extends Controller
 
     public function create(Request $request)
     {
-        $this->validate($request, ['decision' => 'required|decisionStruct']);
+        $this->validate($request, ['table' => 'required|decisionStruct']);
 
         return $this->response->json(
-            $this->decisionRepository->create($request->get('decision')),
+            $this->decisionRepository->create($request->get('table')),
             Response::HTTP_CREATED
         );
     }
 
     public function update(Request $request, $id)
     {
-        $this->validate($request, ['decision' => 'required|decisionStruct']);
+        $this->validate($request, ['table' => 'required|decisionStruct']);
 
         return $this->response->json(
-            $this->decisionRepository->update($id, $request->get('decision'))
+            $this->decisionRepository->update($id, $request->get('table'))
         );
     }
 

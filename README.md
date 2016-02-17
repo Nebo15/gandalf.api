@@ -49,7 +49,7 @@ $ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/tab
 Create decision table.
 Params:
 
- * `decision` - full decision table with title, description, default_decision, fields, rules, conditions. 
+ * `table` - full decision table with title, description, default_decision, fields, rules, conditions. 
 
 
 ```shell
@@ -193,7 +193,7 @@ $ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/tab
 Update decision table.
 Params:
 
- * `decision` - full decision table with title, description, default_decision, fields, rules, conditions. 
+ * `table` - full decision table with title, description, default_decision, fields, rules, conditions. 
 
 
 ```shell

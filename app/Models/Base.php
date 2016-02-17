@@ -1,8 +1,8 @@
 <?php
 namespace App\Models;
 
+use App\Exceptions\FailedToSaveModel;
 use App\Exceptions\IdNotFoundException;
-use Illuminate\Contracts\Validation\ValidationException;
 use Jenssegers\Mongodb\Model as Eloquent;
 
 /**
@@ -33,6 +33,19 @@ abstract class Base extends Eloquent
     public function createId()
     {
         $this->{self::PRIMARY_KEY} = new \MongoId();
+    }
+
+    /**
+     * @param array $options
+     * @return $this
+     */
+    public function save(array $options = [])
+    {
+        if (parent::save($options)) {
+            return $this;
+        }
+
+        throw new FailedToSaveModel;
     }
 
     public static function findById($id)

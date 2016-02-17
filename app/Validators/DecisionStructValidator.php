@@ -33,9 +33,8 @@ class DecisionStructValidator
             return $value['key'];
         }, $value['fields']);
 
-        $rules_fields = ['decision', 'description', 'conditions'];
+        $rules_fields = ['than', 'description', 'conditions'];
         $condition_fields = ['field_key', 'condition', 'value'];
-
         foreach ($value['rules'] as $item) {
             if (!is_array($item)) {
                 return false;

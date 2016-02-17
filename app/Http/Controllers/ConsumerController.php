@@ -12,9 +12,12 @@ use Illuminate\Http\Request;
 use App\Http\Services\Response;
 use App\Models\DecisionHistory;
 use App\Repositories\DecisionRepository;
+use App\Http\Traits\ValidatesRequestsCatcher;
 
 class ConsumerController extends Controller
 {
+    use ValidatesRequestsCatcher;
+
     private $response;
     private $decisionRepository;
 
