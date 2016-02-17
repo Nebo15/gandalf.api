@@ -29,7 +29,7 @@ $app->group(
         $app->get('/tables', ['uses' => 'DecisionsController@index']);
         $app->post('/tables', ['uses' => 'DecisionsController@create']);
         $app->get('/tables/{id}', ['uses' => 'DecisionsController@get']);
-        $app->put('/tables/{id}', ['uses' => 'DecisionsController@edit']);
+        $app->put('/tables/{id}', ['uses' => 'DecisionsController@update']);
         $app->delete('/tables/{id}', ['uses' => 'DecisionsController@delete']);
     }
 );
