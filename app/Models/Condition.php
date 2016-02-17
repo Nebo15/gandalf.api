@@ -1,0 +1,21 @@
+<?php
+/**
+ * Author: Paul Bardack paul.bardack@gmail.com http://paulbardack.com
+ * Date: 15.02.16
+ * Time: 17:40
+ */
+
+namespace App\Models;
+
+/**
+ * Class Condition
+ * @package App\Models
+ * @property string $field_key
+ * @property string $condition
+ * @property string $value
+ * @property bool $matched
+ */
+class Condition extends Base
+{
+    protected $visible = ['field_key', 'condition', 'value'];
+}

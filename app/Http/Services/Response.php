@@ -2,6 +2,7 @@
 namespace App\Http\Services;
 
 use Illuminate\Http\Response as LumenResponse;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class Response extends LumenResponse
 {
@@ -19,5 +20,18 @@ class Response extends LumenResponse
             $respond['dev'] = $dev;
         }
         return $this->setStatusCode($code)->setContent($respond);
+    }
+
+    public function jsonPaginator(LengthAwarePaginator $paginator, array $meta = [], callable $map = null)
+    {
+        $collection = $paginator->getCollection();
+        $content = $map ? $collection->map($map) : $collection->toArray();
+
+        return $this->json($content, 200, $meta, [
+            'size' => $paginator->perPage(),
+            'total' => $paginator->total(),
+            'current_page' => $paginator->currentPage(),
+            'last_page' => $paginator->lastPage(),
+        ]);
     }
 }

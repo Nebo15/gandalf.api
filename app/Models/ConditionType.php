@@ -7,9 +7,7 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Model;
-
-class ConditionType extends Model
+class ConditionType extends Base
 {
 
 }

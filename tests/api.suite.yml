@@ -1,0 +1,11 @@
+class_name: ApiTester
+modules:
+    enabled:
+        - \Helper\Api
+        - PhpBrowser
+        - MongoDb
+        - REST:
+            url: http://gandalf.dev/
+            depends: PhpBrowser
+            part: Json
+            env: testing

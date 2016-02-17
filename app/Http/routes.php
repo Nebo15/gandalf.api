@@ -12,18 +12,38 @@
 */
 
 $app->get('/', function () use ($app) {
-    return $app->version();
+    return response('ok');
 });
+
+$app->group(
+    [
+        'prefix' => 'api/v1/admin',
+        'namespace' => 'App\Http\Controllers',
+        'middleware' => ['auth.admin']
+    ],
+    function ($app) {
+        /** @var Laravel\Lumen\Application $app */
+        $app->get('/tables/decisions', ['uses' => 'DecisionsController@history']);
+        $app->get('/tables/{id}/decisions', ['uses' => 'DecisionsController@historyItem']);
+
+        $app->get('/tables', ['uses' => 'DecisionsController@index']);
+        $app->post('/tables', ['uses' => 'DecisionsController@create']);
+        $app->get('/tables/{id}', ['uses' => 'DecisionsController@get']);
+        $app->put('/tables/{id}', ['uses' => 'DecisionsController@update']);
+        $app->delete('/tables/{id}', ['uses' => 'DecisionsController@delete']);
+    }
+);
 
 $app->group(
     [
         'prefix' => 'api/v1',
         'namespace' => 'App\Http\Controllers',
-        'middleware' => ['auth']
+        'middleware' => ['auth.consumer']
     ],
     function ($app) {
         /** @var Laravel\Lumen\Application $app */
-        $app->post('/rules', ['uses' => 'UserController@rules']);
-        $app->post('/check', ['uses' => 'UserController@check']);
+        $app->get('/tables/decisions', ['uses' => 'ConsumerController@decisions']);
+        $app->get('/tables/{id}/decisions', ['uses' => 'ConsumerController@decision']);
+        $app->post('/tables/{id}/check', ['uses' => 'ConsumerController@check']);
     }
 );
