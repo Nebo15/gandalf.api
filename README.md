@@ -1,6 +1,15 @@
 # Gandalf
 ### Fraud shall not pass
 
+## Auth
+
+For all request you should pass Authorization header
+
+```shell
+$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/tables
+```
+
+
 ## Decision table
 
 ### List
@@ -8,7 +17,7 @@
 #### GET /admin/tables
 
 ```shell
-$ curl http://gandalf.api/api/v1/admin/tables
+$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/tables
 ```
 
 ```json
@@ -44,7 +53,7 @@ Params:
 
 
 ```shell
-$ curl -d'{"decision": DECISION_TABLE }' http://gandalf.api/api/v1/admin/tables/56c31536a60ad644060041af
+$ curl -H"Authorization: API_KEY:API_SECRET" -d'{"decision": DECISION_TABLE }' http://gandalf.api/api/v1/admin/tables/56c31536a60ad644060041af
 ```
 
 ```json
@@ -112,7 +121,7 @@ $ curl -d'{"decision": DECISION_TABLE }' http://gandalf.api/api/v1/admin/tables/
 #### GET /admin/tables/{id}
 
 ```shell
-$ curl http://gandalf.api/api/v1/admin/tables/56c31536a60ad644060041af
+$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/tables/56c31536a60ad644060041af
 ```
 
 ```json
@@ -188,7 +197,7 @@ Params:
 
 
 ```shell
-$ curl -X PUT -d'{"decision": DECISION_TABLE }' http://gandalf.api/api/v1/admin/tables/56c31536a60ad644060041af
+$ curl -H"Authorization: API_KEY:API_SECRET" -X PUT -d'{"decision": DECISION_TABLE }' http://gandalf.api/api/v1/admin/tables/56c31536a60ad644060041af
 ```
 
 ```json
@@ -256,7 +265,7 @@ $ curl -X PUT -d'{"decision": DECISION_TABLE }' http://gandalf.api/api/v1/admin/
 #### Delete /admin/table/{id}
 
 ```shell
-$ curl -X DELETE http://gandalf.api/api/v1/admin/tables/56c31536a60ad644060041af
+$ curl -H"Authorization: API_KEY:API_SECRET" -X DELETE http://gandalf.api/api/v1/admin/tables/56c31536a60ad644060041af
 ```
 
 ```json
@@ -279,7 +288,7 @@ Params:
 * `page` - **integer**, page
 
 ```shell
-$ curl http://gandalf.api/api/v1/admin/tables/decisions
+$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/tables/decisions
 ```
 
 ```json
@@ -368,7 +377,7 @@ $ curl http://gandalf.api/api/v1/admin/tables/decisions
 #### GET admin/tables/{id}/decisions
 
 ```shell
-$ curl http://gandalf.api/api/v1/admin/tables/56c32f02a60ad689060041a9/decisions
+$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/tables/56c32f02a60ad689060041a9/decisions
 ```
 
 ```json
@@ -459,7 +468,7 @@ All fields are required!
 
 
 ```shell
-$ curl -d'{"borrowers_phone_name": "test", "contact_person_phone_verification": "Life"}' 
+$ curl -H"Authorization: API_KEY:API_SECRET" -d'{"borrowers_phone_name": "test", "contact_person_phone_verification": "Life"}' 
 http://gandalf.api/api/v1/tables/56c32f02a60ad689060041a9/check
 ```
 ```json
@@ -496,7 +505,7 @@ Params:
 * `page` - **integer**, page
 
 ```shell
-$ curl http://gandalf.api/api/v1/tables/decisions
+$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/tables/decisions
 ```
 ```json
 {
@@ -549,7 +558,7 @@ $ curl http://gandalf.api/api/v1/tables/decisions
 #### GET /tables/{id}/decisions
 
 ```shell
-$ curl http://gandalf.api/api/v1/tables/56c32f02a60ad689060041a9/decisions
+$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/tables/56c32f02a60ad689060041a9/decisions
 ```
 
 ```json
