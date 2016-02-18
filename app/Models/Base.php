@@ -54,6 +54,6 @@ abstract class Base extends Eloquent
             throw new IdNotFoundException;
         }
 
-        return self::where(self::PRIMARY_KEY, '=', $id)->firstOrFail();
+        return self::where(self::PRIMARY_KEY, $id)->firstOrFail();
     }
 }

@@ -63,6 +63,7 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseCodeIs(200);
         $this->seeResponseMatchesJsonType([
             '_id' => 'string',
+            'table_id' => 'string',
             'title' => 'string',
             'description' => 'string',
             'default_decision' => 'string',
@@ -101,6 +102,7 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseCodeIs(200);
         $this->seeResponseMatchesJsonType([
             '_id' => 'string',
+            'table_id' => 'string',
             'final_decision' => 'string',
             'request' => 'array',
             'rules' => 'array',
@@ -117,6 +119,8 @@ class ApiTester extends \Codeception\Actor
         $data = $data ?: ['borrowers_phone_name' => 'okay', 'contact_person_phone_verification' => 'true'];
         $this->sendPOST("api/v1/tables/$id/check", $data);
         $this->assertTableDecisionsForConsumer();
+
+        return $this->getResponseFields()->data;
     }
 
     public function getTableData()

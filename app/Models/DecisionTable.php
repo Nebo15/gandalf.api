@@ -8,18 +8,18 @@
 namespace App\Models;
 
 /**
- * Class Decision
+ * Class DecisionTable
  * @package App\Models
  * @property string $title
  * @property string $description
  * @property string $default_decision
  * @property Rule[] $rules
  * @property Field[] $fields
- * @method static Decision findById($id)
- * @method Decision save(array $options = [])
+ * @method static DecisionTable findById($id)
+ * @method DecisionTable save(array $options = [])
  * @method static \Illuminate\Pagination\LengthAwarePaginator paginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null)
  */
-class Decision extends Base
+class DecisionTable extends Base
 {
     protected $visible = ['_id', 'title', 'description', 'fields', 'rules', 'default_decision'];
 

@@ -23,8 +23,8 @@ $app->group(
     ],
     function ($app) {
         /** @var Laravel\Lumen\Application $app */
-        $app->get('/tables/decisions', ['uses' => 'DecisionsController@history']);
-        $app->get('/tables/{id}/decisions', ['uses' => 'DecisionsController@historyItem']);
+        $app->get('/decisions', ['uses' => 'DecisionsController@history']);
+        $app->get('/decisions/{id}', ['uses' => 'DecisionsController@historyItem']);
 
         $app->get('/tables', ['uses' => 'DecisionsController@index']);
         $app->post('/tables', ['uses' => 'DecisionsController@create']);
@@ -42,8 +42,7 @@ $app->group(
     ],
     function ($app) {
         /** @var Laravel\Lumen\Application $app */
-        $app->get('/tables/decisions', ['uses' => 'ConsumerController@decisions']);
-        $app->get('/tables/{id}/decisions', ['uses' => 'ConsumerController@decision']);
+        $app->get('/decisions/{id}', ['uses' => 'ConsumerController@decision']);
         $app->post('/tables/{id}/check', ['uses' => 'ConsumerController@check']);
     }
 );

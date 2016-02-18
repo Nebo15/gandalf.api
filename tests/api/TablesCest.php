@@ -62,13 +62,28 @@ class TablesCest
     {
         $I->loginAdmin();
         $I->createTable();
+        $table_id_no_decisions = $I->getResponseFields()->data->_id;
 
-        $I->checkDecision($I->getResponseFields()->data->_id);
+        $I->createTable();
 
-        $I->sendGET('api/v1/admin/tables/decisions');
+        $table_id_with_decisions = $I->getResponseFields()->data->_id;
+        $I->checkDecision($table_id_with_decisions);
+
+        $I->sendGET('api/v1/admin/decisions?table_id=' . $table_id_no_decisions);
+        $I->seeResponseCodeIs(404);
+
+        $I->sendGET('api/v1/admin/decisions');
         $I->assertTableDecisionsForAdmin('$.data[*]');
         foreach ($I->getResponseFields()->data as $item) {
-            $I->sendGET('api/v1/admin/tables/' . $item->_id . '/decisions');
+            $I->sendGET('api/v1/admin/decisions/' . $item->_id);
+            $I->assertTableDecisionsForAdmin();
+        }
+
+        # filter by table_id
+        $I->sendGET('api/v1/admin/decisions?table_id=' . $table_id_with_decisions);
+        $I->assertTableDecisionsForAdmin('$.data[*]');
+        foreach ($I->getResponseFields()->data as $item) {
+            $I->sendGET('api/v1/admin/decisions/' . $item->_id);
             $I->assertTableDecisionsForAdmin();
         }
     }

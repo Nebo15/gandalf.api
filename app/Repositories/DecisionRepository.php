@@ -7,39 +7,52 @@
 
 namespace App\Repositories;
 
-use App\Models\Decision;
+use App\Models\DecisionTable;
 use App\Models\DecisionHistory;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class DecisionRepository
 {
     public function all($size = null)
     {
-        return Decision::paginate(intval($size));
+        return DecisionTable::paginate(intval($size));
     }
 
     public function get($id)
     {
-        return Decision::findById($id)->toArray();
+        return DecisionTable::findById($id)->toArray();
     }
 
     public function create($values)
     {
-        return Decision::create($values)->toArray();
+        return DecisionTable::create($values)->toArray();
     }
 
     public function update($id, $values)
     {
-        return Decision::findById($id)->fill($values)->save()->toArray();
+        return DecisionTable::findById($id)->fill($values)->save()->toArray();
     }
 
     public function delete($id)
     {
-        return Decision::findById($id)->delete();
+        return DecisionTable::findById($id)->delete();
     }
 
-    public function history($size = null)
+    public function history($size = null, $table_id = null)
     {
-        return DecisionHistory::paginate(intval($size));
+        if ($table_id) {
+            $query = DecisionHistory::where('table_id', new \MongoId($table_id));
+            if ($query->count() <= 0) {
+                $e = new ModelNotFoundException;
+                $e->setModel(DecisionTable::class);
+                throw $e;
+            }
+            $paginator = $query->paginate(intval($size));
+        } else {
+            $paginator = DecisionHistory::paginate(intval($size));
+        }
+
+        return $paginator;
     }
 
     public function historyItem($id)
