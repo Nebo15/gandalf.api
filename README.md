@@ -44,7 +44,7 @@ $ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/tab
 
 ### Create decision table
 
-#### POST /admin/table/{id}
+#### POST /admin/tables/{id}
 
 Create decision table.
 Params:
@@ -188,7 +188,7 @@ $ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/tab
 
 ### Update decision table
 
-#### PUT /admin/table/{id}
+#### PUT /admin/tables/{id}
 
 Update decision table.
 Params:
@@ -197,7 +197,8 @@ Params:
 
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" -X PUT -d'{"decision": DECISION_TABLE }' http://gandalf.api/api/v1/admin/tables/56c31536a60ad644060041af
+$ curl -H"Authorization: API_KEY:API_SECRET" -X PUT -d'{"decision": DECISION_TABLE }' 
+http://gandalf.api/api/v1/admin/tables/56c31536a60ad644060041af
 ```
 
 ```json
@@ -262,7 +263,7 @@ $ curl -H"Authorization: API_KEY:API_SECRET" -X PUT -d'{"decision": DECISION_TAB
 
 ### Delete decision table
 
-#### Delete /admin/table/{id}
+#### Delete /admin/tables/{id}
 
 ```shell
 $ curl -H"Authorization: API_KEY:API_SECRET" -X DELETE http://gandalf.api/api/v1/admin/tables/56c31536a60ad644060041af
@@ -280,15 +281,16 @@ $ curl -H"Authorization: API_KEY:API_SECRET" -X DELETE http://gandalf.api/api/v1
 
 ### Decisions history for admin 
 
-#### GET admin/tables/decisions
+#### GET admin/decisions
 
 Params:
 
+* `table_id` - decisions by table id, default null
 * `size` - **integer**, items per page, default 20
 * `page` - **integer**, page
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/tables/decisions
+$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/decisions
 ```
 
 ```json
@@ -299,6 +301,7 @@ $ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/tab
     "data": [
         {
             "_id": "56c32f02a60ad689060041a9",
+            "table_id": "12c31536a60ad644060054az",
             "default_decision": "approve",
             "final_decision": "approve",
             "fields": [
@@ -374,10 +377,10 @@ $ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/tab
 
 ### Decision history item by id for admin 
 
-#### GET admin/tables/{id}/decisions
+#### GET admin/decisions/{id}
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/tables/56c32f02a60ad689060041a9/decisions
+$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/decisions/56c32f02a60ad689060041a9
 ```
 
 ```json
@@ -387,6 +390,7 @@ $ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/tab
     },
     "data": {
         "_id": "56c32f02a60ad689060041a9",
+        "table_id": "12c31536a60ad644060054az",
         "default_decision": "approve",
         "final_decision": "approve",
         "fields": [
@@ -453,6 +457,8 @@ $ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/tab
 }
 ```
 
+## Consumer API
+
 ### Check
 
 #### POST /tables/{id}/check
@@ -465,6 +471,9 @@ For decision table, that you can see in example above, you should pass two param
  * `contact_person_phone_verification`
 
 All fields are required!
+
+Additional params:
+ * `webhook` - optional, webhook url for table decision
 
 
 ```shell
@@ -495,67 +504,9 @@ http://gandalf.api/api/v1/tables/56c32f02a60ad689060041a9/check
 }
 ```
 
-### Get all decisions history
-
-#### GET /tables/decisions
-
-Params:
-
-* `size` - **integer**, items per page, default 20
-* `page` - **integer**, page
-
-```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/tables/decisions
-```
-```json
-{
-    "meta": {
-        "code": 200
-    },
-    "data": [
-        {   
-            "_id": "56c32f02a60ad689060041a9",
-            "final_decision": "approve",
-            "rules": [
-                {
-                    "description": "my rule",
-                    "decision": null
-                },
-                {
-                    "description": "another rule",
-                    "decision": "approve"
-                }
-            ]
-        },
-        {   
-            "_id": "23c32f02a60ad689060041h5",
-            "final_decision": "decline",
-            "rules": [
-                {
-                    "description": "my rule",
-                    "decision": "decline"
-                },
-                {
-                    "description": "another rule",
-                    "decision": null
-                }
-            ]
-        }
-    ],
-    "paginate": {
-        "size": 20,
-        "total": 1,
-        "current_page": 1,
-        "last_page": 1
-    }
-}
-```
-
-
-
 ### Get decision history by id
 
-#### GET /tables/{id}/decisions
+#### GET /decisions/{id}
 
 ```shell
 $ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/tables/56c32f02a60ad689060041a9/decisions

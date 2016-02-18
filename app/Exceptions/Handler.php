@@ -92,7 +92,7 @@ class Handler extends ExceptionHandler
 
     private function formatModelName($model)
     {
-        $name = explode('\\', $model);
+        $name = preg_replace('/\B([A-Z])/', '_$1', explode('\\', $model));
 
         return strtolower(end($name));
     }

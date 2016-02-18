@@ -1,0 +1,37 @@
+default_environment: test
+
+path:
+    migrations: database/migrations
+    
+environments:
+    dev:
+        dsn: mongodb://localhost
+        
+        default_database: gandalf
+        
+        log_database: gandalf
+        log_collection: migrations
+    
+    stage:
+        dsn: mongodb://localhost
+        
+        default_database: gandalf
+        
+        log_database: gandalf
+        log_collection: migrations
+    
+    prod:
+        dsn: mongodb://localhost
+        
+        default_database: gandalf
+        
+        log_database: gandalf
+        log_collection: migrations
+
+    test:
+        dsn: mongodb://localhost
+
+        default_database: gandalf_test
+
+        log_database: gandalf_test
+        log_collection: migrations

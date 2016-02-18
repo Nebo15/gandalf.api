@@ -12,6 +12,7 @@ namespace App\Models;
  * @package App\Models
  * @property string $default_decision
  * @property string $final_decision
+ * @property \MongoId $table_id
  * @property array $request
  * @property Rule[] $rules
  * @property Field[] $fields
@@ -23,6 +24,7 @@ class DecisionHistory extends Base
 {
     protected $visible = [
         '_id',
+        'table_id',
         'title',
         'description',
         'request',
@@ -34,7 +36,16 @@ class DecisionHistory extends Base
         self::UPDATED_AT
     ];
 
-    protected $fillable = ['title', 'description', 'fields', 'request', 'rules', 'default_decision', 'final_decision'];
+    protected $fillable = [
+        'title',
+        'table_id',
+        'description',
+        'fields',
+        'request',
+        'rules',
+        'default_decision',
+        'final_decision'
+    ];
 
     protected $perPage = 20;
 
@@ -52,6 +63,7 @@ class DecisionHistory extends Base
     {
         return [
             '_id' => $this->getId(),
+            'table_id' => $this->table_id->__toString(),
             'final_decision' => $this->final_decision,
             'request' => $this->request,
             'rules' => $this->rules()->get()->map(function (Rule $rule) {

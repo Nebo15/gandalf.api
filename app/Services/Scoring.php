@@ -7,7 +7,7 @@
 
 namespace App\Services;
 
-use App\Models\Decision;
+use App\Models\DecisionTable;
 use App\Models\Condition;
 use App\Models\DecisionHistory;
 use App\Repositories\DecisionRepository;
@@ -24,7 +24,7 @@ class Scoring
 
     public function check($id, $values)
     {
-        $decision = Decision::findById($id);
+        $decision = DecisionTable::findById($id);
         $validator = \Validator::make($values, $this->createValidationRules($decision));
         if ($validator->fails()) {
             throw new ValidationException($validator);
@@ -32,12 +32,14 @@ class Scoring
 
         # crooked nail. Maybe you should write your own ODM?
         $scoring_data = [
+            'table_id' => new \MongoId($decision->getId()),
             'title' => $decision->title,
             'description' => $decision->description,
             'default_decision' => $decision->default_decision,
             'fields' => $decision->fields()->toArray(),
             'rules' => [],
-            'request' => $values
+            'request' => $values,
+            'webhook' => isset($values['webhook']) ? $values['webhook'] : null
         ];
         $final_decision = null;
 
@@ -65,6 +67,9 @@ class Scoring
         }
 
         $scoring_data['final_decision'] = $final_decision ?: $decision->default_decision;
+        if ($values['webhook']) {
+            # create webhook service
+        }
 
         return DecisionHistory::create($scoring_data)->toConsumerArray();
     }
@@ -103,9 +108,9 @@ class Scoring
         $condition->matched = $matched;
     }
 
-    private function createValidationRules(Decision $decision)
+    private function createValidationRules(DecisionTable $decision)
     {
-        $rules = [];
+        $rules = ['webhook' => 'sometimes|required|url'];
         if ($fields = $decision->fields) {
             foreach ($fields as $item) {
                 $rules[$item->key] = 'required' . $this->getValidationRuleByType($item->type);

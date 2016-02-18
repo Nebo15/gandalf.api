@@ -58,7 +58,9 @@ class DecisionsController extends Controller
 
     public function history(Request $request)
     {
-        return $this->response->jsonPaginator($this->decisionRepository->history($request->get('size')));
+        return $this->response->jsonPaginator(
+            $this->decisionRepository->history($request->get('size'), $request->get('table_id'))
+        );
     }
 
     public function historyItem($id)

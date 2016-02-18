@@ -11,7 +11,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\Decision::truncate();
+        \App\Models\DecisionTable::truncate();
         \App\Models\ConditionType::truncate();
 
         $types = [
@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\ConditionType::insert($data);
 
-        \App\Models\Decision::create([
+        \App\Models\DecisionTable::create([
             'default_decision' => 'approve',
             'fields' => [
                 [
