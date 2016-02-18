@@ -6,7 +6,7 @@
 For all request you should pass Authorization header
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/tables
+$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf-api.nebo15.com/api/v1/admin/tables
 ```
 
 
@@ -17,7 +17,7 @@ $ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/tab
 #### GET /admin/tables
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/tables
+$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf-api.nebo15.com/api/v1/admin/tables
 ```
 
 ```json
@@ -53,7 +53,7 @@ Params:
 
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" -d'{"decision": DECISION_TABLE }' http://gandalf.api/api/v1/admin/tables/56c31536a60ad644060041af
+$ curl -H"Authorization: API_KEY:API_SECRET" -d'{"decision": DECISION_TABLE }' http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
 ```
 
 ```json
@@ -121,7 +121,7 @@ $ curl -H"Authorization: API_KEY:API_SECRET" -d'{"decision": DECISION_TABLE }' h
 #### GET /admin/tables/{id}
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/tables/56c31536a60ad644060041af
+$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
 ```
 
 ```json
@@ -198,7 +198,7 @@ Params:
 
 ```shell
 $ curl -H"Authorization: API_KEY:API_SECRET" -X PUT -d'{"decision": DECISION_TABLE }' 
-http://gandalf.api/api/v1/admin/tables/56c31536a60ad644060041af
+http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
 ```
 
 ```json
@@ -266,7 +266,7 @@ http://gandalf.api/api/v1/admin/tables/56c31536a60ad644060041af
 #### Delete /admin/tables/{id}
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" -X DELETE http://gandalf.api/api/v1/admin/tables/56c31536a60ad644060041af
+$ curl -H"Authorization: API_KEY:API_SECRET" -X DELETE http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
 ```
 
 ```json
@@ -290,7 +290,7 @@ Params:
 * `page` - **integer**, page
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/decisions
+$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf-api.nebo15.com/api/v1/admin/decisions
 ```
 
 ```json
@@ -380,7 +380,7 @@ $ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/dec
 #### GET admin/decisions/{id}
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/admin/decisions/56c32f02a60ad689060041a9
+$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf-api.nebo15.com/api/v1/admin/decisions/56c32f02a60ad689060041a9
 ```
 
 ```json
@@ -478,7 +478,7 @@ Additional params:
 
 ```shell
 $ curl -H"Authorization: API_KEY:API_SECRET" -d'{"borrowers_phone_name": "test", "contact_person_phone_verification": "Life"}' 
-http://gandalf.api/api/v1/tables/56c32f02a60ad689060041a9/check
+http://gandalf-api.nebo15.com/api/v1/tables/56c32f02a60ad689060041a9/check
 ```
 ```json
 {
@@ -509,7 +509,7 @@ http://gandalf.api/api/v1/tables/56c32f02a60ad689060041a9/check
 #### GET /decisions/{id}
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf.api/api/v1/tables/56c32f02a60ad689060041a9/decisions
+$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf-api.nebo15.com/api/v1/tables/56c32f02a60ad689060041a9/decisions
 ```
 
 ```json
