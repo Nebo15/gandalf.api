@@ -38,7 +38,8 @@ class Scoring
             'default_decision' => $decision->default_decision,
             'fields' => $decision->fields()->toArray(),
             'rules' => [],
-            'request' => $values
+            'request' => $values,
+            'webhook' => isset($values['webhook']) ? $values['webhook'] : null
         ];
         $final_decision = null;
 
@@ -66,6 +67,9 @@ class Scoring
         }
 
         $scoring_data['final_decision'] = $final_decision ?: $decision->default_decision;
+        if ($values['webhook']) {
+            # create webhook service
+        }
 
         return DecisionHistory::create($scoring_data)->toConsumerArray();
     }
@@ -106,7 +110,7 @@ class Scoring
 
     private function createValidationRules(DecisionTable $decision)
     {
-        $rules = [];
+        $rules = ['webhook' => 'sometimes|required|url'];
         if ($fields = $decision->fields) {
             foreach ($fields as $item) {
                 $rules[$item->key] = 'required' . $this->getValidationRuleByType($item->type);

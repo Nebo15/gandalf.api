@@ -472,6 +472,9 @@ For decision table, that you can see in example above, you should pass two param
 
 All fields are required!
 
+Additional params:
+ * `webhook` - optional, webhook url for table decision
+
 
 ```shell
 $ curl -H"Authorization: API_KEY:API_SECRET" -d'{"borrowers_phone_name": "test", "contact_person_phone_verification": "Life"}' 

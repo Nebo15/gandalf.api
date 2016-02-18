@@ -18,7 +18,7 @@ class DecisionsCest
         $I->sendGET('api/v1/admin/decisions');
         $I->seeResponseCodeIs(401);
 
-        $I->sendGET('api/v1/decisions/' . $decision->_id );
+        $I->sendGET('api/v1/decisions/' . $decision->_id);
         $I->assertTableDecisionsForConsumer();
     }
 }
