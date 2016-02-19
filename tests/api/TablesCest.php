@@ -88,7 +88,7 @@ class TablesCest
         }
     }
 
-    public function decisionInvalid(ApiTester $I)
+    public function invalidDecisions(ApiTester $I)
     {
         $I->loginAdmin();
         $I->createTable();
@@ -96,6 +96,21 @@ class TablesCest
 
         $I->sendPOST("api/v1/tables/$table_id/check", ['internal_credit_history' => 'okay']);
         $I->seeResponseCodeIs(422);
-        $I->seeResponseMatchesJsonType(['Property' => 'array'], '$.data');
+        $I->seeResponseMatchesJsonType([
+            'borrowers_phone_verification' => 'array',
+            'contact_person_phone_verification' => 'array',
+            'property' => 'array',
+            'employment' => 'array',
+        ], '$.data');
+
+        $I->sendPOST("api/v1/tables/$table_id/check", [
+            'internal_credit_history' => 'okay',
+            'borrowers_phone_verification' => 'okay',
+            'contact_person_phone_verification' => 'okay',
+            'property' => 'okay',
+            'employment' => 'okay',
+        ]);
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseMatchesJsonType(['property' => 'array', 'employment' => 'array'], '$.data');
     }
 }

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c531d14b4937240fc6c85cfe41183d82",
-    "content-hash": "837b27f6733bb3bbb9c7281031897079",
+    "hash": "1ae588dab42fc3ab096a2ec178e06ec7",
+    "content-hash": "de8b99b5d649f7b3814fb7ff60807fb0",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -1135,16 +1135,16 @@
         },
         {
             "name": "jenssegers/mongodb",
-            "version": "v2.2.6",
+            "version": "v2.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jenssegers/laravel-mongodb.git",
-                "reference": "4cdb4fba3a6861937f3877761c903ddf618db1da"
+                "reference": "6e9b5f4fe5fa5044b7dea0db5576f7c21374c661"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jenssegers/laravel-mongodb/zipball/4cdb4fba3a6861937f3877761c903ddf618db1da",
-                "reference": "4cdb4fba3a6861937f3877761c903ddf618db1da",
+                "url": "https://api.github.com/repos/jenssegers/laravel-mongodb/zipball/6e9b5f4fe5fa5044b7dea0db5576f7c21374c661",
+                "reference": "6e9b5f4fe5fa5044b7dea0db5576f7c21374c661",
                 "shasum": ""
             },
             "require": {
@@ -1190,7 +1190,7 @@
                 "mongo",
                 "mongodb"
             ],
-            "time": "2016-02-03 22:46:34"
+            "time": "2016-02-12 18:42:59"
         },
         {
             "name": "laravel/lumen-framework",

@@ -67,7 +67,7 @@ class Scoring
         }
 
         $scoring_data['final_decision'] = $final_decision ?: $decision->default_decision;
-        if ($values['webhook']) {
+        if (isset($values['webhook'])) {
             # create webhook service
         }
 

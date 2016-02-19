@@ -56,7 +56,7 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseMatchesJsonType([
             'field_key' => 'string',
             'condition' => 'string',
-            'value' => 'string',
+            'value' => 'string|boolean',
         ], "$jsonPath.rules[*].conditions[*]");
     }
 
@@ -94,7 +94,7 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseMatchesJsonType([
             'field_key' => 'string',
             'condition' => 'string',
-            'value' => 'string',
+            'value' => 'string|boolean',
             'matched' => 'boolean',
         ], "$jsonPath.rules[*].conditions[*]");
     }
@@ -122,8 +122,8 @@ class ApiTester extends \Codeception\Actor
             'borrowers_phone_verification' => 'Positive',
             'contact_person_phone_verification' => 'Positive',
             'internal_credit_history' => 'Positive',
-            'Employment' => true,
-            'Property' => true,
+            'employment' => true,
+            'property' => true,
         ];
         $this->sendPOST("api/v1/tables/$id/check", $data);
         $this->assertTableDecisionsForConsumer();
@@ -155,6 +155,8 @@ class ApiTester extends \Codeception\Actor
 
         $data = [
             'default_decision' => 'approve',
+            'title' => 'Test title',
+            'description' => 'Test description',
             'fields' => [],
             'rules' => []
         ];
@@ -184,7 +186,7 @@ class ApiTester extends \Codeception\Actor
                     $value = false;
                 }
                 $conditions[] = [
-                    'field_key' => $key,
+                    'field_key' => strtolower(str_replace(' ', '_', $key)),
                     'condition' => '$eq',
                     'value' => $value
                 ];
