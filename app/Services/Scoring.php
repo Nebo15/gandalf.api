@@ -122,8 +122,6 @@ class Scoring
 
     private function getValidationRuleByType($type)
     {
-        # ToDo: write code
-
-        return '';
+        return $type == 'bool' ? '|boolean' : '';
     }
 }

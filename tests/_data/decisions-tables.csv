@@ -1,0 +1,73 @@
+Borrowers phone verification ;Contact person phone verification;Internal credit history;Employment;Property;Than
+Positive;Positive;Positive;y;y;Approve
+Positive;Positive;Positive;y;n;Approve
+Positive;Positive;Positive;n;y;Approve
+Positive;Positive;Positive;n;n;Approve
+Positive;Neutral;Positive;y;y;Approve
+Positive;Neutral;Positive;y;n;Approve
+Positive;Neutral;Positive;n;y;Approve
+Positive;Neutral;Positive;n;n;Approve
+Positive;Neutral;Neutral;y;y;Approve
+Positive;Neutral;Neutral;y;n;Decline
+Positive;Neutral;Neutral;n;y;Approve
+Positive;Neutral;Neutral;n;n;Decline
+Positive;Negative;Positive;y;y;Decline
+Positive;Negative;Positive;y;n;Decline
+Positive;Negative;Positive;n;y;Decline
+Positive;Negative;Positive;n;n;Decline
+Positive;Negative;Neutral;y;y;Decline
+Positive;Negative;Neutral;y;n;Decline
+Positive;Negative;Neutral;n;y;Decline
+Positive;Negative;Neutral;n;n;Decline
+Positive;Positive;Neutral;y;y;Approve
+Positive;Positive;Neutral;y;n;Approve
+Positive;Positive;Neutral;n;y;Approve
+Positive;Positive;Neutral;n;n;Decline
+Call limit reached;Positive;Positive;y;y;Approve
+Call limit reached;Positive;Positive;y;n;Approve
+Call limit reached;Positive;Positive;n;y;Approve
+Call limit reached;Positive;Positive;n;n;Approve
+Call limit reached;Positive;Neutral;y;y;Decline
+Call limit reached;Positive;Neutral;y;n;Decline
+Call limit reached;Positive;Neutral;n;y;Decline
+Call limit reached;Positive;Neutral;n;n;Decline
+Call limit reached;Neutral;Positive;y;y;Decline
+Call limit reached;Neutral;Positive;y;n;Decline
+Call limit reached;Neutral;Positive;n;y;Decline
+Call limit reached;Neutral;Positive;n;n;Decline
+Call limit reached;Neutral;Neutral;y;y;Decline
+Call limit reached;Neutral;Neutral;y;n;Decline
+Call limit reached;Neutral;Neutral;n;y;Decline
+Call limit reached;Neutral;Neutral;n;n;Decline
+Call limit reached;Negative;Positive;y;y;Decline
+Call limit reached;Negative;Positive;y;n;Decline
+Call limit reached;Negative;Positive;n;y;Decline
+Call limit reached;Negative;Positive;n;n;Decline
+Call limit reached;Negative;Neutral;y;y;Decline
+Call limit reached;Negative;Neutral;y;n;Decline
+Call limit reached;Negative;Neutral;n;y;Decline
+Call limit reached;Negative;Neutral;n;n;Decline
+Negative;Positive;Positive;y;y;Decline
+Negative;Positive;Positive;y;n;Decline
+Negative;Positive;Positive;n;y;Decline
+Negative;Positive;Positive;n;n;Decline
+Negative;Positive;Neutral;y;y;Decline
+Negative;Positive;Neutral;y;n;Decline
+Negative;Positive;Neutral;n;y;Decline
+Negative;Positive;Neutral;n;n;Decline
+Negative;Neutral;Positive;y;y;Decline
+Negative;Neutral;Positive;y;n;Decline
+Negative;Neutral;Positive;n;y;Decline
+Negative;Neutral;Positive;n;n;Decline
+Negative;Neutral;Neutral;y;y;Decline
+Negative;Neutral;Neutral;y;n;Decline
+Negative;Neutral;Neutral;n;y;Decline
+Negative;Neutral;Neutral;n;n;Decline
+Negative;Negative;Positive;y;y;Decline
+Negative;Negative;Positive;y;n;Decline
+Negative;Negative;Positive;n;y;Decline
+Negative;Negative;Positive;n;n;Decline
+Negative;Negative;Neutral;y;y;Decline
+Negative;Negative;Neutral;y;n;Decline
+Negative;Negative;Neutral;n;y;Decline
+Negative;Negative;Neutral;n;n;Decline

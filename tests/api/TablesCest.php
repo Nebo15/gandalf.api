@@ -94,8 +94,8 @@ class TablesCest
         $I->createTable();
         $table_id = $I->getResponseFields()->data->_id;
 
-        $I->sendPOST("api/v1/tables/$table_id/check", ['borrowers_phone_name' => 'okay']);
+        $I->sendPOST("api/v1/tables/$table_id/check", ['internal_credit_history' => 'okay']);
         $I->seeResponseCodeIs(422);
-        $I->seeResponseMatchesJsonType(['contact_person_phone_verification' => 'array'], '$.data');
+        $I->seeResponseMatchesJsonType(['Property' => 'array'], '$.data');
     }
 }

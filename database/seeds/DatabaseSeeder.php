@@ -35,58 +35,60 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\ConditionType::insert($data);
 
-        \App\Models\DecisionTable::create([
+        $csv = array_map('str_getcsv', file(__DIR__ . '/decisions-tables.csv'));
+
+        array_walk($csv, function (&$row) use ($csv) {
+            $row = array_combine(
+                array_map('trim', explode(';', $csv[0][0])),
+                array_map('trim', explode(';', $row[0]))
+            );
+        });
+
+        $fields = array_shift($csv);
+
+        $data = [
             'default_decision' => 'approve',
-            'fields' => [
-                [
-                    "key" => "borrowers_phone_name",
-                    "title" => "Borrowers Phone Name",
-                    "source" => "request",
-                    "type" => "string",
-                ],
-                [
-                    "key" => "contact_person_phone_verification",
-                    "title" => "Contact person phone verification",
-                    "source" => "request",
-                    "type" => "bool",
-                ],
-            ],
-            'rules' => [
-                [
-                    'than' => 'approve',
-                    'description' => 'my',
-                    'conditions' => [
-                        [
-                            'field_key' => 'borrowers_phone_name',
-                            'condition' => '$eq',
-                            'value' => 'Vodaphone'
+            'fields' => [],
+            'rules' => []
+        ];
 
-                        ],
-                        [
-                            'field_key' => 'contact_person_phone_verification',
-                            'condition' => '$eq',
-                            'value' => 'true'
-                        ],
-                    ]
-                ],
-                [
-                    'than' => 'decline',
-                    'description' => 'new',
-                    'conditions' => [
-                        [
-                            'field_key' => 'borrowers_phone_name',
-                            'condition' => '$eq',
-                            'value' => 'Life'
+        unset($fields['Than']);
+        foreach ($fields as $field) {
+            $type = 'string';
+            if(in_array($field, ['Employment', 'Property'])){
+                $type = 'bool';
+            }
+            $data['fields'][] = [
+                "key" => strtolower(str_replace(' ', '_', $field)),
+                "title" => $field,
+                "source" => "request",
+                "type" => $type,
+            ];
+        }
+        foreach ($csv as $rule) {
+            $than = $rule['Than'];
+            unset($rule['Than']);
 
-                        ],
-                        [
-                            'field_key' => 'contact_person_phone_verification',
-                            'condition' => '$eq',
-                            'value' => 'true'
-                        ],
-                    ]
-                ],
-            ]
-        ]);
+            $conditions = [];
+            foreach ($rule as $key => $value) {
+                if ($value == 'y') {
+                    $value = true;
+                } elseif ($value == 'n') {
+                    $value = false;
+                }
+                $conditions[] = [
+                    'field_key' => $key,
+                    'condition' => '$eq',
+                    'value' => $value
+                ];
+            }
+            $data['rules'][] = [
+                'than' => $than,
+                'description' => '',
+                'conditions' => $conditions
+            ];
+        }
+
+        \App\Models\DecisionTable::create($data);
     }
 }
