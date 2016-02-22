@@ -35,7 +35,7 @@ class ConsumerController extends Controller
     public function decisions(Request $request)
     {
         return $this->response->jsonPaginator(
-            $this->decisionRepository->consumerHistory($request->get('size')),
+            $this->decisionRepository->consumerHistory($request->input('size')),
             [],
             function (DecisionHistory $decisionHistory) {
                 return $decisionHistory->toConsumerArray();

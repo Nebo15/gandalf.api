@@ -24,7 +24,7 @@ class DecisionsController extends Controller
     public function index(Request $request)
     {
         return $this->response->jsonPaginator(
-            $this->decisionRepository->all($request->get('size')),
+            $this->decisionRepository->all($request->input('size')),
             [],
             function (DecisionTable $decisionTable) {
                 return $decisionTable->toListArray();
@@ -42,7 +42,7 @@ class DecisionsController extends Controller
         $this->validate($request, ['table' => 'required|decisionStruct']);
 
         return $this->response->json(
-            $this->decisionRepository->create($request->get('table')),
+            $this->decisionRepository->create($request->input('table')),
             Response::HTTP_CREATED
         );
     }
@@ -59,7 +59,7 @@ class DecisionsController extends Controller
         $this->validate($request, ['table' => 'required|decisionStruct']);
 
         return $this->response->json(
-            $this->decisionRepository->update($id, $request->get('table'))
+            $this->decisionRepository->update($id, $request->input('table'))
         );
     }
 
@@ -73,7 +73,7 @@ class DecisionsController extends Controller
     public function history(Request $request)
     {
         return $this->response->jsonPaginator(
-            $this->decisionRepository->history($request->get('size'), $request->get('table_id'))
+            $this->decisionRepository->history($request->input('size'), $request->input('table_id'))
         );
     }
 
