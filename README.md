@@ -44,7 +44,7 @@ $ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf-api.nebo15.com/api/v
 
 ### Create decision table
 
-#### POST /admin/tables/{id}
+#### POST /admin/tables
 
 Create decision table.
 Params:

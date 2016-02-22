@@ -14,7 +14,7 @@ class TablesCest
         $I->createTable();
 
         $I->sendGET('api/v1/admin/tables');
-        $I->assertTable('$.data[*]');
+        $I->assertListTable();
         foreach ($I->getResponseFields()->data as $item) {
             $I->sendGET('api/v1/admin/tables/' . $item->_id);
             $I->assertTable();
@@ -27,7 +27,7 @@ class TablesCest
         $I->createTable();
 
         $I->sendGET('api/v1/admin/tables');
-        $I->assertTable('$.data[*]');
+        $I->assertListTable();
 
         $id = $I->getResponseFields()->data[0]->_id;
         $data = $I->getTableData();
@@ -44,7 +44,7 @@ class TablesCest
         $I->createTable();
 
         $I->sendGET('api/v1/admin/tables');
-        $I->assertTable('$.data[*]');
+        $I->assertListTable();
 
         $response = $I->getResponseFields();
         $id = $response->data[0]->_id;

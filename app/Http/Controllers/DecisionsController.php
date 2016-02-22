@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\DecisionTable;
 use App\Http\Services\Response;
 use App\Repositories\DecisionRepository;
 use App\Http\Traits\ValidatesRequestsCatcher;
@@ -22,7 +23,13 @@ class DecisionsController extends Controller
 
     public function index(Request $request)
     {
-        return $this->response->jsonPaginator($this->decisionRepository->all($request->get('size')));
+        return $this->response->jsonPaginator(
+            $this->decisionRepository->all($request->get('size')),
+            [],
+            function (DecisionTable $decisionTable) {
+                return $decisionTable->toListArray();
+            }
+        );
     }
 
     public function get($id)
