@@ -17,5 +17,10 @@ namespace App\Models;
  */
 class Field extends Base
 {
+    protected $visible = ['key', 'title', 'source', 'type', 'preset'];
 
+    public function preset()
+    {
+        return $this->embedsOne('App\Models\Preset');
+    }
 }

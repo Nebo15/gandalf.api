@@ -69,12 +69,10 @@ class Handler extends ExceptionHandler
             $http_code = 404;
             $error_code = $this->formatModelName($e->getModel()) . '_not_found';
 
-
         } elseif ($e instanceof HttpException) {
             $http_code = $e->getStatusCode();
             $error_code = $e->getMessage() ?: 'http';
         }
-
 
         if ($http_code === 500 and env('APP_DEBUG') === true) {
             return $e->__toString();
