@@ -6,7 +6,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class Response extends LumenResponse
 {
-    public function json($content = [], $code = LumenResponse::HTTP_OK, $meta = [], $paginate = [], $dev = [])
+    public function json($content = [], $code = LumenResponse::HTTP_OK, $meta = [], $paginate = [], $sandboxData = [])
     {
         $meta['code'] = $code;
         $respond = [
@@ -14,10 +14,10 @@ class Response extends LumenResponse
             'data' => $content,
         ];
         if (!empty($paginate)) {
-            $respond['paginate'] = $paginate;
+            $respond['paging'] = $paginate;
         }
-        if (!empty($dev)) {
-            $respond['dev'] = $dev;
+        if (!empty($sandboxData)) {
+            $respond['sandbox'] = $sandboxData;
         }
         return $this->setStatusCode($code)->setContent($respond);
     }

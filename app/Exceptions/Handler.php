@@ -87,7 +87,7 @@ class Handler extends ExceptionHandler
             $meta['error_message'] = $error_msg;
         }
 
-        return response()->json($meta, $http_code, ['Content-Type' => 'application/json']);
+        return response()->json(['meta' => $meta], $http_code, ['Content-Type' => 'application/json']);
     }
 
     private function formatModelName($model)
