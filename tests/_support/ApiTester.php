@@ -28,6 +28,21 @@ class ApiTester extends \Codeception\Actor
         $this->assertTable('$.data', 201);
     }
 
+    public function assertListTable($jsonPath = '$.data[*]')
+    {
+        $this->seeResponseCodeIs(200);
+        $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
+            'title' => 'string',
+            'description' => 'string',
+            'default_decision' => 'string',
+        ], $jsonPath);
+
+        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules");
+        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.fields");
+
+    }
+
     public function assertTable($jsonPath = '$.data', $code = 200)
     {
         $this->seeResponseCodeIs($code);
@@ -105,6 +120,8 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseMatchesJsonType([
             '_id' => 'string',
             'table_id' => 'string',
+            'title' => 'string',
+            'description' => 'string',
             'final_decision' => 'string',
             'request' => 'array',
             'rules' => 'array',
@@ -114,6 +131,11 @@ class ApiTester extends \Codeception\Actor
             'decision' => 'string|null',
             'description' => 'string',
         ], "$jsonPath.rules[*]");
+
+        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.fields");
+        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.default_decision");
+        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].than");
+        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions");
     }
 
     public function checkDecision($id, array $data = [])

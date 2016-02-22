@@ -10,6 +10,8 @@ namespace App\Models;
 /**
  * Class DecisionHistory
  * @package App\Models
+ * @property string $title
+ * @property string $description
  * @property string $default_decision
  * @property string $final_decision
  * @property \MongoId $table_id
@@ -64,6 +66,8 @@ class DecisionHistory extends Base
         return [
             '_id' => $this->getId(),
             'table_id' => $this->table_id->__toString(),
+            'title' => $this->title,
+            'description' => $this->description,
             'final_decision' => $this->final_decision,
             'request' => $this->request,
             'rules' => $this->rules()->get()->map(function (Rule $rule) {
