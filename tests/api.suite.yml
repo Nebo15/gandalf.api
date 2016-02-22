@@ -4,6 +4,7 @@ modules:
         - \Helper\Api
         - PhpBrowser
         - MongoDb
+        - Asserts
         - REST:
             url: http://gandalf.dev/
             depends: PhpBrowser

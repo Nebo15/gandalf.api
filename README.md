@@ -53,7 +53,7 @@ Params:
 
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" -d'{"decision": DECISION_TABLE }' http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
+$ curl -H"Authorization: API_KEY:API_SECRET" -d'{"table": DECISION_TABLE }' http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
 ```
 
 ```json
@@ -63,6 +63,74 @@ $ curl -H"Authorization: API_KEY:API_SECRET" -d'{"decision": DECISION_TABLE }' h
     },
     "data": {   
         "_id": "56c31536a60ad644060041af",
+        "default_decision": "approve",
+        "fields": [
+            {
+                "key": "borrowers_phone_name",
+                "title": "Borrowers Phone Name",
+                "source": "request",
+                "type": "string"
+            },
+            {
+                "key": "contact_person_phone_verification",
+                "title": "Contact person phone verification",
+                "source": "request",
+                "type": "bool"
+            }
+        ],
+        "rules": [
+            {
+                "than": "approve",
+                "description": "my",
+                "conditions": [
+                    {
+                        "field_key": "borrowers_phone_name",
+                        "condition": "$eq",
+                        "value": "Vodaphone"
+                    },
+                    {
+                        "field_key": "contact_person_phone_verification",
+                        "condition": "$eq",
+                        "value": "true"
+                    }
+                ]
+            },
+            {
+                "than": "decline",
+                "description": "new",
+                "conditions": [
+                    {
+                        "field_key": "borrowers_phone_name",
+                        "condition": "$eq",
+                        "value": "Life"
+                    },
+                    {
+                        "field_key": "contact_person_phone_verification",
+                        "condition": "$eq",
+                        "value": "true"
+                    }
+                ]
+            }
+        ]
+    }
+}
+```
+
+### Clone decision table
+
+#### POST /admin/tables/{id}/clone
+
+```shell
+$ curl -H"Authorization: API_KEY:API_SECRET" -X POST http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
+```
+
+```json
+{
+    "meta": {
+        "code": 200
+    },
+    "data": {   
+        "_id": "44c31536a60ad644060021aa",
         "default_decision": "approve",
         "fields": [
             {
@@ -197,7 +265,7 @@ Params:
 
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" -X PUT -d'{"decision": DECISION_TABLE }' 
+$ curl -H"Authorization: API_KEY:API_SECRET" -X PUT -d'{"table": DECISION_TABLE }' 
 http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
 ```
 

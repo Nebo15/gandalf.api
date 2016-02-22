@@ -28,6 +28,14 @@ class DecisionRepository
         return DecisionTable::create($values)->toArray();
     }
 
+    public function cloneModel($id)
+    {
+        $values = DecisionTable::findById($id)->getAttributes();
+        unset($values[DecisionTable::PRIMARY_KEY]);
+
+        return DecisionTable::create($values)->toArray();
+    }
+
     public function update($id, $values)
     {
         return DecisionTable::findById($id)->fill($values)->save()->toArray();

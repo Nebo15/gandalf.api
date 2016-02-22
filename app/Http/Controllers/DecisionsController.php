@@ -47,6 +47,13 @@ class DecisionsController extends Controller
         );
     }
 
+    public function cloneModel($id)
+    {
+        return $this->response->json(
+            $this->decisionRepository->cloneModel($id)
+        );
+    }
+
     public function update(Request $request, $id)
     {
         $this->validate($request, ['table' => 'required|decisionStruct']);

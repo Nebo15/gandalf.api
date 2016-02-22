@@ -37,6 +37,22 @@ class TablesCest
         $I->assertResponseDataFields(['title' => $data['title']]);
     }
 
+    public function cloning(ApiTester $I)
+    {
+        $I->loginAdmin();
+        $I->createTable();
+
+        $data = $I->getResponseFields()->data;
+        $id = $data->_id;
+        $I->sendPOST("api/v1/admin/tables/$id/clone", []);
+        $I->assertTable();
+        $cloneData = $I->getResponseFields()->data;
+        unset($cloneData->_id);
+        unset($data->_id);
+
+        $I->assertEquals($data, $cloneData);
+    }
+
     public function delete(ApiTester $I)
     {
         $I->loginAdmin();

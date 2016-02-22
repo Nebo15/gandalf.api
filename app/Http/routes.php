@@ -30,6 +30,7 @@ $app->group(
         $app->post('/tables', ['uses' => 'DecisionsController@create']);
         $app->get('/tables/{id}', ['uses' => 'DecisionsController@get']);
         $app->put('/tables/{id}', ['uses' => 'DecisionsController@update']);
+        $app->post('/tables/{id}/clone', ['uses' => 'DecisionsController@cloneModel']);
         $app->delete('/tables/{id}', ['uses' => 'DecisionsController@delete']);
     }
 );
