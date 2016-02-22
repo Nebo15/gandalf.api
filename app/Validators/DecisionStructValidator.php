@@ -49,10 +49,10 @@ class DecisionStructValidator
             if (!is_array($item['conditions'])) {
                 return false;
             }
+            if (count($item['conditions']) < count($table_fields_keys)) {
+                return false;
+            }
             foreach ($item['conditions'] as $condition) {
-                if (count($condition_fields) != count($condition)) {
-                    return false;
-                }
 
                 foreach ($condition_fields as $table_field) {
                     if (!array_key_exists($table_field, $condition)) {
