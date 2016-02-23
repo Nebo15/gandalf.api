@@ -10,12 +10,12 @@ namespace App\Models;
 /**
  * Class Condition
  * @package App\Models
- * @property string $field_key
+ * @property string $field_alias
  * @property string $condition
  * @property string $value
  * @property bool $matched
  */
 class Condition extends Base
 {
-    protected $visible = ['field_key', 'condition', 'value'];
+    protected $visible = ['field_alias', 'condition', 'value'];
 }

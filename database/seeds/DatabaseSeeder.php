@@ -55,12 +55,14 @@ class DatabaseSeeder extends Seeder
         unset($fields['Than']);
         foreach ($fields as $field) {
             $type = 'string';
-            if(in_array($field, ['Employment', 'Property'])){
+            if (in_array($field, ['Employment', 'Property'])) {
                 $type = 'bool';
             }
+            $key = strtolower(str_replace(' ', '_', $field));
             $data['fields'][] = [
-                "key" => strtolower(str_replace(' ', '_', $field)),
+                "key" => $key,
                 "title" => $field,
+                "alias" => $key,
                 "source" => "request",
                 "type" => $type,
             ];
@@ -77,7 +79,7 @@ class DatabaseSeeder extends Seeder
                     $value = false;
                 }
                 $conditions[] = [
-                    'field_key' => strtolower(str_replace(' ', '_', $key)),
+                    'field_alias' => strtolower(str_replace(' ', '_', $key)),
                     'condition' => '$eq',
                     'value' => $value
                 ];

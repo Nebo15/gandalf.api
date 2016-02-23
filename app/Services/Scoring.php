@@ -7,14 +7,17 @@
 
 namespace App\Services;
 
-use App\Models\DecisionTable;
+use App\Models\Field;
 use App\Models\Condition;
+use App\Models\DecisionTable;
 use App\Models\DecisionHistory;
 use App\Repositories\DecisionRepository;
 use Illuminate\Contracts\Validation\ValidationException;
 
 class Scoring
 {
+    private $presets = [];
+
     private $decisionRepository;
 
     public function __construct(DecisionRepository $decisionRepository)
@@ -29,6 +32,8 @@ class Scoring
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
+        /** @var \Jenssegers\Mongodb\Relations\EmbedsMany $fields */
+        $fields = $decision->fields();
 
         # crooked nail. Maybe you should write your own ODM?
         $scoring_data = [
@@ -36,7 +41,7 @@ class Scoring
             'title' => $decision->title,
             'description' => $decision->description,
             'default_decision' => $decision->default_decision,
-            'fields' => $decision->fields()->toArray(),
+            'fields' => $fields->toArray(),
             'rules' => [],
             'request' => $values,
             'webhook' => isset($values['webhook']) ? $values['webhook'] : null
@@ -52,7 +57,15 @@ class Scoring
             ];
             $conditions_matched = true;
             foreach ($rule->conditions as $condition) {
-                $this->checkCondition($condition, $values[$condition->field_key]);
+
+                $this->checkCondition(
+                    $condition,
+                    $this->prepareFieldPreset(
+                        $fields->where('alias', $condition->field_alias)->first(),
+                        $values[$condition->field_alias]
+                    )
+                );
+
                 if (!$condition->matched) {
                     $conditions_matched = false;
                 }
@@ -76,36 +89,54 @@ class Scoring
 
     private function checkCondition(Condition $condition, $value)
     {
-        switch ($condition->condition) {
-            case '$eq':
-                $matched = $condition->value === $value;
-                break;
-            case '$ne':
-                $matched = $condition->value !== $value;
-                break;
-            case '$gt':
-                $matched = $condition->value > $value;
-                break;
-            case '$gte':
-                $matched = $condition->value >= $value;
-                break;
-            case '$lt':
-                $matched = $condition->value < $value;
-                break;
-            case '$lte':
-                $matched = $condition->value <= $value;
-                break;
-            case '$in':
-                $matched = in_array($value, array_map('trim', explode(',', $condition->value)));
-                break;
-            case '$nin':
-                $matched = !in_array($value, array_map('trim', explode(',', $condition->value)));
-                break;
-            default:
-                throw new \Exception('Undefined condition rule ' . $condition->condition);
+        $condition->matched = $this->checkConditionValue($condition->condition, $condition->value, $value);
+    }
+
+    private function prepareFieldPreset(Field $field, $value)
+    {
+        if (array_key_exists($field->alias, $this->presets)) {
+            $value = $this->presets[$field->alias];
+
+        } elseif ($preset = $field->preset and $preset->condition) {
+            $value = $this->checkConditionValue($preset->condition, $preset->value, $value);
+            $this->presets[$field->alias] = $value;
         }
 
-        $condition->matched = $matched;
+        return $value;
+    }
+
+    private function checkConditionValue($condition, $condition_value, $field_value)
+    {
+        switch ($condition) {
+            case '$eq':
+                $matched = $condition_value === $field_value;
+                break;
+            case '$ne':
+                $matched = $condition_value !== $field_value;
+                break;
+            case '$gt':
+                $matched = $condition_value > $field_value;
+                break;
+            case '$gte':
+                $matched = $condition_value >= $field_value;
+                break;
+            case '$lt':
+                $matched = $condition_value < $field_value;
+                break;
+            case '$lte':
+                $matched = $condition_value <= $field_value;
+                break;
+            case '$in':
+                $matched = in_array($field_value, array_map('trim', explode(',', $condition_value)));
+                break;
+            case '$nin':
+                $matched = !in_array($field_value, array_map('trim', explode(',', $condition_value)));
+                break;
+            default:
+                throw new \Exception("Undefined condition rule '$condition'");
+        }
+
+        return $matched;
     }
 
     private function createValidationRules(DecisionTable $decision)

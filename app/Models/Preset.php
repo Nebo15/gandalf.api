@@ -1,8 +1,8 @@
 <?php
 /**
  * Author: Paul Bardack paul.bardack@gmail.com http://paulbardack.com
- * Date: 22.02.16
- * Time: 18:42
+ * Date: 23.02.16
+ * Time: 19:30
  */
 
 namespace App\Models;
@@ -11,11 +11,10 @@ namespace App\Models;
  * Class Preset
  *
  * @package App\Models
- * @property string $field_key
  * @property string $condition
  * @property string $value
  */
 class Preset extends Base
 {
-    protected $visible = ['field_key', 'condition', 'value'];
+    protected $visible = ['condition', 'value'];
 }

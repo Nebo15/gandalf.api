@@ -29,12 +29,12 @@ class DecisionStructValidator
             }
         }
 
-        $table_fields_keys = array_map(function ($value) {
+        $table_fields_keys = array_unique(array_map(function ($value) {
             return $value['key'];
-        }, $value['fields']);
+        }, $value['fields']));
 
         $rules_fields = ['than', 'description', 'conditions'];
-        $condition_fields = ['field_key', 'condition', 'value'];
+        $condition_fields = ['field_alias', 'condition', 'value'];
         foreach ($value['rules'] as $item) {
             if (!is_array($item)) {
                 return false;
@@ -58,7 +58,7 @@ class DecisionStructValidator
                     if (!array_key_exists($table_field, $condition)) {
                         return false;
                     }
-                    if (!in_array($condition['field_key'], $table_fields_keys)) {
+                    if (!in_array($condition['field_alias'], $table_fields_keys)) {
                         return false;
                     }
                 }

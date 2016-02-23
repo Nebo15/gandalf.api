@@ -12,12 +12,16 @@ namespace App\Models;
  * @package App\Models
  * @property string $key
  * @property string $title
+ * @property string $alias
  * @property string $source
  * @property string $type
+ * @property Preset $preset
  */
 class Field extends Base
 {
-    protected $visible = ['key', 'title', 'source', 'type', 'preset'];
+    protected $fillable = ['key', 'alias', 'title', 'source', 'type', 'preset'];
+
+    protected $visible = ['key', 'alias', 'title', 'source', 'type', 'preset'];
 
     public function preset()
     {
