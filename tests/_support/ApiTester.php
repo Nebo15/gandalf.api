@@ -26,6 +26,8 @@ class ApiTester extends \Codeception\Actor
     {
         $this->sendPOST('api/v1/admin/tables', ['table' => $this->getTableData()]);
         $this->assertTable('$.data', 201);
+
+        return $this->getResponseFields()->data;
     }
 
     public function assertListTable($jsonPath = '$.data[*]')
@@ -156,13 +158,13 @@ class ApiTester extends \Codeception\Actor
     public function getTableData()
     {
         if (!$this->tableData) {
-            $this->tableData = $this->parseCsf();
+            $this->tableData = $this->parseCsv();
         }
 
         return $this->tableData;
     }
 
-    private function parseCsf()
+    private function parseCsv()
     {
         $csv = array_map('str_getcsv', file(__DIR__ . '/../_data/decisions-tables.csv'));
 
@@ -176,7 +178,7 @@ class ApiTester extends \Codeception\Actor
         $fields = array_shift($csv);
 
         $data = [
-            'default_decision' => 'approve',
+            'default_decision' => 'Decline',
             'title' => 'Test title',
             'description' => 'Test description',
             'fields' => [],

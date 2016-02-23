@@ -55,11 +55,11 @@ class Scoring
                 $this->checkCondition($condition, $values[$condition->field_key]);
                 if (!$condition->matched) {
                     $conditions_matched = false;
-
-                } elseif (!$final_decision) {
-                    $final_decision = $rule->than;
                 }
                 $scoring_rule['conditions'][] = $condition->getAttributes();
+            }
+            if (!$final_decision and $conditions_matched) {
+                $final_decision = $rule->than;
             }
 
             $scoring_rule['decision'] = $conditions_matched ? $rule->than : null;

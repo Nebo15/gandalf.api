@@ -77,13 +77,14 @@ class TablesCest
     public function decisions(ApiTester $I)
     {
         $I->loginAdmin();
-        $I->createTable();
-        $table_id_no_decisions = $I->getResponseFields()->data->_id;
+        $table_data = $I->createTable();
+        $table_id_no_decisions = $table_data->_id;
 
-        $I->createTable();
+        $table_data = $I->createTable();
 
-        $table_id_with_decisions = $I->getResponseFields()->data->_id;
-        $I->checkDecision($table_id_with_decisions);
+        $table_id_with_decisions = $table_data->_id;
+        $decision_table = $I->checkDecision($table_id_with_decisions);
+        $I->assertEquals('Approve', $decision_table->final_decision);
 
         $I->sendGET('api/v1/admin/decisions?table_id=' . $table_id_no_decisions);
         $I->seeResponseCodeIs(404);
@@ -102,13 +103,21 @@ class TablesCest
             $I->sendGET('api/v1/admin/decisions/' . $item->_id);
             $I->assertTableDecisionsForAdmin();
         }
+
+        $decision_data = $I->checkDecision($table_id_with_decisions, [
+            'borrowers_phone_verification' => 'invalid',
+            'contact_person_phone_verification' => 'invalid',
+            'internal_credit_history' => 'invalid',
+            'employment' => false,
+            'property' => false,
+        ]);
+        $I->assertEquals($table_data->default_decision, $decision_data->final_decision);
     }
 
     public function invalidDecisions(ApiTester $I)
     {
         $I->loginAdmin();
-        $I->createTable();
-        $table_id = $I->getResponseFields()->data->_id;
+        $table_id = $I->createTable()->_id;
 
         $I->sendPOST("api/v1/tables/$table_id/check", ['internal_credit_history' => 'okay']);
         $I->seeResponseCodeIs(422);
