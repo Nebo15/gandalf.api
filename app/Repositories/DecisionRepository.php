@@ -25,16 +25,7 @@ class DecisionRepository
 
     public function create($values)
     {
-        $table = new DecisionTable($values);
-        if (isset($values['fields'])) {
-            $table->addFields($values['fields']);
-        }
-        if (isset($values['rules'])) {
-            $table->addRules($values['rules']);
-        }
-        $table->save();
-
-        return $table;
+        return $this->edit($values);
     }
 
     public function cloneModel($id)
@@ -47,7 +38,22 @@ class DecisionRepository
 
     public function update($id, $values)
     {
-        return DecisionTable::findById($id)->fill($values)->save();
+        return $this->edit($values, $id);
+    }
+
+    private function edit($values, $id = null)
+    {
+        $table = $id ? DecisionTable::findById($id) : new DecisionTable($values);
+        $table->fill($values);
+        if (isset($values['fields'])) {
+            $table->setFields($values['fields']);
+        }
+        if (isset($values['rules'])) {
+            $table->setRules($values['rules']);
+        }
+        $table->save();
+
+        return $table;
     }
 
     public function delete($id)
