@@ -7,6 +7,44 @@ class TablesCest
         $I->haveHttpHeader('Content-Type', 'application/json');
     }
 
+    public function create(ApiTester $I)
+    {
+        $I->loginAdmin();
+        $table = $I->createTable([
+            'default_decision' => 'Decline',
+            'title' => 'Test title',
+            'description' => 'Test description',
+            'fields' => [
+                [
+                    "key" => ' Test INVALID key ',
+                    "title" => 'Test',
+                    "source" => "request",
+                    "type" => 'string',
+                    'Test' => 'test'
+                ]
+            ],
+            'rules' => [
+                [
+                    'than' => 'Approve',
+                    'description' => '',
+                    'conditions' => [
+                        [
+                            'field_key' => ' Test INVALID key ',
+                            'condition' => '$eq',
+                            'value' => 'okay',
+                            'matched' => true,
+                        ]
+                    ]
+                ]
+            ]
+
+        ]);
+        $I->sendGET('api/v1/admin/tables/' . $table->_id);
+        $I->assertTable();
+        $I->assertEquals('test_invalid_key', $table->fields[0]->key);
+        $I->assertEquals('test_invalid_key', $table->rules[0]->conditions[0]->field_key);
+    }
+
     public function all(ApiTester $I)
     {
         $I->loginAdmin();
@@ -19,6 +57,10 @@ class TablesCest
             $I->sendGET('api/v1/admin/tables/' . $item->_id);
             $I->assertTable();
         }
+
+        $I->logout();
+        $I->sendGET('api/v1/admin/tables');
+        $I->seeResponseCodeIs(401);
     }
 
     public function update(ApiTester $I)

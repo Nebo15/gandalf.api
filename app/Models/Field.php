@@ -12,19 +12,25 @@ namespace App\Models;
  * @package App\Models
  * @property string $key
  * @property string $title
- * @property string $alias
  * @property string $source
  * @property string $type
  * @property Preset $preset
  */
 class Field extends Base
 {
-    protected $fillable = ['key', 'alias', 'title', 'source', 'type', 'preset'];
+    protected $fillable = ['key', 'title', 'source', 'type'];
 
-    protected $visible = ['key', 'alias', 'title', 'source', 'type', 'preset'];
+    protected $visible = ['key', 'title', 'source', 'type', 'preset'];
 
     public function preset()
     {
         return $this->embedsOne('App\Models\Preset');
+    }
+
+    # mutators
+
+    public function setKeyAttribute($value)
+    {
+        $this->attributes['key'] = strtolower(str_replace(' ', '_', trim($value)));
     }
 }

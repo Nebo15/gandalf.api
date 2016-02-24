@@ -16,16 +16,25 @@ namespace App\Models;
  * @property Rule[] $rules
  * @property Field[] $fields
  * @method static DecisionTable findById($id)
+ * @method static DecisionTable create(array $attributes = [])
  * @method DecisionTable save(array $options = [])
  * @method static \Illuminate\Pagination\LengthAwarePaginator paginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null)
  */
 class DecisionTable extends Base
 {
-    protected $visible = ['_id', 'title', 'description', 'fields', 'rules', 'default_decision'];
+    protected $visible = ['_id', 'title', 'description', 'default_decision', 'rules', 'fields'];
 
-    protected $fillable = ['title', 'description', 'default_decision', 'rules', 'fields'];
+    protected $fillable = ['title', 'description', 'default_decision'];
 
     protected $perPage = 20;
+
+    protected function getArrayableRelations()
+    {
+        return [
+            'fields' => $this->fields,
+            'rules' => $this->rules
+        ];
+    }
 
     public function rules()
     {
@@ -35,6 +44,28 @@ class DecisionTable extends Base
     public function fields()
     {
         return $this->embedsMany('App\Models\Field');
+    }
+
+    public function addRules($rules)
+    {
+        foreach ($rules as $rule) {
+            $ruleModel = new Rule($rule);
+            if (isset($rule['conditions'])) {
+                $ruleModel->addConditions($rule['conditions']);
+            }
+            $this->rules()->associate($ruleModel);
+        }
+
+        return $this;
+    }
+
+    public function addFields($fields)
+    {
+        foreach ($fields as $field) {
+            $this->fields()->associate(new Field($field));
+        }
+
+        return $this;
     }
 
     public function toListArray()

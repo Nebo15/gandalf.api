@@ -20,12 +20,21 @@ class DecisionRepository
 
     public function get($id)
     {
-        return DecisionTable::findById($id)->toArray();
+        return DecisionTable::findById($id);
     }
 
     public function create($values)
     {
-        return DecisionTable::create($values)->toArray();
+        $table = new DecisionTable($values);
+        if (isset($values['fields'])) {
+            $table->addFields($values['fields']);
+        }
+        if (isset($values['rules'])) {
+            $table->addRules($values['rules']);
+        }
+        $table->save();
+
+        return $table;
     }
 
     public function cloneModel($id)
@@ -33,12 +42,12 @@ class DecisionRepository
         $values = DecisionTable::findById($id)->getAttributes();
         unset($values[DecisionTable::PRIMARY_KEY]);
 
-        return DecisionTable::create($values)->toArray();
+        return $this->create($values);
     }
 
     public function update($id, $values)
     {
-        return DecisionTable::findById($id)->fill($values)->save()->toArray();
+        return DecisionTable::findById($id)->fill($values)->save();
     }
 
     public function delete($id)
@@ -65,7 +74,7 @@ class DecisionRepository
 
     public function historyItem($id)
     {
-        return DecisionHistory::findById($id)->toArray();
+        return DecisionHistory::findById($id);
     }
 
     public function consumerHistory($size = null)

@@ -15,11 +15,11 @@ class AuthTokenConsumer
 {
     public function handle(Request $request, Closure $next)
     {
-        $auth = $request->header('authorization');
-        if (!$auth or false === strpos($auth, ':')) {
+        $app = $request->getUser();
+        $token = $request->getPassword();
+        if (!$app or !$token) {
             throw new AuthorizationException;
         }
-        list($app, $token) = array_map('trim', explode(':', $auth));
 
         $tokens = config('tokens');
         foreach ($tokens as $role => $credentials) {

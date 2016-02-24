@@ -22,9 +22,9 @@ class ApiTester extends \Codeception\Actor
 
     use _generated\ApiTesterActions;
 
-    public function createTable()
+    public function createTable(array $data = null)
     {
-        $this->sendPOST('api/v1/admin/tables', ['table' => $this->getTableData()]);
+        $this->sendPOST('api/v1/admin/tables', ['table' => $data ?: $this->getTableData()]);
         $this->assertTable('$.data', 201);
 
         return $this->getResponseFields()->data;
@@ -58,7 +58,7 @@ class ApiTester extends \Codeception\Actor
         ], $jsonPath);
 
         $this->seeResponseMatchesJsonType([
-            'key' => 'string',
+            'key' => 'string:regex(@^[a-z_]+$@)',
             'title' => 'string',
             'source' => 'string',
             'type' => 'string',
@@ -75,6 +75,11 @@ class ApiTester extends \Codeception\Actor
             'condition' => 'string',
             'value' => 'string|boolean',
         ], "$jsonPath.rules[*].conditions[*]");
+
+        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions[*].matched");
+        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions[*]._id]");
+        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*]._id]");
+        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.fields[*]._id]");
     }
 
     public function assertTableDecisionsForAdmin($jsonPath = '$.data')
@@ -245,16 +250,16 @@ class ApiTester extends \Codeception\Actor
 
     public function loginAdmin()
     {
-        $this->haveHttpHeader('Authorization', 'admin:admin');
+        $this->amHttpAuthenticated('admin', 'admin');
     }
 
     public function loginConsumer()
     {
-        $this->haveHttpHeader('Authorization', 'consumer:consumer');
+        $this->amHttpAuthenticated('consumer', 'consumer');
     }
 
     public function logout()
     {
-        $this->haveHttpHeader('Authorization', null);
+        $this->amHttpAuthenticated(null, null);
     }
 }

@@ -54,6 +54,10 @@ class DecisionStructValidator
             }
             foreach ($item['conditions'] as $condition) {
 
+                if (!is_array($condition)) {
+                    return false;
+                }
+
                 foreach ($condition_fields as $table_field) {
                     if (!array_key_exists($table_field, $condition)) {
                         return false;
