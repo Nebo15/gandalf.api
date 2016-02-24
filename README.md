@@ -3,10 +3,10 @@
 
 ## Auth
 
-For all request you should pass Authorization header
+For all request you should pass BASIC Authorization header
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf-api.nebo15.com/api/v1/admin/tables
+$ curl -H"Authorization: Basic YXV0aDphdXRo" http://gandalf-api.nebo15.com/api/v1/admin/tables
 ```
 
 
@@ -17,7 +17,7 @@ $ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf-api.nebo15.com/api/v
 #### GET /admin/tables
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf-api.nebo15.com/api/v1/admin/tables
+$ curl -H"Authorization: Basic YXV0aDphdXRo" http://gandalf-api.nebo15.com/api/v1/admin/tables
 ```
 
 ```json
@@ -53,7 +53,7 @@ Params:
 
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" -d'{"table": DECISION_TABLE }' http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
+$ curl -H"Authorization: Basic YXV0aDphdXRo" -d'{"table": DECISION_TABLE }' http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
 ```
 
 ```json
@@ -121,7 +121,7 @@ $ curl -H"Authorization: API_KEY:API_SECRET" -d'{"table": DECISION_TABLE }' http
 #### POST /admin/tables/{id}/clone
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" -X POST http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
+$ curl -H"Authorization: Basic YXV0aDphdXRo" -X POST http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
 ```
 
 ```json
@@ -189,7 +189,7 @@ $ curl -H"Authorization: API_KEY:API_SECRET" -X POST http://gandalf-api.nebo15.c
 #### GET /admin/tables/{id}
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
+$ curl -H"Authorization: Basic YXV0aDphdXRo" http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
 ```
 
 ```json
@@ -265,7 +265,7 @@ Params:
 
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" -X PUT -d'{"table": DECISION_TABLE }' 
+$ curl -H"Authorization: Basic YXV0aDphdXRo" -X PUT -d'{"table": DECISION_TABLE }' 
 http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
 ```
 
@@ -334,7 +334,7 @@ http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
 #### Delete /admin/tables/{id}
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" -X DELETE http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
+$ curl -H"Authorization: Basic YXV0aDphdXRo" -X DELETE http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
 ```
 
 ```json
@@ -358,7 +358,7 @@ Params:
 * `page` - **integer**, page
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf-api.nebo15.com/api/v1/admin/decisions
+$ curl -H"Authorization: Basic YXV0aDphdXRo" http://gandalf-api.nebo15.com/api/v1/admin/decisions
 ```
 
 ```json
@@ -448,7 +448,7 @@ $ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf-api.nebo15.com/api/v
 #### GET admin/decisions/{id}
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf-api.nebo15.com/api/v1/admin/decisions/56c32f02a60ad689060041a9
+$ curl -H"Authorization: Basic YXV0aDphdXRo" http://gandalf-api.nebo15.com/api/v1/admin/decisions/56c32f02a60ad689060041a9
 ```
 
 ```json
@@ -545,7 +545,7 @@ Additional params:
 
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" -d'{"borrowers_phone_name": "test", "contact_person_phone_verification": "Life"}' 
+$ curl -H"Authorization: Basic YXV0aDphdXRo" -d'{"borrowers_phone_name": "test", "contact_person_phone_verification": "Life"}' 
 http://gandalf-api.nebo15.com/api/v1/tables/56c32f02a60ad689060041a9/check
 ```
 ```json
@@ -577,7 +577,7 @@ http://gandalf-api.nebo15.com/api/v1/tables/56c32f02a60ad689060041a9/check
 #### GET /decisions/{id}
 
 ```shell
-$ curl -H"Authorization: API_KEY:API_SECRET" http://gandalf-api.nebo15.com/api/v1/tables/56c32f02a60ad689060041a9/decisions
+$ curl -H"Authorization: Basic YXV0aDphdXRo" http://gandalf-api.nebo15.com/api/v1/tables/56c32f02a60ad689060041a9/decisions
 ```
 
 ```json

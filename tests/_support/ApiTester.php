@@ -243,16 +243,16 @@ class ApiTester extends \Codeception\Actor
 
     public function loginAdmin()
     {
-        $this->haveHttpHeader('Authorization', 'admin:admin');
+        $this->amHttpAuthenticated('admin', 'admin');
     }
 
     public function loginConsumer()
     {
-        $this->haveHttpHeader('Authorization', 'consumer:consumer');
+        $this->amHttpAuthenticated('consumer', 'consumer');
     }
 
     public function logout()
     {
-        $this->haveHttpHeader('Authorization', null);
+        $this->amHttpAuthenticated(null, null);
     }
 }

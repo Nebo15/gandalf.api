@@ -19,6 +19,10 @@ class TablesCest
             $I->sendGET('api/v1/admin/tables/' . $item->_id);
             $I->assertTable();
         }
+
+        $I->logout();
+        $I->sendGET('api/v1/admin/tables');
+        $I->seeResponseCodeIs(401);
     }
 
     public function update(ApiTester $I)
