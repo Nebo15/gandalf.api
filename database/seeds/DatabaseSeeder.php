@@ -79,7 +79,7 @@ class DatabaseSeeder extends Seeder
                     $value = false;
                 }
                 $conditions[] = [
-                    'field_alias' => strtolower(str_replace(' ', '_', $key)),
+                    'field_key' => strtolower(str_replace(' ', '_', $key)),
                     'condition' => '$eq',
                     'value' => $value
                 ];

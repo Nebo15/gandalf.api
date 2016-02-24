@@ -22,6 +22,11 @@ class Field extends Base
 
     protected $visible = ['key', 'title', 'source', 'type', 'preset'];
 
+    protected function getArrayableRelations()
+    {
+        return ['preset' => $this->preset];
+    }
+
     public function preset()
     {
         return $this->embedsOne('App\Models\Preset');

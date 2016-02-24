@@ -17,4 +17,6 @@ namespace App\Models;
 class Preset extends Base
 {
     protected $visible = ['condition', 'value'];
+
+    protected $fillable = ['condition', 'value'];
 }

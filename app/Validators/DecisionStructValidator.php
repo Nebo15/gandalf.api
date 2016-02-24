@@ -34,7 +34,7 @@ class DecisionStructValidator
         }, $value['fields']));
 
         $rules_fields = ['than', 'description', 'conditions'];
-        $condition_fields = ['field_alias', 'condition', 'value'];
+        $condition_fields = ['field_key', 'condition', 'value'];
         foreach ($value['rules'] as $item) {
             if (!is_array($item)) {
                 return false;
@@ -62,7 +62,7 @@ class DecisionStructValidator
                     if (!array_key_exists($table_field, $condition)) {
                         return false;
                     }
-                    if (!in_array($condition['field_alias'], $table_fields_keys)) {
+                    if (!in_array($condition['field_key'], $table_fields_keys)) {
                         return false;
                     }
                 }

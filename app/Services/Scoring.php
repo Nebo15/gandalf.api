@@ -61,8 +61,8 @@ class Scoring
                 $this->checkCondition(
                     $condition,
                     $this->prepareFieldPreset(
-                        $fields->where('alias', $condition->field_alias)->first(),
-                        $values[$condition->field_alias]
+                        $fields->where('key', $condition->field_key)->first(),
+                        $values[$condition->field_key]
                     )
                 );
 
@@ -94,12 +94,12 @@ class Scoring
 
     private function prepareFieldPreset(Field $field, $value)
     {
-        if (array_key_exists($field->alias, $this->presets)) {
-            $value = $this->presets[$field->alias];
+        if (array_key_exists($field->key, $this->presets)) {
+            $value = $this->presets[$field->key];
 
         } elseif ($preset = $field->preset and $preset->condition) {
             $value = $this->checkConditionValue($preset->condition, $preset->value, $value);
-            $this->presets[$field->alias] = $value;
+            $this->presets[$field->key] = $value;
         }
 
         return $value;
@@ -108,6 +108,9 @@ class Scoring
     private function checkConditionValue($condition, $condition_value, $field_value)
     {
         switch ($condition) {
+            case '$is_set' :
+                $matched = true;
+                break;
             case '$eq':
                 $matched = $condition_value === $field_value;
                 break;

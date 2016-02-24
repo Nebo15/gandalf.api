@@ -62,7 +62,11 @@ class DecisionTable extends Base
     public function addFields($fields)
     {
         foreach ($fields as $field) {
-            $this->fields()->associate(new Field($field));
+            $fieldModel = new Field($field);
+            if (isset($field['preset'])) {
+                $fieldModel->preset()->associate(new Preset($field['preset']));
+            }
+            $this->fields()->associate($fieldModel);
         }
 
         return $this;

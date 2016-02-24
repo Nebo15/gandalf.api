@@ -19,8 +19,12 @@ class TablesCest
                     "key" => ' Test INVALID key ',
                     "title" => 'Test',
                     "source" => "request",
-                    "type" => 'string',
-                    'Test' => 'test'
+                    "type" => 'integer',
+                    "preset" => [
+                        'condition' => '$lte',
+                        'value' => 10,
+                    ],
+                    'test' => 'INVALID'
                 ]
             ],
             'rules' => [
@@ -37,10 +41,14 @@ class TablesCest
                     ]
                 ]
             ]
-
         ]);
+
         $I->sendGET('api/v1/admin/tables/' . $table->_id);
         $I->assertTable();
+        $I->dontSeeResponseJsonMatchesJsonPath("$.data.fields[*].test");
+        $I->seeResponseContainsJson(
+
+        );
         $I->assertEquals('test_invalid_key', $table->fields[0]->key);
         $I->assertEquals('test_invalid_key', $table->rules[0]->conditions[0]->field_key);
     }

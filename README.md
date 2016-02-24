@@ -84,12 +84,12 @@ $ curl -H"Authorization: Basic YXV0aDphdXRo" -d'{"table": DECISION_TABLE }' http
                 "description": "my",
                 "conditions": [
                     {
-                        "field_alias": "borrowers_phone_name",
+                        "field_key": "borrowers_phone_name",
                         "condition": "$eq",
                         "value": "Vodaphone"
                     },
                     {
-                        "field_alias": "contact_person_phone_verification",
+                        "field_key": "contact_person_phone_verification",
                         "condition": "$eq",
                         "value": "true"
                     }
@@ -100,12 +100,12 @@ $ curl -H"Authorization: Basic YXV0aDphdXRo" -d'{"table": DECISION_TABLE }' http
                 "description": "new",
                 "conditions": [
                     {
-                        "field_alias": "borrowers_phone_name",
+                        "field_key": "borrowers_phone_name",
                         "condition": "$eq",
                         "value": "Life"
                     },
                     {
-                        "field_alias": "contact_person_phone_verification",
+                        "field_key": "contact_person_phone_verification",
                         "condition": "$eq",
                         "value": "true"
                     }
@@ -152,12 +152,12 @@ $ curl -H"Authorization: Basic YXV0aDphdXRo" -X POST http://gandalf-api.nebo15.c
                 "description": "my",
                 "conditions": [
                     {
-                        "field_alias": "borrowers_phone_name",
+                        "field_key": "borrowers_phone_name",
                         "condition": "$eq",
                         "value": "Vodaphone"
                     },
                     {
-                        "field_alias": "contact_person_phone_verification",
+                        "field_key": "contact_person_phone_verification",
                         "condition": "$eq",
                         "value": "true"
                     }
@@ -168,12 +168,12 @@ $ curl -H"Authorization: Basic YXV0aDphdXRo" -X POST http://gandalf-api.nebo15.c
                 "description": "new",
                 "conditions": [
                     {
-                        "field_alias": "borrowers_phone_name",
+                        "field_key": "borrowers_phone_name",
                         "condition": "$eq",
                         "value": "Life"
                     },
                     {
-                        "field_alias": "contact_person_phone_verification",
+                        "field_key": "contact_person_phone_verification",
                         "condition": "$eq",
                         "value": "true"
                     }
@@ -222,12 +222,12 @@ $ curl -H"Authorization: Basic YXV0aDphdXRo" http://gandalf-api.nebo15.com/api/v
                 "description": "my",
                 "conditions": [
                     {
-                        "field_alias": "borrowers_phone_name",
+                        "field_key": "borrowers_phone_name",
                         "condition": "$eq",
                         "value": "Vodaphone"
                     },
                     {
-                        "field_alias": "contact_person_phone_verification",
+                        "field_key": "contact_person_phone_verification",
                         "condition": "$eq",
                         "value": "true"
                     }
@@ -238,12 +238,12 @@ $ curl -H"Authorization: Basic YXV0aDphdXRo" http://gandalf-api.nebo15.com/api/v
                 "description": "new",
                 "conditions": [
                     {
-                        "field_alias": "borrowers_phone_name",
+                        "field_key": "borrowers_phone_name",
                         "condition": "$eq",
                         "value": "Life"
                     },
                     {
-                        "field_alias": "contact_person_phone_verification",
+                        "field_key": "contact_person_phone_verification",
                         "condition": "$eq",
                         "value": "true"
                     }
@@ -297,12 +297,12 @@ http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
                 "description": "my",
                 "conditions": [
                     {
-                        "field_alias": "borrowers_phone_name",
+                        "field_key": "borrowers_phone_name",
                         "condition": "$eq",
                         "value": "Vodaphone"
                     },
                     {
-                        "field_alias": "contact_person_phone_verification",
+                        "field_key": "contact_person_phone_verification",
                         "condition": "$eq",
                         "value": "true"
                     }
@@ -313,12 +313,12 @@ http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
                 "description": "new",
                 "conditions": [
                     {
-                        "field_alias": "borrowers_phone_name",
+                        "field_key": "borrowers_phone_name",
                         "condition": "$eq",
                         "value": "Life"
                     },
                     {
-                        "field_alias": "contact_person_phone_verification",
+                        "field_key": "contact_person_phone_verification",
                         "condition": "$eq",
                         "value": "true"
                     }
@@ -393,13 +393,13 @@ $ curl -H"Authorization: Basic YXV0aDphdXRo" http://gandalf-api.nebo15.com/api/v
                     "decision": null,
                     "conditions": [
                         {
-                            "field_alias": "borrowers_phone_name",
+                            "field_key": "borrowers_phone_name",
                             "condition": "$eq",
                             "value": "Vodaphone",
                             "matched": true
                         },
                         {
-                            "field_alias": "contact_person_phone_verification",
+                            "field_key": "contact_person_phone_verification",
                             "condition": "$eq",
                             "value": "true",
                             "matched": false
@@ -412,13 +412,13 @@ $ curl -H"Authorization: Basic YXV0aDphdXRo" http://gandalf-api.nebo15.com/api/v
                     "decision": null,
                     "conditions": [
                         {
-                            "field_alias": "borrowers_phone_name",
+                            "field_key": "borrowers_phone_name",
                             "condition": "$eq",
                             "value": "Life",
                             "matched": false
                         },
                         {
-                            "field_alias": "contact_person_phone_verification",
+                            "field_key": "contact_person_phone_verification",
                             "condition": "$eq",
                             "value": "true",
                             "matched": false
@@ -482,13 +482,13 @@ $ curl -H"Authorization: Basic YXV0aDphdXRo" http://gandalf-api.nebo15.com/api/v
                 "decision": null,
                 "conditions": [
                     {
-                        "field_alias": "borrowers_phone_name",
+                        "field_key": "borrowers_phone_name",
                         "condition": "$eq",
                         "value": "Vodaphone",
                         "matched": true
                     },
                     {
-                        "field_alias": "contact_person_phone_verification",
+                        "field_key": "contact_person_phone_verification",
                         "condition": "$eq",
                         "value": "true",
                         "matched": false
@@ -501,13 +501,13 @@ $ curl -H"Authorization: Basic YXV0aDphdXRo" http://gandalf-api.nebo15.com/api/v
                 "decision": null,
                 "conditions": [
                     {
-                        "field_alias": "borrowers_phone_name",
+                        "field_key": "borrowers_phone_name",
                         "condition": "$eq",
                         "value": "Life",
                         "matched": false
                     },
                     {
-                        "field_alias": "contact_person_phone_verification",
+                        "field_key": "contact_person_phone_verification",
                         "condition": "$eq",
                         "value": "true",
                         "matched": false
