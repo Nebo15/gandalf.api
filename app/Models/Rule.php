@@ -32,8 +32,9 @@ class Rule extends Base
         return $this->embedsMany('App\Models\Condition');
     }
 
-    public function addConditions($conditions)
+    public function setConditions($conditions)
     {
+        $this->conditions()->delete();
         foreach ($conditions as $condition) {
             $this->conditions()->associate(new Condition($condition));
         }

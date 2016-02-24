@@ -74,9 +74,55 @@ class TablesCest
         $id = $I->getResponseFields()->data[0]->_id;
         $data = $I->getTableData();
         $data['title'] = 'Updated title';
+        $data['description'] = 'Updated description';
+        $data['fields'] = [
+            [
+                "key" => 'test_key',
+                "title" => 'Test key',
+                "source" => "request",
+                "type" => 'string',
+            ]
+        ];
+        $data['rules'] = [
+            [
+                'than' => 'Approve',
+                'description' => 'New rule',
+                'conditions' => [
+                    [
+                        'field_key' => 'test_key',
+                        'condition' => '$eq',
+                        'value' => 'test'
+                    ]
+                ]
+            ]
+        ];
         $I->sendPUT('api/v1/admin/tables/' . $id, ['table' => $data]);
         $I->assertTable();
-        $I->assertResponseDataFields(['title' => $data['title']]);
+        $I->assertResponseDataFields([
+            'title' => $data['title'],
+            'description' => $data['description'],
+            'fields' => [
+                [
+                    "key" => 'test_key',
+                    "title" => 'Test key',
+                    "source" => "request",
+                    "type" => 'string',
+                ]
+            ],
+            'rules' => [
+                [
+                    'than' => 'Approve',
+                    'description' => 'New rule',
+                    'conditions' => [
+                        [
+                            'field_key' => 'test_key',
+                            'condition' => '$eq',
+                            'value' => 'test'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
     }
 
     public function cloning(ApiTester $I)

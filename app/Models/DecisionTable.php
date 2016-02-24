@@ -46,12 +46,13 @@ class DecisionTable extends Base
         return $this->embedsMany('App\Models\Field');
     }
 
-    public function addRules($rules)
+    public function setRules($rules)
     {
+        $this->rules()->delete();
         foreach ($rules as $rule) {
             $ruleModel = new Rule($rule);
             if (isset($rule['conditions'])) {
-                $ruleModel->addConditions($rule['conditions']);
+                $ruleModel->setConditions($rule['conditions']);
             }
             $this->rules()->associate($ruleModel);
         }
@@ -59,8 +60,9 @@ class DecisionTable extends Base
         return $this;
     }
 
-    public function addFields($fields)
+    public function setFields($fields)
     {
+        $this->fields()->delete();
         foreach ($fields as $field) {
             $this->fields()->associate(new Field($field));
         }
