@@ -34,7 +34,7 @@ class DecisionsController extends Controller
 
     public function get($id)
     {
-        return $this->response->json($this->decisionRepository->get($id));
+        return $this->response->json($this->decisionRepository->get($id)->toArray());
     }
 
     public function create(Request $request)
@@ -42,7 +42,7 @@ class DecisionsController extends Controller
         $this->validate($request, ['table' => 'required|decisionStruct']);
 
         return $this->response->json(
-            $this->decisionRepository->create($request->input('table')),
+            $this->decisionRepository->create($request->input('table'))->toArray(),
             Response::HTTP_CREATED
         );
     }
@@ -50,7 +50,7 @@ class DecisionsController extends Controller
     public function cloneModel($id)
     {
         return $this->response->json(
-            $this->decisionRepository->cloneModel($id)
+            $this->decisionRepository->cloneModel($id)->toArray()
         );
     }
 
@@ -59,7 +59,7 @@ class DecisionsController extends Controller
         $this->validate($request, ['table' => 'required|decisionStruct']);
 
         return $this->response->json(
-            $this->decisionRepository->update($id, $request->input('table'))
+            $this->decisionRepository->update($id, $request->input('table'))->toArray()
         );
     }
 
@@ -79,6 +79,6 @@ class DecisionsController extends Controller
 
     public function historyItem($id)
     {
-        return $this->response->json($this->decisionRepository->historyItem($id));
+        return $this->response->json($this->decisionRepository->historyItem($id)->toArray());
     }
 }

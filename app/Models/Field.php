@@ -17,5 +17,14 @@ namespace App\Models;
  */
 class Field extends Base
 {
+    protected $visible = ['key', 'title', 'source', 'type'];
 
+    protected $fillable = ['key', 'title', 'source', 'type'];
+
+    # mutators
+
+    public function setKeyAttribute($value)
+    {
+        $this->attributes['key'] = strtolower(str_replace(' ', '_', trim($value)));
+    }
 }

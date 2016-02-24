@@ -84,16 +84,16 @@ class Scoring
                 $matched = $condition->value !== $value;
                 break;
             case '$gt':
-                $matched = $condition->value > $value;
+                $matched = $value > $condition->value;
                 break;
             case '$gte':
-                $matched = $condition->value >= $value;
+                $matched = $value >= $condition->value;
                 break;
             case '$lt':
-                $matched = $condition->value < $value;
+                $matched = $value < $condition->value;
                 break;
             case '$lte':
-                $matched = $condition->value <= $value;
+                $matched = $value <= $condition->value;
                 break;
             case '$in':
                 $matched = in_array($value, array_map('trim', explode(',', $condition->value)));

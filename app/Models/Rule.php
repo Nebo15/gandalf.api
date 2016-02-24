@@ -18,10 +18,26 @@ namespace App\Models;
  */
 class Rule extends Base
 {
-    protected $visible = ['decision', 'description'];
+    protected $visible = ['decision', 'description', 'than', 'conditions'];
+
+    protected $fillable = ['decision', 'description', 'than'];
+
+    protected function getArrayableRelations()
+    {
+        return ['conditions' => $this->conditions];
+    }
 
     public function conditions()
     {
         return $this->embedsMany('App\Models\Condition');
+    }
+
+    public function addConditions($conditions)
+    {
+        foreach ($conditions as $condition) {
+            $this->conditions()->associate(new Condition($condition));
+        }
+
+        return $this;
     }
 }

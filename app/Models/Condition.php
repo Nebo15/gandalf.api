@@ -18,4 +18,11 @@ namespace App\Models;
 class Condition extends Base
 {
     protected $visible = ['field_key', 'condition', 'value'];
+
+    protected $fillable = ['field_key', 'condition', 'value'];
+
+    public function setFieldKeyAttribute($value)
+    {
+        $this->attributes['field_key'] = strtolower(str_replace(' ', '_', trim($value)));
+    }
 }
