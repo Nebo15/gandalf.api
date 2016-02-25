@@ -208,6 +208,56 @@ class TablesCest
         ]);
     }
 
+    public function ruleIn(ApiTester $I)
+    {
+        $I->loginAdmin();
+        $table = $I->createTable([
+            'title' => 'Test title',
+            'description' => 'Test description',
+            'default_decision' => 'Decline',
+            'fields' => [
+                [
+                    "key" => 'test',
+                    "title" => 'Test',
+                    "source" => "request",
+                    "type" => 'string'
+                ],
+                [
+                    "key" => 'test',
+                    "title" => 'Preset',
+                    "source" => "request",
+                    "type" => 'string',
+                    "preset" => [
+                        'condition' => '$nin',
+                        'value' => "1, 3, 'wow,comma'",
+                    ],
+                ]
+            ],
+            'rules' => [
+                [
+                    'than' => 'Approve',
+                    'title' => '',
+                    'description' => '',
+                    'conditions' => [
+                        [
+                            'field_key' => 'test',
+                            'condition' => '$in',
+                            'value' => "1, 3, 'wow,comma'",
+                        ],
+                        [
+                            'field_key' => 'test',
+                            'condition' => '$eq',
+                            'value' => false,
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+        $decision = $I->checkDecision($table->_id, ['test' => 'wow,comma']);
+        print_r($decision);
+        die();
+    }
+
     public function all(ApiTester $I)
     {
         $I->loginAdmin();

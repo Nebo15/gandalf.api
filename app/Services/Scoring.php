@@ -107,6 +107,7 @@ class Scoring
             $value = $this->presets[$field->key];
 
         } elseif ($preset = $field->preset and $preset->condition) {
+            echo 'preset';die();
             $value = $this->checkConditionValue($preset->condition, $preset->value, $value);
             $this->presets[$field->key] = $value;
         }
@@ -139,16 +140,24 @@ class Scoring
                 $matched = $field_value <= $condition_value;
                 break;
             case '$in':
-                $matched = in_array($field_value, array_map('trim', explode(',', $condition_value)));
+                $matched = in_array($field_value, $this->explodeValue($condition_value));
                 break;
             case '$nin':
-                $matched = !in_array($field_value, array_map('trim', explode(',', $condition_value)));
+                print_r($this->explodeValue($condition_value));die();
+                $matched = !in_array($field_value, $this->explodeValue($condition_value));
                 break;
             default:
                 throw new \Exception("Undefined condition rule '$condition'");
         }
 
         return $matched;
+    }
+
+    private function explodeValue($value)
+    {
+        preg_match_all("/'[^']+'|[^, ]+/", $value, $output);
+
+        return array_map('trim', $output[0]);
     }
 
     private function createValidationRules(DecisionTable $decision)
