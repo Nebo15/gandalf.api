@@ -173,6 +173,14 @@ class TablesCest
         $I->sendPOST("api/v1/tables/{$table->_id}/decisions", [' ISSET ' => 8]);
         $I->seeResponseCodeIs(422);
 
+        # invalid request type
+        $I->sendPOST("api/v1/tables/{$table->_id}/decisions", ['is_set' => 'invalid_type', 'second' => 'test']);
+        $I->seeResponseCodeIs(422);
+
+        # invalid request type
+        $I->sendPOST("api/v1/tables/{$table->_id}/decisions", ['is_set' => 200, 'second' => false]);
+        $I->seeResponseCodeIs(422);
+
         $I->loginConsumer();
         $decision = $I->checkDecision($table->_id, ['is_set' => 1000, 'second' => 'test']);
 
