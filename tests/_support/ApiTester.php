@@ -119,6 +119,10 @@ class ApiTester extends \Codeception\Actor
             'value' => 'string|boolean',
             'matched' => 'boolean',
         ], "$jsonPath.rules[*].conditions[*]");
+
+        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions[*]._id]");
+        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*]._id]");
+        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.fields[*]._id]");
     }
 
     public function assertTableDecisionsForConsumer($jsonPath = '$.data')

@@ -35,7 +35,7 @@ class TablesCest
                         [
                             'field_key' => ' Test INVALID key ',
                             'condition' => '$eq',
-                            'value' => 'okay',
+                            'value' => true,
                             'matched' => true,
                         ]
                     ]
@@ -45,12 +45,55 @@ class TablesCest
 
         $I->sendGET('api/v1/admin/tables/' . $table->_id);
         $I->assertTable();
-        $I->dontSeeResponseJsonMatchesJsonPath("$.data.fields[*].test");
-        $I->seeResponseContainsJson(
+        $I->assertResponseDataFields([
+            'fields' => [[
+                "preset" => [
+                    'condition' => '$lte',
+                    'value' => 10,
+                ],
+            ]]
+        ]);
 
-        );
+        $I->dontSeeResponseJsonMatchesJsonPath("$.data.fields[*].test");
         $I->assertEquals('test_invalid_key', $table->fields[0]->key);
         $I->assertEquals('test_invalid_key', $table->rules[0]->conditions[0]->field_key);
+
+        # assert preset
+        $decision = $I->checkDecision($table->_id, ['test_invalid_key' => 30]);
+        $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
+        $I->assertResponseDataFields([
+            'final_decision' => 'Decline',
+            'fields' => [[
+                "preset" => [
+                    'condition' => '$lte',
+                    'value' => 10,
+                ],
+            ]],
+            'rules' => [[
+                'conditions' => [[
+                    'field_key' => 'test_invalid_key',
+                    'matched' => false
+                ]]
+            ]]
+        ]);
+
+        $decision = $I->checkDecision($table->_id, ['test_invalid_key' => 8]);
+        $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
+        $I->assertResponseDataFields([
+            'final_decision' => 'Approve',
+            'fields' => [[
+                "preset" => [
+                    'condition' => '$lte',
+                    'value' => 10,
+                ],
+            ]],
+            'rules' => [[
+                'conditions' => [[
+                    'field_key' => 'test_invalid_key',
+                    'matched' => true
+                ]]
+            ]]
+        ]);
     }
 
     public function all(ApiTester $I)

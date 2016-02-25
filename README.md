@@ -47,13 +47,18 @@ $ curl -H"Authorization: Basic YXV0aDphdXRo" http://gandalf-api.nebo15.com/api/v
 #### POST /admin/tables
 
 Create decision table.
-Params:
 
- * `table` - full decision table with title, description, default_decision, fields, rules, conditions. 
+Params:
+ * `table` - full decision table with title, description, default_decision, fields, rules, conditions.
+  
+It is possible to create a preset for some request **param**, that will be prepared for conditions.
+For example, if you create a preset for field **Borrowers Salary** with condition: `$gte` and value `1000`,
+for rules conditions you will receive result of preset checking - `true` or `false`
 
 
 ```shell
-$ curl -H"Authorization: Basic YXV0aDphdXRo" -d'{"table": DECISION_TABLE }' http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
+$ curl -H"Authorization: Basic YXV0aDphdXRo" -d'{"table": DECISION_TABLE }' 
+http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
 ```
 
 ```json
@@ -66,10 +71,14 @@ $ curl -H"Authorization: Basic YXV0aDphdXRo" -d'{"table": DECISION_TABLE }' http
         "default_decision": "approve",
         "fields": [
             {
-                "key": "borrowers_phone_name",
-                "title": "Borrowers Phone Name",
+                "key": "salary",
+                "title": "Borrowers Salary",
                 "source": "request",
-                "type": "string"
+                "type": "string",
+                "preset": {
+                    "condition" => "$gte",
+                    "value" => 1000
+                }
             },
             {
                 "key": "contact_person_phone_verification",
@@ -84,9 +93,9 @@ $ curl -H"Authorization: Basic YXV0aDphdXRo" -d'{"table": DECISION_TABLE }' http
                 "description": "my",
                 "conditions": [
                     {
-                        "field_key": "borrowers_phone_name",
+                        "field_key": "salary",
                         "condition": "$eq",
-                        "value": "Vodaphone"
+                        "value": "true"
                     },
                     {
                         "field_key": "contact_person_phone_verification",

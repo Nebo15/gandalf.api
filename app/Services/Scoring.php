@@ -69,7 +69,9 @@ class Scoring
                 if (!$condition->matched) {
                     $conditions_matched = false;
                 }
-                $scoring_rule['conditions'][] = $condition->getAttributes();
+                $condition = $condition->getAttributes();
+                unset($condition[Condition::PRIMARY_KEY]);
+                $scoring_rule['conditions'][] = $condition;
             }
             if (!$final_decision and $conditions_matched) {
                 $final_decision = $rule->than;
@@ -108,7 +110,7 @@ class Scoring
     private function checkConditionValue($condition, $condition_value, $field_value)
     {
         switch ($condition) {
-            case '$is_set' :
+            case '$is_set':
                 $matched = true;
                 break;
             case '$eq':
