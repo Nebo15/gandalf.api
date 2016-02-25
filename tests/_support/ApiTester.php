@@ -88,6 +88,8 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseMatchesJsonType([
             '_id' => 'string',
             'table' => 'array',
+            'title' => 'string',
+            'description' => 'string',
             'default_decision' => 'string',
             'final_decision' => 'string',
             'updated_at' => 'string',
@@ -136,6 +138,8 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseMatchesJsonType([
             '_id' => 'string',
             'table' => 'array',
+            'title' => 'string',
+            'description' => 'string',
             'final_decision' => 'string',
             'request' => 'array',
             'rules' => 'array',

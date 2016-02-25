@@ -30,14 +30,26 @@ class TablesCest
             'rules' => [
                 [
                     'than' => 'Approve',
-                    'title' => '',
-                    'description' => '',
+                    'title' => 'Valid rule title',
+                    'description' => 'Valid rule description',
                     'conditions' => [
                         [
                             'field_key' => ' Test INVALID key ',
                             'condition' => '$eq',
                             'value' => true,
                             'matched' => true,
+                        ]
+                    ]
+                ],
+                [
+                    'than' => 'Decline',
+                    'title' => 'Second title',
+                    'description' => 'Second description',
+                    'conditions' => [
+                        [
+                            'field_key' => ' Test INVALID key ',
+                            'condition' => '$eq',
+                            'value' => false,
                         ]
                     ]
                 ]
@@ -89,6 +101,8 @@ class TablesCest
         $decision = $I->checkDecision($table->_id, ['test_invalid_key' => 8]);
         $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
         $I->assertResponseDataFields([
+            'title' => 'Valid rule title',
+            'description' => 'Valid rule description',
             'final_decision' => 'Approve',
             'fields' => [
                 [

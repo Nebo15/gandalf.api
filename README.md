@@ -576,15 +576,31 @@ http://gandalf-api.nebo15.com/api/v1/tables/56c32f02a60ad689060041a9/decisions
     "data": [
         {   
             "_id": "56c32f02a60ad689060041a9",
-            "final_decision": "approve",
+            "table": {
+                "_id": "56c32f02a60ad689060041a9",
+                "title": "Test title",
+                "description": "Test description"
+            },
+            "title": "First matched rule title",
+            "description": "First matched rule description",
+            "final_decision": "Approve",
+            "request": {
+                "borrowers_phone_verification": "Positive",
+                "contact_person_phone_verification": "Positive",
+                "internal_credit_history": "Positive",
+                "employment": true,
+                "property": true
+            },
             "rules": [
                 {
-                    "description": "my rule",
+                    "title": "First matched rule title",
+                    "description": "First matched rule description",
                     "decision": null
                 },
                 {
-                    "description": "another rule",
-                    "decision": "approve"
+                    "title": "another rule title",
+                    "description": "another rule description",
+                    "decision": "Approve"
                 }
             ]
         }
@@ -606,16 +622,32 @@ $ curl -H"Authorization: Basic YXV0aDphdXRo" http://gandalf-api.nebo15.com/api/v
         "code": 200
     },
     "data": {   
-        "_id": "56c32f02a60ad689060041a9",
-        "final_decision": "approve",
+        "_id": "56cf1827a60ad63e1000564e",
+        "table": {
+            "_id": "56c32f02a60ad689060041a9",
+            "title": "Test title",
+            "description": "Test description"
+        },
+        "title": "First matched rule title",
+        "description": "First matched rule description",
+        "final_decision": "Approve",
+        "request": {
+            "borrowers_phone_verification": "Positive",
+            "contact_person_phone_verification": "Positive",
+            "internal_credit_history": "Positive",
+            "employment": true,
+            "property": true
+        },
         "rules": [
             {
-                "description": "my rule",
+                "title": "First matched rule title",
+                "description": "First matched rule description",
                 "decision": null
             },
             {
-                "description": "another rule",
-                "decision": "approve"
+                "title": "another rule title",
+                "description": "another rule description",
+                "decision": "Approve"
             }
         ]
     }

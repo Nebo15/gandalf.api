@@ -42,6 +42,8 @@ class Scoring
                 'title' => $decision->title,
                 'description' => $decision->description,
             ],
+            'title' => '',
+            'description' => '',
             'default_decision' => $decision->default_decision,
             'fields' => $fields->toArray(),
             'rules' => [],
@@ -78,6 +80,8 @@ class Scoring
             }
             if (!$final_decision and $conditions_matched) {
                 $final_decision = $rule->than;
+                $scoring_data['title'] = $rule->title;
+                $scoring_data['description'] = $rule->description;
             }
 
             $scoring_rule['decision'] = $conditions_matched ? $rule->than : null;
