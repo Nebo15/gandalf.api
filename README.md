@@ -51,9 +51,9 @@ Create decision table.
 Params:
  * `table` - full decision table with title, description, default_decision, fields, rules, conditions.
   
-It is possible to create a preset for some request **param**, that will be prepared for conditions.
-For example, if you create a preset for field **Borrowers Salary** with condition: `$gte` and value `1000`,
-for rules conditions you will receive result of preset checking - `true` or `false`
+It is possible to create a **preset** for some request *param*, that will be prepared for conditions.
+For example, if you create a **preset** for field *Borrowers Salary* with condition: `$gte` and value `1000`,
+for rules conditions you will receive result of **preset** checking - `true` or `false`
 
 
 ```shell
