@@ -30,6 +30,7 @@ class TablesCest
             'rules' => [
                 [
                     'than' => 'Approve',
+                    'title' => '',
                     'description' => '',
                     'conditions' => [
                         [
@@ -46,12 +47,14 @@ class TablesCest
         $I->sendGET('api/v1/admin/tables/' . $table->_id);
         $I->assertTable();
         $I->assertResponseDataFields([
-            'fields' => [[
-                "preset" => [
-                    'condition' => '$lte',
-                    'value' => 10,
-                ],
-            ]]
+            'fields' => [
+                [
+                    "preset" => [
+                        'condition' => '$lte',
+                        'value' => 10,
+                    ],
+                ]
+            ]
         ]);
 
         $I->dontSeeResponseJsonMatchesJsonPath("$.data.fields[*].test");
@@ -63,36 +66,123 @@ class TablesCest
         $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
         $I->assertResponseDataFields([
             'final_decision' => 'Decline',
-            'fields' => [[
-                "preset" => [
-                    'condition' => '$lte',
-                    'value' => 10,
-                ],
-            ]],
-            'rules' => [[
-                'conditions' => [[
-                    'field_key' => 'test_invalid_key',
-                    'matched' => false
-                ]]
-            ]]
+            'fields' => [
+                [
+                    "preset" => [
+                        'condition' => '$lte',
+                        'value' => 10,
+                    ],
+                ]
+            ],
+            'rules' => [
+                [
+                    'conditions' => [
+                        [
+                            'field_key' => 'test_invalid_key',
+                            'matched' => false
+                        ]
+                    ]
+                ]
+            ]
         ]);
 
         $decision = $I->checkDecision($table->_id, ['test_invalid_key' => 8]);
         $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
         $I->assertResponseDataFields([
             'final_decision' => 'Approve',
-            'fields' => [[
-                "preset" => [
-                    'condition' => '$lte',
-                    'value' => 10,
+            'fields' => [
+                [
+                    "preset" => [
+                        'condition' => '$lte',
+                        'value' => 10,
+                    ],
+                ]
+            ],
+            'rules' => [
+                [
+                    'conditions' => [
+                        [
+                            'field_key' => 'test_invalid_key',
+                            'matched' => true
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+    }
+
+    public function ruleIsset(ApiTester $I)
+    {
+        $I->loginAdmin();
+        $table = $I->createTable([
+            'title' => 'Test title',
+            'description' => 'Test description',
+            'default_decision' => 'Decline',
+            'fields' => [
+                [
+                    "key" => ' IS SET ',
+                    "title" => 'Test',
+                    "source" => "request",
+                    "type" => 'integer',
+                    "preset" => [
+                        'condition' => '$lte',
+                        'value' => 10,
+                    ],
                 ],
-            ]],
-            'rules' => [[
-                'conditions' => [[
-                    'field_key' => 'test_invalid_key',
-                    'matched' => true
-                ]]
-            ]]
+                [
+                    "key" => 'Second ',
+                    "title" => 'Second',
+                    "source" => "request",
+                    "type" => 'string'
+                ]
+            ],
+            'rules' => [
+                [
+                    'than' => 'Approve',
+                    'title' => '',
+                    'description' => '',
+                    'conditions' => [
+                        [
+                            'field_key' => ' IS SET ',
+                            'condition' => '$is_set',
+                            'value' => true,
+                        ],
+                        [
+                            'field_key' => 'Second ',
+                            'condition' => '$is_set',
+                            'value' => true,
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+        $I->sendPOST("api/v1/tables/{$table->_id}/decisions", [' ISSET ' => 8]);
+        $I->seeResponseCodeIs(422);
+
+        $I->loginConsumer();
+        $decision = $I->checkDecision($table->_id, ['is_set' => 1000, 'second' => 'test']);
+
+        $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
+        $I->seeResponseCodeIs(401);
+
+        $I->loginAdmin();
+        $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
+        $I->assertResponseDataFields([
+            'final_decision' => 'Approve',
+            'rules' => [
+                [
+                    'conditions' => [
+                        [
+                            'field_key' => 'is_set',
+                            'matched' => true
+                        ],
+                        [
+                            'field_key' => 'second',
+                            'matched' => true
+                        ]
+                    ]
+                ]
+            ]
         ]);
     }
 
@@ -228,13 +318,6 @@ class TablesCest
         $I->sendGET('api/v1/admin/decisions?table_id=' . $table_id_no_decisions);
         $I->seeResponseCodeIs(404);
 
-        $I->sendGET('api/v1/admin/decisions');
-        $I->assertTableDecisionsForAdmin('$.data[*]');
-        foreach ($I->getResponseFields()->data as $item) {
-            $I->sendGET('api/v1/admin/decisions/' . $item->_id);
-            $I->assertTableDecisionsForAdmin();
-        }
-
         # filter by table_id
         $I->sendGET('api/v1/admin/decisions?table_id=' . $table_id_with_decisions);
         $I->assertTableDecisionsForAdmin('$.data[*]');
@@ -251,6 +334,22 @@ class TablesCest
             'property' => false,
         ]);
         $I->assertEquals($table_data->default_decision, $decision_data->final_decision);
+
+        $I->sendGET('api/v1/admin/decisions');
+        $I->assertTableDecisionsForAdmin('$.data[*]');
+
+        $decisions = $I->getResponseFields()->data;
+        $I->assertEquals('invalid', $decisions[0]->request->borrowers_phone_verification);
+        $I->assertEquals('Positive', $decisions[1]->request->borrowers_phone_verification);
+
+        foreach ($I->getResponseFields()->data as $item) {
+            $I->sendGET('api/v1/admin/decisions/' . $item->_id);
+            $I->assertTableDecisionsForAdmin();
+        }
+
+        $I->loginConsumer();
+        $I->sendGET('api/v1/admin/decisions');
+        $I->seeResponseCodeIs(401);
     }
 
     public function invalidDecisions(ApiTester $I)
@@ -258,7 +357,7 @@ class TablesCest
         $I->loginAdmin();
         $table_id = $I->createTable()->_id;
 
-        $I->sendPOST("api/v1/tables/$table_id/check", ['internal_credit_history' => 'okay']);
+        $I->sendPOST("api/v1/tables/$table_id/decisions", ['internal_credit_history' => 'okay']);
         $I->seeResponseCodeIs(422);
         $I->seeResponseMatchesJsonType([
             'borrowers_phone_verification' => 'array',
@@ -267,7 +366,7 @@ class TablesCest
             'employment' => 'array',
         ], '$.data');
 
-        $I->sendPOST("api/v1/tables/$table_id/check", [
+        $I->sendPOST("api/v1/tables/$table_id/decisions", [
             'internal_credit_history' => 'okay',
             'borrowers_phone_verification' => 'okay',
             'contact_person_phone_verification' => 'okay',

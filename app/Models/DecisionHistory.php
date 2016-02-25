@@ -26,10 +26,8 @@ class DecisionHistory extends Base
 {
     protected $visible = [
         '_id',
-        'table_id',
-        'title',
-        'description',
         'request',
+        'table',
         'fields',
         'rules',
         'default_decision',
@@ -40,8 +38,7 @@ class DecisionHistory extends Base
 
     protected $fillable = [
         'title',
-        'table_id',
-        'description',
+        'table',
         'fields',
         'request',
         'rules',
@@ -65,14 +62,33 @@ class DecisionHistory extends Base
     {
         return [
             '_id' => $this->getId(),
-            'table_id' => $this->table_id->__toString(),
-            'title' => $this->title,
-            'description' => $this->description,
+            'table' => $this->getTableArray(),
             'final_decision' => $this->final_decision,
             'request' => $this->request,
             'rules' => $this->rules()->get()->map(function (Rule $rule) {
-                return ['description' => $rule->description, 'decision' => $rule->decision];
+                return [
+                    'title' => $rule->title,
+                    'description' => $rule->description,
+                    'decision' => $rule->decision
+                ];
             })->toArray()
         ];
+    }
+
+    public function toArray()
+    {
+        # Cause property table are
+        $data = parent::toArray();
+        $data['table'] = $this->getTableArray();
+
+        return $data;
+    }
+
+    public function getTableArray()
+    {
+        $data = $this->getAttribute('table');
+        $data['_id'] = strval($data['_id']);
+
+        return $data;
     }
 }

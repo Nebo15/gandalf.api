@@ -10,17 +10,23 @@ namespace App\Models;
 /**
  * Class Rule
  * @package App\Models
- * @property string $decision
+ * @property string $title
  * @property string $description
+ * @property string $decision
  * @property string $than
  * @property Condition[] $conditions
  *
  */
 class Rule extends Base
 {
-    protected $visible = ['decision', 'description', 'than', 'conditions'];
+    protected $visible = ['title', 'decision', 'description', 'than', 'conditions'];
 
-    protected $fillable = ['decision', 'description', 'than'];
+    protected $fillable = ['title', 'decision', 'description', 'than'];
+
+    protected $casts = [
+        'title' => 'string',
+        'description' => 'string',
+    ];
 
     protected function getArrayableRelations()
     {

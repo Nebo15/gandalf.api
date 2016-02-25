@@ -76,8 +76,8 @@ http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
                 "source": "request",
                 "type": "string",
                 "preset": {
-                    "condition" => "$gte",
-                    "value" => 1000
+                    "condition": "$gte",
+                    "value": 1000
                 }
             },
             {
@@ -90,6 +90,7 @@ http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
         "rules": [
             {
                 "than": "approve",
+                "title": "My title",
                 "description": "my",
                 "conditions": [
                     {
@@ -106,6 +107,7 @@ http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
             },
             {
                 "than": "decline",
+                "title": "My title",
                 "description": "new",
                 "conditions": [
                     {
@@ -158,6 +160,7 @@ $ curl -H"Authorization: Basic YXV0aDphdXRo" -X POST http://gandalf-api.nebo15.c
         "rules": [
             {
                 "than": "approve",
+                "title": "My title",
                 "description": "my",
                 "conditions": [
                     {
@@ -174,6 +177,7 @@ $ curl -H"Authorization: Basic YXV0aDphdXRo" -X POST http://gandalf-api.nebo15.c
             },
             {
                 "than": "decline",
+                "title": "My title",
                 "description": "new",
                 "conditions": [
                     {
@@ -228,6 +232,7 @@ $ curl -H"Authorization: Basic YXV0aDphdXRo" http://gandalf-api.nebo15.com/api/v
         "rules": [
             {
                 "than": "approve",
+                "title": "My title",
                 "description": "my",
                 "conditions": [
                     {
@@ -244,6 +249,7 @@ $ curl -H"Authorization: Basic YXV0aDphdXRo" http://gandalf-api.nebo15.com/api/v
             },
             {
                 "than": "decline",
+                "title": "My title",
                 "description": "new",
                 "conditions": [
                     {
@@ -304,6 +310,7 @@ http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
             {
                 "decision": "approve",
                 "description": "my",
+                "title": "My title",
                 "conditions": [
                     {
                         "field_key": "borrowers_phone_name",
@@ -319,6 +326,7 @@ http://gandalf-api.nebo15.com/api/v1/admin/tables/56c31536a60ad644060041af
             },
             {
                 "decision": "decline",
+                "title": "My title",
                 "description": "new",
                 "conditions": [
                     {
@@ -398,6 +406,7 @@ $ curl -H"Authorization: Basic YXV0aDphdXRo" http://gandalf-api.nebo15.com/api/v
             "rules": [
                 {
                     "than": "approve",
+                    "title": "My title",
                     "description": "my",
                     "decision": null,
                     "conditions": [
@@ -417,6 +426,7 @@ $ curl -H"Authorization: Basic YXV0aDphdXRo" http://gandalf-api.nebo15.com/api/v
                 },
                 {
                     "than": "decline",
+                    "title": "My title",
                     "description": "new",
                     "decision": null,
                     "conditions": [
@@ -487,6 +497,7 @@ $ curl -H"Authorization: Basic YXV0aDphdXRo" http://gandalf-api.nebo15.com/api/v
         "rules": [
             {
                 "than": "approve",
+                "title": "My title",
                 "description": "my",
                 "decision": null,
                 "conditions": [
@@ -536,9 +547,9 @@ $ curl -H"Authorization: Basic YXV0aDphdXRo" http://gandalf-api.nebo15.com/api/v
 
 ## Consumer API
 
-### Check
+### Create decisions from decision table
 
-#### POST /tables/{id}/check
+#### POST /tables/{id}/decisions
 
 Check params from request with decision table.
 POST params it's an associative array (dictionary) whose keys are the values of `fields.key` from decision table.
@@ -555,7 +566,7 @@ Additional params:
 
 ```shell
 $ curl -H"Authorization: Basic YXV0aDphdXRo" -d'{"borrowers_phone_name": "test", "contact_person_phone_verification": "Life"}' 
-http://gandalf-api.nebo15.com/api/v1/tables/56c32f02a60ad689060041a9/check
+http://gandalf-api.nebo15.com/api/v1/tables/56c32f02a60ad689060041a9/decisions
 ```
 ```json
 {

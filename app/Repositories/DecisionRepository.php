@@ -64,18 +64,18 @@ class DecisionRepository
     public function history($size = null, $table_id = null)
     {
         if ($table_id) {
-            $query = DecisionHistory::where('table_id', new \MongoId($table_id));
+            $query = DecisionHistory::where('table._id', new \MongoId($table_id));
             if ($query->count() <= 0) {
                 $e = new ModelNotFoundException;
                 $e->setModel(DecisionTable::class);
                 throw $e;
             }
-            $paginator = $query->paginate(intval($size));
+            $query = $query->orderBy(DecisionHistory::CREATED_AT, 'DESC');
         } else {
-            $paginator = DecisionHistory::paginate(intval($size));
+            $query = DecisionHistory::orderBy(DecisionHistory::CREATED_AT, 'DESC');
         }
 
-        return $paginator;
+        return $query->paginate(intval($size));
     }
 
     public function historyItem($id)
@@ -85,7 +85,7 @@ class DecisionRepository
 
     public function consumerHistory($size = null)
     {
-        return DecisionHistory::paginate(intval($size));
+        return DecisionHistory::orderBy(DecisionHistory::CREATED_AT, 'DESC')->paginate(intval($size));
     }
 
     public function consumerHistoryItem($id)

@@ -37,9 +37,11 @@ class Scoring
 
         # crooked nail. Maybe you should write your own ODM?
         $scoring_data = [
-            'table_id' => new \MongoId($decision->getId()),
-            'title' => $decision->title,
-            'description' => $decision->description,
+            'table' => [
+                '_id' => new \MongoId($decision->getId()),
+                'title' => $decision->title,
+                'description' => $decision->description,
+            ],
             'default_decision' => $decision->default_decision,
             'fields' => $fields->toArray(),
             'rules' => [],
@@ -52,6 +54,7 @@ class Scoring
         foreach ($decision->rules()->get() as $rule) {
             $scoring_rule = [
                 'than' => $rule->than,
+                'title' => $rule->title,
                 'description' => $rule->description,
                 'conditions' => []
             ];
