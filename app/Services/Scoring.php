@@ -13,6 +13,7 @@ use App\Models\DecisionTable;
 use App\Models\DecisionHistory;
 use App\Repositories\DecisionRepository;
 use Illuminate\Contracts\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Scoring
 {
@@ -51,6 +52,7 @@ class Scoring
             'webhook' => isset($values['webhook']) ? $values['webhook'] : null
         ];
         $final_decision = null;
+        $fieldsCollection = $fields->get();
 
         /** @var \App\Models\Rule $rule */
         foreach ($decision->rules()->get() as $rule) {
@@ -61,15 +63,19 @@ class Scoring
                 'conditions' => []
             ];
             $conditions_matched = true;
+            $fieldIndex = 0;
             foreach ($rule->conditions as $condition) {
 
-                $this->checkCondition(
-                    $condition,
-                    $this->prepareFieldPreset(
-                        $fields->where('key', $condition->field_key)->first(),
-                        $values[$condition->field_key]
-                    )
-                );
+                /** @var Field $field */
+                $field = $fieldsCollection->offsetGet($fieldIndex);
+                if ($field->key != $condition->field_key) {
+                    throw new HttpException(
+                        500,
+                        "Field key '{$field->key}' and condition key '{$condition->field_key}' does not matched"
+                    );
+                }
+                $field->index = $fieldIndex;
+                $this->checkCondition($condition, $this->prepareFieldPreset($field, $values[$condition->field_key]));
 
                 if (!$condition->matched) {
                     $conditions_matched = false;
@@ -77,6 +83,8 @@ class Scoring
                 $condition = $condition->getAttributes();
                 unset($condition[Condition::PRIMARY_KEY]);
                 $scoring_rule['conditions'][] = $condition;
+
+                $fieldIndex++;
             }
             if (!$final_decision and $conditions_matched) {
                 $final_decision = $rule->than;
@@ -103,12 +111,12 @@ class Scoring
 
     private function prepareFieldPreset(Field $field, $value)
     {
-        if (array_key_exists($field->key, $this->presets)) {
-            $value = $this->presets[$field->key];
+        if (array_key_exists($field->index, $this->presets)) {
+            $value = $this->presets[$field->index];
 
         } elseif ($preset = $field->preset and $preset->condition) {
             $value = $this->checkConditionValue($preset->condition, $preset->value, $value);
-            $this->presets[$field->key] = $value;
+            $this->presets[$field->index] = $value;
         }
 
         return $value;
@@ -139,16 +147,25 @@ class Scoring
                 $matched = $field_value <= $condition_value;
                 break;
             case '$in':
-                $matched = in_array($field_value, array_map('trim', explode(',', $condition_value)));
+                $matched = in_array($field_value, $this->explodeValue($condition_value));
                 break;
             case '$nin':
-                $matched = !in_array($field_value, array_map('trim', explode(',', $condition_value)));
+                $matched = !in_array($field_value, $this->explodeValue($condition_value));
                 break;
             default:
                 throw new \Exception("Undefined condition rule '$condition'");
         }
 
         return $matched;
+    }
+
+    private function explodeValue($value)
+    {
+        preg_match_all("/'[^']+'|[^, ]+/", $value, $output);
+
+        return array_map(function ($value) {
+            return trim($value, "'");
+        }, $output[0]);
     }
 
     private function createValidationRules(DecisionTable $decision)

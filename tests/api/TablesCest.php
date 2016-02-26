@@ -208,6 +208,100 @@ class TablesCest
         ]);
     }
 
+    public function ruleIn(ApiTester $I)
+    {
+        $I->loginAdmin();
+        $table = $I->createTable([
+            'title' => 'Test title',
+            'description' => 'Test description',
+            'default_decision' => 'Decline',
+            'fields' => [
+                [
+                    "key" => 'test',
+                    "title" => 'Test',
+                    "source" => "request",
+                    "type" => 'string'
+                ],
+                [
+                    "key" => 'test',
+                    "title" => 'Preset wow',
+                    "source" => "request",
+                    "type" => 'string',
+                    "preset" => [
+                        'condition' => '$nin',
+                        'value' => "1, 3, 'another,comma'",
+                    ],
+                ],
+                [
+                    "key" => 'test',
+                    "title" => 'Preset third',
+                    "source" => "request",
+                    "type" => 'string',
+                    "preset" => [
+                        'condition' => '$in',
+                        'value' => "1, 3, 'third,comma'",
+                    ],
+                ],
+            ],
+            'rules' => [
+                [
+                    'than' => 'Approve',
+                    'title' => '',
+                    'description' => '',
+                    'conditions' => [
+                        [
+                            'field_key' => 'test',
+                            'condition' => '$in',
+                            'value' => "1, 3, 'wow,comma'",
+                        ],
+                        [
+                            'field_key' => 'test',
+                            'condition' => '$eq',
+                            'value' => true,
+                        ],
+                        [
+                            'field_key' => 'test',
+                            'condition' => '$eq',
+                            'value' => true,
+                        ],
+                    ]
+                ]
+            ]
+        ]);
+        $data = [
+            'wow,comma' => [true, true, false],
+            'another,comma' => [false, false, false],
+            'third,comma' => [false, true, true],
+        ];
+        foreach ($data as $value => $results) {
+            $id = $I->checkDecision($table->_id, ['test' => $value])->_id;
+            $I->sendGET('api/v1/admin/decisions/' . $id);
+            $I->assertResponseDataFields(
+                [
+                    'rules' => [
+                        'conditions' => [
+                            [
+                                'field_key' => 'test',
+                                'value' => "1, 3, 'wow,comma'",
+                                'matched' => $results[0]
+                            ],
+                            [
+                                'field_key' => 'test',
+                                'condition' => '$eq',
+                                'matched' => $results[1],
+                            ],
+                            [
+                                'field_key' => 'test',
+                                'condition' => '$eq',
+                                'matched' => $results[2],
+                            ],
+                        ]
+                    ]
+                ]
+            );
+        }
+    }
+
     public function all(ApiTester $I)
     {
         $I->loginAdmin();
