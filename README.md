@@ -1,4 +1,8 @@
 # Gandalf
+
+[![Deployment status from DeployBot](https://nebo15.deploybot.com/badge/56046448049120/64889.svg)](http://deploybot.com)
+[![Build Status](https://travis-ci.com/Nebo15/gandalf.api.svg?token=xgZbSs9Y2bjswEUEXkUb&branch=master)](https://travis-ci.com/Nebo15/gandalf.api)
+
 ### Fraud shall not pass
 
 ## Auth
