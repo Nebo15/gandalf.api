@@ -156,7 +156,7 @@ class Scoring
         $rules = ['webhook' => 'sometimes|required|url'];
         if ($fields = $decision->fields) {
             foreach ($fields as $item) {
-                $rules[$item->key] = 'required' . $this->getValidationRuleByType($item->type);
+                $rules[$item->key] = 'required|' . $this->getValidationRuleByType($item->type);
             }
         }
 
@@ -165,6 +165,22 @@ class Scoring
 
     private function getValidationRuleByType($type)
     {
-        return $type == 'bool' ? '|boolean' : '';
+        switch (strtolower($type)) {
+            case 'number':
+            case 'integer':
+            case 'numeric':
+                $rule = 'numeric';
+                break;
+
+            case 'bool':
+            case 'boolean':
+                $rule = 'boolean';
+                break;
+
+            default:
+                $rule = 'string';
+        }
+
+        return $rule;
     }
 }
