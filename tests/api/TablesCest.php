@@ -19,7 +19,7 @@ class TablesCest
                     "key" => ' Test INVALID key ',
                     "title" => 'Test',
                     "source" => "request",
-                    "type" => 'integer',
+                    "type" => 'numeric',
                     "preset" => [
                         'condition' => '$lte',
                         'value' => 10,
@@ -137,7 +137,7 @@ class TablesCest
                     "key" => ' IS SET ',
                     "title" => 'Test',
                     "source" => "request",
-                    "type" => 'integer',
+                    "type" => 'numeric',
                     "preset" => [
                         'condition' => '$lte',
                         'value' => 10,

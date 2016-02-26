@@ -8,7 +8,9 @@ class ValidationServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        Validator::extend('decisionStruct', 'App\Validators\DecisionStructValidator@decision');
+        Validator::extend('conditionType', 'App\Validators\DecisionStructValidator@conditionType');
+        Validator::extend('conditionsCount', 'App\Validators\DecisionStructValidator@conditionsCount');
+        Validator::extend('conditionsField', 'App\Validators\DecisionStructValidator@conditionsField');
     }
 
     public function register()

@@ -7,68 +7,44 @@
 
 namespace App\Validators;
 
+use Illuminate\Validation\Validator;
+
 class DecisionStructValidator
 {
-    public function decision($attribute, $value)
+    public function conditionType($attribute, $value, $parameters, Validator $validator)
     {
-        if (!is_array($value)
-            or !isset($value['default_decision'])
-            or !isset($value['fields'])
-            or !isset($value['rules'])
-            or !is_array($value['rules'])
+        echo gettype($value);
+        print_r($validator->getData());
+        die();
+        return true;
+    }
+
+    public function conditionsCount($attribute, $value, $parameters, Validator $validator)
+    {
+        print_r('asd');
+        die();
+    }
+
+    public function conditionsField($attribute, $value, $parameters, Validator $validator)
+    {
+        $data = $validator->getData();
+
+        if (!isset($data['table']['fields'])
+            or !is_array($data['table']['fields'])
+            or count($data['table']['fields']) <= 0
         ) {
             return false;
         }
 
-        $fields = ['title', 'key', 'type', 'source'];
-        foreach ($value['fields'] as $request_field) {
-            foreach ($fields as $field) {
-                if (!array_key_exists($field, $request_field)) {
-                    return false;
-                }
+        foreach ($data['table']['fields'] as $field) {
+            if (!isset($field['key'])) {
+                return false;
+            }
+            if ($field['key'] == $value) {
+                return true;
             }
         }
 
-        $table_fields_keys = array_unique(array_map(function ($value) {
-            return $value['key'];
-        }, $value['fields']));
-
-        $rules_fields = ['than', 'description', 'conditions'];
-        $condition_fields = ['field_key', 'condition', 'value'];
-        foreach ($value['rules'] as $item) {
-            if (!is_array($item)) {
-                return false;
-            }
-
-            foreach ($rules_fields as $key) {
-                if (!array_key_exists($key, $item)) {
-                    return false;
-                }
-            }
-
-            if (!is_array($item['conditions'])) {
-                return false;
-            }
-            if (count($item['conditions']) < count($table_fields_keys)) {
-                return false;
-            }
-            foreach ($item['conditions'] as $condition) {
-
-                if (!is_array($condition)) {
-                    return false;
-                }
-
-                foreach ($condition_fields as $table_field) {
-                    if (!array_key_exists($table_field, $condition)) {
-                        return false;
-                    }
-                    if (!in_array($condition['field_key'], $table_fields_keys)) {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        return true;
+        return false;
     }
 }
