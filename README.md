@@ -99,6 +99,16 @@ You can request current decision table by calling this command from your CLI (wo
 - Analytics and Decision History - you can review all previous decisions made by your tables and to analyze what rules is triggered more often.
 - Production-tested - several large NDA-closed PSP's and online lending platforms already use Gandalf.
 
+## Story behind Gandlaf
+
+We - are production oriented team, and we work for a fintech company. Almost all project that we created need a decision engine that reduces business risks. And all solutions we can find is ether old and ugly, or very expensive. So we decided to create free open-source alternative, that will be scalable, reliable and flexible enough to cover 95% of cases.
+
+To make is suitable for Big Data we decided to build it on top of use very reliable open-source database MongoDB, that have good sharding capabilities and easy to maintain.
+
+Also we believe that vendor-lock is a bad thing, so we published all source code on a MIT license, so you are free to change it as you wish.
+
+Done by [Nebo #15](https://github.com/Nebo15).
+
 ## Step by Step Guide
 
 TODO.
