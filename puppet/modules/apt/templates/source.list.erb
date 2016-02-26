@@ -1,0 +1,11 @@
+# <%= @comment %>
+<%- if @_include['deb'] then -%>
+deb <%- if @architecture or @allow_unsigned -%>
+[<%- if @architecture %>arch=<%= @architecture %> <% end %><% if @allow_unsigned %>trusted=yes<% end -%>
+] <%- end %><%= @location %> <%= @release %> <%= @repos %>
+<%- end -%>
+<%- if @_include['src'] then -%>
+deb-src <%- if @architecture or @allow_unsigned -%>
+[<%- if @architecture %>arch=<%= @architecture %> <% end %><% if @allow_unsigned %>trusted=yes<% end -%>
+] <%- end %><%= @location %> <%= @release %> <%= @repos %>
+<%- end -%>

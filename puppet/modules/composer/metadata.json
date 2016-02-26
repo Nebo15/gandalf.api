@@ -1,0 +1,14 @@
+{
+  "name": "brainsware-composer",
+  "version": "0.2.5",
+  "author": "Brainsware",
+  "summary": "manage PHP composer installation as well as installation and update of projects using composer",
+  "license": "Apache-2.0",
+  "source": "https://github.com/Brainsware/puppet-composer",
+  "project_page": "https://github.com/Brainsware/puppet-composer",
+  "issues_url": "https://github.com/Brainsware/puppet-composer/issues",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 4.1.0 <= 5.0.0"},
+    {"name":"maestrodev-wget","version_requirement":">= 1.2.0 <= 2.0.0"}
+  ]
+}

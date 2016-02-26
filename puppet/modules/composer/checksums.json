@@ -1,0 +1,23 @@
+{
+  "CONTRIBUTING.md": "dd3f7e07456a8ae60681e53854dde3aa",
+  "Gemfile": "9ae3ba2ea6915c38b11be7329ac2da9a",
+  "Guardfile": "3ae8d9a61b870350cc1c8e0d6a9a36e7",
+  "LICENSE": "b1e01b26bacfc2232046c90a330332b3",
+  "README.md": "c7ef9d05b92dbca87afa70802085c3ed",
+  "Rakefile": "8ee667025ed2392b133b92f1ef1311cd",
+  "manifests/init.pp": "f406a915b77db0c85b10056de588e20a",
+  "manifests/install/package.pp": "86adb1104b4bd1c47b14c35e3608b442",
+  "manifests/install/wget.pp": "9d90d3c440020a6864de257c02ee9729",
+  "manifests/project.pp": "286d258776ae2af7acdb29c75febe8d6",
+  "metadata.json": "c1e138749a0537602ad55473c253c2e0",
+  "spec/acceptance/class_spec.rb": "e53effd5e3542955cf099c53fb261161",
+  "spec/acceptance/nodesets/centos-64-x64.yml": "7ad72bad9087a52f30c6f7d5600b68dd",
+  "spec/acceptance/nodesets/default.yml": "1091bb0897dc8ee94a391ab1d8e45132",
+  "spec/acceptance/nodesets/ubuntu-server-12042-x64.yml": "1091bb0897dc8ee94a391ab1d8e45132",
+  "spec/classes/composer_spec.rb": "2ce5227bbb0e13ed9db24b4ded87e0ff",
+  "spec/classes/coverage_spec.rb": "5b6dfa0dd426aca0ccfae23c0a629f0b",
+  "spec/defines/project_spec.rb": "0bf3648aa5e75d442c1a53b581b8370e",
+  "spec/spec_helper.rb": "0db89c9a486df193c0e40095422e19dc",
+  "spec/spec_helper_acceptance.rb": "8cb81aef8ff8188ee27845ca5e94873b",
+  "tests/init.pp": "033b2c47bb6b63a72d2b457a2e0411b5"
+}
