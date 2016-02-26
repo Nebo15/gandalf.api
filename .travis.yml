@@ -20,7 +20,7 @@ before_script:
   - sudo chmod 777 -Rf storage/
   - echo $PWD
   - sudo mkdir /www
-  - sudo ln -s $PWD /www/mbill.web
+  - sudo ln -s $PWD /www/gandalf.api
   - cp ./.env.example ./.env
   - bash puppet/initial/init.sh -r local
   - echo 127.0.0.1 gandalf.dev | sudo tee -a /etc/hosts
