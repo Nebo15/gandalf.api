@@ -224,14 +224,24 @@ class TablesCest
                 ],
                 [
                     "key" => 'test',
-                    "title" => 'Preset',
+                    "title" => 'Preset wow',
                     "source" => "request",
                     "type" => 'string',
                     "preset" => [
                         'condition' => '$nin',
-                        'value' => "1, 3, 'wow,comma'",
+                        'value' => "1, 3, 'another,comma'",
                     ],
-                ]
+                ],
+                [
+                    "key" => 'test',
+                    "title" => 'Preset third',
+                    "source" => "request",
+                    "type" => 'string',
+                    "preset" => [
+                        'condition' => '$in',
+                        'value' => "1, 3, 'third,comma'",
+                    ],
+                ],
             ],
             'rules' => [
                 [
@@ -247,15 +257,49 @@ class TablesCest
                         [
                             'field_key' => 'test',
                             'condition' => '$eq',
-                            'value' => false,
-                        ]
+                            'value' => true,
+                        ],
+                        [
+                            'field_key' => 'test',
+                            'condition' => '$eq',
+                            'value' => true,
+                        ],
                     ]
                 ]
             ]
         ]);
-        $decision = $I->checkDecision($table->_id, ['test' => 'wow,comma']);
-        print_r($decision);
-        die();
+        $data = [
+            'wow,comma' => [true, true, false],
+            'another,comma' => [false, false, false],
+            'third,comma' => [false, true, true],
+        ];
+        foreach ($data as $value => $results) {
+            $id = $I->checkDecision($table->_id, ['test' => $value])->_id;
+            $I->sendGET('api/v1/admin/decisions/' . $id);
+            $I->assertResponseDataFields(
+                [
+                    'rules' => [
+                        'conditions' => [
+                            [
+                                'field_key' => 'test',
+                                'value' => "1, 3, 'wow,comma'",
+                                'matched' => $results[0]
+                            ],
+                            [
+                                'field_key' => 'test',
+                                'condition' => '$eq',
+                                'matched' => $results[1],
+                            ],
+                            [
+                                'field_key' => 'test',
+                                'condition' => '$eq',
+                                'matched' => $results[2],
+                            ],
+                        ]
+                    ]
+                ]
+            );
+        }
     }
 
     public function all(ApiTester $I)

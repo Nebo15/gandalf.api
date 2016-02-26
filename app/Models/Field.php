@@ -14,6 +14,7 @@ namespace App\Models;
  * @property string $title
  * @property string $source
  * @property string $type
+ * @property integer $index - technical property
  * @property Preset $preset
  */
 class Field extends Base
