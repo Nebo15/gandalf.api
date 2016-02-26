@@ -43,6 +43,3 @@ after_failure:
   - cat /var/log/www/*.log;
   - cat /var/log/php-fpm.log;
   - cat $PWD/storage/logs/lumen.log;
-after_success:
-  - curl -X POST "https://nebo15.deploybot.com/webhook/deploy?env_id=53936&secret=03d7b861015a0ae75abe10699579547e011a20b33bf2bb70"
-  - sudo /bin/bash ./.travis/bin/p2ytest.sh
