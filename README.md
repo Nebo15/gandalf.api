@@ -11,6 +11,8 @@ It's build on top of PHP Lumen framework and MongoDB.
 
 Gandalf allows you to define multiple decigion tables and to list all decigions that was made.
 
+You can use it for anti-fraud, risk management, as part any other decigion making purposes.
+
 ### Decision Table
 
 It consist of columns that describes API request structure, rows that describe decision-making logic, and cells that represents a single validation rule.
