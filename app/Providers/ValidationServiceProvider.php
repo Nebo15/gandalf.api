@@ -1,9 +1,9 @@
 <?php
 namespace App\Providers;
 
+use Illuminate\Validation\Factory;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Factory;
 
 class ValidationServiceProvider extends ServiceProvider
 {

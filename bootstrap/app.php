@@ -53,11 +53,6 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
-$app->singleton(
-    Illuminate\Contracts\Validation\Validator::class,
-    App\Http\Services\Validator::class
-);
-
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
