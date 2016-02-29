@@ -7,22 +7,51 @@
 
 namespace App\Validators;
 
+use App\Services\ConditionsTypes;
 use Illuminate\Validation\Validator;
 
 class DecisionStructValidator
 {
+    private $conditionsTypes;
+
+    public function __construct(ConditionsTypes $conditionsTypes)
+    {
+        $this->conditionsTypes = $conditionsTypes;
+    }
+
     public function conditionType($attribute, $value, $parameters, Validator $validator)
     {
-        echo gettype($value);
-        print_r($validator->getData());
-        die();
+        $condition = $this->conditionsTypes->getCondition(
+            array_get(
+                $validator->getData(),
+                str_replace('value', 'condition', $attribute)
+            )
+        );
+
+        if ($type = $condition['input_type']) {
+            $validator = \Validator::make(
+                ['value' => $value],
+                ['value' => "required|$type"]
+            );
+            return $validator->fails() ? false : true;
+        }
+
         return true;
     }
 
     public function conditionsCount($attribute, $value, $parameters, Validator $validator)
     {
-        print_r('asd');
-        die();
+        $fields = array_get($validator->getData(), 'table.fields');
+        $unique_fields = [];
+        foreach ($fields as $field) {
+            $unique_fields[$field['key']] = $field['title'];
+        }
+        $unique_conditions = [];
+        foreach ($value as $condition) {
+            $unique_conditions[$condition['field_key']] = $condition['condition'];
+        }
+
+        return count($unique_conditions) == count($unique_fields);
     }
 
     public function conditionsField($attribute, $value, $parameters, Validator $validator)

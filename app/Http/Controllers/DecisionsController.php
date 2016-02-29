@@ -36,9 +36,9 @@ class DecisionsController extends Controller
             'table.rules.*.than' => 'required|string',
             'table.rules.*.description' => 'sometimes|string',
             'table.rules.*.conditions' => 'required|array|conditionsCount',
-//            'table.rules.*.conditions.*.field_key' => 'required|string|conditionsField',
-//            'table.rules.*.conditions.*.condition' => 'required|in:' . $conditionsTypes->getConditionsRules(),
-//            'table.rules.*.conditions.*.value' => 'required|conditionType',
+            'table.rules.*.conditions.*.field_key' => 'required|string|conditionsField',
+            'table.rules.*.conditions.*.condition' => 'required|in:' . $conditionsTypes->getConditionsRules(),
+            'table.rules.*.conditions.*.value' => 'required|conditionType',
         ];
     }
 

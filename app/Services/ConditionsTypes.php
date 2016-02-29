@@ -77,13 +77,20 @@ class ConditionsTypes
         return implode(',', array_keys($this->conditions));
     }
 
-    public function checkConditionValue($condition, $condition_value, $field_value)
+    public function checkConditionValue($condition_key, $condition_value, $field_value)
     {
-        if (!array_key_exists($condition, $this->conditions)) {
-            throw new \Exception("Undefined condition rule '$condition'");
+        $condition = $this->getCondition($condition_key);
+
+        return $condition['function']($condition_value, $field_value);
+    }
+
+    public function getCondition($condition_key)
+    {
+        if (!array_key_exists($condition_key, $this->conditions)) {
+            throw new \Exception("Undefined condition rule '$condition_key'");
         }
 
-        return $this->conditions[$condition]['function']($condition_value, $field_value);
+        return $this->conditions[$condition_key];
     }
 
     private function explodeValue($value)

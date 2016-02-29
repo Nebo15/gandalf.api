@@ -22,6 +22,7 @@ try {
 $app = new Laravel\Lumen\Application(
     realpath(__DIR__ . '/../')
 );
+unset($app->availableBindings['validator']);
 
 $app->register('Jenssegers\Mongodb\MongodbServiceProvider');
 
@@ -50,6 +51,11 @@ $app->singleton(
 $app->singleton(
     Illuminate\Contracts\Console\Kernel::class,
     App\Console\Kernel::class
+);
+
+$app->singleton(
+    Illuminate\Contracts\Validation\Validator::class,
+    App\Http\Services\Validator::class
 );
 
 /*

@@ -7,7 +7,7 @@ class TablesCest
         $I->haveHttpHeader('Content-Type', 'application/json');
     }
 
-    public function create(ApiTester $I)
+    public function createOk(ApiTester $I)
     {
         $I->loginAdmin();
         $table = $I->createTable([
@@ -123,6 +123,110 @@ class TablesCest
                 ]
             ]
         ]);
+    }
+
+    public function createInvalid(ApiTester $I)
+    {
+        $I->loginAdmin();
+        $I->sendPOST('api/v1/admin/tables', [
+            'table' => [
+                'default_decision' => 'Decline',
+                'fields' => [
+                    [
+                        "key" => '1',
+                        "title" => 'Test',
+                        "source" => "request",
+                        "type" => 'numeric',
+                    ],
+                    [
+                        "key" => '2',
+                        "title" => 'Test 2',
+                        "source" => "request",
+                        "type" => 'numeric',
+                    ],
+                    [
+                        "key" => '3',
+                        "title" => 'Test 3',
+                        "source" => "request",
+                        "type" => 'numeric',
+                    ],
+                ],
+                'rules' => [
+                    [
+                        'than' => 'Approve',
+                        'title' => 'Valid rule title',
+                        'description' => 'Valid rule description',
+                        'conditions' => [
+                            [
+                                'field_key' => '3',
+                                'condition' => '$eq',
+                                'value' => true,
+                            ],
+                            [
+                                'field_key' => '1',
+                                'condition' => '$eq',
+                                'value' => true,
+                            ],
+                            [
+                                'field_key' => '2',
+                                'condition' => '$eq',
+                                'value' => true,
+                            ],
+
+                        ]
+                    ],
+                    [
+                        'than' => 'Decline',
+                        'title' => 'Second title',
+                        'description' => 'Second description',
+                        'conditions' => [
+                            [
+                                'field_key' => '3',
+                                'condition' => '$eq',
+                                'value' => true,
+                            ],
+                            [
+                                'field_key' => '2',
+                                'condition' => '$eq',
+                                'value' => false,
+                            ],
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseContains('table.rules.1.conditions');
+
+        $I->sendPOST('api/v1/admin/tables', [
+            'table' => [
+                'default_decision' => 'Decline',
+                'fields' => [
+                    [
+                        "key" => '1',
+                        "title" => 'Test',
+                        "source" => "request",
+                        "type" => 'numeric',
+                    ]
+                ],
+                'rules' => [
+                    [
+                        'than' => 'Approve',
+                        'title' => 'Valid rule title',
+                        'description' => 'Valid rule description',
+                        'conditions' => [
+                            [
+                                'field_key' => '1',
+                                'condition' => '$lte',
+                                'value' => 'invalid',
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseContains('table.rules.0.conditions.0.value');
     }
 
     public function ruleIsset(ApiTester $I)
