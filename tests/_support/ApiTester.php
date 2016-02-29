@@ -212,7 +212,7 @@ class ApiTester extends \Codeception\Actor
         foreach ($fields as $field) {
             $type = 'string';
             if (in_array($field, ['Employment', 'Property'])) {
-                $type = 'bool';
+                $type = 'boolean';
             }
             $key = strtolower(str_replace(' ', '_', $field));
             $data['fields'][] = [
