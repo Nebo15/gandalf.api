@@ -36,7 +36,6 @@ class ConditionsTypes
                 'input_type' => 'numeric',
                 'function' => function ($condition_value, $field_value) {
                     return $field_value > $condition_value;
-                    ;
                 }
             ],
             '$gte' => [
