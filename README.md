@@ -9,9 +9,9 @@ It's build on top of PHP Lumen framework and MongoDB.
 
 ## How does it work?
 
-Gandalf allows you to define multiple decigion tables and to list all decigions that was made.
+Gandalf allows you to define multiple decision tables and to list all decisions that was made.
 
-You can use it for anti-fraud, risk management, as part any other decigion making purposes.
+You can use it for anti-fraud, risk management, as part any other decision making purposes.
 
 ### Decision Table
 
@@ -101,7 +101,7 @@ You can request current decision table by calling this command from your CLI (wo
 - Analytics and Decision History - you can review all previous decisions made by your tables and to analyze what rules is triggered more often.
 - Production-tested - several large NDA-closed PSP's and online lending platforms already use Gandalf.
 
-## Story behind Gandlaf
+## Story behind Gandalf
 
 We - are production oriented team, and we work for a fintech company. Almost all project that we created need a decision engine that reduces business risks. And all solutions we can find is ether old and ugly, or very expensive. So we decided to create free open-source alternative, that will be scalable, reliable and flexible enough to cover 95% of cases.
 
