@@ -23,13 +23,13 @@ class ConditionsTypes
             '$eq' => [
                 'input_type' => '',
                 'function' => function ($condition_value, $field_value) {
-                    return $condition_value === $field_value;
+                    return $condition_value == $field_value;
                 }
             ],
             '$ne' => [
                 'input_type' => '',
                 'function' => function ($condition_value, $field_value) {
-                    return $condition_value !== $field_value;
+                    return $condition_value != $field_value;
                 }
             ],
             '$gt' => [

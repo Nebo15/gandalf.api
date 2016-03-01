@@ -406,6 +406,129 @@ class TablesCest
         }
     }
 
+    public function ruleEqual(ApiTester $I)
+    {
+        $I->loginAdmin();
+        $table_data = [
+            'title' => 'Test',
+            'description' => 'Test',
+            'default_decision' => 'Decline',
+            'fields' => [
+                [
+                    "key" => 'boolean',
+                    "title" => 'Test',
+                    "source" => "request",
+                    "type" => 'boolean'
+                ]
+            ],
+            'rules' => [
+                [
+                    'than' => 'Approve',
+                    'title' => '',
+                    'description' => '',
+                    'conditions' => [
+                        [
+                            'field_key' => 'boolean',
+                            'condition' => '$eq',
+                            'value' => true,
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        # boolean
+        $table = $I->createTable($table_data);
+        foreach ([true, '1', 1] as $value) {
+            $I->checkDecision($table->_id, ['boolean' => $value]);
+            $I->assertResponseDataFields(['final_decision' => 'Approve']);
+        }
+        foreach ([false, '0', 0] as $value) {
+            $I->checkDecision($table->_id, ['boolean' => $value]);
+            $I->assertResponseDataFields(['final_decision' => 'Decline']);
+        }
+        foreach (['invalid', 100, null] as $value) {
+            $I->sendPOST("api/v1/tables/$table->_id/decisions", ['boolean' => $value]);
+            $I->seeResponseCodeIs(422);
+        }
+
+        # string
+        $table_data['fields'][0]['type'] = 'string';
+        $table_data['rules'][0]['conditions'][0]['value'] = 'string';
+        $table = $I->createTable($table_data);
+        foreach ([true, null, 1, ''] as $value) {
+            $I->sendPOST("api/v1/tables/$table->_id/decisions", ['boolean' => $value]);
+            $I->seeResponseCodeIs(422);
+        }
+        foreach (['invalid', '123321'] as $value) {
+            $I->checkDecision($table->_id, ['boolean' => $value]);
+            $I->assertResponseDataFields(['final_decision' => 'Decline']);
+        }
+        $I->checkDecision($table->_id, ['boolean' => 'string']);
+        $I->assertResponseDataFields(['final_decision' => 'Approve']);
+
+        # numeric
+        $table_data['fields'][0]['type'] = 'numeric';
+        $table_data['rules'][0]['conditions'][0]['value'] = 100.15;
+        $table = $I->createTable($table_data);
+        foreach ([true, null, 'invalid', '100.15i'] as $value) {
+            $I->sendPOST("api/v1/tables/$table->_id/decisions", ['boolean' => $value]);
+            $I->seeResponseCodeIs(422);
+        }
+        foreach ([100, "100"] as $value) {
+            $I->checkDecision($table->_id, ['boolean' => $value]);
+            $I->assertResponseDataFields(['final_decision' => 'Decline']);
+        }
+        foreach ([100.15, "100.15"] as $value) {
+            $I->checkDecision($table->_id, ['boolean' => $value]);
+            $I->assertResponseDataFields(['final_decision' => 'Approve']);
+        }
+    }
+
+    public function ruleNotEqual(ApiTester $I)
+    {
+        $I->loginAdmin();
+        $table = $I->createTable([
+            'title' => 'Test',
+            'description' => 'Test',
+            'default_decision' => 'Decline',
+            'fields' => [
+                [
+                    "key" => 'boolean',
+                    "title" => 'Test',
+                    "source" => "request",
+                    "type" => 'numeric'
+                ]
+            ],
+            'rules' => [
+                [
+                    'than' => 'Approve',
+                    'title' => '',
+                    'description' => '',
+                    'conditions' => [
+                        [
+                            'field_key' => 'boolean',
+                            'condition' => '$ne',
+                            'value' => 100,
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+        foreach ([true, null, 'invalid', '100.15i'] as $value) {
+            $I->sendPOST("api/v1/tables/$table->_id/decisions", ['boolean' => $value]);
+            $I->seeResponseCodeIs(422);
+        }
+        foreach ([100, "100"] as $value) {
+            $I->checkDecision($table->_id, ['boolean' => $value]);
+            $I->assertResponseDataFields(['final_decision' => 'Decline']);
+        }
+        foreach ([100.15, "100.15"] as $value) {
+            $I->checkDecision($table->_id, ['boolean' => $value]);
+            $I->assertResponseDataFields(['final_decision' => 'Approve']);
+        }
+    }
+
     public function all(ApiTester $I)
     {
         $I->loginAdmin();
