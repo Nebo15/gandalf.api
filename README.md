@@ -29,7 +29,7 @@ Column can have following settings:
 
 - ```Title``` - human-readable string that describes field in interface.
 - ```Field API Key``` - field name from witch data will be taken. For example, if you add a field with key ```name``` than all API consumers should provide JSON with this field: ```{"name": "Some User Name"}```.
-- ```Type``` - type of data that will be submitted in this field. ```String```, ```Number``` or ```Boolean```.
+- ```Type``` - type of data that will be submitted in this field. ```String```, ```Numeric``` or ```Boolean```.
 
 ##### Presets
 
@@ -39,7 +39,7 @@ It should look something like this:
 
 - ```Title``` = ```Sufficient Salary```;
 - ```Field API Key``` = ```salary```;
-- ```Type``` = ```Number```;
+- ```Type``` = ```Numeric```;
 - ```Preset Condition``` = ```greater than```;
 - ```Preset Value``` = ```1000```.
 
@@ -47,13 +47,13 @@ By checking checkbox below ```Low Salary```  column in a row, you will make sure
 
 #### Rows
 
-Each row represents a rule in a ```OR``` logical operator style. 
+Each row represents a rule in an ```OR``` logical operator style. 
 
 Row will return value selected in "Decision" column only if all validation rules in it have passed. Rules are checked in a same order as you see them in a table. You can reorder them by drug'n'drop.
 
 #### Cells
 
-All cells in a row represent validations in a ```AND``` logical operator style. 
+All cells in a row represent validations in an ```AND``` logical operator style. 
 
 Sometimes you have a big table and in some rows you prefer to skip some validations. For this case you can select special validation rule called ```is set```. Logically it means that ```{field_name} is set``` and this condition will always pass validation. 
 
@@ -70,8 +70,9 @@ String fileds support following conditions:
 - ```contains``` - validation will pass if field value is contains specified value. 
 - ```is set``` - validation will always pass. (Use it to skip some columns.)
 
-Number supports:
+Numeric supports:
 - ```=``` - validation will pass if field value equals specified value.
+- ```!=``` - validation will pass if field value does not equal specified value.
 - ```>``` - validation will pass if field value is greater than specified value.
 - ```>=``` - validation will pass if field value is greater or equal to a specified value.
 - ```<``` - validation will pass if field value is less than specified value.
@@ -82,8 +83,8 @@ Number supports:
 - ```is set``` - validation will always pass. (Use it to skip some columns.)
 
 Boolean supports:
-- ```true``` - will pass if field value is ```true```, ```"true"```, ```'true'```, ```1```, ```"1"``` or ```'1'```.
-- ```false``` - will pass if field value is ```false```, ```"false"```, ```'false'```, ```0```, ```"0"``` or ```'0'```.
+- ```true``` - will pass if field value is ```true```, ```1```, ```"1"``` or ```'1'```.
+- ```false``` - will pass if field value is ```false```, ```0```, ```"0"``` or ```'0'```.
 - ```is set``` - validation will always pass. (Use it to skip some columns.)
 
 #### Decision Making
@@ -109,4 +110,4 @@ TODO.
 
 # API Docs
 
-You can find a full API docs on [this](http://nebo15.github.io/qbill.docs/gandalf.html#validation-conditions) page.
+You can find a full API docs on [this](http://nebo15.github.io/qbill.docs/gandalf.html) page.

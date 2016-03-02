@@ -447,7 +447,7 @@ class TablesCest
             $I->checkDecision($table->_id, ['boolean' => $value]);
             $I->assertResponseDataFields(['final_decision' => 'Decline']);
         }
-        foreach (['invalid', 100, null] as $value) {
+        foreach (['invalid', 'true', "true", 100, null] as $value) {
             $I->sendPOST("api/v1/tables/$table->_id/decisions", ['boolean' => $value]);
             $I->seeResponseCodeIs(422);
         }
@@ -460,7 +460,7 @@ class TablesCest
             $I->sendPOST("api/v1/tables/$table->_id/decisions", ['boolean' => $value]);
             $I->seeResponseCodeIs(422);
         }
-        foreach (['invalid', '123321'] as $value) {
+        foreach (['invalid', '123321', 'true', "true"] as $value) {
             $I->checkDecision($table->_id, ['boolean' => $value]);
             $I->assertResponseDataFields(['final_decision' => 'Decline']);
         }
