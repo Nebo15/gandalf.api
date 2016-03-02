@@ -73,7 +73,7 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseMatchesJsonType([
             'field_key' => 'string',
             'condition' => 'string',
-            'value' => 'string|boolean',
+            'value' => 'string|integer|float|boolean',
         ], "$jsonPath.rules[*].conditions[*]");
 
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions[*].matched");
@@ -117,7 +117,7 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseMatchesJsonType([
             'field_key' => 'string',
             'condition' => 'string',
-            'value' => 'string|boolean',
+            'value' => 'string|integer|float|boolean',
             'matched' => 'boolean',
         ], "$jsonPath.rules[*].conditions[*]");
 
