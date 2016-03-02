@@ -73,7 +73,7 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseMatchesJsonType([
             'field_key' => 'string',
             'condition' => 'string',
-            'value' => 'string|boolean',
+            'value' => 'string|integer|float|boolean',
         ], "$jsonPath.rules[*].conditions[*]");
 
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions[*].matched");
@@ -117,7 +117,7 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseMatchesJsonType([
             'field_key' => 'string',
             'condition' => 'string',
-            'value' => 'string|boolean',
+            'value' => 'string|integer|float|boolean',
             'matched' => 'boolean',
         ], "$jsonPath.rules[*].conditions[*]");
 
@@ -212,7 +212,7 @@ class ApiTester extends \Codeception\Actor
         foreach ($fields as $field) {
             $type = 'string';
             if (in_array($field, ['Employment', 'Property'])) {
-                $type = 'bool';
+                $type = 'boolean';
             }
             $key = strtolower(str_replace(' ', '_', $field));
             $data['fields'][] = [

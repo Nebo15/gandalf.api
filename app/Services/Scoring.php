@@ -19,11 +19,14 @@ class Scoring
 {
     private $presets = [];
 
+    private $conditionsTypes;
+
     private $decisionRepository;
 
     public function __construct(DecisionRepository $decisionRepository)
     {
         $this->decisionRepository = $decisionRepository;
+        $this->conditionsTypes = new ConditionsTypes;
     }
 
     public function check($id, $values)
@@ -106,7 +109,7 @@ class Scoring
 
     private function checkCondition(Condition $condition, $value)
     {
-        $condition->matched = $this->checkConditionValue($condition->condition, $condition->value, $value);
+        $condition->matched = $this->conditionsTypes->checkConditionValue($condition->condition, $condition->value, $value);
     }
 
     private function prepareFieldPreset(Field $field, $value)
@@ -115,57 +118,11 @@ class Scoring
             $value = $this->presets[$field->index];
 
         } elseif ($preset = $field->preset and $preset->condition) {
-            $value = $this->checkConditionValue($preset->condition, $preset->value, $value);
+            $value = $this->conditionsTypes->checkConditionValue($preset->condition, $preset->value, $value);
             $this->presets[$field->index] = $value;
         }
 
         return $value;
-    }
-
-    private function checkConditionValue($condition, $condition_value, $field_value)
-    {
-        switch ($condition) {
-            case '$is_set':
-                $matched = true;
-                break;
-            case '$eq':
-                $matched = $condition_value === $field_value;
-                break;
-            case '$ne':
-                $matched = $condition_value !== $field_value;
-                break;
-            case '$gt':
-                $matched = $field_value > $condition_value;
-                break;
-            case '$gte':
-                $matched = $field_value >= $condition_value;
-                break;
-            case '$lt':
-                $matched = $field_value < $condition_value;
-                break;
-            case '$lte':
-                $matched = $field_value <= $condition_value;
-                break;
-            case '$in':
-                $matched = in_array($field_value, $this->explodeValue($condition_value));
-                break;
-            case '$nin':
-                $matched = !in_array($field_value, $this->explodeValue($condition_value));
-                break;
-            default:
-                throw new \Exception("Undefined condition rule '$condition'");
-        }
-
-        return $matched;
-    }
-
-    private function explodeValue($value)
-    {
-        preg_match_all("/'[^']+'|[^, ]+/", $value, $output);
-
-        return array_map(function ($value) {
-            return trim($value, "'");
-        }, $output[0]);
     }
 
     private function createValidationRules(DecisionTable $decision)

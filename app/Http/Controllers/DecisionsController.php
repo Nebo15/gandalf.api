@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\DecisionTable;
 use App\Http\Services\Response;
+use App\Services\ConditionsTypes;
 use App\Repositories\DecisionRepository;
 use App\Http\Traits\ValidatesRequestsCatcher;
 
@@ -15,10 +16,30 @@ class DecisionsController extends Controller
     private $decisionRepository;
     private $response;
 
-    public function __construct(Response $response, DecisionRepository $decision)
+    private $tableValidationRules;
+
+    public function __construct(Response $response, DecisionRepository $decision, ConditionsTypes $conditionsTypes)
     {
         $this->decisionRepository = $decision;
         $this->response = $response;
+        $this->tableValidationRules = [
+            'table' => 'required|array',
+            'table.title' => 'sometimes|string',
+            'table.description' => 'sometimes|string',
+            'table.default_decision' => 'required|string',
+            'table.fields' => 'required|array',
+            'table.fields.*.title' => 'required|string',
+            'table.fields.*.key' => 'required|string',
+            'table.fields.*.type' => 'required|in:numeric,boolean,string',
+            'table.fields.*.source' => 'required|in:request',
+            'table.rules' => 'required|array',
+            'table.rules.*.than' => 'required|string',
+            'table.rules.*.description' => 'sometimes|string',
+            'table.rules.*.conditions' => 'required|array|conditionsCount',
+            'table.rules.*.conditions.*.field_key' => 'required|string|conditionsField',
+            'table.rules.*.conditions.*.condition' => 'required|in:' . $conditionsTypes->getConditionsRules(),
+            'table.rules.*.conditions.*.value' => 'required|conditionType',
+        ];
     }
 
     public function index(Request $request)
@@ -39,7 +60,7 @@ class DecisionsController extends Controller
 
     public function create(Request $request)
     {
-        $this->validate($request, ['table' => 'required|decisionStruct']);
+        $this->validate($request, $this->tableValidationRules);
 
         return $this->response->json(
             $this->decisionRepository->create($request->input('table'))->toArray(),
@@ -56,7 +77,7 @@ class DecisionsController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->validate($request, ['table' => 'required|decisionStruct']);
+        $this->validate($request, $this->tableValidationRules);
 
         return $this->response->json(
             $this->decisionRepository->update($id, $request->input('table'))->toArray()
