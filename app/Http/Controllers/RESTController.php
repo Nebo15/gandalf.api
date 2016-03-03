@@ -9,55 +9,68 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Services\Response;
+use App\Repositories\RESTRepository;
 use App\Http\Traits\ValidatesRequestsCatcher;
 
 abstract class RESTController extends \Laravel\Lumen\Routing\Controller
 {
     use ValidatesRequestsCatcher;
 
+    private $request;
     private $response;
-    protected $repository;
+    private $repository;
 
-    public function __construct(Response $response)
+    protected $repositoryClassName;
+
+    protected $validationRules = [];
+
+    public function __construct(Request $request, Response $response)
     {
+        $this->request = $request;
         $this->response = $response;
     }
 
-    public function getRepository()
+    protected function getRepository()
     {
         if (!$this->repository) {
-
+            if(!$this->repositoryClassName){
+                throw new \Exception("You should set \$repositoryClassName");
+            }
+            $this->repository = new $this->repositoryClassName;
+            if(!($this->repository instanceof RESTRepository)){
+                throw new \Exception("Repository $this->repositoryClassName should be instance of RESTRepository");
+            }
         }
 
         return $this->repository;
     }
 
-    public function create(Request $request)
+    public function create()
     {
-        $this->validate($request, $this->tableValidationRules);
+        $this->validate();
 
         return $this->response->json(
-            $this->repository->create($request->input('table'))->toArray(),
+            $this->getRepository()->createOrUpdate($this->request->all())->toArray(),
             Response::HTTP_CREATED
         );
     }
 
-    public function cloneModel($id)
+    public function copy($id)
     {
         return $this->response->json(
-            $this->decisionRepository->cloneModel($id)->toArray()
+            $this->getRepository()->copy($id)->toArray()
         );
     }
 
     public function read($id)
     {
-        return $this->response->json($this->decisionRepository->get($id)->toArray());
+        return $this->response->json($this->getRepository()->read($id)->toArray());
     }
 
     public function readList(Request $request)
     {
         return $this->response->jsonPaginator(
-            $this->decisionRepository->all($request->input('size')),
+            $this->getRepository()->readList($request->input('size')),
             [],
             function (DecisionTable $decisionTable) {
                 return $decisionTable->toListArray();
@@ -67,17 +80,25 @@ abstract class RESTController extends \Laravel\Lumen\Routing\Controller
 
     public function update(Request $request, $id)
     {
-        $this->validate($request, $this->tableValidationRules);
+//        $this->validate($request, $this->tableValidationRules);
 
         return $this->response->json(
-            $this->decisionRepository->update($id, $request->input('table'))->toArray()
+            $this->getRepository()->createOrUpdate($request->request->all(), $id)->toArray()
         );
     }
 
     public function delete($id)
     {
         return $this->response->json(
-            $this->decisionRepository->delete($id)
+            $this->getRepository()->delete($id)
         );
+    }
+
+    public function validate()
+    {
+        echo debug_backtrace()[1]['function'];
+        die();
+        $rules = [];
+        parent::validate($this->request, $rules);
     }
 }

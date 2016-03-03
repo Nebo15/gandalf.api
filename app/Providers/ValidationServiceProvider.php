@@ -30,7 +30,6 @@ class ValidationServiceProvider extends ServiceProvider
             }
 
             return $validator;
-
         });
     }
 }
