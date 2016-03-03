@@ -7,7 +7,6 @@
 
 namespace App\Services;
 
-
 class GroupsBalancer
 {
 

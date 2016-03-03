@@ -84,6 +84,7 @@ $app->routeMiddleware([
 |
 */
 
+$app->register(App\Providers\RESTServiceProvider::class);
 $app->register(App\Providers\ValidationServiceProvider::class);
 $app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 // $app->register(App\Providers\AppServiceProvider::class);

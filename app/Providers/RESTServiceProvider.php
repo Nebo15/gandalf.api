@@ -14,7 +14,7 @@ class RESTServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->app->singleton('RESTRouter', function ($app) {
+        $this->app->singleton('REST.router', function ($app) {
             return new RESTRouter($app);
         });
     }

@@ -7,8 +7,7 @@
 
 namespace App\Models;
 
-
-interface Listable
+interface RESTListable
 {
-
+    public function toListArray();
 }

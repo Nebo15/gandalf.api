@@ -7,6 +7,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RESTListable;
 use Illuminate\Http\Request;
 use App\Http\Services\Response;
 use App\Repositories\RESTRepository;
@@ -33,11 +34,11 @@ abstract class RESTController extends \Laravel\Lumen\Routing\Controller
     protected function getRepository()
     {
         if (!$this->repository) {
-            if(!$this->repositoryClassName){
+            if (!$this->repositoryClassName) {
                 throw new \Exception("You should set \$repositoryClassName");
             }
             $this->repository = new $this->repositoryClassName;
-            if(!($this->repository instanceof RESTRepository)){
+            if (!($this->repository instanceof RESTRepository)) {
                 throw new \Exception("Repository $this->repositoryClassName should be instance of RESTRepository");
             }
         }
@@ -47,7 +48,7 @@ abstract class RESTController extends \Laravel\Lumen\Routing\Controller
 
     public function create()
     {
-        $this->validate();
+        $this->validateRoute();
 
         return $this->response->json(
             $this->getRepository()->createOrUpdate($this->request->all())->toArray(),
@@ -72,15 +73,15 @@ abstract class RESTController extends \Laravel\Lumen\Routing\Controller
         return $this->response->jsonPaginator(
             $this->getRepository()->readList($request->input('size')),
             [],
-            function (DecisionTable $decisionTable) {
-                return $decisionTable->toListArray();
+            function (RESTListable $model) {
+                return $model->toListArray();
             }
         );
     }
 
     public function update(Request $request, $id)
     {
-//        $this->validate($request, $this->tableValidationRules);
+        $this->validateRoute();
 
         return $this->response->json(
             $this->getRepository()->createOrUpdate($request->request->all(), $id)->toArray()
@@ -94,11 +95,11 @@ abstract class RESTController extends \Laravel\Lumen\Routing\Controller
         );
     }
 
-    public function validate()
+    public function validateRoute()
     {
-        echo debug_backtrace()[1]['function'];
-        die();
-        $rules = [];
-        parent::validate($this->request, $rules);
+        $action = debug_backtrace()[1]['function'];
+        if (isset($this->validationRules[$action])) {
+            $this->validate($this->request, $this->validationRules[$action]);
+        }
     }
 }

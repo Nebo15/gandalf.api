@@ -7,23 +7,31 @@
 
 namespace App\Services;
 
+use Laravel\Lumen\Application;
 
 class RESTRouter
 {
     private $app;
     
-    public function __construct(\App $app)
+    public function __construct(Application $app)
     {
         $this->app = $app;
     }
 
-    public function api($route, $controller)
+    public function api($route, $controllerName)
     {
-        $this->app->get("/$route", ["uses" => "$controller@index"]);
-        $this->app->post("/$route", ["uses" => "$controller@create"]);
-        $this->app->get("/$route/{id}", ["uses" => "$controller@get"]);
-        $this->app->put("/$route/{id}", ["uses" => "$controller@update"]);
-        $this->app->post("/$route/{id}/clone", ["uses" => "$controller@cloneModel"]);
-        $this->app->delete("/$route/{id}", ["uses" => "$controller@delete"]);
+        # ToDo: validate controller instance
+//        if (!($controllerName instanceof App\Http\Controllers\RESTController)) {
+//            throw new \Exception(
+//                "Controller $controllerName should be instance of App\\Http\\Controllers\\RESTController"
+//            );
+//        }
+
+        $this->app->get("/$route", ["uses" => "$controllerName@readList"]);
+        $this->app->post("/$route", ["uses" => "$controllerName@create"]);
+        $this->app->get("/$route/{id}", ["uses" => "$controllerName@read"]);
+        $this->app->put("/$route/{id}", ["uses" => "$controllerName@update"]);
+        $this->app->post("/$route/{id}/clone", ["uses" => "$controllerName@copy"]);
+        $this->app->delete("/$route/{id}", ["uses" => "$controllerName@delete"]);
     }
 }

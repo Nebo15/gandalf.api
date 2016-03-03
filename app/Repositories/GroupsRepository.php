@@ -7,7 +7,6 @@
 
 namespace App\Repositories;
 
-
 class GroupsRepository extends RESTRepository
 {
     protected $modelClassName = 'App\Models\Group';

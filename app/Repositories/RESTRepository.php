@@ -13,12 +13,16 @@ abstract class RESTRepository
 {
     protected $modelClassName;
 
-    protected function __construct()
+    /** @var Model $model */
+    private $model;
+
+    public function __construct()
     {
         if (!$this->modelClassName) {
             throw new \Exception("You should set \$modelClassName in " . get_called_class());
         }
-        if (!($this->modelClassName instanceof Model)) {
+        $this->model = new $this->modelClassName;
+        if (!($this->model instanceof Model)) {
             throw new \Exception(
                 "Model $this->modelClassName should be instance of Illuminate\\Database\\Eloquent\\Model"
             );
@@ -46,7 +50,7 @@ abstract class RESTRepository
 
     public function createOrUpdate($values, $id = null)
     {
-        $model = $id ? $this->read($id) : new $this->modelClassName;
+        $model = $id ? $this->read($id) : $this->model->newInstance();
         $model->fill($values)->save();
 
         return $model;

@@ -15,7 +15,10 @@ $app->get('/', function () use ($app) {
     return response('ok');
 });
 
-$app->make('RESTRouter')->api('api/v1/admin/tables');
+
+/** @var \App\Services\RESTRouter $RESTRouter */
+$RESTRouter = $app->make('REST.router');
+$RESTRouter->api('api/v1/admin/groups', 'GroupsController');
 
 $app->group(
     [
