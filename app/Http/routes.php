@@ -15,6 +15,8 @@ $app->get('/', function () use ($app) {
     return response('ok');
 });
 
+$app->make('RESTRouter')->api('api/v1/admin/tables');
+
 $app->group(
     [
         'prefix' => 'api/v1/admin',

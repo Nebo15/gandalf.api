@@ -7,12 +7,15 @@
 
 namespace App\Providers;
 
+use App\Services\RESTRouter;
 use Illuminate\Support\ServiceProvider;
 
 class RESTServiceProvider extends ServiceProvider
 {
     public function register()
     {
-
+        $this->app->singleton('RESTRouter', function ($app) {
+            return new RESTRouter($app);
+        });
     }
 }

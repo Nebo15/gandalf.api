@@ -8,7 +8,7 @@
 namespace App\Models;
 
 
-class Group extends Base
+class Group extends Base implements Listable
 {
     protected $fillable = ['tables', 'probability'];
 
