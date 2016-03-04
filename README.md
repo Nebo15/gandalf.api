@@ -9,18 +9,18 @@ API docs is [here](http://nebo15.github.io/qbill.docs/gandalf.html#validation-co
 
 It's build on top of PHP Lumen framework and MongoDB.
 
+# How does it work?
+
+Gandalf allows you to define multiple decision tables and to list all decisions that was made.
+
+You can use it for anti-fraud, risk management, as part any other decision making purposes.
+
 ### Features
 
 - Customizable - have the freedom to design a decision rules you need and to manage data structure on the fly in a easy to understand way.
 - Split testing - you can group your decision table to run a A/B tests. Later, you can leave only one, that shows best results.
 - Analytics and Decision History - you can review all previous decisions made by your tables and to analyze what rules is triggered more often.
 - Production-tested - several large NDA-closed PSP's and online lending platforms already use Gandalf.
-
-# How does it work?
-
-Gandalf allows you to define multiple decision tables and to list all decisions that was made.
-
-You can use it for anti-fraud, risk management, as part any other decision making purposes.
 
 ## Decision Table
 
@@ -122,7 +122,7 @@ For all request you should pass BASIC Authorization header. There are two types 
 $ curl -uAPI_USER:API_TOKEN http://gandalf-api.nebo15.com/api/v1/admin/tables
 ```
 
-## Step by Step Guide
+# Installation Guide
 
 TODO.
 
