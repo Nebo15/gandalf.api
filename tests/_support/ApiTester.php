@@ -30,6 +30,24 @@ class ApiTester extends \Codeception\Actor
         return $this->getResponseFields()->data;
     }
 
+    public function createGroup($groupsAmount = 2, $probability_type = 'random', array $data = null)
+    {
+        if (!$data) {
+            for($i = 0; $i < $groupsAmount; $i++){
+                $data[$i] = [
+                    '_id' => '',
+                ];
+                if($probability_type == 'percent'){
+                    $data[$i] = '';
+                }
+            }
+        }
+        $this->sendPOST('api/v1/admin/groups', $data);
+        $this->assertTable('$.data', 201);
+
+        return $this->getResponseFields()->data;
+    }
+
     public function assertListTable($jsonPath = '$.data[*]')
     {
         $this->seeResponseCodeIs(200);

@@ -12,9 +12,9 @@ class Group extends Base implements ListableInterface
 {
     use ListableTrait;
 
-    protected $fillable = [];
+    protected $fillable = ['tables', 'probability_type'];
 
-    protected $listable = [];
+    protected $listable = ['tables', 'probability_type'];
 
-    protected $visible = [];
+    protected $visible = ['tables', 'probability_type'];
 }
