@@ -7,24 +7,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Decision;
 use App\Services\Scoring;
+use Nebo15\REST\Response;
 use Illuminate\Http\Request;
-use App\Http\Services\Response;
-use App\Models\DecisionHistory;
-use App\Repositories\DecisionRepository;
-use App\Http\Traits\ValidatesRequestsCatcher;
+use App\Repositories\TablesRepository;
+use Nebo15\REST\Traits\ValidatesRequestsTrait;
 
 class ConsumerController extends Controller
 {
-    use ValidatesRequestsCatcher;
+    use ValidatesRequestsTrait;
 
     private $response;
-    private $decisionRepository;
+    private $tablesRepository;
 
-    public function __construct(Response $response, DecisionRepository $decision)
+    public function __construct(Response $response, TablesRepository $tablesRepository)
     {
         $this->response = $response;
-        $this->decisionRepository = $decision;
+        $this->tablesRepository = $tablesRepository;
     }
 
     public function check(Request $request, Scoring $scoring, $id)
@@ -35,16 +35,16 @@ class ConsumerController extends Controller
     public function decisions(Request $request)
     {
         return $this->response->jsonPaginator(
-            $this->decisionRepository->consumerHistory($request->input('size')),
+            $this->tablesRepository->consumerHistory($request->input('size')),
             [],
-            function (DecisionHistory $decisionHistory) {
-                return $decisionHistory->toConsumerArray();
+            function (Decision $decision) {
+                return $decision->toConsumerArray();
             }
         );
     }
 
     public function decision($id)
     {
-        return $this->response->json($this->decisionRepository->consumerHistoryItem($id));
+        return $this->response->json($this->tablesRepository->consumerHistoryItem($id));
     }
 }

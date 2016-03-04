@@ -1,13 +1,13 @@
 <?php
-/**
- * Author: Paul Bardack paul.bardack@gmail.com http://paulbardack.com
- * Date: 03.03.16
- * Time: 16:24
+/*
+ * This code was generated automatically by Nebo15/REST
  */
 
 namespace App\Repositories;
 
-class GroupsRepository extends RESTRepository
+use Nebo15\REST\AbstractRepository;
+
+class GroupsRepository extends AbstractRepository
 {
     protected $modelClassName = 'App\Models\Group';
 }

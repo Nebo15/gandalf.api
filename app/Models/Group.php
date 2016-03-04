@@ -1,21 +1,20 @@
 <?php
-/**
- * Author: Paul Bardack paul.bardack@gmail.com http://paulbardack.com
- * Date: 02.03.16
- * Time: 13:12
+/*
+ * This code was generated automatically by Nebo15/REST
  */
 
 namespace App\Models;
 
-use App\Http\Traits\RESTListable as ListableTrait;
+use Nebo15\REST\Traits\ListableTrait;
+use Nebo15\REST\Interfaces\ListableInterface;
 
-class Group extends Base implements RESTListable
+class Group extends Base implements ListableInterface
 {
     use ListableTrait;
 
-    protected $fillable = ['tables', 'probability'];
+    protected $fillable = [];
 
-    protected $listable = ['probability'];
+    protected $listable = [];
 
-    protected $visible = ['_id', 'tables', 'probability'];
+    protected $visible = [];
 }

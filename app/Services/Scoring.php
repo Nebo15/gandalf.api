@@ -9,9 +9,9 @@ namespace App\Services;
 
 use App\Models\Field;
 use App\Models\Condition;
-use App\Models\DecisionTable;
-use App\Models\DecisionHistory;
-use App\Repositories\DecisionRepository;
+use App\Models\Decision;
+use App\Models\Table;
+use App\Repositories\TablesRepository;
 use Illuminate\Contracts\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -21,17 +21,17 @@ class Scoring
 
     private $conditionsTypes;
 
-    private $decisionRepository;
+    private $tablesRepository;
 
-    public function __construct(DecisionRepository $decisionRepository)
+    public function __construct(TablesRepository $tablesRepository)
     {
-        $this->decisionRepository = $decisionRepository;
+        $this->tablesRepository = $tablesRepository;
         $this->conditionsTypes = new ConditionsTypes;
     }
 
     public function check($id, $values)
     {
-        $decision = DecisionTable::findById($id);
+        $decision = $this->tablesRepository->read($id);
         $validator = \Validator::make($values, $this->createValidationRules($decision));
         if ($validator->fails()) {
             throw new ValidationException($validator);
@@ -104,7 +104,7 @@ class Scoring
             # create webhook service
         }
 
-        return DecisionHistory::create($scoring_data)->toConsumerArray();
+        return Decision::create($scoring_data)->toConsumerArray();
     }
 
     private function checkCondition(Condition $condition, $value)
@@ -125,10 +125,10 @@ class Scoring
         return $value;
     }
 
-    private function createValidationRules(DecisionTable $decision)
+    private function createValidationRules(Table $table)
     {
         $rules = ['webhook' => 'sometimes|required|url'];
-        if ($fields = $decision->fields) {
+        if ($fields = $table->fields) {
             foreach ($fields as $item) {
                 $rules[$item->key] = 'required|' . $this->getValidationRuleByType($item->type);
             }

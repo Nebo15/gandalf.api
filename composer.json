@@ -8,7 +8,8 @@
         "php": ">=5.5.9",
         "laravel/lumen-framework": "5.2.*",
         "vlucas/phpdotenv": "~2.2",
-        "jenssegers/mongodb": "2.*"
+        "jenssegers/mongodb": "2.*",
+        "nebo15/lumen.rest": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -29,5 +30,24 @@
             "tests/",
             "database/"
         ]
-    }
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "nebo15/lumen.rest",
+                "version": "dev-master",
+                "source": {
+                    "url": "https://github.com/Nebo15/lumen-rest",
+                    "type": "git",
+                    "reference": "master"
+                },
+                "autoload": {
+                    "psr-4" : {
+                        "Nebo15\\REST\\" : "src"
+                    }
+                }
+            }
+        }
+    ]
 }

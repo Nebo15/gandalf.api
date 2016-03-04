@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1ae588dab42fc3ab096a2ec178e06ec7",
-    "content-hash": "de8b99b5d649f7b3814fb7ff60807fb0",
+    "hash": "11d16d596731a42913c0fb838dc3b6ce",
+    "content-hash": "1d63cd33f123c3a8e87a20d23933f82c",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -1397,6 +1397,22 @@
                 "schedule"
             ],
             "time": "2016-01-26 21:23:30"
+        },
+        {
+            "name": "nebo15/lumen.rest",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Nebo15/lumen-rest",
+                "reference": "master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Nebo15\\REST\\": "src"
+                }
+            },
+            "time": "2016-03-04 15:47:50"
         },
         {
             "name": "nesbot/carbon",
@@ -4177,6 +4193,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "nebo15/lumen.rest": 20,
         "sokil/php-mongo-migrator": 20
     },
     "prefer-stable": false,

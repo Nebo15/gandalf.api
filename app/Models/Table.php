@@ -1,14 +1,15 @@
 <?php
-/**
- * Author: Paul Bardack paul.bardack@gmail.com http://paulbardack.com
- * Date: 12.02.16
- * Time: 17:39
+/*
+ * This code was generated automatically by Nebo15/REST
  */
 
 namespace App\Models;
 
+use Nebo15\REST\Traits\ListableTrait;
+use Nebo15\REST\Interfaces\ListableInterface;
+
 /**
- * Class DecisionTable
+ * Class Table
  * @package App\Models
  * @property string $title
  * @property string $description
@@ -20,8 +21,12 @@ namespace App\Models;
  * @method DecisionTable save(array $options = [])
  * @method static \Illuminate\Pagination\LengthAwarePaginator paginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null)
  */
-class DecisionTable extends Base
+class Table extends Base implements ListableInterface
 {
+    use ListableTrait;
+
+    protected $listable = ['_id', 'title', 'description', 'default_decision'];
+
     protected $visible = ['_id', 'title', 'description', 'default_decision', 'rules', 'fields'];
 
     protected $fillable = ['title', 'description', 'default_decision'];
@@ -72,15 +77,5 @@ class DecisionTable extends Base
         }
 
         return $this;
-    }
-
-    public function toListArray()
-    {
-        return [
-            '_id' => $this->getId(),
-            'title' => $this->title,
-            'description' => $this->description,
-            'default_decision' => $this->default_decision,
-        ];
     }
 }
