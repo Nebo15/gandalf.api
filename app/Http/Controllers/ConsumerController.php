@@ -8,6 +8,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Decision;
+use App\Services\GroupsBalancer;
 use App\Services\Scoring;
 use Nebo15\REST\Response;
 use Illuminate\Http\Request;
@@ -27,9 +28,14 @@ class ConsumerController extends Controller
         $this->tablesRepository = $tablesRepository;
     }
 
-    public function check(Request $request, Scoring $scoring, $id)
+    public function tableCheck(Request $request, Scoring $scoring, $id)
     {
         return $this->response->json($scoring->check($id, $request->all()));
+    }
+
+    public function groupCheck(Request $request, GroupsBalancer $balancer, Scoring $scoring, $id)
+    {
+        return $this->response->json($scoring->check($balancer->getTable($id), $request->all()));
     }
 
     public function decisions(Request $request)

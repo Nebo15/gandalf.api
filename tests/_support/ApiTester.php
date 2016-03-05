@@ -210,7 +210,7 @@ class ApiTester extends \Codeception\Actor
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions");
     }
 
-    public function checkDecision($id, array $data = [])
+    public function checkDecision($id, array $data = [], $route = 'tables')
     {
         $data = $data ?: [
             'borrowers_phone_verification' => 'Positive',
@@ -219,7 +219,7 @@ class ApiTester extends \Codeception\Actor
             'employment' => true,
             'property' => true,
         ];
-        $this->sendPOST("api/v1/tables/$id/decisions", $data);
+        $this->sendPOST("api/v1/$route/$id/decisions", $data);
         $this->assertTableDecisionsForConsumer();
 
         return $this->getResponseFields()->data;

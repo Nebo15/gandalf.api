@@ -30,12 +30,5 @@
             "tests/",
             "database/"
         ]
-    },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "/Users/bardack/www/lumen-REST",
-            "symlink": true
-        }
-    ]
+    }
 }

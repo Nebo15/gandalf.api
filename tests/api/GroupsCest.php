@@ -17,9 +17,21 @@ class GroupsCest
         $I->sendGET($this->api_prefix);
         $I->assertListGroup();
 
-        $id = $I->getResponseFields()->data[0]->_id;
-        $I->sendGET($this->api_prefix . "/$id");
+        $group = $I->getResponseFields()->data[0];
+        $I->sendGET($this->api_prefix . "/$group->_id");
         $I->assertGroup();
+
+        $tables_ids = [];
+        foreach ($group->tables as $table) {
+            $I->sendGET("api/v1/admin/tables/$table->_id");
+            $I->assertTable();
+            $tables_ids[] = $table->_id;
+        }
+        # check group
+        for($i = 0; $i < 3; $i++ ){
+            $I->checkDecision($group->_id, [], 'groups');
+            $I->assertTrue(in_array($I->getResponseFields()->data->table->_id, $tables_ids));
+        }
     }
 
     public function createInvalid(ApiTester $I)
@@ -90,7 +102,7 @@ class GroupsCest
 
         $data = $I->getResponseFields()->data;
         $id = $data->_id;
-        $I->sendPOST($this->api_prefix . "/$id/clone", []);
+        $I->sendPOST($this->api_prefix . "/$id/copy", []);
         $I->assertGroup();
         $cloneData = $I->getResponseFields()->data;
         unset($cloneData->_id);

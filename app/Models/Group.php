@@ -8,6 +8,12 @@ namespace App\Models;
 use Nebo15\REST\Traits\ListableTrait;
 use Nebo15\REST\Interfaces\ListableInterface;
 
+/**
+ * Class Group
+ * @package App\Models
+ * @property array $tables;
+ * @property string $probability;
+ */
 class Group extends Base implements ListableInterface
 {
     use ListableTrait;

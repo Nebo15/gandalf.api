@@ -43,6 +43,7 @@ $app->group(
     function ($app) {
         /** @var Laravel\Lumen\Application $app */
         $app->get('/decisions/{id}', ['uses' => 'ConsumerController@decision']);
-        $app->post('/tables/{id}/decisions', ['uses' => 'ConsumerController@check']);
+        $app->post('/tables/{id}/decisions', ['uses' => 'ConsumerController@tableCheck']);
+        $app->post('/groups/{id}/decisions', ['uses' => 'ConsumerController@groupCheck']);
     }
 );
