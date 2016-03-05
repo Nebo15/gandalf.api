@@ -22,28 +22,57 @@ class ApiTester extends \Codeception\Actor
 
     use _generated\ApiTesterActions;
 
-    public function createTable(array $data = null)
+    public function createGroup($tablesAmount = 2, $probability = 'random', array $data = null)
     {
-        $this->sendPOST('api/v1/admin/tables', ['table' => $data ?: $this->getTableData()]);
-        $this->assertTable('$.data', 201);
+        if (!$data) {
+            $data['tables'] = [];
+            for ($i = 0; $i < $tablesAmount; $i++) {
+                $data['tables'][$i] = [
+                    '_id' => $this->createTable(null, false)->_id,
+                ];
+            }
+        }
+        $data['probability'] = $probability;
+        $this->sendPOST('api/v1/admin/groups', $data);
+        $this->assertGroup('$.data', 201);
 
         return $this->getResponseFields()->data;
     }
 
-    public function createGroup($groupsAmount = 2, $probability_type = 'random', array $data = null)
+    public function assertGroup($jsonPath = '$.data', $code = 200)
     {
-        if (!$data) {
-            for($i = 0; $i < $groupsAmount; $i++){
-                $data[$i] = [
-                    '_id' => '',
-                ];
-                if($probability_type == 'percent'){
-                    $data[$i] = '';
-                }
-            }
+        $this->seeResponseCodeIs($code);
+        $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
+            'tables' => 'array',
+            'probability' => 'string:regex(@^(random)$@)',
+        ], $jsonPath);
+
+        $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
+        ], "$jsonPath.tables[*]");
+    }
+
+    public function assertListGroup($jsonPath = '$.data[*]')
+    {
+        $this->seeResponseCodeIs(200);
+        $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
+            'tables' => 'array',
+            'probability' => 'string:regex(@^(random)$@)',
+        ], $jsonPath);
+
+        $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
+        ], "$jsonPath.tables[*]");
+    }
+
+    public function createTable(array $data = null, $assert = true)
+    {
+        $this->sendPOST('api/v1/admin/tables', ['table' => $data ?: $this->getTableData()]);
+        if ($assert) {
+            $this->assertTable('$.data', 201);
         }
-        $this->sendPOST('api/v1/admin/groups', $data);
-        $this->assertTable('$.data', 201);
 
         return $this->getResponseFields()->data;
     }

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "11d16d596731a42913c0fb838dc3b6ce",
-    "content-hash": "1d63cd33f123c3a8e87a20d23933f82c",
+    "hash": "729debc29137c375329ecfcfb6ee071e",
+    "content-hash": "1767132157a5b740c7196419bcd39f15",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -1135,16 +1135,16 @@
         },
         {
             "name": "jenssegers/mongodb",
-            "version": "v2.3.4",
+            "version": "v2.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jenssegers/laravel-mongodb.git",
-                "reference": "fe4b0aa141dafe74805ef06e9aa067453f02a7af"
+                "reference": "244f40b843e9278d2154ef1554abce3b78ee1370"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jenssegers/laravel-mongodb/zipball/fe4b0aa141dafe74805ef06e9aa067453f02a7af",
-                "reference": "fe4b0aa141dafe74805ef06e9aa067453f02a7af",
+                "url": "https://api.github.com/repos/jenssegers/laravel-mongodb/zipball/244f40b843e9278d2154ef1554abce3b78ee1370",
+                "reference": "244f40b843e9278d2154ef1554abce3b78ee1370",
                 "shasum": ""
             },
             "require": {
@@ -1190,7 +1190,7 @@
                 "mongo",
                 "mongodb"
             ],
-            "time": "2016-02-29 18:18:57"
+            "time": "2016-03-05 09:12:32"
         },
         {
             "name": "laravel/lumen-framework",
@@ -1400,11 +1400,16 @@
         },
         {
             "name": "nebo15/lumen.rest",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Nebo15/lumen-rest",
-                "reference": "master"
+            "version": "0.0.1",
+            "dist": {
+                "type": "path",
+                "url": "/Users/bardack/www/lumen-REST/",
+                "reference": "27156a6f580c8828a004d32c4c48e2a132cf2cf6",
+                "shasum": null
+            },
+            "require-dev": {
+                "laravel/lumen-framework": "5.2.*",
+                "squizlabs/php_codesniffer": "2.*"
             },
             "type": "library",
             "autoload": {
@@ -1412,7 +1417,21 @@
                     "Nebo15\\REST\\": "src"
                 }
             },
-            "time": "2016-03-04 15:47:50"
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paul Bardack",
+                    "homepage": "http://paulbardack.com"
+                }
+            ],
+            "description": "Components for fast building REST API for Lumen",
+            "keywords": [
+                "API",
+                "REST",
+                "lumen"
+            ]
         },
         {
             "name": "nesbot/carbon",
@@ -4193,7 +4212,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "nebo15/lumen.rest": 20,
         "sokil/php-mongo-migrator": 20
     },
     "prefer-stable": false,
