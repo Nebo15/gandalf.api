@@ -22,10 +22,57 @@ class ApiTester extends \Codeception\Actor
 
     use _generated\ApiTesterActions;
 
-    public function createTable(array $data = null)
+    public function createGroup($tablesAmount = 2, $probability = 'random', array $data = null)
+    {
+        if (!$data) {
+            $data['tables'] = [];
+            for ($i = 0; $i < $tablesAmount; $i++) {
+                $data['tables'][$i] = [
+                    '_id' => $this->createTable(null, false)->_id,
+                ];
+            }
+        }
+        $data['probability'] = $probability;
+        $this->sendPOST('api/v1/admin/groups', $data);
+        $this->assertGroup('$.data', 201);
+
+        return $this->getResponseFields()->data;
+    }
+
+    public function assertGroup($jsonPath = '$.data', $code = 200)
+    {
+        $this->seeResponseCodeIs($code);
+        $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
+            'tables' => 'array',
+            'probability' => 'string:regex(@^(random)$@)',
+        ], $jsonPath);
+
+        $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
+        ], "$jsonPath.tables[*]");
+    }
+
+    public function assertListGroup($jsonPath = '$.data[*]')
+    {
+        $this->seeResponseCodeIs(200);
+        $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
+            'tables' => 'array',
+            'probability' => 'string:regex(@^(random)$@)',
+        ], $jsonPath);
+
+        $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
+        ], "$jsonPath.tables[*]");
+    }
+
+    public function createTable(array $data = null, $assert = true)
     {
         $this->sendPOST('api/v1/admin/tables', ['table' => $data ?: $this->getTableData()]);
-        $this->assertTable('$.data', 201);
+        if ($assert) {
+            $this->assertTable('$.data', 201);
+        }
 
         return $this->getResponseFields()->data;
     }
@@ -163,7 +210,7 @@ class ApiTester extends \Codeception\Actor
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions");
     }
 
-    public function checkDecision($id, array $data = [])
+    public function checkDecision($id, array $data = [], $route = 'tables')
     {
         $data = $data ?: [
             'borrowers_phone_verification' => 'Positive',
@@ -172,7 +219,7 @@ class ApiTester extends \Codeception\Actor
             'employment' => true,
             'property' => true,
         ];
-        $this->sendPOST("api/v1/tables/$id/decisions", $data);
+        $this->sendPOST("api/v1/$route/$id/decisions", $data);
         $this->assertTableDecisionsForConsumer();
 
         return $this->getResponseFields()->data;

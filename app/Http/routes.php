@@ -15,6 +15,12 @@ $app->get('/', function () use ($app) {
     return response('ok');
 });
 
+
+/** @var Nebo15\REST\Router $api */
+$api = $app->make('Nebo15\REST\Router');
+$api->api('api/v1/admin/groups', 'GroupsController', ['auth.admin']);
+$api->api('api/v1/admin/tables', 'TablesController', ['auth.admin']);
+
 $app->group(
     [
         'prefix' => 'api/v1/admin',
@@ -23,15 +29,8 @@ $app->group(
     ],
     function ($app) {
         /** @var Laravel\Lumen\Application $app */
-        $app->get('/decisions', ['uses' => 'DecisionsController@history']);
-        $app->get('/decisions/{id}', ['uses' => 'DecisionsController@historyItem']);
-
-        $app->get('/tables', ['uses' => 'DecisionsController@index']);
-        $app->post('/tables', ['uses' => 'DecisionsController@create']);
-        $app->get('/tables/{id}', ['uses' => 'DecisionsController@get']);
-        $app->put('/tables/{id}', ['uses' => 'DecisionsController@update']);
-        $app->post('/tables/{id}/clone', ['uses' => 'DecisionsController@cloneModel']);
-        $app->delete('/tables/{id}', ['uses' => 'DecisionsController@delete']);
+        $app->get('/decisions', ['uses' => 'TablesController@history']);
+        $app->get('/decisions/{id}', ['uses' => 'TablesController@historyItem']);
     }
 );
 
@@ -44,6 +43,7 @@ $app->group(
     function ($app) {
         /** @var Laravel\Lumen\Application $app */
         $app->get('/decisions/{id}', ['uses' => 'ConsumerController@decision']);
-        $app->post('/tables/{id}/decisions', ['uses' => 'ConsumerController@check']);
+        $app->post('/tables/{id}/decisions', ['uses' => 'ConsumerController@tableCheck']);
+        $app->post('/groups/{id}/decisions', ['uses' => 'ConsumerController@groupCheck']);
     }
 );

@@ -609,14 +609,14 @@ class TablesCest
         ]);
     }
 
-    public function cloning(ApiTester $I)
+    public function copy(ApiTester $I)
     {
         $I->loginAdmin();
         $I->createTable();
 
         $data = $I->getResponseFields()->data;
         $id = $data->_id;
-        $I->sendPOST("api/v1/admin/tables/$id/clone", []);
+        $I->sendPOST("api/v1/admin/tables/$id/copy", []);
         $I->assertTable();
         $cloneData = $I->getResponseFields()->data;
         unset($cloneData->_id);
