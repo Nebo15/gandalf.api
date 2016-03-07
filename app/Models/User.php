@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Auth\Authenticatable;
 use Laravel\Lumen\Auth\Authorizable;
-use Nebo15\LumenOauth2\Traits\Oauthable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Nebo15\LumenOauth2\Interfaces\Oauthable as OauthableContract;
+use Nebo15\LumenOauth2\Traits\Oauthable;
 
 class User extends Base implements
     AuthenticatableContract,

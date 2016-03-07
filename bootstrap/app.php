@@ -32,7 +32,6 @@ $app->withEloquent();
 
 $app->configure('database');
 $app->configure('tokens');
-$app->configure('auth');
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
@@ -66,9 +65,7 @@ $app->singleton(
 */
 
 $app->middleware([
-    App\Http\Middleware\JsonMiddleware::class,
-    //Illuminate\Session\Middleware\StartSession::class
-    //Illuminate\Session\Middleware\StartSession::class,
+    App\Http\Middleware\JsonMiddleware::class
 ]);
 
 $app->routeMiddleware([
