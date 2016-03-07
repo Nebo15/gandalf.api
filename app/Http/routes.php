@@ -21,6 +21,8 @@ $api = $app->make('Nebo15\REST\Router');
 $api->api('api/v1/admin/groups', 'GroupsController', ['auth.admin']);
 $api->api('api/v1/admin/tables', 'TablesController', ['auth.admin']);
 
+$app->make('Oauth.routes')->makeRestRoutes();
+
 $app->group(
     [
         'prefix' => 'api/v1/admin',

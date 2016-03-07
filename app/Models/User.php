@@ -2,27 +2,19 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Model;
 use Illuminate\Auth\Authenticatable;
 use Laravel\Lumen\Auth\Authorizable;
+use Nebo15\LumenOauth2\Traits\Oauthable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Nebo15\LumenOauth2\Interfaces\Oauthable as OauthableContract;
 
-class User extends Model implements
+class User extends Base implements
     AuthenticatableContract,
-    AuthorizableContract
+    AuthorizableContract,
+    OauthableContract
 {
-    use Authenticatable, Authorizable;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'name',
-        'email',
-    ];
+    use Authenticatable, Authorizable, Oauthable;
 
     /**
      * The attributes excluded from the model's JSON form.

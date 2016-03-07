@@ -32,6 +32,7 @@ $app->withEloquent();
 
 $app->configure('database');
 $app->configure('tokens');
+$app->configure('auth');
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
@@ -65,7 +66,9 @@ $app->singleton(
 */
 
 $app->middleware([
-    App\Http\Middleware\JsonMiddleware::class
+    App\Http\Middleware\JsonMiddleware::class,
+    //Illuminate\Session\Middleware\StartSession::class
+    //Illuminate\Session\Middleware\StartSession::class,
 ]);
 
 $app->routeMiddleware([
@@ -87,6 +90,7 @@ $app->routeMiddleware([
 $app->register(Nebo15\REST\ServiceProvider::class);
 $app->register(App\Providers\ValidationServiceProvider::class);
 $app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+$app->register(Nebo15\LumenOauth2\Providers\ServiceProvider::class);
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 
@@ -101,7 +105,7 @@ $app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 |
 */
 
-$app->group(['namespace' => 'App\Http\Controllers'], function ($app) {
+$app->group([], function ($app) {
     require __DIR__ . '/../app/Http/routes.php';
 });
 
