@@ -23,6 +23,8 @@ $api->api('api/v1/admin/tables', 'TablesController', ['auth.admin']);
 
 $app->make('Oauth.routes')->makeRestRoutes();
 
+$app->post('api/v1/user/', ['uses' => 'UsersController@create', 'middleware' => 'oauth.basic.client']);
+
 $app->group(
     [
         'prefix' => 'api/v1/admin',

@@ -1,6 +1,7 @@
 <?php
 namespace App\Providers;
 
+use Illuminate\Validation\DatabasePresenceVerifier;
 use Illuminate\Validation\Factory;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
@@ -16,6 +17,10 @@ class ValidationServiceProvider extends ServiceProvider
 
     public function register()
     {
+        $this->app->singleton('validation.presence', function ($app) {
+            return new DatabasePresenceVerifier($app['db']);
+        });
+
         $this->app->singleton('validator', function ($app) {
             $validator = new Factory($app['translator'], $app);
             $validator->resolver(function ($translator, $data, $rules, $messages, $customAttributes) {

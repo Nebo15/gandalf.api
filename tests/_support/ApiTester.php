@@ -19,6 +19,8 @@
 class ApiTester extends \Codeception\Actor
 {
     private $tableData;
+    private $mongo;
+    private $client;
 
     use _generated\ApiTesterActions;
 
@@ -37,6 +39,11 @@ class ApiTester extends \Codeception\Actor
         $this->assertGroup('$.data', 201);
 
         return $this->getResponseFields()->data;
+    }
+
+    public function getFaker($locale = 'en_US')
+    {
+        return Faker\Factory::create($locale);
     }
 
     public function assertGroup($jsonPath = '$.data', $code = 200)
@@ -322,6 +329,37 @@ class ApiTester extends \Codeception\Actor
     {
         $this->amHttpAuthenticated('consumer', 'consumer');
     }
+
+    public function getMongo()
+    {
+        if (!$this->mongo) {
+            $this->mongo = (new MongoClient())->selectDB('gandalf_test');
+        }
+
+        return $this->mongo;
+    }
+
+    public function createAndLoginClient()
+    {
+        if (!$this->client) {
+            $faker = $this->getFaker();
+            $client = [
+                'client_id' => md5($faker->name),
+                'client_secret' => $faker->password(32,32)
+            ];
+            $this->getMongo()->oauth_clients->insert($client);
+            $this->client = $client;
+        }
+        $this->loginClient($this->client);
+        return $this->client;
+    }
+
+    public function loginClient($client)
+    {
+        $this->logout();
+        $this->amHttpAuthenticated($client['client_id'], $client['client_secret']);
+    }
+
 
     public function logout()
     {
