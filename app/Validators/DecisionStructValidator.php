@@ -33,10 +33,24 @@ class DecisionStructValidator
                 ['value' => $value],
                 ['value' => "required|$type"]
             );
-            return $validator->fails() ? false : true;
+            return !($validator->fails());
         }
 
         return true;
+    }
+
+    public function ruleThanType($attribute, $value, $parameters, Validator $validator)
+    {
+        $type = 'string';
+        $rule_matching = array_get($validator->getData(), 'table.matching_type', 'first');
+        if ($rule_matching == 'all') {
+            $type = 'numeric';
+        }
+        $validator = \Validator::make(
+            ['value' => $value],
+            ['value' => "required|$type"]
+        );
+        return !($validator->fails());
     }
 
     public function conditionsCount($attribute, $value, $parameters, Validator $validator)

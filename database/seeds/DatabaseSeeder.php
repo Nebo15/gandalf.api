@@ -11,7 +11,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\DecisionTable::truncate();
+        \App\Models\Decision::truncate();
         \App\Models\ConditionType::truncate();
 
         $types = [
@@ -47,6 +47,7 @@ class DatabaseSeeder extends Seeder
         $fields = array_shift($csv);
 
         $data = [
+            'matching_type' => 'first',
             'default_decision' => 'approve',
             'fields' => [],
             'rules' => []
@@ -91,6 +92,6 @@ class DatabaseSeeder extends Seeder
             ];
         }
 
-        \App\Models\DecisionTable::create($data);
+        \App\Models\Decision::create($data);
     }
 }
