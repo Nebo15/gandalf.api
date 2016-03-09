@@ -9,7 +9,8 @@
         "laravel/lumen-framework": "5.2.*",
         "vlucas/phpdotenv": "~2.2",
         "jenssegers/mongodb": "2.*",
-        "nebo15/lumen.rest": "*"
+        "nebo15/lumen.rest": "*",
+        "nebo15/lumen.oauth2-mongodb": "*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
