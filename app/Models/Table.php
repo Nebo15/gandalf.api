@@ -14,22 +14,23 @@ use Nebo15\REST\Interfaces\ListableInterface;
  * @property string $title
  * @property string $description
  * @property string $default_decision
+ * @property string $matching_type
  * @property Rule[] $rules
  * @property Field[] $fields
- * @method static DecisionTable findById($id)
- * @method static DecisionTable create(array $attributes = [])
- * @method DecisionTable save(array $options = [])
+ * @method static Decision findById($id)
+ * @method static Decision create(array $attributes = [])
+ * @method Decision save(array $options = [])
  * @method static \Illuminate\Pagination\LengthAwarePaginator paginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null)
  */
 class Table extends Base implements ListableInterface
 {
     use ListableTrait;
 
-    protected $listable = ['_id', 'title', 'description', 'default_decision'];
+    protected $listable = ['_id', 'title', 'description', 'matching_type', 'default_decision'];
 
-    protected $visible = ['_id', 'title', 'description', 'default_decision', 'rules', 'fields'];
+    protected $visible = ['_id', 'title', 'description', 'matching_type', 'default_decision', 'rules', 'fields'];
 
-    protected $fillable = ['title', 'description', 'default_decision'];
+    protected $fillable = ['title', 'description', 'default_decision', 'matching_type'];
 
     protected $perPage = 20;
 

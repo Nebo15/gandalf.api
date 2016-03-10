@@ -7,10 +7,10 @@
 
 namespace App\Services;
 
-use App\Models\Field;
-use App\Models\Condition;
-use App\Models\Decision;
 use App\Models\Table;
+use App\Models\Field;
+use App\Models\Decision;
+use App\Models\Condition;
 use App\Repositories\TablesRepository;
 use Illuminate\Contracts\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -31,34 +31,34 @@ class Scoring
 
     public function check($id, $values)
     {
-        $decision = $this->tablesRepository->read($id);
-        $validator = \Validator::make($values, $this->createValidationRules($decision));
+        $table = $this->tablesRepository->read($id);
+        $validator = \Validator::make($values, $this->createValidationRules($table));
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
-        /** @var \Jenssegers\Mongodb\Relations\EmbedsMany $fields */
-        $fields = $decision->fields();
+        $fields = $table->fields();
 
-        # crooked nail. Maybe you should write your own ODM?
+        $webhook = isset($values['webhook']) ? $values['webhook'] : null;
         $scoring_data = [
             'table' => [
-                '_id' => new \MongoId($decision->getId()),
-                'title' => $decision->title,
-                'description' => $decision->description,
+                '_id' => new \MongoId($table->getId()),
+                'title' => $table->title,
+                'description' => $table->description,
+                'matching_type' => $table->matching_type
             ],
             'title' => '',
             'description' => '',
-            'default_decision' => $decision->default_decision,
+            'default_decision' => $table->default_decision,
             'fields' => $fields->toArray(),
             'rules' => [],
             'request' => $values,
-            'webhook' => isset($values['webhook']) ? $values['webhook'] : null
+            'webhook' => $webhook
         ];
         $final_decision = null;
         $fieldsCollection = $fields->get();
 
         /** @var \App\Models\Rule $rule */
-        foreach ($decision->rules()->get() as $rule) {
+        foreach ($table->rules()->get() as $rule) {
             $scoring_rule = [
                 'than' => $rule->than,
                 'title' => $rule->title,
@@ -89,18 +89,25 @@ class Scoring
 
                 $fieldIndex++;
             }
-            if (!$final_decision and $conditions_matched) {
-                $final_decision = $rule->than;
-                $scoring_data['title'] = $rule->title;
-                $scoring_data['description'] = $rule->description;
+            if ($table->matching_type == 'all') {
+                if ($conditions_matched) {
+                    $final_decision += intval($rule->than);
+                }
+            } else {
+
+                if (!$final_decision and $conditions_matched) {
+                    $final_decision = $rule->than;
+                    $scoring_data['title'] = $rule->title;
+                    $scoring_data['description'] = $rule->description;
+                }
             }
 
             $scoring_rule['decision'] = $conditions_matched ? $rule->than : null;
             $scoring_data['rules'][] = $scoring_rule;
         }
 
-        $scoring_data['final_decision'] = $final_decision ?: $decision->default_decision;
-        if (isset($values['webhook'])) {
+        $scoring_data['final_decision'] = $final_decision ?: $table->default_decision;
+        if ($webhook) {
             # create webhook service
         }
 
@@ -109,7 +116,11 @@ class Scoring
 
     private function checkCondition(Condition $condition, $value)
     {
-        $condition->matched = $this->conditionsTypes->checkConditionValue($condition->condition, $condition->value, $value);
+        $condition->matched = $this->conditionsTypes->checkConditionValue(
+            $condition->condition,
+            $condition->value,
+            $value
+        );
     }
 
     private function prepareFieldPreset(Field $field, $value)

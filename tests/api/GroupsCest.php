@@ -28,8 +28,8 @@ class GroupsCest
             $tables_ids[] = $table->_id;
         }
         # check group
-        for($i = 0; $i < 3; $i++ ){
-            $I->checkDecision($group->_id, [], 'groups');
+        for ($i = 0; $i < 3; $i++) {
+            $I->checkDecision($group->_id, [], 'first', 'groups');
             $I->assertTrue(in_array($I->getResponseFields()->data->table->_id, $tables_ids));
         }
     }

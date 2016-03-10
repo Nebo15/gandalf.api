@@ -13,6 +13,7 @@ class ValidationServiceProvider extends ServiceProvider
         Validator::extend('conditionType', 'App\Validators\DecisionStructValidator@conditionType');
         Validator::extend('conditionsCount', 'App\Validators\DecisionStructValidator@conditionsCount');
         Validator::extend('conditionsField', 'App\Validators\DecisionStructValidator@conditionsField');
+        Validator::extend('ruleThanType', 'App\Validators\DecisionStructValidator@ruleThanType');
     }
 
     public function register()
