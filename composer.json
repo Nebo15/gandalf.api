@@ -4,12 +4,25 @@
     "keywords": ["framework", "laravel", "lumen"],
     "license": "MIT",
     "type": "project",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "/Users/bardack/www/lumen-rest",
+            "symlink": true
+        },
+        {
+            "type": "path",
+            "url": "/Users/bardack/www/eloquent-changelog",
+            "symlink": true
+        }
+    ],
     "require": {
         "php": ">=5.5.9",
         "laravel/lumen-framework": "5.2.*",
         "vlucas/phpdotenv": "~2.2",
         "jenssegers/mongodb": "2.*",
         "nebo15/lumen.rest": "*",
+        "nebo15/eloquent.changelog": "*",
         "nebo15/lumen.oauth2-mongodb": "*"
     },
     "require-dev": {

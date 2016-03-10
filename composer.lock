@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4c6a6139e7d6d2f6ad156c417ba17fae",
-    "content-hash": "e27e04f884f9b94186f73ca16bb1fe80",
+    "hash": "acbef94c4e4d62d2c73ed164c8281dca",
+    "content-hash": "4a1e72fa3e59817e2585eb6536316cff",
     "packages": [
         {
             "name": "bshaffer/oauth2-server-php",
@@ -1448,17 +1448,52 @@
             "time": "2016-01-26 21:23:30"
         },
         {
+            "name": "nebo15/eloquent.changelog",
+            "version": "0.0.1",
+            "dist": {
+                "type": "path",
+                "url": "/Users/bardack/www/eloquent-changelog/",
+                "reference": "45ac3c4b8dc2fd850333018f91a51e242e0fbd2e",
+                "shasum": null
+            },
+            "require-dev": {
+                "illuminate/database": "5.2.*",
+                "squizlabs/php_codesniffer": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Nebo15\\EloquentChangelog\\": "src"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paul Bardack",
+                    "homepage": "http://paulbardack.com"
+                }
+            ],
+            "description": "Eloquent changelog",
+            "keywords": [
+                "Eloquent",
+                "Laravel",
+                "changelog"
+            ]
+        },
+        {
             "name": "nebo15/lumen.oauth2-mongodb",
-            "version": "0.0.5",
+            "version": "0.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/lumen-oauth2-mongo.git",
-                "reference": "43596921c0420aa602b94bd9074ea69614365799"
+                "reference": "6f9e04cb7c34edfdee4554fb1bcaf9411226a976"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-oauth2-mongo/zipball/43596921c0420aa602b94bd9074ea69614365799",
-                "reference": "43596921c0420aa602b94bd9074ea69614365799",
+                "url": "https://api.github.com/repos/Nebo15/lumen-oauth2-mongo/zipball/6f9e04cb7c34edfdee4554fb1bcaf9411226a976",
+                "reference": "6f9e04cb7c34edfdee4554fb1bcaf9411226a976",
                 "shasum": ""
             },
             "require": {
@@ -1490,21 +1525,16 @@
                 "mongo",
                 "oauth2"
             ],
-            "time": "2016-03-07 11:36:03"
+            "time": "2016-03-09 14:47:15"
         },
         {
             "name": "nebo15/lumen.rest",
-            "version": "0.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Nebo15/lumen-rest.git",
-                "reference": "10f20958b5a2dae8504a25af580273fc6b1d471c"
-            },
+            "version": "0.0.2",
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-rest/zipball/10f20958b5a2dae8504a25af580273fc6b1d471c",
-                "reference": "10f20958b5a2dae8504a25af580273fc6b1d471c",
-                "shasum": ""
+                "type": "path",
+                "url": "/Users/bardack/www/lumen-rest/",
+                "reference": "49d8ba30fb95837f2703386601029603d7977b77",
+                "shasum": null
             },
             "require-dev": {
                 "laravel/lumen-framework": "5.2.*",
@@ -1516,7 +1546,6 @@
                     "Nebo15\\REST\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1528,11 +1557,10 @@
             ],
             "description": "Components for fast building REST API for Lumen",
             "keywords": [
-                "api",
-                "lumen",
-                "rest"
-            ],
-            "time": "2016-03-05 20:02:24"
+                "API",
+                "REST",
+                "lumen"
+            ]
         },
         {
             "name": "nesbot/carbon",
@@ -2072,7 +2100,7 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
@@ -2131,7 +2159,7 @@
         },
         {
             "name": "symfony/polyfill-php56",
-            "version": "v1.1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php56.git",
@@ -2187,7 +2215,7 @@
         },
         {
             "name": "symfony/polyfill-util",
-            "version": "v1.1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-util.git",
@@ -2797,16 +2825,16 @@
         },
         {
             "name": "guzzlehttp/promises",
-            "version": "1.0.3",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "b1e1c0d55f8083c71eda2c28c12a228d708294ea"
+                "reference": "bb9024c526b22f3fe6ae55a561fd70653d470aa8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/b1e1c0d55f8083c71eda2c28c12a228d708294ea",
-                "reference": "b1e1c0d55f8083c71eda2c28c12a228d708294ea",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/bb9024c526b22f3fe6ae55a561fd70653d470aa8",
+                "reference": "bb9024c526b22f3fe6ae55a561fd70653d470aa8",
                 "shasum": ""
             },
             "require": {
@@ -2844,7 +2872,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2015-10-15 22:28:00"
+            "time": "2016-03-08 01:15:46"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -3858,16 +3886,16 @@
         },
         {
             "name": "sokil/php-mongo",
-            "version": "1.15",
+            "version": "1.15.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sokil/php-mongo.git",
-                "reference": "a9ac0ae91ee00883db9f9b951d49df4be2d70b9f"
+                "reference": "dbc297fc43e3d1529df039e3415877b62f826f05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sokil/php-mongo/zipball/a9ac0ae91ee00883db9f9b951d49df4be2d70b9f",
-                "reference": "a9ac0ae91ee00883db9f9b951d49df4be2d70b9f",
+                "url": "https://api.github.com/repos/sokil/php-mongo/zipball/dbc297fc43e3d1529df039e3415877b62f826f05",
+                "reference": "dbc297fc43e3d1529df039e3415877b62f826f05",
                 "shasum": ""
             },
             "require": {
@@ -3911,7 +3939,7 @@
                 "mongodb",
                 "odm"
             ],
-            "time": "2016-03-01 20:13:42"
+            "time": "2016-03-10 09:57:05"
         },
         {
             "name": "sokil/php-mongo-migrator",

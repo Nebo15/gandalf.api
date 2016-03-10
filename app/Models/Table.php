@@ -79,4 +79,33 @@ class Table extends Base implements ListableInterface
 
         return $this;
     }
+
+    public function getDirty()
+    {
+        $dirty = parent::getDirty();
+
+        /** @var Field[] $fields */
+        $rules = $this->rules()->get();
+
+        if ($count = $rules->count() > 0) {
+            /** @var Rule[] $rules */
+            $dirty['rules'] = [];
+            for ($i = 0; $i < $count; $i++) {
+                if ($dirtyRules = $rules[$i]->getDirty()) {
+                    $dirty['rules'][$i] = $dirtyRules;
+                }
+                $conditions = $rules[$i]->conditions();
+                if ($conditions_count = $conditions->count() > 0) {
+                    /** @var Condition[] $conditions */
+                    for ($z = 0; $z < $conditions_count; $z++) {
+                        if ($dirtyCond = $conditions[0]->getDirty()) {
+
+                        }
+                    }
+                }
+            }
+        }
+
+        $fields = $this->fields()->get();
+    }
 }
