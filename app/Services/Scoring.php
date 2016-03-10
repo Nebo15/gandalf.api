@@ -91,10 +91,7 @@ class Scoring
             }
             if ($table->matching_type == 'all') {
                 if ($conditions_matched) {
-                    if (!$final_decision) {
-                        $final_decision = 0;
-                    }
-                    $final_decision += $rule->than;
+                    $final_decision += intval($rule->than);
                 }
             } else {
 
