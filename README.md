@@ -1,7 +1,7 @@
 # Gandalf
 
 [![Deployment status from DeployBot](https://nebo15.deploybot.com/badge/56046448049120/64889.svg)](http://deploybot.com)
-[![Build Status](https://travis-ci.com/Nebo15/gandalf.api.svg?token=xgZbSs9Y2bjswEUEXkUb&branch=master)](https://travis-ci.com/Nebo15/gandalf.api)
+[![Build Status](https://travis-ci.org/Nebo15/gandalf.api.svg?branch=master)](https://travis-ci.org/Nebo15/gandalf.api)
 
 This is a Back-End project for our Open-Source Decision Engine for Big-Data. You can find front-end here: [Nebo15/gandalf.web](https://github.com/Nebo15/gandalf.web).
 
