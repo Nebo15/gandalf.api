@@ -5,12 +5,11 @@
 
 namespace App\Observers;
 
+use App\Models\User;
+
 class UserObserver
 {
-    /**
-     * @param \App\Models\User $user
-     */
-    public function creating($user)
+    public function creating(User $user)
     {
         if (!$user->nickname) {
             if ($user->temporary_email) {
@@ -18,53 +17,43 @@ class UserObserver
             }
         }
     }
-    /**
-     * @param \App\Models\User $user
-     */
-    public function created($user)
-    {}
-    /**
-     * @param \App\Models\User $user
-     */
-    public function updating($user)
-    {}
-    /**
-     * @param \App\Models\User $user
-     */
-    public function updated($user)
-    {}
-    /**
-     * @param \App\Models\User $user
-     */
-    public function saving($user)
+
+    public function created(User $user)
+    {
+    }
+
+    public function updating(User $user)
+    {
+    }
+
+    public function updated(User $user)
+    {
+    }
+
+    public function saving(User $user)
     {
         if ($user->isDirty('password')) {
-            $user->password =  $user->getPasswordHasher()->make($user->password);
+            $user->password = $user->getPasswordHasher()->make($user->password);
         }
     }
-    /**
-     * @param \App\Models\User $user
-     */
-    public function saved($user)
-    {}
-    /**
-     * @param \App\Models\User $user
-     */
-    public function deleting($user)
-    {}
-    /**
-     * @param \App\Models\User $user
-     */
-    public function deleted($user)
-    {}
-    /**
-     * @param \App\Models\User $user
-     */
-    public function restoring($user)
-    {}
-    /**
-     * @param \App\Models\User $user
-     */
-    public function restored($user)
-    {}
+
+    public function saved(User $user)
+    {
+    }
+
+    public function deleting(User $user)
+    {
+    }
+
+    public function deleted(User $user)
+    {
+    }
+
+    public function restoring(User $user)
+    {
+    }
+
+    public function restored(User $user)
+    {
+    }
 }

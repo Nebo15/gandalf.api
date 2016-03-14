@@ -34,6 +34,10 @@ class Table extends Base implements ListableInterface
 
     protected $perPage = 20;
 
+    protected $casts = [
+        '_id' => 'string',
+    ];
+
     protected function getArrayableRelations()
     {
         return [

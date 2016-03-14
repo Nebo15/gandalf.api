@@ -18,6 +18,8 @@ class TablesRepository extends AbstractRepository
 {
     protected $modelClassName = 'App\Models\Table';
 
+    protected $observerClassName = 'App\Observers\TableObserver';
+
     public function createOrUpdate($values, $id = null)
     {
         /** @var \App\Models\Table $model */
