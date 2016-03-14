@@ -21,6 +21,10 @@ $api = $app->make('Nebo15\REST\Router');
 $api->api('api/v1/admin/groups', 'GroupsController', ['auth.admin']);
 $api->api('api/v1/admin/tables', 'TablesController', ['auth.admin']);
 
+/** @var Nebo15\Changelog\Router $api */
+$api = $app->make('Nebo15\Changelog\Router');
+$api->api('api/v1/admin', ['auth.admin']);
+
 $app->make('Oauth.routes')->makeRestRoutes();
 
 $app->post('api/v1/user/', ['uses' => 'UsersController@create', 'middleware' => 'oauth.basic.client']);

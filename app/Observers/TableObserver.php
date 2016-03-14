@@ -25,8 +25,6 @@ class TableObserver
 
     public function saving(Table $table)
     {
-        echo 123;
-        die();
         /** get user name */
         Changelog::createFromModel($table, 'admin');
     }
