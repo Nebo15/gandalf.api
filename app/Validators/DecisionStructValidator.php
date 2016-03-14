@@ -41,7 +41,7 @@ class DecisionStructValidator
 
     public function ruleThanType($attribute, $value, $parameters, Validator $validator)
     {
-        $type = 'string';
+        $type = 'alpha_num';
         $rule_matching = array_get($validator->getData(), 'table.matching_type', 'first');
         if ($rule_matching == 'all') {
             $type = 'numeric';
@@ -50,6 +50,7 @@ class DecisionStructValidator
             ['value' => $value],
             ['value' => "required|$type"]
         );
+
         return !($validator->fails());
     }
 
