@@ -27,6 +27,8 @@ class TablesController extends AbstractController
             'table.title' => 'sometimes|string',
             'table.description' => 'sometimes|string',
             'table.default_decision' => 'required|ruleThanType',
+            'table.default_title' => 'sometimes|required|between:2,128',
+            'table.default_description' => 'sometimes|required|between:2,512',
             'table.matching_type' => 'required|in:first,all',
             'table.fields' => 'required|array',
             'table.fields.*.title' => 'required|string',

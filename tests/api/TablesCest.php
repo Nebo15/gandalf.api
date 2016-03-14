@@ -12,6 +12,8 @@ class TablesCest
         $I->loginAdmin();
         $table = $I->createTable([
             'default_decision' => 'Decline',
+            'default_title' => 'Title 100',
+            'default_description' => 'Description 220',
             'title' => 'Test title',
             'description' => 'Test description',
             'matching_type' => 'first',
@@ -60,6 +62,8 @@ class TablesCest
         $I->sendGET('api/v1/admin/tables/' . $table->_id);
         $I->assertTable();
         $I->assertResponseDataFields([
+            'default_title' => 'Title 100',
+            'default_description' => 'Description 220',
             'fields' => [
                 [
                     "preset" => [
@@ -131,6 +135,8 @@ class TablesCest
         $I->loginAdmin();
         $I->sendPOST('api/v1/admin/tables', [
             'table' => [
+                'default_title' => '',
+                'default_description' => str_repeat('1', 513),
                 'default_decision' => 'Decline',
                 'fields' => [
                     [
@@ -197,6 +203,8 @@ class TablesCest
             ]
         ]);
         $I->seeResponseCodeIs(422);
+        $I->seeResponseContains('table.default_title');
+        $I->seeResponseContains('table.default_description');
         $I->seeResponseContains('table.rules.1.conditions');
         $I->seeResponseContains('table.matching_type');
 

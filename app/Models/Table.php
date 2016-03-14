@@ -13,7 +13,9 @@ use Nebo15\REST\Interfaces\ListableInterface;
  * @package App\Models
  * @property string $title
  * @property string $description
+ * @property string $default_title
  * @property string $default_decision
+ * @property string $default_description
  * @property string $matching_type
  * @property Rule[] $rules
  * @property Field[] $fields
@@ -28,14 +30,33 @@ class Table extends Base implements ListableInterface
 
     protected $listable = ['_id', 'title', 'description', 'matching_type', 'default_decision'];
 
-    protected $visible = ['_id', 'title', 'description', 'matching_type', 'default_decision', 'rules', 'fields'];
+    protected $visible = [
+        '_id',
+        'title',
+        'description',
+        'matching_type',
+        'default_decision',
+        'default_title',
+        'default_description',
+        'rules',
+        'fields'
+    ];
 
-    protected $fillable = ['title', 'description', 'default_decision', 'matching_type'];
+    protected $fillable = [
+        'title',
+        'description',
+        'default_title',
+        'default_description',
+        'default_decision',
+        'matching_type'
+    ];
 
     protected $perPage = 20;
 
     protected $casts = [
         '_id' => 'string',
+        'default_title' => 'string',
+        'default_description' => 'string',
     ];
 
     protected function getArrayableRelations()
@@ -82,5 +103,28 @@ class Table extends Base implements ListableInterface
         }
 
         return $this;
+    }
+
+    public function toArray()
+    {
+        $array = parent::toArray();
+        $strings = ['default_title', 'default_description'];
+        foreach ($strings as $key) {
+            if (!array_key_exists($key, $array)) {
+                $array[$key] = '';
+            }
+        }
+
+        return $array;
+    }
+
+    public function getDefaultTitleAttribute($value)
+    {
+        return strval($value);
+    }
+
+    public function getDefaultDescriptionAttribute($value)
+    {
+        return strval($value);
     }
 }
