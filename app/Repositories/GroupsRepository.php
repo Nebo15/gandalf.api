@@ -15,4 +15,6 @@ use Nebo15\REST\AbstractRepository;
 class GroupsRepository extends AbstractRepository
 {
     protected $modelClassName = 'App\Models\Group';
+
+    protected $observerClassName = 'App\Observers\GroupObserver';
 }

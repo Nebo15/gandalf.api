@@ -6,10 +6,9 @@
 namespace App\Observers;
 
 use \App\Models\Table;
-use Illuminate\Http\Request;
 use Nebo15\Changelog\Changelog;
 
-class TableObserver
+class GroupObserver
 {
     public function creating(Table $table)
     {}
@@ -25,8 +24,6 @@ class TableObserver
 
     public function saving(Table $table)
     {
-        echo 123;
-        die();
         /** get user name */
         Changelog::createFromModel($table, 'admin');
     }
