@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "acbef94c4e4d62d2c73ed164c8281dca",
-    "content-hash": "4a1e72fa3e59817e2585eb6536316cff",
+    "hash": "35ec0fa6962d57225795141fc7a15b3d",
+    "content-hash": "a755233f4af20007273cef9a76bfb514",
     "packages": [
         {
             "name": "bshaffer/oauth2-server-php",
@@ -1449,20 +1449,11 @@
         },
         {
             "name": "nebo15/eloquent.changelog",
-            "version": "0.0.1",
-            "dist": {
-                "type": "path",
-                "url": "/Users/bardack/www/eloquent-changelog/",
-                "reference": "e5f158777fe287b41b6250b4d866119172190c23",
-                "shasum": null
-            },
-            "require": {
-                "jenssegers/mongodb": "2.*",
-                "nebo15/lumen.rest": "*"
-            },
-            "require-dev": {
-                "laravel/lumen-framework": "5.2.*",
-                "squizlabs/php_codesniffer": "2.*"
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Nebo15/eloquent-changelog",
+                "reference": "master"
             },
             "type": "library",
             "autoload": {
@@ -1470,21 +1461,7 @@
                     "Nebo15\\Changelog\\": "src"
                 }
             },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Paul Bardack",
-                    "homepage": "http://paulbardack.com"
-                }
-            ],
-            "description": "Eloquent changelog",
-            "keywords": [
-                "Eloquent",
-                "Laravel",
-                "changelog"
-            ]
+            "time": "2016-03-14 15:20:17"
         },
         {
             "name": "nebo15/lumen.oauth2-mongodb",
@@ -1533,12 +1510,17 @@
         },
         {
             "name": "nebo15/lumen.rest",
-            "version": "0.0.2",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Nebo15/lumen-rest.git",
+                "reference": "27245239075b73496456a3b5ca642ada8c885c7e"
+            },
             "dist": {
-                "type": "path",
-                "url": "/Users/bardack/www/lumen-rest/",
-                "reference": "20da19d533b264b01be3bfad76cf12a53760206b",
-                "shasum": null
+                "type": "zip",
+                "url": "https://api.github.com/repos/Nebo15/lumen-rest/zipball/27245239075b73496456a3b5ca642ada8c885c7e",
+                "reference": "27245239075b73496456a3b5ca642ada8c885c7e",
+                "shasum": ""
             },
             "require-dev": {
                 "laravel/lumen-framework": "5.2.*",
@@ -1550,6 +1532,7 @@
                     "Nebo15\\REST\\": "src"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1561,10 +1544,11 @@
             ],
             "description": "Components for fast building REST API for Lumen",
             "keywords": [
-                "API",
-                "REST",
-                "lumen"
-            ]
+                "api",
+                "lumen",
+                "rest"
+            ],
+            "time": "2016-03-14 15:30:30"
         },
         {
             "name": "nesbot/carbon",
@@ -4346,6 +4330,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "nebo15/lumen.rest": 20,
+        "nebo15/eloquent.changelog": 20,
         "sokil/php-mongo-migrator": 20
     },
     "prefer-stable": false,

@@ -5,41 +5,50 @@
 
 namespace App\Observers;
 
-use \App\Models\Table;
+use \App\Models\Group;
 use Nebo15\Changelog\Changelog;
 
 class GroupObserver
 {
-    public function creating(Table $table)
-    {}
-
-    public function created(Table $table)
-    {}
-
-    public function updating(Table $table)
-    {}
-
-    public function updated(Table $table)
-    {}
-
-    public function saving(Table $table)
+    public function creating(Group $Group)
     {
-        /** get user name */
-        Changelog::createFromModel($table, 'admin');
     }
 
-    public function saved(Table $table)
-    {}
+    public function created(Group $Group)
+    {
+    }
 
-    public function deleting(Table $table)
-    {}
+    public function updating(Group $Group)
+    {
+    }
 
-    public function deleted(Table $table)
-    {}
+    public function updated(Group $Group)
+    {
+    }
 
-    public function restoring(Table $table)
-    {}
+    public function saving(Group $Group)
+    {
+    }
 
-    public function restored(Table $table)
-    {}
+    public function saved(Group $Group)
+    {
+        /** get user name */
+        Changelog::createFromModel($Group, 'admin');
+    }
+
+    public function deleting(Group $Group)
+    {
+    }
+
+    public function deleted(Group $Group)
+    {
+    }
+
+    public function restoring(Group $Group)
+    {
+    }
+
+    public function restored(Group $Group)
+    {
+    }
 }

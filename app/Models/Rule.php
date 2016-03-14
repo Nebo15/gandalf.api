@@ -24,6 +24,7 @@ class Rule extends Base
     protected $fillable = ['title', 'description', 'than'];
 
     protected $casts = [
+        '_id' => 'string',
         'title' => 'string',
         'description' => 'string',
     ];

@@ -13,7 +13,6 @@ use Jenssegers\Mongodb\Model as Eloquent;
 abstract class Base extends Eloquent
 {
     const PRIMARY_KEY = '_id';
-    protected $primaryKey = self::PRIMARY_KEY;
     protected $connection = 'mongodb';
     protected $validation_rules = [];
 

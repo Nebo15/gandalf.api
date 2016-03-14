@@ -6,14 +6,21 @@
     "type": "project",
     "repositories": [
         {
-            "type": "path",
-            "url": "/Users/bardack/www/lumen-rest",
-            "symlink": true
-        },
-        {
-            "type": "path",
-            "url": "/Users/bardack/www/eloquent-changelog",
-            "symlink": true
+            "type": "package",
+            "package": {
+                "name": "nebo15/eloquent.changelog",
+                "version": "dev-master",
+                "source": {
+                    "url": "https://github.com/Nebo15/eloquent-changelog",
+                    "type": "git",
+                    "reference": "master"
+                },
+                "autoload": {
+                    "psr-4" : {
+                        "Nebo15\\Changelog\\" : "src"
+                    }
+                }
+            }
         }
     ],
     "require": {
@@ -21,8 +28,8 @@
         "laravel/lumen-framework": "5.2.*",
         "vlucas/phpdotenv": "~2.2",
         "jenssegers/mongodb": "2.*",
-        "nebo15/lumen.rest": "*",
-        "nebo15/eloquent.changelog": "*",
+        "nebo15/lumen.rest": "dev-master",
+        "nebo15/eloquent.changelog": "dev-master",
         "nebo15/lumen.oauth2-mongodb": "*"
     },
     "require-dev": {
