@@ -107,6 +107,8 @@ class ApiTester extends \Codeception\Actor
             'title' => 'string',
             'description' => 'string',
             'default_decision' => 'string|integer',
+            'default_title' => 'string',
+            'default_description' => 'string',
             'rules' => 'array',
             'fields' => 'array',
         ], $jsonPath);

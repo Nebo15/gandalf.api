@@ -46,8 +46,8 @@ class Scoring
                 'description' => $table->description,
                 'matching_type' => $table->matching_type
             ],
-            'title' => '',
-            'description' => '',
+            'title' => $table->default_title,
+            'description' => $table->default_description,
             'default_decision' => $table->default_decision,
             'fields' => $fields->toArray(),
             'rules' => [],
