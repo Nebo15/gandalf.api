@@ -10,7 +10,8 @@
         "vlucas/phpdotenv": "~2.2",
         "jenssegers/mongodb": "2.*",
         "nebo15/lumen.rest": "*",
-        "nebo15/lumen.oauth2-mongodb": "*"
+        "nebo15/lumen.oauth2-mongodb": "*",
+        "nebo15/lumen.applicationable": "*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -31,5 +32,12 @@
             "tests/",
             "database/"
         ]
-    }
+    },
+    "repositories": [
+      {
+        "type": "path",
+        "url": "/www/lumen.packages/lumen-applicationable",
+        "symlink": true
+      }
+    ]
 }

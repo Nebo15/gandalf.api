@@ -9,7 +9,7 @@ class TablesCest
 
     public function createOk(ApiTester $I)
     {
-        $I->loginAdmin();
+        $I->createAndLoginUser();
         $table = $I->createTable([
             'default_decision' => 'Decline',
             'title' => 'Test title',
@@ -127,7 +127,7 @@ class TablesCest
 
     public function createInvalid(ApiTester $I)
     {
-        $I->loginAdmin();
+        $I->createAndLoginUser();
         $I->sendPOST('api/v1/admin/tables', [
             'table' => [
                 'default_decision' => 'Decline',
@@ -231,7 +231,7 @@ class TablesCest
 
     public function ruleIsset(ApiTester $I)
     {
-        $I->loginAdmin();
+        $user = $I->createAndLoginUser();
         $table = $I->createTable([
             'title' => 'Test title',
             'description' => 'Test description',
@@ -291,7 +291,7 @@ class TablesCest
         $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
         $I->seeResponseCodeIs(401);
 
-        $I->loginAdmin();
+        $I->createAndLoginUser();
         $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
         $I->assertResponseDataFields([
             'final_decision' => 'Approve',

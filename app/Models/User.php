@@ -8,6 +8,8 @@ use Illuminate\Auth\Authenticatable;
 use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Nebo15\LumenApplicationable\Contracts\ApplicationableUserContract;
+use Nebo15\LumenApplicationable\Traits\ApplicationableUserTrait;
 use Nebo15\LumenOauth2\Interfaces\Oauthable as OauthableContract;
 use Nebo15\LumenOauth2\Traits\Oauthable;
 use Nebo15\REST\Traits\ListableTrait;
@@ -17,9 +19,10 @@ class User extends Base implements
     ListableInterface,
     AuthenticatableContract,
     AuthorizableContract,
-    OauthableContract
+    OauthableContract,
+    ApplicationableUserContract
 {
-    use ListableTrait, Authenticatable, Authorizable, Oauthable;
+    use ListableTrait, Authenticatable, Authorizable, Oauthable, ApplicationableUserTrait;
 
     protected $listable = [];
 

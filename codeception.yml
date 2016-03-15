@@ -22,3 +22,5 @@ modules:
             password: ''
             dump:
             cleanup: true
+        REST:
+        Laravel5:

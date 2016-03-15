@@ -24,6 +24,13 @@ class ApiTester extends \Codeception\Actor
 
     use _generated\ApiTesterActions;
 
+
+    public function __construct(\Codeception\Scenario $scenario)
+    {
+        $this->scenario = $scenario;
+        $this->scenario->stopIfBlocked();
+    }
+
     public function createGroup($tablesAmount = 2, $probability = 'random', array $data = null)
     {
         if (!$data) {
@@ -259,7 +266,7 @@ class ApiTester extends \Codeception\Actor
             'title' => 'Test title',
             'description' => 'Test description',
             'fields' => [],
-            'rules' => []
+            'rules' => [],
         ];
 
         unset($fields['Than']);
@@ -290,18 +297,36 @@ class ApiTester extends \Codeception\Actor
                 $conditions[] = [
                     'field_key' => strtolower(str_replace(' ', '_', $key)),
                     'condition' => '$eq',
-                    'value' => $value
+                    'value' => $value,
                 ];
             }
             $data['rules'][] = [
                 'than' => $than,
                 'title' => '',
                 'description' => '',
-                'conditions' => $conditions
+                'conditions' => $conditions,
             ];
         }
 
         return $data;
+    }
+
+    public function assertProject($jsonPath = '$.data', $code = 200)
+    {
+        $this->seeResponseCodeIs($code);
+        $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
+            'title' => 'string',
+            'users' => 'array',
+        ], $jsonPath);
+
+        $this->seeResponseMatchesJsonType([
+            'user_id' => 'string',
+            'role' => 'string',
+            'scope' => 'array',
+        ], "$jsonPath.users[*]");
+
+        $this->canSeeResponseJsonMatchesJsonPath("$jsonPath.consumers");
     }
 
     public function assertResponseDataFields(array $fields, $code = 200)
@@ -339,30 +364,66 @@ class ApiTester extends \Codeception\Actor
         return $this->mongo;
     }
 
+    public function createUser()
+    {
+        $this->createAndLoginClient();
+        $faker = $this->getFaker();
+
+        $user_data = [
+            'email' => $faker->email,
+            'password' => $faker->password(),
+            'username' => $faker->firstName,
+        ];
+
+        $this->sendPOST('api/v1/user/', $user_data);
+        $this->seeResponseCodeIs(201);
+
+        $this->sendPOST('oauth/',
+            [
+                'grant_type' => 'password',
+                'username' => $user_data['username'],
+                'password' => $user_data['password'],
+            ]
+        );
+
+        return json_decode($this->grabResponse());
+    }
+
+    public function createAndLoginUser()
+    {
+        $token = $this->createUser();
+        $this->loginUser($token);
+    }
+
+    public function loginUser($token)
+    {
+        $this->logout();
+        $this->amBearerAuthenticated($token->access_token);
+    }
+
     public function createAndLoginClient()
     {
         if (!$this->client) {
             $faker = $this->getFaker();
             $client = [
                 'client_id' => md5($faker->name),
-                'client_secret' => $faker->password(32,32)
+                'client_secret' => $faker->password(32, 32),
             ];
             $this->getMongo()->oauth_clients->insert($client);
             $this->client = $client;
         }
         $this->loginClient($this->client);
+
         return $this->client;
     }
 
     public function loginClient($client)
     {
-        $this->logout();
-        $this->amHttpAuthenticated($client['client_id'], $client['client_secret']);
+        $this->setHeader('Authorization', 'Basic ' . base64_encode($client['client_id'].':'.$client['client_secret']));
     }
-
 
     public function logout()
     {
-        $this->amHttpAuthenticated(null, null);
+        $this->deleteHeader('Authorization');
     }
 }
