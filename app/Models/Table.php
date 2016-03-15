@@ -30,6 +30,13 @@ class Table extends Base implements ListableInterface
 
     protected $listable = ['_id', 'title', 'description', 'matching_type', 'default_decision'];
 
+    protected $attributes = [
+        'title' => '',
+        'description' => '',
+        'default_title' => '',
+        'default_description' => '',
+    ];
+
     protected $visible = [
         '_id',
         'title',
@@ -55,6 +62,8 @@ class Table extends Base implements ListableInterface
 
     protected $casts = [
         '_id' => 'string',
+        'title',
+        'description',
         'default_title' => 'string',
         'default_description' => 'string',
     ];
@@ -103,28 +112,5 @@ class Table extends Base implements ListableInterface
         }
 
         return $this;
-    }
-
-    public function toArray()
-    {
-        $array = parent::toArray();
-        $strings = ['default_title', 'default_description'];
-        foreach ($strings as $key) {
-            if (!array_key_exists($key, $array)) {
-                $array[$key] = '';
-            }
-        }
-
-        return $array;
-    }
-
-    public function getDefaultTitleAttribute($value)
-    {
-        return strval($value);
-    }
-
-    public function getDefaultDescriptionAttribute($value)
-    {
-        return strval($value);
     }
 }
