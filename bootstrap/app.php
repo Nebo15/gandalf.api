@@ -85,6 +85,7 @@ $app->routeMiddleware([
 */
 
 $app->register(Nebo15\REST\ServiceProvider::class);
+$app->register(Nebo15\Changelog\ServiceProvider::class);
 $app->register(App\Providers\ValidationServiceProvider::class);
 $app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 $app->register(Nebo15\LumenOauth2\Providers\ServiceProvider::class);

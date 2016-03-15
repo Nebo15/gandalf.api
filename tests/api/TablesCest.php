@@ -9,11 +9,14 @@ class TablesCest
 
     public function createOk(ApiTester $I)
     {
-        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
         $table = $I->createTable([
             'default_decision' => 'Decline',
+            'default_title' => 'Title 100',
+            'default_description' => 'Description 220',
             'title' => 'Test title',
             'description' => 'Test description',
+            'matching_type' => 'first',
             'fields' => [
                 [
                     "key" => ' Test INVALID key ',
@@ -59,6 +62,8 @@ class TablesCest
         $I->sendGET('api/v1/admin/tables/' . $table->_id);
         $I->assertTable();
         $I->assertResponseDataFields([
+            'default_title' => 'Title 100',
+            'default_description' => 'Description 220',
             'fields' => [
                 [
                     "preset" => [
@@ -127,9 +132,11 @@ class TablesCest
 
     public function createInvalid(ApiTester $I)
     {
-        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
         $I->sendPOST('api/v1/admin/tables', [
             'table' => [
+                'default_title' => '',
+                'default_description' => str_repeat('1', 513),
                 'default_decision' => 'Decline',
                 'fields' => [
                     [
@@ -196,7 +203,10 @@ class TablesCest
             ]
         ]);
         $I->seeResponseCodeIs(422);
+        $I->seeResponseContains('table.default_title');
+        $I->seeResponseContains('table.default_description');
         $I->seeResponseContains('table.rules.1.conditions');
+        $I->seeResponseContains('table.matching_type');
 
         $I->sendPOST('api/v1/admin/tables', [
             'table' => [
@@ -231,11 +241,12 @@ class TablesCest
 
     public function ruleIsset(ApiTester $I)
     {
-        $user = $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
         $table = $I->createTable([
             'title' => 'Test title',
             'description' => 'Test description',
             'default_decision' => 'Decline',
+            'matching_type' => 'first',
             'fields' => [
                 [
                     "key" => ' IS SET ',
@@ -285,13 +296,8 @@ class TablesCest
         $I->sendPOST("api/v1/tables/{$table->_id}/decisions", ['is_set' => 200, 'second' => false]);
         $I->seeResponseCodeIs(422);
 
-        $I->loginConsumer();
         $decision = $I->checkDecision($table->_id, ['is_set' => 1000, 'second' => 'test']);
 
-        $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
-        $I->seeResponseCodeIs(401);
-
-        $I->createAndLoginUser();
         $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
         $I->assertResponseDataFields([
             'final_decision' => 'Approve',
@@ -314,11 +320,12 @@ class TablesCest
 
     public function ruleIn(ApiTester $I)
     {
-        $I->loginAdmin();
+        $I->createProjectAndSetHeader();
         $table = $I->createTable([
             'title' => 'Test title',
             'description' => 'Test description',
             'default_decision' => 'Decline',
+            'matching_type' => 'first',
             'fields' => [
                 [
                     "key" => 'test',
@@ -408,11 +415,12 @@ class TablesCest
 
     public function ruleEqual(ApiTester $I)
     {
-        $I->loginAdmin();
+        $I->createProjectAndSetHeader();
         $table_data = [
             'title' => 'Test',
             'description' => 'Test',
             'default_decision' => 'Decline',
+            'matching_type' => 'first',
             'fields' => [
                 [
                     "key" => 'boolean',
@@ -487,11 +495,12 @@ class TablesCest
 
     public function ruleNotEqual(ApiTester $I)
     {
-        $I->loginAdmin();
+        $I->createProjectAndSetHeader();
         $table = $I->createTable([
             'title' => 'Test',
             'description' => 'Test',
             'default_decision' => 'Decline',
+            'matching_type' => 'first',
             'fields' => [
                 [
                     "key" => 'boolean',
@@ -531,7 +540,7 @@ class TablesCest
 
     public function all(ApiTester $I)
     {
-        $I->loginAdmin();
+        $I->createProjectAndSetHeader();
         $I->createTable();
         $I->createTable();
 
@@ -549,7 +558,7 @@ class TablesCest
 
     public function update(ApiTester $I)
     {
-        $I->loginAdmin();
+        $I->createProjectAndSetHeader();
         $I->createTable();
 
         $I->sendGET('api/v1/admin/tables');
@@ -611,7 +620,7 @@ class TablesCest
 
     public function copy(ApiTester $I)
     {
-        $I->loginAdmin();
+        $I->createProjectAndSetHeader();
         $I->createTable();
 
         $data = $I->getResponseFields()->data;
@@ -627,7 +636,7 @@ class TablesCest
 
     public function delete(ApiTester $I)
     {
-        $I->loginAdmin();
+        $I->createProjectAndSetHeader();
         $I->createTable();
         $I->createTable();
 
@@ -646,9 +655,9 @@ class TablesCest
         $I->assertTable();
     }
 
-    public function decisions(ApiTester $I)
+    public function decisionsFirst(ApiTester $I)
     {
-        $I->loginAdmin();
+        $I->createProjectAndSetHeader();
         $table_data = $I->createTable();
         $table_id_no_decisions = $table_data->_id;
 
@@ -663,7 +672,7 @@ class TablesCest
 
         # filter by table_id
         $I->sendGET('api/v1/admin/decisions?table_id=' . $table_id_with_decisions);
-        $I->assertTableDecisionsForAdmin('$.data[*]');
+        $I->assertTableDecisionsForAdmin('first', '$.data[*]');
         foreach ($I->getResponseFields()->data as $item) {
             $I->sendGET('api/v1/admin/decisions/' . $item->_id);
             $I->assertTableDecisionsForAdmin();
@@ -679,7 +688,7 @@ class TablesCest
         $I->assertEquals($table_data->default_decision, $decision_data->final_decision);
 
         $I->sendGET('api/v1/admin/decisions');
-        $I->assertTableDecisionsForAdmin('$.data[*]');
+        $I->assertTableDecisionsForAdmin('first', '$.data[*]');
 
         $decisions = $I->getResponseFields()->data;
         $I->assertEquals('invalid', $decisions[0]->request->borrowers_phone_verification);
@@ -695,9 +704,63 @@ class TablesCest
         $I->seeResponseCodeIs(401);
     }
 
+    public function decisionsAll(ApiTester $I)
+    {
+        $I->createProjectAndSetHeader();
+        $table_data = $I->createTable([
+            'default_decision' => 10,
+            'title' => 'Test title',
+            'description' => 'Test description',
+            'matching_type' => 'all',
+            'fields' => [
+                [
+                    "key" => 'salary',
+                    "title" => 'Test',
+                    "source" => "request",
+                    "type" => 'numeric',
+                ]
+            ],
+            'rules' => [
+                [
+                    'than' => 100,
+                    'title' => 'Valid rule title',
+                    'description' => 'Valid rule description',
+                    'conditions' => [
+                        [
+                            'field_key' => 'salary',
+                            'condition' => '$gte',
+                            'value' => 100
+                        ]
+                    ]
+                ],
+                [
+                    'than' => 1000,
+                    'title' => 'Second title',
+                    'description' => 'Second description',
+                    'conditions' => [
+                        [
+                            'field_key' => 'salary',
+                            'condition' => '$gte',
+                            'value' => 1000,
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $decision_table = $I->checkDecision($table_data->_id, ['salary' => 99], 'all');
+        $I->assertEquals(10, $decision_table->final_decision);
+
+        $decision_table = $I->checkDecision($table_data->_id, ['salary' => 100], 'all');
+        $I->assertEquals(100, $decision_table->final_decision);
+
+        $decision_table = $I->checkDecision($table_data->_id, ['salary' => 1000], 'all');
+        $I->assertEquals(1100, $decision_table->final_decision);
+    }
+
     public function invalidDecisions(ApiTester $I)
     {
-        $I->loginAdmin();
+        $I->createProjectAndSetHeader();
         $table_id = $I->createTable()->_id;
 
         $I->sendPOST("api/v1/tables/$table_id/decisions", ['internal_credit_history' => 'okay']);

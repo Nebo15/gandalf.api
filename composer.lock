@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "36e438735a1bedec37e9fbc8e0b96cb7",
-    "content-hash": "b725c95a3231109212acd7925ecff267",
+    "hash": "d7b89980e35702d3a12a7010bc76bacd",
+    "content-hash": "782331ec88964178d2b17e941857fecc",
     "packages": [
         {
             "name": "bshaffer/oauth2-server-php",
@@ -1448,13 +1448,64 @@
             "time": "2016-01-26 21:23:30"
         },
         {
-            "name": "nebo15/lumen.applicationable",
-            "version": "0.0.7",
+            "name": "nebo15/eloquent.changelog",
+            "version": "0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Nebo15/eloquent-changelog.git",
+                "reference": "7a9c500d8a6f3a41b9e1c12ef8ec4fe64e3fb3fc"
+            },
             "dist": {
-                "type": "path",
-                "url": "/www/lumen.packages/lumen-applicationable/",
-                "reference": "71248c69fa5355b2cbf1a8aa59813b533904f340",
-                "shasum": null
+                "type": "zip",
+                "url": "https://api.github.com/repos/Nebo15/eloquent-changelog/zipball/7a9c500d8a6f3a41b9e1c12ef8ec4fe64e3fb3fc",
+                "reference": "7a9c500d8a6f3a41b9e1c12ef8ec4fe64e3fb3fc",
+                "shasum": ""
+            },
+            "require": {
+                "jenssegers/mongodb": "2.*",
+                "nebo15/lumen.rest": "*"
+            },
+            "require-dev": {
+                "laravel/lumen-framework": "5.2.*",
+                "squizlabs/php_codesniffer": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Nebo15\\Changelog\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paul Bardack",
+                    "homepage": "http://paulbardack.com"
+                }
+            ],
+            "description": "Eloquent changelog",
+            "keywords": [
+                "changelog",
+                "eloquent",
+                "laravel"
+            ],
+            "time": "2016-03-14 15:20:17"
+        },
+        {
+            "name": "nebo15/lumen.applicationable",
+            "version": "0.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Nebo15/lumen-applicationable.git",
+                "reference": "d97621f3e90b48f2c1efef0227e8c16235679f64"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/d97621f3e90b48f2c1efef0227e8c16235679f64",
+                "reference": "d97621f3e90b48f2c1efef0227e8c16235679f64",
+                "shasum": ""
             },
             "require-dev": {
                 "jenssegers/mongodb": "2.*",
@@ -1467,6 +1518,7 @@
                     "Nebo15\\LumenApplicationable\\": "src"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1479,8 +1531,9 @@
             "keywords": [
                 "applicationable",
                 "lumen",
-                "mongoDb"
-            ]
+                "mongodb"
+            ],
+            "time": "2016-03-15 15:49:16"
         },
         {
             "name": "nebo15/lumen.oauth2-mongodb",
@@ -1529,16 +1582,16 @@
         },
         {
             "name": "nebo15/lumen.rest",
-            "version": "0.0.2",
+            "version": "0.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/lumen-rest.git",
-                "reference": "49d8ba30fb95837f2703386601029603d7977b77"
+                "reference": "27245239075b73496456a3b5ca642ada8c885c7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-rest/zipball/49d8ba30fb95837f2703386601029603d7977b77",
-                "reference": "49d8ba30fb95837f2703386601029603d7977b77",
+                "url": "https://api.github.com/repos/Nebo15/lumen-rest/zipball/27245239075b73496456a3b5ca642ada8c885c7e",
+                "reference": "27245239075b73496456a3b5ca642ada8c885c7e",
                 "shasum": ""
             },
             "require-dev": {
@@ -1567,7 +1620,7 @@
                 "lumen",
                 "rest"
             ],
-            "time": "2016-03-09 17:06:09"
+            "time": "2016-03-14 15:30:30"
         },
         {
             "name": "nesbot/carbon",
@@ -3951,16 +4004,16 @@
         },
         {
             "name": "sokil/php-mongo-migrator",
-            "version": "dev-master",
+            "version": "0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sokil/php-mongo-migrator.git",
-                "reference": "fa6641ec3a8bee36072ed8d4bcf5e73610b1cba8"
+                "reference": "f7f34f2331060495734335561e2dc45380f09020"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sokil/php-mongo-migrator/zipball/fa6641ec3a8bee36072ed8d4bcf5e73610b1cba8",
-                "reference": "fa6641ec3a8bee36072ed8d4bcf5e73610b1cba8",
+                "url": "https://api.github.com/repos/sokil/php-mongo-migrator/zipball/f7f34f2331060495734335561e2dc45380f09020",
+                "reference": "f7f34f2331060495734335561e2dc45380f09020",
                 "shasum": ""
             },
             "require": {
@@ -3973,7 +4026,7 @@
             },
             "require-dev": {
                 "phpunit/phpunit": "3.7.*",
-                "satooshi/php-coveralls": "0.7.*"
+                "satooshi/php-coveralls": "dev-master"
             },
             "bin": [
                 "bin/mongo-migrator"
@@ -3995,7 +4048,7 @@
                 }
             ],
             "description": "Migrations for mongo",
-            "time": "2016-02-22 14:26:39"
+            "time": "2015-08-27 04:02:28"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -4348,9 +4401,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "sokil/php-mongo-migrator": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

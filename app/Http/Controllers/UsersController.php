@@ -17,6 +17,10 @@ class UsersController extends AbstractController
             'email' => 'required|unique:users,email|email',
             'password' => 'required',
         ],
-        'update' => [],
+        'update' => [
+            'username' => 'sometimes|required|unique:users,username|min:2|max:32',
+            'email' => 'sometimes|required|unique:users,email|email',
+            'password' => 'sometimes|required',
+        ],
     ];
 }

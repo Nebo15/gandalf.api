@@ -5,14 +5,20 @@
 
 namespace App\Repositories;
 
-use App\Models\DecisionTable;
 use App\Models\Decision;
 use Nebo15\REST\AbstractRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+/**
+ * Class TablesRepository
+ * @package App\Repositories
+ * @method \App\Models\Table read($id)
+ */
 class TablesRepository extends AbstractRepository
 {
     protected $modelClassName = 'App\Models\Table';
+
+    protected $observerClassName = 'App\Observers\TableObserver';
 
     public function createOrUpdate($values, $id = null)
     {
@@ -36,7 +42,7 @@ class TablesRepository extends AbstractRepository
             $query = Decision::where('table._id', new \MongoId($table_id));
             if ($query->count() <= 0) {
                 $e = new ModelNotFoundException;
-                $e->setModel(DecisionTable::class);
+                $e->setModel(Decision::class);
                 throw $e;
             }
             $query = $query->orderBy(Decision::CREATED_AT, 'DESC');

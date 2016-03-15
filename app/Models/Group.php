@@ -5,6 +5,8 @@
 
 namespace App\Models;
 
+use Nebo15\LumenApplicationable\Contracts\ApplicationableContract;
+use Nebo15\LumenApplicationable\Traits\ApplicationableTrait;
 use Nebo15\REST\Traits\ListableTrait;
 use Nebo15\REST\Interfaces\ListableInterface;
 
@@ -14,13 +16,17 @@ use Nebo15\REST\Interfaces\ListableInterface;
  * @property array $tables;
  * @property string $probability;
  */
-class Group extends Base implements ListableInterface
+class Group extends Base implements ListableInterface, ApplicationableContract
 {
-    use ListableTrait;
+    use ListableTrait, ApplicationableTrait;
 
     protected $fillable = ['tables', 'probability'];
 
     protected $listable = ['_id', 'probability', 'tables'];
 
     protected $visible = ['_id', 'probability', 'tables'];
+
+    protected $casts = [
+        '_id' => 'string',
+    ];
 }

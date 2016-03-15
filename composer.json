@@ -9,14 +9,15 @@
         "laravel/lumen-framework": "5.2.*",
         "vlucas/phpdotenv": "~2.2",
         "jenssegers/mongodb": "2.*",
+        "nebo15/lumen.applicationable": "*",
         "nebo15/lumen.rest": "*",
-        "nebo15/lumen.oauth2-mongodb": "*",
-        "nebo15/lumen.applicationable": "*"
+        "nebo15/eloquent.changelog": "*",
+        "nebo15/lumen.oauth2-mongodb": "*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "phpunit/phpunit": "~4.0",
-        "sokil/php-mongo-migrator": "dev-master",
+        "sokil/php-mongo-migrator": "*",
         "squizlabs/php_codesniffer": "2.*",
         "barryvdh/laravel-ide-helper": "^2.1",
         "codeception/codeception": "*",
@@ -32,12 +33,5 @@
             "tests/",
             "database/"
         ]
-    },
-    "repositories": [
-      {
-        "type": "path",
-        "url": "/www/lumen.packages/lumen-applicationable",
-        "symlink": true
-      }
-    ]
+    }
 }

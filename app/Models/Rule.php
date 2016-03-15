@@ -21,9 +21,10 @@ class Rule extends Base
 {
     protected $visible = ['title', 'decision', 'description', 'than', 'conditions'];
 
-    protected $fillable = ['title', 'decision', 'description', 'than'];
+    protected $fillable = ['title', 'description', 'than'];
 
     protected $casts = [
+        '_id' => 'string',
         'title' => 'string',
         'description' => 'string',
     ];

@@ -23,6 +23,10 @@ class Field extends Base
 
     protected $visible = ['key', 'title', 'source', 'type', 'preset'];
 
+    protected $casts = [
+        '_id' => 'string',
+    ];
+
     protected function getArrayableRelations()
     {
         return ['preset' => $this->preset];
