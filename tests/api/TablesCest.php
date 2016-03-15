@@ -704,60 +704,6 @@ class TablesCest
         $I->seeResponseCodeIs(401);
     }
 
-    public function decisionsAll(ApiTester $I)
-    {
-        $I->createProjectAndSetHeader();
-        $table_data = $I->createTable([
-            'default_decision' => 10,
-            'title' => 'Test title',
-            'description' => 'Test description',
-            'matching_type' => 'all',
-            'fields' => [
-                [
-                    "key" => 'salary',
-                    "title" => 'Test',
-                    "source" => "request",
-                    "type" => 'numeric',
-                ]
-            ],
-            'rules' => [
-                [
-                    'than' => 100,
-                    'title' => 'Valid rule title',
-                    'description' => 'Valid rule description',
-                    'conditions' => [
-                        [
-                            'field_key' => 'salary',
-                            'condition' => '$gte',
-                            'value' => 100
-                        ]
-                    ]
-                ],
-                [
-                    'than' => 1000,
-                    'title' => 'Second title',
-                    'description' => 'Second description',
-                    'conditions' => [
-                        [
-                            'field_key' => 'salary',
-                            'condition' => '$gte',
-                            'value' => 1000,
-                        ]
-                    ]
-                ]
-            ]
-        ]);
-
-        $decision_table = $I->checkDecision($table_data->_id, ['salary' => 99], 'all');
-        $I->assertEquals(10, $decision_table->final_decision);
-
-        $decision_table = $I->checkDecision($table_data->_id, ['salary' => 100], 'all');
-        $I->assertEquals(100, $decision_table->final_decision);
-
-        $decision_table = $I->checkDecision($table_data->_id, ['salary' => 1000], 'all');
-        $I->assertEquals(1100, $decision_table->final_decision);
-    }
-
     public function invalidDecisions(ApiTester $I)
     {
         $I->createProjectAndSetHeader();

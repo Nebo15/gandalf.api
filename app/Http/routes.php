@@ -18,8 +18,8 @@ $app->get('/', function () use ($app) {
 
 /** @var Nebo15\REST\Router $api */
 $api = $app->make('Nebo15\REST\Router');
-$api->api('groups', 'GroupsController', ['oauth', 'applicationable']);
-$api->api('tables', 'TablesController', ['oauth', 'applicationable']);
+$api->api('groups', 'GroupsController', ['auth.admin']);
+$api->api('tables', 'TablesController', ['auth.admin']);
 
 
 /** @var Nebo15\Changelog\Router $changelog */
@@ -28,7 +28,6 @@ $changelog->api('api/v1/admin', ['auth.admin']);
 
 $app->make('Oauth.routes')->makeRestRoutes();
 $app->make('Applicationable.routes')->makeRoutes();
-
 
 $app->post('api/v1/user/', [
     'uses' => 'App\Http\Controllers\UsersController@create',
