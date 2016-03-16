@@ -5,6 +5,8 @@
 
 namespace App\Models;
 
+use Nebo15\LumenApplicationable\Contracts\ApplicationableContract;
+use Nebo15\LumenApplicationable\Traits\ApplicationableTrait;
 use Nebo15\REST\Traits\ListableTrait;
 use Nebo15\REST\Interfaces\ListableInterface;
 
@@ -24,9 +26,9 @@ use Nebo15\REST\Interfaces\ListableInterface;
  * @method Decision save(array $options = [])
  * @method static \Illuminate\Pagination\LengthAwarePaginator paginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null)
  */
-class Table extends Base implements ListableInterface
+class Table extends Base implements ListableInterface, ApplicationableContract
 {
-    use ListableTrait;
+    use ListableTrait, ApplicationableTrait;
 
     protected $listable = ['_id', 'title', 'description', 'matching_type', 'default_decision'];
 

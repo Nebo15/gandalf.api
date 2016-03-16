@@ -7,6 +7,7 @@ namespace App\Observers;
 
 use \App\Models\Group;
 use Nebo15\Changelog\Changelog;
+use Nebo15\LumenApplicationable\ApplicationableHelper;
 
 class GroupObserver
 {
@@ -28,6 +29,7 @@ class GroupObserver
 
     public function saving(Group $Group)
     {
+        ApplicationableHelper::addApplication($Group);
     }
 
     public function saved(Group $Group)

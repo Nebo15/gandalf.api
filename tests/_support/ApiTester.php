@@ -21,8 +21,17 @@ class ApiTester extends \Codeception\Actor
     private $tableData;
     private $mongo;
     private $client;
+    private $user;
+    private $project;
 
     use _generated\ApiTesterActions;
+
+
+    public function __construct(\Codeception\Scenario $scenario)
+    {
+        $this->scenario = $scenario;
+        $this->scenario->stopIfBlocked();
+    }
 
     public function createGroup($tablesAmount = 2, $probability = 'random', array $data = null)
     {
@@ -51,6 +60,7 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseCodeIs($code);
         $this->seeResponseMatchesJsonType([
             '_id' => 'string',
+            'applications' => 'array',
             'tables' => 'array',
             'probability' => 'string:regex(@^(random)$@)',
         ], $jsonPath);
@@ -105,6 +115,7 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseMatchesJsonType([
             '_id' => 'string',
             'title' => 'string',
+            'applications' => 'array',
             'description' => 'string',
             'default_decision' => 'string|integer',
             'default_title' => 'string',
@@ -273,7 +284,7 @@ class ApiTester extends \Codeception\Actor
             'matching_type' => 'first',
             'description' => 'Test description',
             'fields' => [],
-            'rules' => []
+            'rules' => [],
         ];
 
         unset($fields['Than']);
@@ -304,18 +315,36 @@ class ApiTester extends \Codeception\Actor
                 $conditions[] = [
                     'field_key' => strtolower(str_replace(' ', '_', $key)),
                     'condition' => '$eq',
-                    'value' => $value
+                    'value' => $value,
                 ];
             }
             $data['rules'][] = [
                 'than' => $than,
                 'title' => '',
                 'description' => '',
-                'conditions' => $conditions
+                'conditions' => $conditions,
             ];
         }
 
         return $data;
+    }
+
+    public function assertProject($jsonPath = '$.data', $code = 200)
+    {
+        $this->seeResponseCodeIs($code);
+        $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
+            'title' => 'string',
+            'users' => 'array',
+        ], $jsonPath);
+
+        $this->seeResponseMatchesJsonType([
+            'user_id' => 'string',
+            'role' => 'string',
+            'scope' => 'array',
+        ], "$jsonPath.users[*]");
+
+        $this->canSeeResponseJsonMatchesJsonPath("$jsonPath.consumers");
     }
 
     public function assertResponseDataFields(array $fields, $code = 200)
@@ -341,7 +370,11 @@ class ApiTester extends \Codeception\Actor
 
     public function loginConsumer()
     {
-        $this->amHttpAuthenticated('consumer', 'consumer');
+        $this->createProjectAndSetHeader();
+        $this->sendPOST('api/v1/projects/consumer', ['description' => $this->getFaker()->text('20')]);
+        $consumer = json_decode($this->grabResponse())->data->consumers[0];
+        $this->logout();
+        $this->amHttpAuthenticated($consumer->client_id, $consumer->client_secret);
     }
 
     public function getMongo()
@@ -353,30 +386,96 @@ class ApiTester extends \Codeception\Actor
         return $this->mongo;
     }
 
+    public function createProjectAndSetHeader()
+    {
+        $project = $this->createProject();
+        $this->setHeader('X-Application', $project->_id);
+    }
+
+    public function createProject($new = false)
+    {
+        if (!$this->project && !$new) {
+            $this->createAndLoginUser();
+            $faker = $this->getFaker();
+            $project = [
+                'title' => $faker->streetName,
+                'description' => $faker->text('150')
+            ];
+            $this->sendPOST('api/v1/projects', $project);
+            $project = json_decode($this->grabResponse());
+            $this->assertProject('$.data', 201);
+            $this->project = $project->data;
+        }
+        return $this->project;
+    }
+
+    public function createUser($new = false)
+    {
+        $this->createAndLoginClient();
+        if (!$this->user && !$new) {
+            $faker = $this->getFaker();
+
+            $user_data = [
+                'email' => $faker->email,
+                'password' => $faker->password(),
+                'username' => $faker->firstName,
+            ];
+
+            $this->sendPOST('api/v1/user/', $user_data);
+            $this->seeResponseCodeIs(201);
+
+            $this->sendPOST('oauth/',
+                [
+                    'grant_type' => 'password',
+                    'username' => $user_data['username'],
+                    'password' => $user_data['password'],
+                ]
+            );
+            $this->user = json_decode($this->grabResponse());
+        }
+        return $this->user;
+    }
+
+    public function createAndLoginUser()
+    {
+        $token = $this->createUser();
+        $this->loginUser($token);
+    }
+
+    public function loginExistsUser()
+    {
+        $this->logout();
+        $this->loginUser($this->user);
+    }
+
+    public function loginUser($token)
+    {
+        $this->setHeader('Authorization', 'Bearer ' . $token->access_token);
+    }
+
     public function createAndLoginClient()
     {
         if (!$this->client) {
             $faker = $this->getFaker();
             $client = [
                 'client_id' => md5($faker->name),
-                'client_secret' => $faker->password(32,32)
+                'client_secret' => $faker->password(32, 32),
             ];
             $this->getMongo()->oauth_clients->insert($client);
             $this->client = $client;
         }
         $this->loginClient($this->client);
+
         return $this->client;
     }
 
     public function loginClient($client)
     {
-        $this->logout();
-        $this->amHttpAuthenticated($client['client_id'], $client['client_secret']);
+        $this->setHeader('Authorization', 'Basic ' . base64_encode($client['client_id'].':'.$client['client_secret']));
     }
-
 
     public function logout()
     {
-        $this->amHttpAuthenticated(null, null);
+        $this->deleteHeader('Authorization');
     }
 }

@@ -6,8 +6,8 @@
 namespace App\Observers;
 
 use \App\Models\Table;
-use Illuminate\Http\Request;
 use Nebo15\Changelog\Changelog;
+use Nebo15\LumenApplicationable\ApplicationableHelper;
 
 class TableObserver
 {
@@ -29,6 +29,7 @@ class TableObserver
 
     public function saving(Table $table)
     {
+        ApplicationableHelper::addApplication($table);
     }
 
     public function saved(Table $table)
