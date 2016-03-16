@@ -36,8 +36,11 @@
                   "description": "Meta data"
                 },
                 "data": {
-                  "$ref": "#/definitions/Table",
-                  "description": "Response data object"
+                  "type": "array",
+                  "description": "Response data object",
+                  "items": {
+                    "$ref": "#/definitions/TableList"
+                  }
                 }
               }
             }
@@ -62,6 +65,118 @@
           }
         }
       }
+    },
+    "/admin/tables/{id}": {
+      "get": {
+        "summary": "Read Table",
+        "description": "Get Table by id",
+        "tags": [
+          "Tables"
+        ],
+        "responses": {
+          "200": {
+            "description": "Table object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Table",
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Table",
+        "description": "Update Table by id",
+        "tags": [
+          "Tables"
+        ],
+        "responses": {
+          "200": {
+            "description": "Table object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Table",
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Table",
+        "description": "Delete Table by id",
+        "tags": [
+          "Tables"
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/tables/{id}/copy": {
+      "post": {
+        "summary": "Copy Table",
+        "description": "Create new Table from existing Table by id",
+        "tags": [
+          "Tables"
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Table",
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -75,6 +190,48 @@
           "type": "integer",
           "description": "HTTP response code",
           "example": 200
+        }
+      }
+    },
+    "TableList": {
+      "type": "object",
+      "description": "Short view of Table for list",
+      "required": [
+        "_id",
+        "title",
+        "description",
+        "matching_type",
+        "default_decision"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of Table.",
+          "example": "Some title"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of Table.",
+          "example": "Some description"
+        },
+        "matching_type": {
+          "type": "string",
+          "description": "Matching type for Table.",
+          "example": "first",
+          "enum": [
+            "first",
+            "all"
+          ]
+        },
+        "default_decision": {
+          "type": "string",
+          "description": "If there are no rows with all validations passed, this decision will be set for Decision.",
+          "example": "Decline"
         }
       }
     },
@@ -287,6 +444,26 @@
           "type": "string|numeric|boolean",
           "description": "Value type can be different depends on condition",
           "example": 1000
+        }
+      }
+    },
+    "Decision":{
+      "type": "object",
+      "properties": {
+        "_id",
+        "request",
+        "table",
+        "title",
+        "description",
+        "fields",
+        "rules",
+        "default_decision",
+        "final_decision",
+        "created_at": {
+
+        },
+        "updated_at":{
+
         }
       }
     },
