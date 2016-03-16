@@ -75,7 +75,7 @@ class UsersCest
         $project_id = $project->data->_id;
 
         $I->setHeader('X-Application', $project_id);
-        $I->sendPOST('api/v1/projects/consumer', ['description' => $faker->text('20')]);
+        $I->sendPOST('api/v1/projects/consumer', ['description' => $faker->text('20'), 'scope' => ['check']]);
         $I->assertProject('$.data', 201);
     }
 

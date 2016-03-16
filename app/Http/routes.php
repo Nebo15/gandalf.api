@@ -19,7 +19,7 @@ $app->get('/', function () use ($app) {
 /** @var Nebo15\REST\Router $api */
 $api = $app->make('Nebo15\REST\Router');
 $api->api('groups', 'GroupsController', ['oauth', 'applicationable']);
-$api->api('tables', 'TablesController', ['oauth', 'applicationable']);
+$api->api('tables', 'TablesController', ['oauth', 'applicationable', 'has_access']);
 
 
 /** @var Nebo15\Changelog\Router $changelog */
@@ -51,7 +51,7 @@ $app->group(
     [
         'prefix' => 'api/v1',
         'namespace' => 'App\Http\Controllers',
-        'middleware' => ['applicationable', 'user_or_client'],
+        'middleware' => ['applicationable', 'user_or_client', 'has_access'],
     ],
     function ($app) {
         /** @var Laravel\Lumen\Application $app */

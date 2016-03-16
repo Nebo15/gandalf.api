@@ -32,6 +32,7 @@ $app->withEloquent();
 
 $app->configure('database');
 $app->configure('tokens');
+$app->configure('applicationable');
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings

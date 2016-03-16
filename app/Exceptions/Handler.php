@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Contracts\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Nebo15\LumenApplicationable\Exceptions\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 
@@ -63,6 +64,11 @@ class Handler extends ExceptionHandler
         } elseif ($e instanceof AuthorizationException) {
             $http_code = 401;
             $error_code = 'unauthorized';
+            $meta['error_message'] = $e->getMessage();
+
+        } elseif ($e instanceof AccessDeniedException) {
+            $http_code = 403;
+            $error_code = 'access_denied';
             $meta['error_message'] = $e->getMessage();
 
         } elseif ($e instanceof ModelNotFoundException) {
