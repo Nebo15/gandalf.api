@@ -11,6 +11,11 @@ use Nebo15\REST\Response;
 use Illuminate\Http\Request;
 use App\Services\ConditionsTypes;
 
+/**
+ * Class TablesController
+ * @package App\Http\Controllers
+ * @method \App\Repositories\TablesRepository getRepository()
+ */
 class TablesController extends AbstractController
 {
     protected $repositoryClassName = 'App\Repositories\TablesRepository';
@@ -68,15 +73,15 @@ class TablesController extends AbstractController
         );
     }
 
-    public function history()
+    public function decisions()
     {
         return $this->response->jsonPaginator(
-            $this->getRepository()->history($this->request->input('size'), $this->request->input('table_id'))
+            $this->getRepository()->getDecisions($this->request->input('size'), $this->request->input('table_id'))
         );
     }
 
-    public function historyItem($id)
+    public function decision($id)
     {
-        return $this->response->json($this->getRepository()->historyItem($id)->toArray());
+        return $this->response->json($this->getRepository()->getDecisionById($id)->toArray());
     }
 }
