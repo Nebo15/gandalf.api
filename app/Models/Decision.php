@@ -8,7 +8,7 @@
 namespace App\Models;
 
 /**
- * Class DecisionHistory
+ * Class Decision
  * @package App\Models
  * @property string $title
  * @property string $description
@@ -17,11 +17,11 @@ namespace App\Models;
  * @property array $request
  * @property Rule[] $rules
  * @property Field[] $fields
- * @method static DecisionHistory findById($id)
- * @method DecisionHistory save(array $options = [])
+ * @method static Decision findById($id)
+ * @method Decision save(array $options = [])
  * @method static \Illuminate\Pagination\LengthAwarePaginator paginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null)
  */
-class DecisionHistory extends Base
+class Decision extends Base
 {
     protected $visible = [
         '_id',
@@ -81,7 +81,7 @@ class DecisionHistory extends Base
 
     public function toArray()
     {
-        # Cause property table are
+        # Cause property table have MongoID object
         $data = parent::toArray();
         $data['table'] = $this->getTableArray();
 

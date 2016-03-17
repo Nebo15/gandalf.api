@@ -4,9 +4,58 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1ae588dab42fc3ab096a2ec178e06ec7",
-    "content-hash": "de8b99b5d649f7b3814fb7ff60807fb0",
+    "hash": "d7b89980e35702d3a12a7010bc76bacd",
+    "content-hash": "782331ec88964178d2b17e941857fecc",
     "packages": [
+        {
+            "name": "bshaffer/oauth2-server-php",
+            "version": "v1.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bshaffer/oauth2-server-php.git",
+                "reference": "058c98f73209f9c49495e1799d32c035196fe8b8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bshaffer/oauth2-server-php/zipball/058c98f73209f9c49495e1799d32c035196fe8b8",
+                "reference": "058c98f73209f9c49495e1799d32c035196fe8b8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9"
+            },
+            "suggest": {
+                "aws/aws-sdk-php": "~2.8 is required to use the DynamoDB storage engine",
+                "firebase/php-jwt": "~2.2 is required to use JWT features",
+                "predis/predis": "Required to use the Redis storage engine",
+                "thobbs/phpcassa": "Required to use the Cassandra storage engine"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "OAuth2": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Brent Shaffer",
+                    "email": "bshafs@gmail.com",
+                    "homepage": "http://brentertainment.com"
+                }
+            ],
+            "description": "OAuth2 Server for PHP",
+            "homepage": "http://github.com/bshaffer/oauth2-server-php",
+            "keywords": [
+                "auth",
+                "oauth",
+                "oauth2"
+            ],
+            "time": "2015-09-18 18:05:10"
+        },
         {
             "name": "doctrine/inflector",
             "version": "v1.1.0",
@@ -1135,16 +1184,16 @@
         },
         {
             "name": "jenssegers/mongodb",
-            "version": "v2.3.3",
+            "version": "v2.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jenssegers/laravel-mongodb.git",
-                "reference": "6e9b5f4fe5fa5044b7dea0db5576f7c21374c661"
+                "reference": "244f40b843e9278d2154ef1554abce3b78ee1370"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jenssegers/laravel-mongodb/zipball/6e9b5f4fe5fa5044b7dea0db5576f7c21374c661",
-                "reference": "6e9b5f4fe5fa5044b7dea0db5576f7c21374c661",
+                "url": "https://api.github.com/repos/jenssegers/laravel-mongodb/zipball/244f40b843e9278d2154ef1554abce3b78ee1370",
+                "reference": "244f40b843e9278d2154ef1554abce3b78ee1370",
                 "shasum": ""
             },
             "require": {
@@ -1190,7 +1239,7 @@
                 "mongo",
                 "mongodb"
             ],
-            "time": "2016-02-12 18:42:59"
+            "time": "2016-03-05 09:12:32"
         },
         {
             "name": "laravel/lumen-framework",
@@ -1278,16 +1327,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.17.2",
+            "version": "1.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "bee7f0dc9c3e0b69a6039697533dca1e845c8c24"
+                "reference": "a5f2734e8c16f3aa21b3da09715d10e15b4d2d45"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/bee7f0dc9c3e0b69a6039697533dca1e845c8c24",
-                "reference": "bee7f0dc9c3e0b69a6039697533dca1e845c8c24",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/a5f2734e8c16f3aa21b3da09715d10e15b4d2d45",
+                "reference": "a5f2734e8c16f3aa21b3da09715d10e15b4d2d45",
                 "shasum": ""
             },
             "require": {
@@ -1316,6 +1365,7 @@
                 "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
                 "ext-mongo": "Allow sending log messages to a MongoDB server",
                 "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
+                "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
                 "php-console/php-console": "Allow sending log messages to Google Chrome",
                 "raven/raven": "Allow sending log messages to a Sentry server",
                 "rollbar/rollbar": "Allow sending log messages to Rollbar",
@@ -1325,7 +1375,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.16.x-dev"
+                    "dev-master": "2.0.x-dev"
                 }
             },
             "autoload": {
@@ -1351,7 +1401,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2015-10-14 12:51:02"
+            "time": "2016-03-13 16:08:35"
         },
         {
             "name": "mtdowling/cron-expression",
@@ -1396,6 +1446,182 @@
                 "schedule"
             ],
             "time": "2016-01-26 21:23:30"
+        },
+        {
+            "name": "nebo15/eloquent.changelog",
+            "version": "0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Nebo15/eloquent-changelog.git",
+                "reference": "7a9c500d8a6f3a41b9e1c12ef8ec4fe64e3fb3fc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Nebo15/eloquent-changelog/zipball/7a9c500d8a6f3a41b9e1c12ef8ec4fe64e3fb3fc",
+                "reference": "7a9c500d8a6f3a41b9e1c12ef8ec4fe64e3fb3fc",
+                "shasum": ""
+            },
+            "require": {
+                "jenssegers/mongodb": "2.*",
+                "nebo15/lumen.rest": "*"
+            },
+            "require-dev": {
+                "laravel/lumen-framework": "5.2.*",
+                "squizlabs/php_codesniffer": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Nebo15\\Changelog\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paul Bardack",
+                    "homepage": "http://paulbardack.com"
+                }
+            ],
+            "description": "Eloquent changelog",
+            "keywords": [
+                "changelog",
+                "eloquent",
+                "laravel"
+            ],
+            "time": "2016-03-14 15:20:17"
+        },
+        {
+            "name": "nebo15/lumen.applicationable",
+            "version": "0.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Nebo15/lumen-applicationable.git",
+                "reference": "9308385f768626e16397e25cb7f89c7a66ac350c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/9308385f768626e16397e25cb7f89c7a66ac350c",
+                "reference": "9308385f768626e16397e25cb7f89c7a66ac350c",
+                "shasum": ""
+            },
+            "require": {
+                "nebo15/lumen.rest": "*"
+            },
+            "require-dev": {
+                "jenssegers/mongodb": "2.*",
+                "laravel/lumen-framework": "5.2.*",
+                "squizlabs/php_codesniffer": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Nebo15\\LumenApplicationable\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oleh Samorai"
+                }
+            ],
+            "description": "Interfaces and Traits for applicationable models",
+            "keywords": [
+                "applicationable",
+                "lumen",
+                "mongodb"
+            ],
+            "time": "2016-03-16 16:36:45"
+        },
+        {
+            "name": "nebo15/lumen.oauth2-mongodb",
+            "version": "0.0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Nebo15/lumen-oauth2-mongo.git",
+                "reference": "6f9e04cb7c34edfdee4554fb1bcaf9411226a976"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Nebo15/lumen-oauth2-mongo/zipball/6f9e04cb7c34edfdee4554fb1bcaf9411226a976",
+                "reference": "6f9e04cb7c34edfdee4554fb1bcaf9411226a976",
+                "shasum": ""
+            },
+            "require": {
+                "bshaffer/oauth2-server-php": "~1.8"
+            },
+            "require-dev": {
+                "jenssegers/mongodb": "2.*",
+                "laravel/lumen-framework": "5.2.*",
+                "squizlabs/php_codesniffer": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Nebo15\\LumenOauth2\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oleh Samorai"
+                }
+            ],
+            "description": "Oauth2 Storage + Oauthable interface with trait for user model",
+            "keywords": [
+                "lumen",
+                "mongo",
+                "oauth2"
+            ],
+            "time": "2016-03-09 14:47:15"
+        },
+        {
+            "name": "nebo15/lumen.rest",
+            "version": "0.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Nebo15/lumen-rest.git",
+                "reference": "27245239075b73496456a3b5ca642ada8c885c7e"
+            },
+            "dist": {
+                "type": "path",
+                "url": "https://api.github.com/repos/Nebo15/lumen-rest/zipball/27245239075b73496456a3b5ca642ada8c885c7e",
+                "reference": "27245239075b73496456a3b5ca642ada8c885c7e",
+                "shasum": null
+            },
+            "require-dev": {
+                "laravel/lumen-framework": "5.2.*",
+                "squizlabs/php_codesniffer": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Nebo15\\REST\\": "src"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paul Bardack",
+                    "homepage": "http://paulbardack.com"
+                }
+            ],
+            "description": "Components for fast building REST API for Lumen",
+            "keywords": [
+                "API",
+                "REST",
+                "lumen"
+            ]
         },
         {
             "name": "nesbot/carbon",
@@ -1489,16 +1715,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v1.2.0",
+            "version": "v1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "b0e69d10852716b2ccbdff69c75c477637220790"
+                "reference": "b3313b618f4edd76523572531d5d7e22fe747430"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/b0e69d10852716b2ccbdff69c75c477637220790",
-                "reference": "b0e69d10852716b2ccbdff69c75c477637220790",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/b3313b618f4edd76523572531d5d7e22fe747430",
+                "reference": "b3313b618f4edd76523572531d5d7e22fe747430",
                 "shasum": ""
             },
             "require": {
@@ -1533,7 +1759,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2016-02-06 03:52:05"
+            "time": "2016-03-11 19:54:08"
         },
         {
             "name": "psr/log",
@@ -1935,7 +2161,7 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
@@ -1994,7 +2220,7 @@
         },
         {
             "name": "symfony/polyfill-php56",
-            "version": "v1.1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php56.git",
@@ -2050,7 +2276,7 @@
         },
         {
             "name": "symfony/polyfill-util",
-            "version": "v1.1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-util.git",
@@ -2268,16 +2494,16 @@
     "packages-dev": [
         {
             "name": "barryvdh/laravel-ide-helper",
-            "version": "v2.1.2",
+            "version": "v2.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-ide-helper.git",
-                "reference": "d82e8f191fb043a0f8cbf2de64fd3027bfa4f772"
+                "reference": "f1ebd847aac9a4545325d35108cafc285fe1605f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/d82e8f191fb043a0f8cbf2de64fd3027bfa4f772",
-                "reference": "d82e8f191fb043a0f8cbf2de64fd3027bfa4f772",
+                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/f1ebd847aac9a4545325d35108cafc285fe1605f",
+                "reference": "f1ebd847aac9a4545325d35108cafc285fe1605f",
                 "shasum": ""
             },
             "require": {
@@ -2285,8 +2511,8 @@
                 "illuminate/filesystem": "5.0.x|5.1.x|5.2.x",
                 "illuminate/support": "5.0.x|5.1.x|5.2.x",
                 "php": ">=5.4.0",
-                "phpdocumentor/reflection-docblock": "2.0.4",
-                "symfony/class-loader": "~2.3"
+                "phpdocumentor/reflection-docblock": "^2.0.4",
+                "symfony/class-loader": "~2.3|~3.0"
             },
             "require-dev": {
                 "doctrine/dbal": "~2.3"
@@ -2327,45 +2553,46 @@
                 "phpstorm",
                 "sublime"
             ],
-            "time": "2015-12-21 19:48:06"
+            "time": "2016-03-03 08:45:00"
         },
         {
             "name": "codeception/codeception",
-            "version": "2.1.6",
+            "version": "2.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/Codeception.git",
-                "reference": "b199941f5e59d1e7fd32d78296c8ab98db873d89"
+                "reference": "65971b0dee4972710365b6102154cd412a9bf7b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/b199941f5e59d1e7fd32d78296c8ab98db873d89",
-                "reference": "b199941f5e59d1e7fd32d78296c8ab98db873d89",
+                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/65971b0dee4972710365b6102154cd412a9bf7b1",
+                "reference": "65971b0dee4972710365b6102154cd412a9bf7b1",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-mbstring": "*",
-                "facebook/webdriver": ">=1.0.1",
+                "facebook/webdriver": ">=1.0.1 <2.0",
                 "guzzlehttp/guzzle": ">=4.1.4 <7.0",
                 "guzzlehttp/psr7": "~1.0",
-                "php": ">=5.4.0",
-                "phpunit/phpunit": "~4.8.0",
-                "symfony/browser-kit": ">=2.4|<3.1",
-                "symfony/console": ">=2.4|<3.1",
-                "symfony/css-selector": ">=2.4|<3.1",
-                "symfony/dom-crawler": ">=2.4|<3.1",
-                "symfony/event-dispatcher": ">=2.4|<3.1",
-                "symfony/finder": ">=2.4|<3.1",
-                "symfony/yaml": ">=2.4|<3.1"
+                "php": ">=5.4.0 <8.0",
+                "phpunit/php-code-coverage": ">=2.1.3",
+                "phpunit/phpunit": ">4.8.20 <6.0",
+                "symfony/browser-kit": ">=2.5 <3.1",
+                "symfony/console": ">=2.5 <3.1",
+                "symfony/css-selector": ">=2.5 <3.1",
+                "symfony/dom-crawler": ">=2.5 <3.1",
+                "symfony/event-dispatcher": ">=2.5 <3.1",
+                "symfony/finder": ">=2.5 <3.1",
+                "symfony/yaml": ">=2.5 <3.1"
             },
             "require-dev": {
                 "codeception/specify": "~0.3",
-                "facebook/php-sdk-v4": "~4.0",
+                "facebook/php-sdk-v4": "~5.0",
                 "flow/jsonpath": "~0.2",
                 "monolog/monolog": "~1.8",
                 "pda/pheanstalk": "~2.0",
-                "videlalvaro/php-amqplib": "~2.4"
+                "php-amqplib/php-amqplib": "~2.4"
             },
             "suggest": {
                 "codeception/phpbuiltinserver": "Extension to start and stop PHP built-in web server for your tests",
@@ -2407,7 +2634,7 @@
                 "functional testing",
                 "unit testing"
             ],
-            "time": "2016-02-09 22:27:48"
+            "time": "2016-03-12 01:15:25"
         },
         {
             "name": "doctrine/instantiator",
@@ -2660,16 +2887,16 @@
         },
         {
             "name": "guzzlehttp/promises",
-            "version": "1.0.3",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "b1e1c0d55f8083c71eda2c28c12a228d708294ea"
+                "reference": "bb9024c526b22f3fe6ae55a561fd70653d470aa8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/b1e1c0d55f8083c71eda2c28c12a228d708294ea",
-                "reference": "b1e1c0d55f8083c71eda2c28c12a228d708294ea",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/bb9024c526b22f3fe6ae55a561fd70653d470aa8",
+                "reference": "bb9024c526b22f3fe6ae55a561fd70653d470aa8",
                 "shasum": ""
             },
             "require": {
@@ -2707,7 +2934,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2015-10-15 22:28:00"
+            "time": "2016-03-08 01:15:46"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -3173,16 +3400,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.8.23",
+            "version": "4.8.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "6e351261f9cd33daf205a131a1ba61c6d33bd483"
+                "reference": "a1066c562c52900a142a0e2bbf0582994671385e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/6e351261f9cd33daf205a131a1ba61c6d33bd483",
-                "reference": "6e351261f9cd33daf205a131a1ba61c6d33bd483",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a1066c562c52900a142a0e2bbf0582994671385e",
+                "reference": "a1066c562c52900a142a0e2bbf0582994671385e",
                 "shasum": ""
             },
             "require": {
@@ -3241,7 +3468,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-02-11 14:56:33"
+            "time": "2016-03-14 06:16:08"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -3721,16 +3948,16 @@
         },
         {
             "name": "sokil/php-mongo",
-            "version": "1.14",
+            "version": "1.15.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sokil/php-mongo.git",
-                "reference": "d482c60272d8573e80b1de9863b04c93664f87be"
+                "reference": "dbc297fc43e3d1529df039e3415877b62f826f05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sokil/php-mongo/zipball/d482c60272d8573e80b1de9863b04c93664f87be",
-                "reference": "d482c60272d8573e80b1de9863b04c93664f87be",
+                "url": "https://api.github.com/repos/sokil/php-mongo/zipball/dbc297fc43e3d1529df039e3415877b62f826f05",
+                "reference": "dbc297fc43e3d1529df039e3415877b62f826f05",
                 "shasum": ""
             },
             "require": {
@@ -3774,20 +4001,20 @@
                 "mongodb",
                 "odm"
             ],
-            "time": "2016-01-30 09:31:44"
+            "time": "2016-03-10 09:57:05"
         },
         {
             "name": "sokil/php-mongo-migrator",
-            "version": "dev-master",
+            "version": "0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sokil/php-mongo-migrator.git",
-                "reference": "fa6641ec3a8bee36072ed8d4bcf5e73610b1cba8"
+                "reference": "f7f34f2331060495734335561e2dc45380f09020"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sokil/php-mongo-migrator/zipball/fa6641ec3a8bee36072ed8d4bcf5e73610b1cba8",
-                "reference": "fa6641ec3a8bee36072ed8d4bcf5e73610b1cba8",
+                "url": "https://api.github.com/repos/sokil/php-mongo-migrator/zipball/f7f34f2331060495734335561e2dc45380f09020",
+                "reference": "f7f34f2331060495734335561e2dc45380f09020",
                 "shasum": ""
             },
             "require": {
@@ -3800,7 +4027,7 @@
             },
             "require-dev": {
                 "phpunit/phpunit": "3.7.*",
-                "satooshi/php-coveralls": "0.7.*"
+                "satooshi/php-coveralls": "dev-master"
             },
             "bin": [
                 "bin/mongo-migrator"
@@ -3822,7 +4049,7 @@
                 }
             ],
             "description": "Migrations for mongo",
-            "time": "2016-02-22 14:26:39"
+            "time": "2015-08-27 04:02:28"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -3960,29 +4187,32 @@
         },
         {
             "name": "symfony/class-loader",
-            "version": "v2.8.3",
+            "version": "v3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/class-loader.git",
-                "reference": "517ab0554b6a5744d04480cb06873ffbd9442d73"
+                "reference": "92e7cf1af2bc1695daabb4ac972db169606e9030"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/class-loader/zipball/517ab0554b6a5744d04480cb06873ffbd9442d73",
-                "reference": "517ab0554b6a5744d04480cb06873ffbd9442d73",
+                "url": "https://api.github.com/repos/symfony/class-loader/zipball/92e7cf1af2bc1695daabb4ac972db169606e9030",
+                "reference": "92e7cf1af2bc1695daabb4ac972db169606e9030",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9",
-                "symfony/polyfill-apcu": "~1.1"
+                "php": ">=5.5.9"
             },
             "require-dev": {
-                "symfony/finder": "~2.0,>=2.0.5|~3.0.0"
+                "symfony/finder": "~2.8|~3.0",
+                "symfony/polyfill-apcu": "~1.1"
+            },
+            "suggest": {
+                "symfony/polyfill-apcu": "For using ApcClassLoader on HHVM"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
@@ -4009,7 +4239,7 @@
             ],
             "description": "Symfony ClassLoader Component",
             "homepage": "https://symfony.com",
-            "time": "2016-01-30 15:58:35"
+            "time": "2016-02-03 09:33:23"
         },
         {
             "name": "symfony/css-selector",
@@ -4121,62 +4351,6 @@
             "time": "2016-02-28 16:24:34"
         },
         {
-            "name": "symfony/polyfill-apcu",
-            "version": "v1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-apcu.git",
-                "reference": "d1911e6caeb4b6a4c8e2d5c46b978a66b3745e4c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-apcu/zipball/d1911e6caeb4b6a4c8e2d5c46b978a66b3745e4c",
-                "reference": "d1911e6caeb4b6a4c8e2d5c46b978a66b3745e4c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.1-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "bootstrap.php"
-                ],
-                "classmap": [
-                    "Resources/stubs"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony polyfill backporting apcu_* functions to lower PHP versions",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "apcu",
-                "compatibility",
-                "polyfill",
-                "portable",
-                "shim"
-            ],
-            "time": "2016-01-20 09:13:37"
-        },
-        {
             "name": "symfony/yaml",
             "version": "v2.8.3",
             "source": {
@@ -4228,9 +4402,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "sokil/php-mongo-migrator": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

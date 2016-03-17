@@ -15,23 +15,35 @@ $app->get('/', function () use ($app) {
     return response('ok');
 });
 
+
+/** @var Nebo15\REST\Router $api */
+$api = $app->make('Nebo15\REST\Router');
+$api->api('groups', 'GroupsController', ['oauth', 'applicationable', 'has_access']);
+$api->api('tables', 'TablesController', ['oauth', 'applicationable', 'has_access']);
+
+
+/** @var Nebo15\Changelog\Router $changelog */
+$changelog = $app->make('Nebo15\Changelog\Router');
+$changelog->api('api/v1/admin', ['auth.admin']);
+
+$app->make('Oauth.routes')->makeRestRoutes();
+$app->make('Applicationable.routes')->makeRoutes();
+
+$app->post('api/v1/user/', [
+    'uses' => 'App\Http\Controllers\UsersController@create',
+    'middleware' => 'oauth.basic.client'
+]);
+
 $app->group(
     [
         'prefix' => 'api/v1/admin',
         'namespace' => 'App\Http\Controllers',
-        'middleware' => ['auth.admin']
+        'middleware' => ['oauth', 'applicationable', 'has_access']
     ],
-    function ($app) {
+    function ($app) use ($api) {
         /** @var Laravel\Lumen\Application $app */
-        $app->get('/decisions', ['uses' => 'DecisionsController@history']);
-        $app->get('/decisions/{id}', ['uses' => 'DecisionsController@historyItem']);
-
-        $app->get('/tables', ['uses' => 'DecisionsController@index']);
-        $app->post('/tables', ['uses' => 'DecisionsController@create']);
-        $app->get('/tables/{id}', ['uses' => 'DecisionsController@get']);
-        $app->put('/tables/{id}', ['uses' => 'DecisionsController@update']);
-        $app->post('/tables/{id}/clone', ['uses' => 'DecisionsController@cloneModel']);
-        $app->delete('/tables/{id}', ['uses' => 'DecisionsController@delete']);
+        $app->get('/decisions', ['uses' => 'TablesController@history']);
+        $app->get('/decisions/{id}', ['uses' => 'TablesController@historyItem']);
     }
 );
 
@@ -39,11 +51,12 @@ $app->group(
     [
         'prefix' => 'api/v1',
         'namespace' => 'App\Http\Controllers',
-        'middleware' => ['auth.consumer']
+        'middleware' => ['applicationable', 'user_or_client', 'has_access'],
     ],
     function ($app) {
         /** @var Laravel\Lumen\Application $app */
         $app->get('/decisions/{id}', ['uses' => 'ConsumerController@decision']);
-        $app->post('/tables/{id}/decisions', ['uses' => 'ConsumerController@check']);
+        $app->post('/tables/{id}/decisions', ['uses' => 'ConsumerController@tableCheck']);
+        $app->post('/groups/{id}/decisions', ['uses' => 'ConsumerController@groupCheck']);
     }
 );
