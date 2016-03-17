@@ -5,7 +5,7 @@
 
 namespace App\Models;
 
-use Nebo15\LumenApplicationable\Contracts\ApplicationableContract;
+use Nebo15\LumenApplicationable\Contracts\Applicationable as ApplicationableContract;
 use Nebo15\LumenApplicationable\Traits\ApplicationableTrait;
 use Nebo15\REST\Traits\ListableTrait;
 use Nebo15\REST\Interfaces\ListableInterface;

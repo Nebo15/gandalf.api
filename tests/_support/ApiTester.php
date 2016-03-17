@@ -371,7 +371,7 @@ class ApiTester extends \Codeception\Actor
     public function loginConsumer()
     {
         $this->createProjectAndSetHeader();
-        $this->sendPOST('api/v1/projects/consumer', ['description' => $this->getFaker()->text('20')]);
+        $this->sendPOST('api/v1/projects/consumer', ['description' => $this->getFaker()->text('20'), 'scope' => ['check']]);
         $consumer = json_decode($this->grabResponse())->data->consumers[0];
         $this->logout();
         $this->amHttpAuthenticated($consumer->client_id, $consumer->client_secret);
