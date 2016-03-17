@@ -157,6 +157,12 @@ class TablesCest
                         "source" => "request",
                         "type" => 'numeric',
                     ],
+                    [
+                        "key" => 'webhook',
+                        "title" => 'Test 3',
+                        "source" => "request",
+                        "type" => 'numeric',
+                    ],
                 ],
                 'rules' => [
                     [
@@ -207,6 +213,7 @@ class TablesCest
         $I->seeResponseContains('table.default_description');
         $I->seeResponseContains('table.rules.1.conditions');
         $I->seeResponseContains('table.matching_type');
+        $I->seeResponseContains('table.fields.3.key');
 
         $I->sendPOST('api/v1/admin/tables', [
             'table' => [

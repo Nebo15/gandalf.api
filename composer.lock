@@ -1592,10 +1592,10 @@
                 "reference": "27245239075b73496456a3b5ca642ada8c885c7e"
             },
             "dist": {
-                "type": "zip",
+                "type": "path",
                 "url": "https://api.github.com/repos/Nebo15/lumen-rest/zipball/27245239075b73496456a3b5ca642ada8c885c7e",
                 "reference": "27245239075b73496456a3b5ca642ada8c885c7e",
-                "shasum": ""
+                "shasum": null
             },
             "require-dev": {
                 "laravel/lumen-framework": "5.2.*",
@@ -1607,7 +1607,6 @@
                     "Nebo15\\REST\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1619,11 +1618,10 @@
             ],
             "description": "Components for fast building REST API for Lumen",
             "keywords": [
-                "api",
-                "lumen",
-                "rest"
-            ],
-            "time": "2016-03-14 15:30:30"
+                "API",
+                "REST",
+                "lumen"
+            ]
         },
         {
             "name": "nesbot/carbon",
