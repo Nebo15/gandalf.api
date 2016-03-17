@@ -44,6 +44,7 @@ $app->group(
         /** @var Laravel\Lumen\Application $app */
         $app->get('/decisions', ['uses' => 'TablesController@decisions']);
         $app->get('/decisions/{id}', ['uses' => 'TablesController@decision']);
+        $app->get('/decisions/{id}/analytics', ['uses' => 'TablesController@analytics']);
     }
 );
 
