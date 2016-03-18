@@ -1,6 +1,6 @@
 <?php
 return [
-    'middleware' => 'oauth',
+    'middleware' => ['oauth'],
     'routes' => [
         'prefix' => '/api/v1/',
         'project_name' => '/projects',

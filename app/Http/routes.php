@@ -18,8 +18,8 @@ $app->get('/', function () use ($app) {
 
 /** @var Nebo15\REST\Router $api */
 $api = $app->make('Nebo15\REST\Router');
-$api->api('groups', 'GroupsController', ['oauth', 'applicationable', 'has_access']);
-$api->api('tables', 'TablesController', ['oauth', 'applicationable', 'has_access']);
+$api->api('groups', 'GroupsController', ['oauth', 'applicationable', 'applicationable.acl']);
+$api->api('tables', 'TablesController', ['oauth', 'applicationable', 'applicationable.acl']);
 
 
 /** @var Nebo15\Changelog\Router $changelog */
@@ -38,7 +38,7 @@ $app->group(
     [
         'prefix' => 'api/v1/admin',
         'namespace' => 'App\Http\Controllers',
-        'middleware' => ['oauth', 'applicationable', 'has_access']
+        'middleware' => ['oauth', 'applicationable', 'applicationable.acl']
     ],
     function ($app) use ($api) {
         /** @var Laravel\Lumen\Application $app */
@@ -51,7 +51,7 @@ $app->group(
     [
         'prefix' => 'api/v1',
         'namespace' => 'App\Http\Controllers',
-        'middleware' => ['applicationable', 'user_or_client', 'has_access'],
+        'middleware' => ['applicationable', 'applicationable.user_or_client', 'applicationable.acl'],
     ],
     function ($app) {
         /** @var Laravel\Lumen\Application $app */

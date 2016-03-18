@@ -1495,16 +1495,16 @@
         },
         {
             "name": "nebo15/lumen.applicationable",
-            "version": "0.0.3",
+            "version": "0.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/lumen-applicationable.git",
-                "reference": "9308385f768626e16397e25cb7f89c7a66ac350c"
+                "reference": "380061e816056386eb73df6e89694d208452d23e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/9308385f768626e16397e25cb7f89c7a66ac350c",
-                "reference": "9308385f768626e16397e25cb7f89c7a66ac350c",
+                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/380061e816056386eb73df6e89694d208452d23e",
+                "reference": "380061e816056386eb73df6e89694d208452d23e",
                 "shasum": ""
             },
             "require": {
@@ -1536,7 +1536,7 @@
                 "lumen",
                 "mongodb"
             ],
-            "time": "2016-03-16 16:36:45"
+            "time": "2016-03-18 12:02:51"
         },
         {
             "name": "nebo15/lumen.oauth2-mongodb",
@@ -1717,16 +1717,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v1.2.2",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "b3313b618f4edd76523572531d5d7e22fe747430"
+                "reference": "ff76e1a660669bb56ba74ba0583fd8d41417bf39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/b3313b618f4edd76523572531d5d7e22fe747430",
-                "reference": "b3313b618f4edd76523572531d5d7e22fe747430",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/ff76e1a660669bb56ba74ba0583fd8d41417bf39",
+                "reference": "ff76e1a660669bb56ba74ba0583fd8d41417bf39",
                 "shasum": ""
             },
             "require": {
@@ -1761,7 +1761,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2016-03-11 19:54:08"
+            "time": "2016-03-17 16:11:57"
         },
         {
             "name": "psr/log",
