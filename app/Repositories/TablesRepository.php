@@ -58,6 +58,13 @@ class TablesRepository extends AbstractRepository
         return Decision::findById($id);
     }
 
+    public function analyzeDecision($id)
+    {
+        $decision = $this->getDecisionById($id);
+
+        return $decision;
+    }
+
     public function getConsumerDecisions($size = null)
     {
         return Decision::orderBy(Decision::CREATED_AT, 'DESC')->paginate(intval($size));

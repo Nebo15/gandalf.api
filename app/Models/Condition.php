@@ -14,6 +14,7 @@ namespace App\Models;
  * @property string $condition
  * @property string $value
  * @property bool $matched
+ * @property integer $probability
  */
 class Condition extends Base
 {

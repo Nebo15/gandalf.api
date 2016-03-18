@@ -84,4 +84,9 @@ class TablesController extends AbstractController
     {
         return $this->response->json($this->getRepository()->getDecisionById($id)->toArray());
     }
+
+    public function analytics($id)
+    {
+        return $this->response->json($this->getRepository()->analyzeDecision($id)->toArray());
+    }
 }
