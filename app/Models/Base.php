@@ -17,7 +17,7 @@ abstract class Base extends Eloquent
     protected $validation_rules = [];
 
     protected $casts = [
-        '_id' => 'string'
+        '_id' => 'string',
     ];
 
     public function getId()
