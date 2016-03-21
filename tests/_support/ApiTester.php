@@ -386,22 +386,17 @@ class ApiTester extends \Codeception\Actor
         $this->amHttpAuthenticated('admin', 'admin');
     }
 
-    public function loginConsumer()
+    public function loginConsumer($consumer)
     {
-        $this->amHttpAuthenticated('consumer', 'consumer');
-    }
-
-    /*
-     * Waiting for SaaS
-    public function loginConsumer()
-    {
-        $this->createProjectAndSetHeader();
-        $this->sendPOST('api/v1/projects/consumer', ['description' => $this->getFaker()->text('20'), 'scope' => ['check']]);
-        $consumer = json_decode($this->grabResponse())->data->consumers[0];
         $this->logout();
         $this->amHttpAuthenticated($consumer->client_id, $consumer->client_secret);
     }
-    */
+
+    public function createConsumer()
+    {
+        $this->sendPOST('api/v1/projects/consumers', ['description' => $this->getFaker()->text('20'), 'scope' => ['check']]);
+        return json_decode($this->grabResponse())->data->consumers[0];
+    }
 
     public function getMongo()
     {
@@ -416,12 +411,12 @@ class ApiTester extends \Codeception\Actor
     {
         $project = $this->createProject();
         $this->setHeader('X-Application', $project->_id);
+        return $project;
     }
 
     public function createProject($new = false)
     {
-        if (!$this->project && !$new) {
-            $this->createAndLoginUser();
+        if (!$this->project || $new) {
             $faker = $this->getFaker();
             $project = [
                 'title' => $faker->streetName,
@@ -438,7 +433,7 @@ class ApiTester extends \Codeception\Actor
     public function createUser($new = false)
     {
         $this->createAndLoginClient();
-        if (!$this->user && !$new) {
+        if (!$this->user || $new) {
             $faker = $this->getFaker();
 
             $user_data = [
@@ -449,6 +444,8 @@ class ApiTester extends \Codeception\Actor
 
             $this->sendPOST('api/v1/user/', $user_data);
             $this->seeResponseCodeIs(201);
+            $user_info = json_decode($this->grabResponse())->data;
+
 
             $this->sendPOST('oauth/',
                 [
@@ -457,26 +454,24 @@ class ApiTester extends \Codeception\Actor
                     'password' => $user_data['password'],
                 ]
             );
-            $this->user = json_decode($this->grabResponse());
+
+            $user_info->token = json_decode($this->grabResponse());
+            $this->user = $user_info;
         }
         return $this->user;
     }
 
     public function createAndLoginUser()
     {
-        $token = $this->createUser();
-        $this->loginUser($token);
+        $user = $this->createUser();
+        $this->loginUser($user);
+        return $user;
     }
 
-    public function loginExistsUser()
+    public function loginUser($user)
     {
         $this->logout();
-        $this->loginUser($this->user);
-    }
-
-    public function loginUser($token)
-    {
-        $this->setHeader('Authorization', 'Bearer ' . $token->access_token);
+        $this->setHeader('Authorization', 'Bearer ' . $user->token->access_token);
     }
 
     public function createAndLoginClient()

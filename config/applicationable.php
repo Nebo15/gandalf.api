@@ -1,17 +1,24 @@
 <?php
 return [
-    'middleware' => ['oauth'],
+    'middleware' => ['oauth', 'applicationable.acl'],
     'routes' => [
         'prefix' => '/api/v1/',
-        'project_name' => '/projects',
-        'consumer_name' => '/projects/consumer',
+        'applications' => '/projects',
+        'consumers' => '/projects/consumers',
+        'users' => '/projects/users',
     ],
     'scopes' => [
-        'create',
-        'read',
-        'update',
-        'delete',
-        'check',
+        'users' => [
+            'create',
+            'read',
+            'update',
+            'delete',
+            'check',
+        ],
+        'consumers' => [
+            'create',
+            'check',
+        ],
     ],
     'acl' => [
         'get' => [
@@ -25,6 +32,7 @@ return [
         ],
         'post' => [
             '~^\/api\/v1\/admin\/groups$~' => ['read', 'create'],
+            '~^\/api\/v1\/projects\/users$~' => ['read', 'create'],
             '~^\/api\/v1\/admin\/groups\/(.+)\/copy$~' => ['read', 'create'],
             '~^\/api\/v1\/admin\/tables$~' => ['read', 'create'],
             '~^\/api\/v1\/admin\/tables\/(.+)\/copy$~' => ['read', 'create'],

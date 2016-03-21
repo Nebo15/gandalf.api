@@ -11,7 +11,8 @@ class GroupsCest
 
     public function createOk(ApiTester $I)
     {
-        $I->loginAdmin();
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
         $I->createGroup();
 
         $I->sendGET($this->api_prefix);
@@ -39,7 +40,8 @@ class GroupsCest
         $I->sendPOST($this->api_prefix, []);
         $I->seeResponseCodeIs(401);
 
-        $I->loginAdmin();
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
 
         $table = $I->createTable();
 
@@ -60,7 +62,8 @@ class GroupsCest
 
     public function updateOk(ApiTester $I)
     {
-        $I->loginAdmin();
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
         $group1 = $I->createGroup();
 
         $table = $I->createTable();
@@ -138,14 +141,16 @@ class GroupsCest
         $I->sendPUT($this->api_prefix, []);
         $I->seeResponseCodeIs(405);
 
-        $I->loginAdmin();
+        $user = $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
+
         $id = $I->createGroup()->_id;
 
         $I->logout();
         $I->sendPUT($this->api_prefix . "/$id", []);
         $I->seeResponseCodeIs(401);
 
-        $I->loginAdmin();
+        $I->loginUser($user);
 
         $notFoundData = [
             ['tables' => [['_id' => strval(new MongoId)]]],
@@ -169,7 +174,8 @@ class GroupsCest
 
     public function copy(ApiTester $I)
     {
-        $I->loginAdmin();
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
         $I->createGroup();
 
         $data = $I->getResponseFields()->data;
@@ -185,7 +191,8 @@ class GroupsCest
 
     public function delete(ApiTester $I)
     {
-        $I->loginAdmin();
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
         $I->createGroup();
         $I->createGroup();
 
