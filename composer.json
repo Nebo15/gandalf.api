@@ -16,10 +16,8 @@
         "laravel/lumen-framework": "5.2.*",
         "vlucas/phpdotenv": "~2.2",
         "jenssegers/mongodb": "2.*",
-        "nebo15/lumen.applicationable": "*",
         "nebo15/lumen.rest": "*",
-        "nebo15/eloquent.changelog": "*",
-        "nebo15/lumen.oauth2-mongodb": "*"
+        "nebo15/eloquent.changelog": "*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

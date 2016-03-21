@@ -4,58 +4,9 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d7b89980e35702d3a12a7010bc76bacd",
-    "content-hash": "782331ec88964178d2b17e941857fecc",
+    "hash": "57b8ef4902d8640d9b05b52df50e9c94",
+    "content-hash": "41607450d76ec36573c104ab9a3cceb3",
     "packages": [
-        {
-            "name": "bshaffer/oauth2-server-php",
-            "version": "v1.8.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/bshaffer/oauth2-server-php.git",
-                "reference": "058c98f73209f9c49495e1799d32c035196fe8b8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/bshaffer/oauth2-server-php/zipball/058c98f73209f9c49495e1799d32c035196fe8b8",
-                "reference": "058c98f73209f9c49495e1799d32c035196fe8b8",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.9"
-            },
-            "suggest": {
-                "aws/aws-sdk-php": "~2.8 is required to use the DynamoDB storage engine",
-                "firebase/php-jwt": "~2.2 is required to use JWT features",
-                "predis/predis": "Required to use the Redis storage engine",
-                "thobbs/phpcassa": "Required to use the Cassandra storage engine"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "OAuth2": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Brent Shaffer",
-                    "email": "bshafs@gmail.com",
-                    "homepage": "http://brentertainment.com"
-                }
-            ],
-            "description": "OAuth2 Server for PHP",
-            "homepage": "http://github.com/bshaffer/oauth2-server-php",
-            "keywords": [
-                "auth",
-                "oauth",
-                "oauth2"
-            ],
-            "time": "2015-09-18 18:05:10"
-        },
         {
             "name": "doctrine/inflector",
             "version": "v1.1.0",
@@ -1243,16 +1194,16 @@
         },
         {
             "name": "laravel/lumen-framework",
-            "version": "v5.2.5",
+            "version": "v5.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/lumen-framework.git",
-                "reference": "01bafdbef52c5ecc072b668da70808d55a4bbf41"
+                "reference": "4e8af6b6792a212fd7d405469add56a514f100c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/lumen-framework/zipball/01bafdbef52c5ecc072b668da70808d55a4bbf41",
-                "reference": "01bafdbef52c5ecc072b668da70808d55a4bbf41",
+                "url": "https://api.github.com/repos/laravel/lumen-framework/zipball/4e8af6b6792a212fd7d405469add56a514f100c0",
+                "reference": "4e8af6b6792a212fd7d405469add56a514f100c0",
                 "shasum": ""
             },
             "require": {
@@ -1323,7 +1274,7 @@
                 "laravel",
                 "lumen"
             ],
-            "time": "2016-02-12 15:02:34"
+            "time": "2016-03-18 15:23:13"
         },
         {
             "name": "monolog/monolog",
@@ -1494,96 +1445,6 @@
             "time": "2016-03-14 15:20:17"
         },
         {
-            "name": "nebo15/lumen.applicationable",
-            "version": "0.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Nebo15/lumen-applicationable.git",
-                "reference": "9308385f768626e16397e25cb7f89c7a66ac350c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/9308385f768626e16397e25cb7f89c7a66ac350c",
-                "reference": "9308385f768626e16397e25cb7f89c7a66ac350c",
-                "shasum": ""
-            },
-            "require": {
-                "nebo15/lumen.rest": "*"
-            },
-            "require-dev": {
-                "jenssegers/mongodb": "2.*",
-                "laravel/lumen-framework": "5.2.*",
-                "squizlabs/php_codesniffer": "2.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Nebo15\\LumenApplicationable\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Oleh Samorai"
-                }
-            ],
-            "description": "Interfaces and Traits for applicationable models",
-            "keywords": [
-                "applicationable",
-                "lumen",
-                "mongodb"
-            ],
-            "time": "2016-03-16 16:36:45"
-        },
-        {
-            "name": "nebo15/lumen.oauth2-mongodb",
-            "version": "0.0.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Nebo15/lumen-oauth2-mongo.git",
-                "reference": "6f9e04cb7c34edfdee4554fb1bcaf9411226a976"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-oauth2-mongo/zipball/6f9e04cb7c34edfdee4554fb1bcaf9411226a976",
-                "reference": "6f9e04cb7c34edfdee4554fb1bcaf9411226a976",
-                "shasum": ""
-            },
-            "require": {
-                "bshaffer/oauth2-server-php": "~1.8"
-            },
-            "require-dev": {
-                "jenssegers/mongodb": "2.*",
-                "laravel/lumen-framework": "5.2.*",
-                "squizlabs/php_codesniffer": "2.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Nebo15\\LumenOauth2\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Oleh Samorai"
-                }
-            ],
-            "description": "Oauth2 Storage + Oauthable interface with trait for user model",
-            "keywords": [
-                "lumen",
-                "mongo",
-                "oauth2"
-            ],
-            "time": "2016-03-09 14:47:15"
-        },
-        {
             "name": "nebo15/lumen.rest",
             "version": "0.0.4",
             "source": {
@@ -1594,7 +1455,7 @@
             "dist": {
                 "type": "path",
                 "url": "https://api.github.com/repos/Nebo15/lumen-rest/zipball/27245239075b73496456a3b5ca642ada8c885c7e",
-                "reference": "27245239075b73496456a3b5ca642ada8c885c7e",
+                "reference": "4dc2e5f29e80e2010fb76f12655ce7e675dbeb36",
                 "shasum": null
             },
             "require-dev": {
@@ -1715,16 +1576,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v1.2.2",
+            "version": "v1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "b3313b618f4edd76523572531d5d7e22fe747430"
+                "reference": "c7e26a21ba357863de030f0b9e701c7d04593774"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/b3313b618f4edd76523572531d5d7e22fe747430",
-                "reference": "b3313b618f4edd76523572531d5d7e22fe747430",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/c7e26a21ba357863de030f0b9e701c7d04593774",
+                "reference": "c7e26a21ba357863de030f0b9e701c7d04593774",
                 "shasum": ""
             },
             "require": {
@@ -1759,7 +1620,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2016-03-11 19:54:08"
+            "time": "2016-03-18 20:34:03"
         },
         {
             "name": "psr/log",

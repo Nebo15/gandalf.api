@@ -9,7 +9,6 @@ use \App\Models\Table;
 use App\Repositories\GroupsRepository;
 use App\Repositories\TablesRepository;
 use Nebo15\Changelog\Changelog;
-use Nebo15\LumenApplicationable\ApplicationableHelper;
 
 class TableObserver
 {
@@ -56,7 +55,6 @@ class TableObserver
 
     public function saving(Table $table)
     {
-        ApplicationableHelper::addApplication($table);
     }
 
     public function saved(Table $table)

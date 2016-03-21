@@ -5,8 +5,6 @@
 
 namespace App\Models;
 
-use Nebo15\LumenApplicationable\Contracts\Applicationable as ApplicationableContract;
-use Nebo15\LumenApplicationable\Traits\ApplicationableTrait;
 use Nebo15\REST\Traits\ListableTrait;
 use Nebo15\REST\Interfaces\ListableInterface;
 
@@ -16,9 +14,9 @@ use Nebo15\REST\Interfaces\ListableInterface;
  * @property array $tables;
  * @property string $probability;
  */
-class Group extends Base implements ListableInterface, ApplicationableContract
+class Group extends Base implements ListableInterface
 {
-    use ListableTrait, ApplicationableTrait;
+    use ListableTrait;
 
     protected $fillable = ['tables', 'probability'];
 
