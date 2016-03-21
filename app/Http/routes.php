@@ -42,8 +42,8 @@ $app->group(
     ],
     function ($app) use ($api) {
         /** @var Laravel\Lumen\Application $app */
-        $app->get('/decisions', ['uses' => 'TablesController@history']);
-        $app->get('/decisions/{id}', ['uses' => 'TablesController@historyItem']);
+        $app->get('/decisions', ['uses' => 'TablesController@decisions']);
+        $app->get('/decisions/{id}', ['uses' => 'TablesController@decision']);
     }
 );
 

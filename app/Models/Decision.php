@@ -69,6 +69,8 @@ class Decision extends Base
             'description' => $this->description,
             'final_decision' => $this->final_decision,
             'request' => $this->request,
+            self::CREATED_AT => $this->getAttribute(self::CREATED_AT),
+            self::UPDATED_AT => $this->getAttribute(self::UPDATED_AT),
             'rules' => $this->rules()->get()->map(function (Rule $rule) {
                 return [
                     'title' => $rule->title,

@@ -36,7 +36,7 @@ class TablesRepository extends AbstractRepository
         return $model;
     }
 
-    public function history($size = null, $table_id = null)
+    public function getDecisions($size = null, $table_id = null)
     {
         if ($table_id) {
             $query = Decision::where('table._id', new \MongoId($table_id));
@@ -53,17 +53,17 @@ class TablesRepository extends AbstractRepository
         return $query->paginate(intval($size));
     }
 
-    public function historyItem($id)
+    public function getDecisionById($id)
     {
         return Decision::findById($id);
     }
 
-    public function consumerHistory($size = null)
+    public function getConsumerDecisions($size = null)
     {
         return Decision::orderBy(Decision::CREATED_AT, 'DESC')->paginate(intval($size));
     }
 
-    public function consumerHistoryItem($id)
+    public function getConsumerDecision($id)
     {
         return Decision::findById($id)->toConsumerArray();
     }
