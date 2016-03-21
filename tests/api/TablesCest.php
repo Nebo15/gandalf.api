@@ -9,6 +9,7 @@ class TablesCest
 
     public function createOk(ApiTester $I)
     {
+        $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
         $table = $I->createTable([
             'default_decision' => 'Decline',
@@ -27,8 +28,8 @@ class TablesCest
                         'condition' => '$lte',
                         'value' => 10,
                     ],
-                    'test' => 'INVALID'
-                ]
+                    'test' => 'INVALID',
+                ],
             ],
             'rules' => [
                 [
@@ -41,8 +42,8 @@ class TablesCest
                             'condition' => '$eq',
                             'value' => true,
                             'matched' => true,
-                        ]
-                    ]
+                        ],
+                    ],
                 ],
                 [
                     'than' => 'Decline',
@@ -53,10 +54,10 @@ class TablesCest
                             'field_key' => ' Test INVALID key ',
                             'condition' => '$eq',
                             'value' => false,
-                        ]
-                    ]
-                ]
-            ]
+                        ],
+                    ],
+                ],
+            ],
         ]);
 
         $I->sendGET('api/v1/admin/tables/' . $table->_id);
@@ -70,8 +71,8 @@ class TablesCest
                         'condition' => '$lte',
                         'value' => 10,
                     ],
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $I->dontSeeResponseJsonMatchesJsonPath("$.data.fields[*].test");
@@ -89,18 +90,18 @@ class TablesCest
                         'condition' => '$lte',
                         'value' => 10,
                     ],
-                ]
+                ],
             ],
             'rules' => [
                 [
                     'conditions' => [
                         [
                             'field_key' => 'test_invalid_key',
-                            'matched' => false
-                        ]
-                    ]
-                ]
-            ]
+                            'matched' => false,
+                        ],
+                    ],
+                ],
+            ],
         ]);
 
         $decision = $I->checkDecision($table->_id, ['test_invalid_key' => 8]);
@@ -115,23 +116,66 @@ class TablesCest
                         'condition' => '$lte',
                         'value' => 10,
                     ],
-                ]
+                ],
             ],
             'rules' => [
                 [
                     'conditions' => [
                         [
                             'field_key' => 'test_invalid_key',
-                            'matched' => true
-                        ]
-                    ]
-                ]
-            ]
+                            'matched' => true,
+                        ],
+                    ],
+                ],
+            ],
         ]);
+    }
+
+    public function checkApplicationableAccess(ApiTester $I)
+    {
+        $first_user = $I->createUser(true);  /** Main user, Project admin */
+        $second_user = $I->createUser(true); /** Test user, Project admin */
+
+        $I->loginUser($first_user);
+        $I->createProjectAndSetHeader();
+        $table = $I->createTable();
+        $I->sendGET('api/v1/admin/tables/' . $table->_id);
+        $I->seeResponseCodeIs(200);
+        $I->loginUser($second_user);
+        $I->sendGET('api/v1/admin/tables/' . $table->_id);
+        $I->seeResponseCodeIs(403);
+
+        $I->sendPOST('api/v1/projects/users', ['user_id' => $second_user->_id]);
+        $I->seeResponseCodeIs(403);
+        $I->loginUser($first_user);
+
+        $I->sendPOST('api/v1/projects/users', ['user_id' => $second_user->_id]);
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseContains('The role field is required');
+        $I->seeResponseContains('The scope field is required');
+
+        $I->sendPOST('api/v1/projects/users', ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['create', 'read', 'uncreated_scope']]);
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseContains('The selected scope is invalid.');
+
+        $I->sendPOST('api/v1/projects/users', ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['create', 'read', 'update']]);
+        $I->seeResponseCodeIs(201);
+        $I->loginUser($second_user);
+        $I->sendGET('api/v1/admin/tables/' . $table->_id);
+        $I->seeResponseCodeIs(200);
+
+        $I->loginUser($first_user);
+        $I->sendDELETE('api/v1/projects/users', ['user_id' => $second_user->_id]);
+        $I->seeResponseCodeIs(200);
+
+        $I->loginUser($second_user);
+        $I->sendGET('api/v1/admin/tables/' . $table->_id);
+        $I->seeResponseCodeIs(403);
     }
 
     public function createInvalid(ApiTester $I)
     {
+        $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
         $I->sendPOST('api/v1/admin/tables', [
             'table' => [
@@ -180,7 +224,7 @@ class TablesCest
                                 'value' => true,
                             ],
 
-                        ]
+                        ],
                     ],
                     [
                         'than' => 'Decline',
@@ -197,10 +241,10 @@ class TablesCest
                                 'condition' => '$eq',
                                 'value' => false,
                             ],
-                        ]
-                    ]
-                ]
-            ]
+                        ],
+                    ],
+                ],
+            ],
         ]);
         $I->seeResponseCodeIs(422);
         $I->seeResponseContains('table.default_title');
@@ -217,7 +261,7 @@ class TablesCest
                         "title" => 'Test',
                         "source" => "request",
                         "type" => 'numeric',
-                    ]
+                    ],
                 ],
                 'rules' => [
                     [
@@ -229,11 +273,11 @@ class TablesCest
                                 'field_key' => '1',
                                 'condition' => '$lte',
                                 'value' => 'invalid',
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ]);
         $I->seeResponseCodeIs(422);
         $I->seeResponseContains('table.rules.0.conditions.0.value');
@@ -241,6 +285,7 @@ class TablesCest
 
     public function ruleIsset(ApiTester $I)
     {
+        $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
         $table = $I->createTable([
             'title' => 'Test title',
@@ -262,8 +307,8 @@ class TablesCest
                     "key" => 'Second ',
                     "title" => 'Second',
                     "source" => "request",
-                    "type" => 'string'
-                ]
+                    "type" => 'string',
+                ],
             ],
             'rules' => [
                 [
@@ -280,10 +325,10 @@ class TablesCest
                             'field_key' => 'Second ',
                             'condition' => '$is_set',
                             'value' => true,
-                        ]
-                    ]
-                ]
-            ]
+                        ],
+                    ],
+                ],
+            ],
         ]);
         $I->sendPOST("api/v1/tables/{$table->_id}/decisions", [' ISSET ' => 8]);
         $I->seeResponseCodeIs(422);
@@ -306,20 +351,21 @@ class TablesCest
                     'conditions' => [
                         [
                             'field_key' => 'is_set',
-                            'matched' => true
+                            'matched' => true,
                         ],
                         [
                             'field_key' => 'second',
-                            'matched' => true
-                        ]
-                    ]
-                ]
-            ]
+                            'matched' => true,
+                        ],
+                    ],
+                ],
+            ],
         ]);
     }
 
     public function ruleIn(ApiTester $I)
     {
+        $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
         $table = $I->createTable([
             'title' => 'Test title',
@@ -331,7 +377,7 @@ class TablesCest
                     "key" => 'test',
                     "title" => 'Test',
                     "source" => "request",
-                    "type" => 'string'
+                    "type" => 'string',
                 ],
                 [
                     "key" => 'test',
@@ -375,9 +421,9 @@ class TablesCest
                             'condition' => '$eq',
                             'value' => true,
                         ],
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ]);
         $data = [
             'wow,comma' => [true, true, false],
@@ -394,7 +440,7 @@ class TablesCest
                             [
                                 'field_key' => 'test',
                                 'value' => "1, 3, 'wow,comma'",
-                                'matched' => $results[0]
+                                'matched' => $results[0],
                             ],
                             [
                                 'field_key' => 'test',
@@ -406,8 +452,8 @@ class TablesCest
                                 'condition' => '$eq',
                                 'matched' => $results[2],
                             ],
-                        ]
-                    ]
+                        ],
+                    ],
                 ]
             );
         }
@@ -415,6 +461,7 @@ class TablesCest
 
     public function ruleEqual(ApiTester $I)
     {
+        $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
         $table_data = [
             'title' => 'Test',
@@ -426,8 +473,8 @@ class TablesCest
                     "key" => 'boolean',
                     "title" => 'Test',
                     "source" => "request",
-                    "type" => 'boolean'
-                ]
+                    "type" => 'boolean',
+                ],
             ],
             'rules' => [
                 [
@@ -439,10 +486,10 @@ class TablesCest
                             'field_key' => 'boolean',
                             'condition' => '$eq',
                             'value' => true,
-                        ]
-                    ]
-                ]
-            ]
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         # boolean
@@ -495,6 +542,7 @@ class TablesCest
 
     public function ruleNotEqual(ApiTester $I)
     {
+        $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
         $table = $I->createTable([
             'title' => 'Test',
@@ -506,8 +554,8 @@ class TablesCest
                     "key" => 'boolean',
                     "title" => 'Test',
                     "source" => "request",
-                    "type" => 'numeric'
-                ]
+                    "type" => 'numeric',
+                ],
             ],
             'rules' => [
                 [
@@ -519,10 +567,10 @@ class TablesCest
                             'field_key' => 'boolean',
                             'condition' => '$ne',
                             'value' => 100,
-                        ]
-                    ]
-                ]
-            ]
+                        ],
+                    ],
+                ],
+            ],
         ]);
         foreach ([true, null, 'invalid', '100.15i'] as $value) {
             $I->sendPOST("api/v1/tables/$table->_id/decisions", ['boolean' => $value]);
@@ -540,6 +588,7 @@ class TablesCest
 
     public function all(ApiTester $I)
     {
+        $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
         $I->createTable();
         $I->createTable();
@@ -558,6 +607,7 @@ class TablesCest
 
     public function update(ApiTester $I)
     {
+        $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
         $I->createTable();
 
@@ -574,7 +624,7 @@ class TablesCest
                 "title" => 'Test key',
                 "source" => "request",
                 "type" => 'string',
-            ]
+            ],
         ];
         $data['rules'] = [
             [
@@ -584,10 +634,10 @@ class TablesCest
                     [
                         'field_key' => 'test_key',
                         'condition' => '$eq',
-                        'value' => 'test'
-                    ]
-                ]
-            ]
+                        'value' => 'test',
+                    ],
+                ],
+            ],
         ];
         $I->sendPUT('api/v1/admin/tables/' . $id, ['table' => $data]);
         $I->assertTable();
@@ -600,7 +650,7 @@ class TablesCest
                     "title" => 'Test key',
                     "source" => "request",
                     "type" => 'string',
-                ]
+                ],
             ],
             'rules' => [
                 [
@@ -610,16 +660,17 @@ class TablesCest
                         [
                             'field_key' => 'test_key',
                             'condition' => '$eq',
-                            'value' => 'test'
-                        ]
-                    ]
-                ]
-            ]
+                            'value' => 'test',
+                        ],
+                    ],
+                ],
+            ],
         ]);
     }
 
     public function copy(ApiTester $I)
     {
+        $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
         $I->createTable();
 
@@ -636,6 +687,7 @@ class TablesCest
 
     public function delete(ApiTester $I)
     {
+        $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
         $I->createTable();
         $I->createTable();
@@ -657,6 +709,7 @@ class TablesCest
 
     public function decisionsFirst(ApiTester $I)
     {
+        $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
         $table_data = $I->createTable();
         $table_id_no_decisions = $table_data->_id;
@@ -699,13 +752,14 @@ class TablesCest
             $I->assertTableDecisionsForAdmin();
         }
 
-        $I->loginConsumer();
+        $I->loginConsumer($I->createConsumer());
         $I->sendGET('api/v1/admin/decisions');
         $I->seeResponseCodeIs(401);
     }
 
     public function invalidDecisions(ApiTester $I)
     {
+        $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
         $table_id = $I->createTable()->_id;
 

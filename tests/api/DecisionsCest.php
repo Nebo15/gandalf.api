@@ -9,12 +9,17 @@ class DecisionsCest
 
     public function customerDecisions(ApiTester $I)
     {
+        $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
         $I->createTable();
+        $table = $I->getResponseFields()->data->_id;
 
-        $decision = $I->checkDecision($I->getResponseFields()->data->_id);
+        $decision = $I->checkDecision($table);
 
-        $I->loginConsumer();
+        $I->loginConsumer($I->createConsumer());
+
+        $I->checkDecision($table);
+
         $I->sendGET('api/v1/admin/decisions');
         $I->seeResponseCodeIs(401);
 
