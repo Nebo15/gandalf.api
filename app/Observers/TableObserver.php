@@ -35,14 +35,21 @@ class TableObserver
             }
             unset($tablesIds[$table->getKey()]);
             if (count($tablesIds) > 0) {
-                $fields = $table->getFieldsKeys()->toArray();
+                $tablesToUpdate = [];
+                $originalTableFields = $table->getFieldsKeys()->toArray();
                 $tableRepository = new TablesRepository;
-                $groupTable = $tableRepository->read($tablesIds[0]);
-                $groupFields = $groupTable->getFieldsKeys()->toArray();
 
-                if($diff = array_diff($fields, $groupFields)){
+                foreach ($tableRepository->findByIds($tablesIds) as $groupTable) {
+                    $groupFields = $groupTable->getFieldsKeys()->toArray();
 
+                    if($newFields = array_diff($originalTableFields, $groupFields)){
+
+                    }
+                    if($oldFields = array_diff($groupFields, $originalTableFields)){
+
+                    }
                 }
+
             }
         }
     }
