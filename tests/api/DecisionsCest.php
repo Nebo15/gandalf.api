@@ -12,14 +12,10 @@ class DecisionsCest
         $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
         $I->createTable();
-        $table = $I->getResponseFields()->data->_id;
 
-        $decision = $I->checkDecision($table);
+        $decision = $I->checkDecision($I->getResponseFields()->data->_id);
 
         $I->loginConsumer($I->createConsumer());
-
-        $I->checkDecision($table);
-
         $I->sendGET('api/v1/admin/decisions');
         $I->seeResponseCodeIs(401);
 
@@ -29,8 +25,7 @@ class DecisionsCest
 
     public function createFirst(ApiTester $I)
     {
-        $I->createAndLoginUser();
-        $I->createProjectAndSetHeader();
+        $I->loginAdmin();
         $table_data = $I->createTable();
         $table_id_no_decisions = $table_data->_id;
 
@@ -72,7 +67,7 @@ class DecisionsCest
             $I->assertTableDecisionsForAdmin();
         }
 
-        $I->loginConsumer($I->createConsumer());
+        $I->loginConsumer();
         $I->sendGET('api/v1/admin/decisions');
         $I->seeResponseCodeIs(401);
     }
@@ -84,8 +79,7 @@ class DecisionsCest
 
     public function createGroup(ApiTester $I)
     {
-        $I->createAndLoginUser();
-        $I->createProjectAndSetHeader();
+        $I->loginAdmin();
         $group = $I->createGroup();
 
         $decision = $I->checkDecision($group->_id, [], 'first', 'groups');
@@ -104,8 +98,7 @@ class DecisionsCest
 
     public function createInvalid(ApiTester $I)
     {
-        $I->createAndLoginUser();
-        $I->createProjectAndSetHeader();
+        $I->loginAdmin();
         $table_id = $I->createTable()->_id;
 
         $I->sendPOST("api/v1/tables/$table_id/decisions", ['internal_credit_history' => 'okay']);

@@ -16,7 +16,7 @@ return [
             'check',
         ],
         'consumers' => [
-            'read',
+            'create',
             'check',
         ],
     ],

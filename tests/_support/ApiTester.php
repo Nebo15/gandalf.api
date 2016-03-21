@@ -389,7 +389,7 @@ class ApiTester extends \Codeception\Actor
     public function loginConsumer($consumer)
     {
         $this->logout();
-        $this->setHeader('Authorization', 'Basic ' . base64_encode($consumer->client_id.':'.$consumer->client_secret));
+        $this->amHttpAuthenticated($consumer->client_id, $consumer->client_secret);
     }
 
     public function createConsumer()
@@ -497,7 +497,7 @@ class ApiTester extends \Codeception\Actor
 
     public function logout()
     {
-        $this->deleteHeader('Authorization');
+        $this->amHttpAuthenticated(null, null);
     }
 
     public function stdToArray($std)

@@ -42,7 +42,9 @@ class GroupsCest
 
         $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
+
         $table = $I->createTable();
+
         $invalid_data = [
             ['probability' => 'random'],
             ['tables' => ['_id' => $table->_id], 'probability' => 'random'],
