@@ -32,7 +32,7 @@ class TablesController extends AbstractController
             'table.matching_type' => 'required|in:first,all',
             'table.fields' => 'required|array',
             'table.fields.*.title' => 'required|string',
-            'table.fields.*.key' => 'required|string',
+            'table.fields.*.key' => 'required|string|not_in:webhook',
             'table.fields.*.type' => 'required|in:numeric,boolean,string',
             'table.fields.*.source' => 'required|in:request',
             'table.rules' => 'required|array',
