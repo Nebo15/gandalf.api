@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a333d8e160c7eb26fbf8d3bcf20620fb",
-    "content-hash": "095c332f6ea890813dc2a94e00edea4d",
+    "hash": "d7b89980e35702d3a12a7010bc76bacd",
+    "content-hash": "782331ec88964178d2b17e941857fecc",
     "packages": [
         {
             "name": "bshaffer/oauth2-server-php",
@@ -1243,16 +1243,16 @@
         },
         {
             "name": "laravel/lumen-framework",
-            "version": "v5.2.5",
+            "version": "v5.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/lumen-framework.git",
-                "reference": "01bafdbef52c5ecc072b668da70808d55a4bbf41"
+                "reference": "4e8af6b6792a212fd7d405469add56a514f100c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/lumen-framework/zipball/01bafdbef52c5ecc072b668da70808d55a4bbf41",
-                "reference": "01bafdbef52c5ecc072b668da70808d55a4bbf41",
+                "url": "https://api.github.com/repos/laravel/lumen-framework/zipball/4e8af6b6792a212fd7d405469add56a514f100c0",
+                "reference": "4e8af6b6792a212fd7d405469add56a514f100c0",
                 "shasum": ""
             },
             "require": {
@@ -1323,7 +1323,7 @@
                 "laravel",
                 "lumen"
             ],
-            "time": "2016-02-12 15:02:34"
+            "time": "2016-03-18 15:23:13"
         },
         {
             "name": "monolog/monolog",
@@ -1495,16 +1495,16 @@
         },
         {
             "name": "nebo15/lumen.applicationable",
-            "version": "0.0.6",
+            "version": "0.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/lumen-applicationable.git",
-                "reference": "42b1609c1e4412e0f486946dee7b9410cb1c0dba"
+                "reference": "67f754171b7d611a9b7519f4fc4ca4361541f8a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/42b1609c1e4412e0f486946dee7b9410cb1c0dba",
-                "reference": "42b1609c1e4412e0f486946dee7b9410cb1c0dba",
+                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/67f754171b7d611a9b7519f4fc4ca4361541f8a8",
+                "reference": "67f754171b7d611a9b7519f4fc4ca4361541f8a8",
                 "shasum": ""
             },
             "require": {
@@ -1536,7 +1536,7 @@
                 "lumen",
                 "mongodb"
             ],
-            "time": "2016-03-18 13:00:50"
+            "time": "2016-03-21 12:13:39"
         },
         {
             "name": "nebo15/lumen.oauth2-mongodb",
@@ -1717,16 +1717,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v1.3.0",
+            "version": "v1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "ff76e1a660669bb56ba74ba0583fd8d41417bf39"
+                "reference": "c7e26a21ba357863de030f0b9e701c7d04593774"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/ff76e1a660669bb56ba74ba0583fd8d41417bf39",
-                "reference": "ff76e1a660669bb56ba74ba0583fd8d41417bf39",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/c7e26a21ba357863de030f0b9e701c7d04593774",
+                "reference": "c7e26a21ba357863de030f0b9e701c7d04593774",
                 "shasum": ""
             },
             "require": {
@@ -1761,7 +1761,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2016-03-17 16:11:57"
+            "time": "2016-03-18 20:34:03"
         },
         {
             "name": "psr/log",
