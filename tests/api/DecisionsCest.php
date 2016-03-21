@@ -9,7 +9,7 @@ class DecisionsCest
 
     public function customerDecisions(ApiTester $I)
     {
-        $I->createProjectAndSetHeader();
+        $I->loginAdmin();
         $I->createTable();
 
         $decision = $I->checkDecision($I->getResponseFields()->data->_id);

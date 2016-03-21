@@ -60,7 +60,6 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseCodeIs($code);
         $this->seeResponseMatchesJsonType([
             '_id' => 'string',
-            'applications' => 'array',
             'tables' => 'array',
             'probability' => 'string:regex(@^(random)$@)',
         ], $jsonPath);
@@ -115,7 +114,6 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseMatchesJsonType([
             '_id' => 'string',
             'title' => 'string',
-            'applications' => 'array',
             'description' => 'string',
             'default_decision' => 'string|integer',
             'default_title' => 'string',
@@ -370,12 +368,20 @@ class ApiTester extends \Codeception\Actor
 
     public function loginConsumer()
     {
+        $this->amHttpAuthenticated('consumer', 'consumer');
+    }
+
+    /*
+     * Waiting for SaaS
+    public function loginConsumer()
+    {
         $this->createProjectAndSetHeader();
         $this->sendPOST('api/v1/projects/consumer', ['description' => $this->getFaker()->text('20'), 'scope' => ['check']]);
         $consumer = json_decode($this->grabResponse())->data->consumers[0];
         $this->logout();
         $this->amHttpAuthenticated($consumer->client_id, $consumer->client_secret);
     }
+    */
 
     public function getMongo()
     {
@@ -476,6 +482,6 @@ class ApiTester extends \Codeception\Actor
 
     public function logout()
     {
-        $this->deleteHeader('Authorization');
+        $this->amHttpAuthenticated(null, null);
     }
 }

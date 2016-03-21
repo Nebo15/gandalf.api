@@ -89,8 +89,9 @@ $app->register(Nebo15\REST\ServiceProvider::class);
 $app->register(Nebo15\Changelog\ServiceProvider::class);
 $app->register(App\Providers\ValidationServiceProvider::class);
 $app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
-$app->register(Nebo15\LumenOauth2\Providers\ServiceProvider::class);
-$app->register(Nebo15\LumenApplicationable\ServiceProvider::class);
+# Waiting for SaaS
+//$app->register(Nebo15\LumenOauth2\Providers\ServiceProvider::class);
+//$app->register(Nebo15\LumenApplicationable\ServiceProvider::class);
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 

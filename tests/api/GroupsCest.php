@@ -11,7 +11,7 @@ class GroupsCest
 
     public function createOk(ApiTester $I)
     {
-        $I->createProjectAndSetHeader();
+        $I->loginAdmin();
         $I->createGroup();
 
         $I->sendGET($this->api_prefix);
@@ -39,7 +39,7 @@ class GroupsCest
         $I->sendPOST($this->api_prefix, []);
         $I->seeResponseCodeIs(401);
 
-        $I->createProjectAndSetHeader();
+        $I->loginAdmin();
 
         $invalid_data = [
             ['probability' => 'random'],
@@ -56,7 +56,7 @@ class GroupsCest
 
     public function updateOk(ApiTester $I)
     {
-        $I->createProjectAndSetHeader();
+        $I->loginAdmin();
         $id = $I->createGroup()->_id;
         $table_id = strval(new MongoId);
         $I->sendPUT($this->api_prefix . "/$id", [
@@ -75,14 +75,14 @@ class GroupsCest
         $I->sendPUT($this->api_prefix, []);
         $I->seeResponseCodeIs(405);
 
-        $I->createProjectAndSetHeader();
+        $I->loginAdmin();
         $id = $I->createGroup()->_id;
 
         $I->logout();
         $I->sendPUT($this->api_prefix . "/$id", []);
         $I->seeResponseCodeIs(401);
 
-        $I->loginExistsUser();
+        $I->loginAdmin();
 
         $invalid_data = [
             ['probability' => 'invalid'],
@@ -97,7 +97,7 @@ class GroupsCest
 
     public function copy(ApiTester $I)
     {
-        $I->createProjectAndSetHeader();
+        $I->loginAdmin();
         $I->createGroup();
 
         $data = $I->getResponseFields()->data;
@@ -113,7 +113,7 @@ class GroupsCest
 
     public function delete(ApiTester $I)
     {
-        $I->createProjectAndSetHeader();
+        $I->loginAdmin();
         $I->createGroup();
         $I->createGroup();
 
