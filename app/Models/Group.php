@@ -24,7 +24,7 @@ class Group extends Base implements ListableInterface, ApplicationableContract
 
     protected $listable = ['_id', 'probability', 'tables'];
 
-    protected $visible = ['_id', 'probability', 'tables'];
+    protected $visible = ['_id', 'probability', 'fields', 'tables'];
 
     protected $casts = [
         '_id' => 'string',

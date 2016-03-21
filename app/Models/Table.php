@@ -115,4 +115,14 @@ class Table extends Base implements ListableInterface, ApplicationableContract
 
         return $this;
     }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function getFieldsKeys()
+    {
+        return $this->fields()->get()->map(function (Field $field) {
+            return $field->key;
+        });
+    }
 }
