@@ -58,9 +58,12 @@ class TablesRepository extends AbstractRepository
         return Decision::findById($id);
     }
 
-    public function analyzeDecision($id)
+    public function analyzeTableDecisions($table_id)
     {
-        $decision = $this->getDecisionById($id);
+        $decisions = Decision::where('table._id', new \MongoId($table_id));
+        if($decisions->count() < 1){
+            return false;
+        }
 
         return $decision;
     }
