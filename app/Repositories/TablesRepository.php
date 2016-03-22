@@ -60,12 +60,52 @@ class TablesRepository extends AbstractRepository
 
     public function analyzeTableDecisions($table_id)
     {
-        $decisions = Decision::where('table._id', new \MongoId($table_id));
-        if($decisions->count() < 1){
-            return false;
+        $table = $this->read($table_id);
+        $decisions = Decision::where('table._id', new \MongoId($table_id))->get();
+        $map = [];
+        /** @var Decision $decision */
+
+        foreach ($decisions as $decision) {
+            $rule_index = 0;
+            foreach ($decision->rules as $rule) {
+                $condition_index = 0;
+                foreach ($rule->conditions as $condition) {
+                    $index = "$rule_index@$condition_index";
+                    if (!isset($map[$index])) {
+                        $map[$index] = ['matched' => 0, 'requests' => 0];
+                    }
+
+                    if ($condition->matched === true) {
+                        $map[$index]['matched']++;
+                    }
+                    $map[$index]['requests']++;
+
+                    $condition_index++;
+                }
+                $rule_index++;
+            }
         }
 
-        return $decision;
+        $rule_index = 0;
+        foreach ($table->rules as $rule) {
+            $condition_index = 0;
+            foreach ($rule->conditions as $condition) {
+                $index = "$rule_index@$condition_index";
+                if (array_key_exists($index, $map)) {
+                    $condition->probability = round($map[$index]['matched'] / $map[$index]['requests'], 2);
+                } else {
+                    $condition->probability = null;
+                }
+                $condition->requests = $map[$index]['requests'];
+                $rule->conditions()->associate($condition);
+
+                $condition_index++;
+            }
+            $rule_index++;
+            $table->rules()->associate($rule);
+        }
+
+        return $table;
     }
 
     public function getConsumerDecisions($size = null)

@@ -15,10 +15,11 @@ namespace App\Models;
  * @property string $value
  * @property bool $matched
  * @property integer $probability
+ * @property integer $requests
  */
 class Condition extends Base
 {
-    protected $visible = ['field_key', 'condition', 'value'];
+    protected $visible = ['field_key', 'condition', 'value', 'probability', 'requests'];
 
     protected $fillable = ['field_key', 'condition', 'value'];
 
