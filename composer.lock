@@ -1446,17 +1446,17 @@
         },
         {
             "name": "nebo15/lumen.rest",
-            "version": "0.0.4",
+            "version": "0.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/lumen-rest.git",
-                "reference": "27245239075b73496456a3b5ca642ada8c885c7e"
+                "reference": "2ab7c4dc6a756c945213c7193cdc2c92fea66fcf"
             },
             "dist": {
-                "type": "path",
-                "url": "https://api.github.com/repos/Nebo15/lumen-rest/zipball/27245239075b73496456a3b5ca642ada8c885c7e",
-                "reference": "4dc2e5f29e80e2010fb76f12655ce7e675dbeb36",
-                "shasum": null
+                "type": "zip",
+                "url": "https://api.github.com/repos/Nebo15/lumen-rest/zipball/2ab7c4dc6a756c945213c7193cdc2c92fea66fcf",
+                "reference": "2ab7c4dc6a756c945213c7193cdc2c92fea66fcf",
+                "shasum": ""
             },
             "require-dev": {
                 "laravel/lumen-framework": "5.2.*",
@@ -1468,6 +1468,7 @@
                     "Nebo15\\REST\\": "src"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1479,10 +1480,11 @@
             ],
             "description": "Components for fast building REST API for Lumen",
             "keywords": [
-                "API",
-                "REST",
-                "lumen"
-            ]
+                "api",
+                "lumen",
+                "rest"
+            ],
+            "time": "2016-03-22 12:29:42"
         },
         {
             "name": "nesbot/carbon",
@@ -2686,16 +2688,16 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "6.1.1",
+            "version": "6.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "c6851d6e48f63b69357cbfa55bca116448140e0c"
+                "reference": "d094e337976dff9d8e2424e8485872194e768662"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/c6851d6e48f63b69357cbfa55bca116448140e0c",
-                "reference": "c6851d6e48f63b69357cbfa55bca116448140e0c",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/d094e337976dff9d8e2424e8485872194e768662",
+                "reference": "d094e337976dff9d8e2424e8485872194e768662",
                 "shasum": ""
             },
             "require": {
@@ -2711,7 +2713,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "6.1-dev"
+                    "dev-master": "6.2-dev"
                 }
             },
             "autoload": {
@@ -2744,7 +2746,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2015-11-23 00:47:50"
+            "time": "2016-03-21 20:02:09"
         },
         {
             "name": "guzzlehttp/promises",
