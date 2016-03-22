@@ -4,13 +4,6 @@
     "keywords": ["framework", "laravel", "lumen"],
     "license": "MIT",
     "type": "project",
-    "repositories": [
-        {
-            "type": "path",
-            "url": "/Users/bardack/www/lumen-rest",
-            "symlink": true
-        }
-    ],
     "require": {
         "php": ">=5.5.9",
         "laravel/lumen-framework": "5.2.*",
