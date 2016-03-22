@@ -9,7 +9,7 @@ class TablesCest
 
     public function createOk(ApiTester $I)
     {
-        $I->createProjectAndSetHeader();
+        $I->loginAdmin();
         $table = $I->createTable([
             'default_decision' => 'Decline',
             'default_title' => 'Title 100',
@@ -132,7 +132,7 @@ class TablesCest
 
     public function createInvalid(ApiTester $I)
     {
-        $I->createProjectAndSetHeader();
+        $I->loginAdmin();
         $I->sendPOST('api/v1/admin/tables', [
             'table' => [
                 'default_title' => '',
@@ -153,12 +153,6 @@ class TablesCest
                     ],
                     [
                         "key" => '3',
-                        "title" => 'Test 3',
-                        "source" => "request",
-                        "type" => 'numeric',
-                    ],
-                    [
-                        "key" => 'webhook',
                         "title" => 'Test 3',
                         "source" => "request",
                         "type" => 'numeric',
@@ -213,7 +207,6 @@ class TablesCest
         $I->seeResponseContains('table.default_description');
         $I->seeResponseContains('table.rules.1.conditions');
         $I->seeResponseContains('table.matching_type');
-        $I->seeResponseContains('table.fields.3.key');
 
         $I->sendPOST('api/v1/admin/tables', [
             'table' => [
@@ -248,7 +241,7 @@ class TablesCest
 
     public function ruleIsset(ApiTester $I)
     {
-        $I->createProjectAndSetHeader();
+        $I->loginAdmin();
         $table = $I->createTable([
             'title' => 'Test title',
             'description' => 'Test description',
@@ -303,8 +296,13 @@ class TablesCest
         $I->sendPOST("api/v1/tables/{$table->_id}/decisions", ['is_set' => 200, 'second' => false]);
         $I->seeResponseCodeIs(422);
 
+        $I->loginConsumer();
         $decision = $I->checkDecision($table->_id, ['is_set' => 1000, 'second' => 'test']);
 
+        $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
+        $I->seeResponseCodeIs(401);
+
+        $I->loginAdmin();
         $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
         $I->assertResponseDataFields([
             'final_decision' => 'Approve',
@@ -327,7 +325,7 @@ class TablesCest
 
     public function ruleIn(ApiTester $I)
     {
-        $I->createProjectAndSetHeader();
+        $I->loginAdmin();
         $table = $I->createTable([
             'title' => 'Test title',
             'description' => 'Test description',
@@ -422,7 +420,7 @@ class TablesCest
 
     public function ruleEqual(ApiTester $I)
     {
-        $I->createProjectAndSetHeader();
+        $I->loginAdmin();
         $table_data = [
             'title' => 'Test',
             'description' => 'Test',
@@ -502,7 +500,7 @@ class TablesCest
 
     public function ruleNotEqual(ApiTester $I)
     {
-        $I->createProjectAndSetHeader();
+        $I->loginAdmin();
         $table = $I->createTable([
             'title' => 'Test',
             'description' => 'Test',
@@ -547,7 +545,7 @@ class TablesCest
 
     public function all(ApiTester $I)
     {
-        $I->createProjectAndSetHeader();
+        $I->loginAdmin();
         $I->createTable();
         $I->createTable();
 
@@ -565,7 +563,7 @@ class TablesCest
 
     public function update(ApiTester $I)
     {
-        $I->createProjectAndSetHeader();
+        $I->loginAdmin();
         $I->createTable();
 
         $I->sendGET('api/v1/admin/tables');
@@ -627,7 +625,7 @@ class TablesCest
 
     public function copy(ApiTester $I)
     {
-        $I->createProjectAndSetHeader();
+        $I->loginAdmin();
         $I->createTable();
 
         $data = $I->getResponseFields()->data;
@@ -643,7 +641,7 @@ class TablesCest
 
     public function delete(ApiTester $I)
     {
-        $I->createProjectAndSetHeader();
+        $I->loginAdmin();
         $I->createTable();
         $I->createTable();
 
@@ -664,7 +662,7 @@ class TablesCest
 
     public function decisionsFirst(ApiTester $I)
     {
-        $I->createProjectAndSetHeader();
+        $I->loginAdmin();
         $table_data = $I->createTable();
         $table_id_no_decisions = $table_data->_id;
 
@@ -713,7 +711,7 @@ class TablesCest
 
     public function invalidDecisions(ApiTester $I)
     {
-        $I->createProjectAndSetHeader();
+        $I->loginAdmin();
         $table_id = $I->createTable()->_id;
 
         $I->sendPOST("api/v1/tables/$table_id/decisions", ['internal_credit_history' => 'okay']);
