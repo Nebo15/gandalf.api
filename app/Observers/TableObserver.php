@@ -27,6 +27,7 @@ class TableObserver
     public function updated(Table $table)
     {
         $groups = (new GroupsRepository)->getGroupsByTableId($table->getKey());
+        var_dump($groups->count());die();
         if ($groups->count() > 0) {
             $tablesIds = [];
             foreach ($groups as $group) {
@@ -37,6 +38,7 @@ class TableObserver
                 $tablesToUpdate = [];
                 $originalTableFields = $table->getFieldsKeys()->toArray();
                 $tableRepository = new TablesRepository;
+                print_r($originalTableFields);die();
 
                 foreach ($tableRepository->findByIds($tablesIds) as $groupTable) {
                     $groupFields = $groupTable->getFieldsKeys()->toArray();

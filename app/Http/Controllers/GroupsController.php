@@ -23,7 +23,7 @@ class GroupsController extends AbstractController
             'probability' => 'sometimes|required|in:random,percent',
             'tables' => 'sometimes|required|array',
             'tables.*' => 'sometimes|required|array',
-            'tables.*._id' => 'sometimes|required|string',
+            'tables.*._id' => 'sometimes|required|string|groupTablesExists',
             'tables.*.percent' => 'sometimes|required_if:probability,percent|numeric',
         ],
     ];

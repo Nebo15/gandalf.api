@@ -23,13 +23,10 @@ class GroupValidator
 
     public function tablesFields($attribute, $value, $parameters, Validator $validator)
     {
-        $tablesData = $validator->getData()['tables'];
+        $tables = $this->getTables($validator);
 
-        $tables = $this->tablesRepository->findByIds(array_column($tablesData, '_id'));
-        if ($tables->count() < count($tablesData)) {
-            $e = new ModelNotFoundException;
-            $e->setModel('App\\Model\\Table');
-            throw new $e;
+        if ($tables->count() == 1) {
+            return true;
         }
 
         $fieldsAmount = 0;
@@ -51,5 +48,36 @@ class GroupValidator
         }
 
         return true;
+    }
+
+    public function tablesExists($attribute, $value, $parameters, Validator $validator)
+    {
+        $this->getTables($validator);
+
+        return true;
+    }
+
+    private function getTables(Validator $validator)
+    {
+        $tablesData = $validator->getData()['tables'];
+        try {
+            $tables = $this->tablesRepository->findByIds(array_column($tablesData, '_id'));
+        } catch (\MongoException $e) {
+            $this->throw404();
+        }
+
+        $tablesAmount = $tables->count();
+        if ($tablesAmount < count($tablesData)) {
+            $this->throw404();
+        }
+
+        return $tables;
+    }
+
+    private function throw404()
+    {
+        $e = new ModelNotFoundException;
+        $e->setModel('App\\Model\\Table');
+        throw new $e;
     }
 }
