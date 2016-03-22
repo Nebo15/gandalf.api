@@ -65,36 +65,71 @@ class GroupsCest
 
         $table = $I->createTable();
 
+        $group1Tables = $I->stdToArray($group1->tables);
+        $group1Tables[2] = ['_id' => $table->_id];
         $I->sendPUT($this->api_prefix . "/$group1->_id", [
-            'tables' => [['_id' => $table->_id]],
+            'tables' => $group1Tables,
             'invalid_field' => 'test'
         ]);
 
-        $I->assertResponseDataFields([
-            'tables' => [['_id' => $table->_id]]
-        ]);
+        $I->assertResponseDataFields(['tables' => $group1Tables]);
         $I->dontSeeResponseJsonMatchesJsonPath("$.data.invalid_field");
 
         $group2 = $I->createGroup();
-        $I->sendPUT($this->api_prefix . "/$group2->_id", [
-            'tables' => [['_id' => $table->_id]],
-        ]);
+        $group2Tables = $I->stdToArray($group2->tables);
+        $group2Tables[2] = ['_id' => $table->_id];
+        $I->sendPUT($this->api_prefix . "/$group2->_id", ['tables' => $group2Tables]);
+        $I->seeResponseCodeIs(200);
 
-        $fields = $table->fields;
-        $fields[0]->key = 'updated_key';
-        unset($fields[2]);
+        $tableData = $I->getTableData();
+        $fields = $tableData['fields'];
+        $fields[4] = [
+            'key' => 'updated_key',
+            'title' => 'new title',
+            'source' => 'request',
+            'type' => 'boolean',
+            'preset' => null,
+        ];
         $fields[] = [
             'key' => 'new_key',
             'title' => 'new title',
-            'source' => 'new source',
-            'type' => 'new type',
+            'source' => 'request',
+            'type' => 'string',
             'preset' => null,
         ];
-        $I->sendPUT('api/v1/admin/tables/' . $table->_id, ['table' => (array)$table]);
-        $table_ids = array_merge(array_column($group1->tables, '_id'), array_column($group2->tables, '_id'));
-        foreach ($table_ids as $table_id) {
+        $rules = $tableData['rules'];
+        $newRules = [];
+        foreach ($rules as $rule) {
+            $rule['conditions'][4]['field_key'] = 'updated_key';
+            $rule['conditions'][5] = [
+                'field_key' => 'new_key',
+                'condition' => '$eq',
+                'value' => 'me',
+            ];
+            $newRules[] = $rule;
+        }
+        $tableData['rules'] = $newRules;
+        $tableData['fields'] = $fields;
+        $I->sendPUT('api/v1/admin/tables/' . $table->_id, ['table' => $tableData]);
+        $I->seeResponseCodeIs(200);
+
+        $tableIds = array_unique(array_merge(array_column($group1Tables, '_id'), array_column($group2Tables, '_id')));
+        foreach ($tableIds as $table_id) {
             $I->sendGET("api/v1/admin/tables/$table_id");
-            $I->assertEquals($table->fields, $I->getResponseFields()->data->fields);
+            $data = $I->getResponseFields()->data;
+            $I->assertEquals($fields, $I->stdToArray($data->fields));
+            foreach ($data->rules as $rule) {
+                $I->assertEquals(6, count($rule->conditions), "Wrong amount of Rule.Conditions after Table update");
+                $conditionsActual = ['new_key', 'updated_key'];
+                $conditionUpdated = [];
+                foreach ($rule->conditions as $condition) {
+                    if(in_array($condition->field_key, $conditionsActual)){
+                        $conditionUpdated[] = $condition->field_key;
+                    }
+                }
+                sort($conditionUpdated);
+                $I->assertEquals($conditionsActual, $conditionUpdated, 'Some of the conditions does not updated');
+            }
         }
     }
 

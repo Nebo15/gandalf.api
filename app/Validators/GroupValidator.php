@@ -7,7 +7,7 @@
 
 namespace App\Validators;
 
-use App\Models\Field;
+use App\Models\Table;
 use Illuminate\Validation\Validator;
 use App\Repositories\TablesRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -77,7 +77,7 @@ class GroupValidator
     private function throw404()
     {
         $e = new ModelNotFoundException;
-        $e->setModel('App\\Model\\Table');
+        $e->setModel(Table::class);
         throw new $e;
     }
 }
