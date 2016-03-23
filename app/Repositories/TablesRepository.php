@@ -32,7 +32,7 @@ class TablesRepository extends AbstractRepository
         $where = [];
         foreach ($filters as $field => $filter) {
             if (in_array($field, $available)) {
-                $where[$field] = "/$filter/";
+                $where[$field] = new \MongoRegex("/$filter/i");
             }
         }
         if (!$where) {
