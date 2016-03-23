@@ -306,6 +306,7 @@ class ApiTester extends \Codeception\Actor
                 "title" => $field,
                 "source" => "request",
                 "type" => $type,
+                "preset" => null
             ];
         }
         foreach ($csv as $rule) {
@@ -492,5 +493,10 @@ class ApiTester extends \Codeception\Actor
     public function logout()
     {
         $this->amHttpAuthenticated(null, null);
+    }
+
+    public function stdToArray($std)
+    {
+        return json_decode(json_encode($std), true);
     }
 }

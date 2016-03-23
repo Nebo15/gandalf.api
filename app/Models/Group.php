@@ -27,4 +27,22 @@ class Group extends Base implements ListableInterface
     protected $casts = [
         '_id' => 'string',
     ];
+
+    public function setTablesAttribute($tables)
+    {
+        for ($i = 0; $i < count($tables); $i++) {
+            if (isset($tables[$i]['_id']) and !($tables[$i]['_id'] instanceof \MongoId)) {
+                $tables[$i]['_id'] = new \MongoId($tables[$i]['_id']);
+            }
+        }
+        $this->attributes['tables'] = $tables;
+    }
+
+    public function getTablesAttribute($tables)
+    {
+        return array_map(function ($item) {
+            $item['_id'] = strval($item['_id']);
+            return $item;
+        }, $tables);
+    }
 }

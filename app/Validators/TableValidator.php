@@ -10,7 +10,7 @@ namespace App\Validators;
 use App\Services\ConditionsTypes;
 use Illuminate\Validation\Validator;
 
-class DecisionStructValidator
+class TableValidator
 {
     private $conditionsTypes;
 
