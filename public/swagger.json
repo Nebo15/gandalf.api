@@ -1019,6 +1019,27 @@
             }
           }
         },
+        "group": {
+          "type": "object",
+          "description": "Short Group object. May be null if decision was made not from Group",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "description": "Group ID. MongoID",
+              "example": "56c31536a60ad644060041af"
+            },
+            "title": {
+              "type": "string",
+              "description": "Group title",
+              "example": "Group.title value"
+            },
+            "description": {
+              "type": "string",
+              "description": "Group description.",
+              "example": "Group.description value"
+            }
+          }
+        },
         "final_decision": {
           "type": "string|integer",
           "description": "Depends of the Table.matching_type could be as highest row in a table with all validations passed or sum of scoring points",
