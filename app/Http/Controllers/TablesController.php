@@ -10,6 +10,7 @@ use Nebo15\REST\AbstractController;
 use Nebo15\REST\Response;
 use Illuminate\Http\Request;
 use App\Services\ConditionsTypes;
+use Nebo15\REST\Interfaces\ListableInterface;
 
 /**
  * Class TablesController
@@ -23,6 +24,10 @@ class TablesController extends AbstractController
     protected $validationRules = [
         'create' => [],
         'update' => [],
+        'readList' => [
+            'title' => 'sometimes|min:2',
+            'description' => 'sometimes|min:2',
+        ]
     ];
 
     public function __construct(Request $request, Response $response, ConditionsTypes $conditionsTypes)
@@ -70,6 +75,17 @@ class TablesController extends AbstractController
 
         return $this->response->json(
             $this->getRepository()->createOrUpdate($this->request->input('table'), $id)->toArray()
+        );
+    }
+
+    public function readList()
+    {
+        return $this->response->jsonPaginator(
+            $this->getRepository()->readListWithFilters($this->request->all()),
+            [],
+            function (ListableInterface $model) {
+                return $model->toListArray();
+            }
         );
     }
 
