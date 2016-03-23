@@ -21,6 +21,27 @@ class TablesRepository extends AbstractRepository
 
     protected $observerClassName = 'App\Observers\TableObserver';
 
+    public function readListWithFilters(array $filters = [])
+    {
+        $size = isset($filter['size']) ? $filter['size'] : null;
+        if (!$filters) {
+            return $this->readList($size);
+        }
+        $available = ['title', 'description'];
+
+        $where = [];
+        foreach ($filters as $field => $filter) {
+            if (in_array($field, $available)) {
+                $where[$field] = new \MongoRegex("/$filter/i");
+            }
+        }
+        if (!$where) {
+            return $this->readList($size);
+        }
+
+        return $this->getModel()->query()->where($where)->paginate($size);
+    }
+
     public function createOrUpdate($values, $id = null)
     {
         /** @var \App\Models\Table $model */
