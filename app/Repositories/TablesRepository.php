@@ -40,7 +40,7 @@ class TablesRepository extends AbstractRepository
     public function getDecisions($size = null, $table_id = null)
     {
         if ($table_id) {
-            $query = Decision::where('table._id', new \MongoId($table_id));
+            $query = Decision::where('table._id', $table_id);
             if ($query->count() <= 0) {
                 $e = new ModelNotFoundException;
                 $e->setModel(Decision::class);
@@ -62,7 +62,7 @@ class TablesRepository extends AbstractRepository
     public function analyzeTableDecisions($table_id)
     {
         $table = $this->read($table_id);
-        $decisions = Decision::where('table._id', new \MongoId($table_id))->get();
+        $decisions = Decision::where('table._id', $table_id)->get();
         $map = [];
         /** @var Decision $decision */
 
