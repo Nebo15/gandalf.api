@@ -33,6 +33,32 @@
           "Admin",
           "Tables"
         ],
+        "parameters": [
+          {
+            "name": "size",
+            "in": "request",
+            "description": "Amount of Tables on page",
+            "required": false
+          },
+          {
+            "name": "page",
+            "in": "request",
+            "description": "Page for pagination",
+            "required": false
+          },
+          {
+            "name": "title",
+            "in": "request",
+            "description": "Filter by Table.title",
+            "required": false
+          },
+          {
+            "name": "description",
+            "in": "request",
+            "description": "Filter by Table.description",
+            "required": false
+          }
+        ],
         "responses": {
           "200": {
             "description": "An array of Tables",
@@ -284,7 +310,7 @@
         }
       }
     },
-    "/admin/tables/{id}/analytics" : {
+    "/admin/tables/{id}/analytics": {
       "get": {
         "security": [
           {
