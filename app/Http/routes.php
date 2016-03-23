@@ -26,7 +26,7 @@ $api->api('tables', 'TablesController', ['oauth', 'applicationable', 'applicatio
 $changelog = $app->make('Nebo15\Changelog\Router');
 $changelog->api('api/v1/admin', ['auth.admin']);
 
-$app->make('Oauth.routes')->makeRestRoutes();
+$app->make('oauth.routes')->makeRestRoutes();
 $app->make('Applicationable.routes')->makeRoutes();
 
 $app->post('api/v1/user/', [

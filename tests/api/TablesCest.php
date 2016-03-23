@@ -285,7 +285,7 @@ class TablesCest
 
     public function ruleIsset(ApiTester $I)
     {
-        $I->createAndLoginUser();
+        $user = $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
         $table = $I->createTable([
             'title' => 'Test title',
@@ -347,7 +347,7 @@ class TablesCest
         $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
         $I->seeResponseCodeIs(401);
 
-        $I->loginAdmin();
+        $I->loginUser($user);
         $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
         $I->assertResponseDataFields([
             'final_decision' => 'Approve',
@@ -737,7 +737,8 @@ class TablesCest
             }
         };
 
-        $I->loginAdmin();
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
 
         $tableData = [
             'default_decision' => 'Decline',
