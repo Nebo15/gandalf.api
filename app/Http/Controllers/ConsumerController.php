@@ -35,7 +35,7 @@ class ConsumerController extends Controller
 
     public function groupCheck(Request $request, GroupsBalancer $balancer, Scoring $scoring, $id)
     {
-        return $this->response->json($scoring->check($balancer->getTable($id), $request->all()));
+        return $this->response->json($scoring->check($balancer->getTable($id), $request->all(), $id));
     }
 
     public function decisions(Request $request)
