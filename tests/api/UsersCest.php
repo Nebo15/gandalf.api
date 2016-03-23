@@ -4,7 +4,6 @@ class UsersCest
 {
     public function _before(ApiTester $I, \Codeception\Scenario $scenario)
     {
-        $scenario->skip("Waiting for SaaS");
         $I->haveHttpHeader('Content-Type', 'application/json');
     }
 

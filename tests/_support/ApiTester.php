@@ -43,10 +43,10 @@ class ApiTester extends \Codeception\Actor
                 ];
             }
         }
-        if(!isset($data['title'])){
+        if (!isset($data['title'])) {
             $data['title'] = 'Group title';
         }
-        if(!isset($data['description'])){
+        if (!isset($data['description'])) {
             $data['description'] = 'Group description';
         }
         $data['probability'] = $probability;
@@ -160,7 +160,7 @@ class ApiTester extends \Codeception\Actor
         $this->assertTable($jsonPath, $code);
         $this->seeResponseMatchesJsonType([
             'probability' => 'integer|float',
-            'requests' => 'integer'
+            'requests' => 'integer',
         ], "$jsonPath.rules[*].conditions[*]");
     }
 
@@ -316,7 +316,7 @@ class ApiTester extends \Codeception\Actor
                 "title" => $field,
                 "source" => "request",
                 "type" => $type,
-                "preset" => null
+                "preset" => null,
             ];
         }
         foreach ($csv as $rule) {
@@ -389,12 +389,15 @@ class ApiTester extends \Codeception\Actor
     public function loginConsumer($consumer)
     {
         $this->logout();
-        $this->amHttpAuthenticated($consumer->client_id, $consumer->client_secret);
+        $this->setHeader('Authorization',
+            'Basic ' . base64_encode($consumer->client_id . ':' . $consumer->client_secret));
     }
 
     public function createConsumer()
     {
-        $this->sendPOST('api/v1/projects/consumers', ['description' => $this->getFaker()->text('20'), 'scope' => ['check']]);
+        $this->sendPOST('api/v1/projects/consumers',
+            ['description' => $this->getFaker()->text('20'), 'scope' => ['check']]);
+
         return json_decode($this->grabResponse())->data->consumers[0];
     }
 
@@ -411,6 +414,7 @@ class ApiTester extends \Codeception\Actor
     {
         $project = $this->createProject();
         $this->setHeader('X-Application', $project->_id);
+
         return $project;
     }
 
@@ -420,13 +424,14 @@ class ApiTester extends \Codeception\Actor
             $faker = $this->getFaker();
             $project = [
                 'title' => $faker->streetName,
-                'description' => $faker->text('150')
+                'description' => $faker->text('150'),
             ];
             $this->sendPOST('api/v1/projects', $project);
             $project = json_decode($this->grabResponse());
             $this->assertProject('$.data', 201);
             $this->project = $project->data;
         }
+
         return $this->project;
     }
 
@@ -458,6 +463,7 @@ class ApiTester extends \Codeception\Actor
             $user_info->token = json_decode($this->grabResponse());
             $this->user = $user_info;
         }
+
         return $this->user;
     }
 
@@ -465,6 +471,7 @@ class ApiTester extends \Codeception\Actor
     {
         $user = $this->createUser();
         $this->loginUser($user);
+
         return $user;
     }
 
@@ -492,12 +499,13 @@ class ApiTester extends \Codeception\Actor
 
     public function loginClient($client)
     {
-        $this->setHeader('Authorization', 'Basic ' . base64_encode($client['client_id'].':'.$client['client_secret']));
+        $this->setHeader('Authorization',
+            'Basic ' . base64_encode($client['client_id'] . ':' . $client['client_secret']));
     }
 
     public function logout()
     {
-        $this->amHttpAuthenticated(null, null);
+        $this->deleteHeader('Authorization');
     }
 
     public function stdToArray($std)
