@@ -493,6 +493,310 @@
           }
         }
       }
+    },
+    "/users/": {
+      "post": {
+        "summary": "Create new User",
+        "description": "Create new application user",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "username",
+                "email",
+                "password"
+              ],
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "description": "User nickname",
+                  "example": "special_user",
+                  "required": true
+                },
+                "email": {
+                  "type": "string",
+                  "description": "User email",
+                  "example": "test@site.com",
+                  "required": true
+                },
+                "password": {
+                  "type": "string",
+                  "description": "User password",
+                  "example": "p@ssword!1!",
+                  "required": true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Decision Consumer object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/User",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/oauth/": {
+      "post": {
+        "summary": "Get user access token",
+        "description": "Get user access token, grant_type password scenario <br/>**Every request should be with Access Token**<br/>**-H 'Authorization: token_type access_token_here'**",
+        "tags": [
+          "User"
+        ],
+        "produces": [
+          "text/html"
+        ],
+        "parameters": [
+          {
+            "name": "grant_type",
+            "description": "Grant Type",
+            "required": true,
+            "type": "string",
+            "enum" : [
+              "password",
+              "refresh_token"
+            ]
+          },
+          {
+            "name": "username",
+            "description": "Username, required if grant_type == password",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "description": "User password, required if grant_type == password",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "refresh_token",
+            "description": "Refresh token, required if grant_type == refresh_token",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Access Token object",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/AccessToken",
+              "description": "Response data object"
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/": {
+      "post": {
+        "summary": "Create project",
+        "description": "Can create project and in the feature link tables to it.<br/> When you created project, your feature requests should be with Header <br />**-H 'X-Application: project_id'**",
+        "tags": [
+          "Project"
+        ],
+        "produces": [
+          "text/html"
+        ],
+        "parameters": [
+          {
+            "name": "title",
+            "description": "Title of project",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta"
+              ],
+              "$ref": "#/definitions/Project",
+              "description": "Response data object"
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/consumers": {
+      "post": {
+        "summary": "Create consumer",
+        "description": "Every into existing project user can create consumer with own scopes",
+        "tags": [
+          "Project"
+        ],
+        "produces": [
+          "text/html"
+        ],
+        "parameters": [
+          {
+            "name": "description",
+            "description": "Description of consumer",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "description": "Scopes of consumer",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type" : "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta"
+              ],
+              "$ref": "#/definitions/Project",
+              "description": "Response data object"
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/users": {
+      "post": {
+        "summary": "Add User to the Project",
+        "description": "Adding existing user to the current project. Share project with other users with different scopes",
+        "tags": [
+          "Project",
+          "User"
+        ],
+        "produces": [
+          "text/html"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "description": "Id of existing user",
+            "required": true,
+            "type": "string"
+
+          },
+          {
+            "name": "role",
+            "description": "Role of user",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "description": "Scopes of consumer",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type" : "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta"
+              ],
+              "$ref": "#/definitions/Project",
+              "description": "Response data object"
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "parameters": {
@@ -1223,6 +1527,188 @@
           "type": "string",
           "description": "Updated Datetime",
           "example": "2016-02-17 11:25:31"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "username": {
+          "type": "string",
+          "description": "Title of the matched rule or Table.default_title.",
+          "example": "special_user"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the matched rule or Table.default_description.",
+          "example": "Some description"
+        },
+        "email": {
+          "type": "string",
+          "description": "User email",
+          "example": "test@site.com"
+        },
+        "created_at": {
+          "type": "string",
+          "description": "Created Datetime",
+          "example": "2016-02-16 14:15:30"
+        },
+        "updated_at": {
+          "type": "string",
+          "description": "Updated Datetime",
+          "example": "2016-02-17 11:25:31"
+        },
+        "access_tokens": {
+          "type": "array",
+          "description": "Array of access tokens.",
+          "items": {
+            "$ref": "#/definitions/AccessToken"
+          }
+        },
+        "refresh_tokens": {
+          "type": "array",
+          "description": "Array of refresh tokens.",
+          "items": {
+            "$ref": "#/definitions/RefreshToken"
+          }
+        }
+      }
+    },
+    "AccessToken": {
+      "type": "object",
+      "properties": {
+        "access_token": {
+          "type": "string",
+          "description": "Unique access token for current user",
+          "example": "2fc5a4e7a91771ca312c79e0ad2cc4c49d3b065d"
+        },
+        "expires_in": {
+          "type": "integer",
+          "description": "Token lifetime",
+          "example": 360
+        },
+        "token_type": {
+          "type": "string",
+          "description": "Type of access token",
+          "example": "Bearer"
+        },
+        "refresh_token": {
+          "type": "string",
+          "description": "Unique refresh token linked to current access token for current user",
+          "example": "2fc5a4e7a91771ca312c79e0ad2cc4c49d3b065d"
+        }
+      }
+    },
+    "RefreshToken": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "refresh_token": {
+          "type": "string",
+          "description": "Unique refresh token linked to some access token for current user",
+          "example": "8bcc30bf6ce74ddaf0ec5eff5a51141c7ba65ef9"
+        },
+        "client_id": {
+          "type": "string",
+          "description": "Client id for refresh token",
+          "example": "test"
+        }
+      }
+    },
+    "Project": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific project. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title for project",
+          "example": "My first test project"
+        },
+        "users": {
+          "type": "array",
+          "description": "Array of project users.",
+          "items": {
+            "$ref": "#/definitions/ProjectUser"
+          }
+        },
+        "consumers": {
+          "type": "array",
+          "description": "Array of project consumers.",
+          "items": {
+            "$ref": "#/definitions/Consumer"
+          }
+        }
+      }
+    },
+    "ProjectUser": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific project user. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "user_id": {
+          "type": "string",
+          "description": "Unique identifier of a user",
+          "example": "56c31536a60ad644060041af"
+        },
+        "role": {
+          "type": "string",
+          "description": "Role of user",
+          "example": "admin"
+        },
+        "scope": {
+          "type": "array",
+          "description": "Array of user scopes.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Consumer": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific project user. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "client_id": {
+          "type": "string",
+          "description": "Client id",
+          "example": "fe5fe8d15bb7a6a0daef36d2843c547c6d594b0c"
+        },
+        "client_secret": {
+          "type": "string",
+          "description": "Client secret",
+          "example": "a7c70da3246a436bde66101d65741f9adf570726"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description of client",
+          "example": "Description of project"
+        },
+        "scope": {
+          "type": "array",
+          "description": "Array of client scopes.",
+          "items": {
+            "type": "string"
+          }
         }
       }
     }
