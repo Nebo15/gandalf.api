@@ -736,6 +736,29 @@ class TablesCest
 
     public function analytics(ApiTester $I)
     {
+        $checkProbabilities = function ($probabilities, $requests) use ($I) {
+            $ruleIndex = 0;
+            foreach ($I->getResponseFields()->data->rules as $rule) {
+                $conditionIndex = 0;
+                foreach ($rule->conditions as $condition) {
+                    $I->assertEquals(
+                        $probabilities[$ruleIndex][$conditionIndex],
+                        $condition->probability,
+                        "Wrong probability for {$condition->field_key}:{$condition->condition}=" . var_export($condition->value,
+                            true)
+                    );
+
+                    $I->assertEquals(
+                        is_array($requests) ? $requests[$condition->field_key] : $requests,
+                        $condition->requests,
+                        "Wrong request amount for condition {$condition->field_key}"
+                    );
+                    $conditionIndex++;
+                }
+                $ruleIndex++;
+            }
+        };
+
         $I->loginAdmin();
 
         $tableData = [
@@ -824,7 +847,7 @@ class TablesCest
             ['numeric' => 360, 'string' => 'Not', 'bool' => false],
             ['numeric' => 370, 'string' => 'Yes', 'bool' => false],
             ['numeric' => 380, 'string' => 'Not', 'bool' => false],
-            ['numeric' => 390, 'string' => 'Yes', 'bool' => false],
+            ['numeric' => 390, 'string' => 'Yes', 'bool' => true],
             ['numeric' => 400, 'string' => 'Yes', 'bool' => true],
             ['numeric' => 410, 'string' => 'Not', 'bool' => true],
             ['numeric' => 420, 'string' => 'Bad', 'bool' => true],
@@ -833,29 +856,20 @@ class TablesCest
             $I->checkDecision($table->_id, $data);
         }
         $I->sendGET("api/v1/admin/tables/{$table->_id}/analytics");
-        $I->assertTable();
-        $correctProbabilities = [
+        $I->assertTableWithAnalytics();
+
+        $checkProbabilities([
             [
                 round(3 / 9, 2),
                 round(4 / 9, 2),
-                round(6 / 9, 2),
+                round(5 / 9, 2),
             ],
             [
                 round(6 / 9, 2),
-                round(2 / 9, 2),
                 round(3 / 9, 2),
+                round(4 / 9, 2),
             ],
-        ];
-        $ruleIndex = 0;
-        foreach ($I->getResponseFields()->data->rules as $rule) {
-            $conditionIndex = 0;
-            foreach ($rule->conditions as $condition) {
-                $I->assertEquals($correctProbabilities[$ruleIndex][$conditionIndex], $condition->probability);
-                $I->assertEquals(9, $condition->requests);
-                $conditionIndex++;
-            }
-            $ruleIndex++;
-        }
+        ], 9);
 
         $tableData['fields'][3] = [
             "key" => 'last',
@@ -878,7 +892,7 @@ class TablesCest
 
         $checkData = [
             ['numeric' => 380, 'string' => 'Bad', 'last' => 250, 'bool' => false],
-            ['numeric' => 390, 'string' => 'Yes', 'last' => 350, 'bool' => false],
+            ['numeric' => 390, 'string' => 'Yes', 'last' => 300, 'bool' => false],
             ['numeric' => 400, 'string' => 'Yes', 'last' => 450, 'bool' => true],
             ['numeric' => 410, 'string' => 'Not', 'last' => 550, 'bool' => true],
             ['numeric' => 420, 'string' => 'Bad', 'last' => 650, 'bool' => true],
@@ -887,9 +901,26 @@ class TablesCest
             $I->checkDecision($table->_id, $data);
         }
 
-
         $I->sendGET("api/v1/admin/tables/{$table->_id}/analytics");
-        print_r($I->getResponseFields()->data->rules);
-        die();
+        $I->assertTableWithAnalytics();
+        $checkProbabilities([
+            [
+                round(6 / 14, 2),
+                round(6 / 14, 2),
+                round(7 / 14, 2),
+                round(2 / 5, 2),
+            ],
+            [
+                round(8 / 14, 2),
+                round(4 / 14, 2),
+                round(7 / 14, 2),
+                round(3 / 5, 2),
+            ],
+        ], [
+            'last' => 5,
+            'bool' => 14,
+            'string' => 14,
+            'numeric' => 14,
+        ]);
     }
 }

@@ -147,6 +147,15 @@ class ApiTester extends \Codeception\Actor
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.fields[*]._id]");
     }
 
+    public function assertTableWithAnalytics($jsonPath = '$.data', $code = 200)
+    {
+        $this->assertTable($jsonPath, $code);
+        $this->seeResponseMatchesJsonType([
+            'probability' => 'integer|float',
+            'requests' => 'integer'
+        ], "$jsonPath.rules[*].conditions[*]");
+    }
+
     public function assertTableDecisionsForAdmin($matching_rules_type = 'first', $jsonPath = '$.data')
     {
         $type = $matching_rules_type == 'all' ? 'integer' : 'string';
