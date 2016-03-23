@@ -733,4 +733,194 @@ class TablesCest
         $I->seeResponseCodeIs(422);
         $I->seeResponseMatchesJsonType(['property' => 'array', 'employment' => 'array'], '$.data');
     }
+
+    public function analytics(ApiTester $I)
+    {
+        $checkProbabilities = function ($probabilities, $requests) use ($I) {
+            $ruleIndex = 0;
+            foreach ($I->getResponseFields()->data->rules as $rule) {
+                $conditionIndex = 0;
+                foreach ($rule->conditions as $condition) {
+                    $I->assertEquals(
+                        $probabilities[$ruleIndex][$conditionIndex],
+                        $condition->probability,
+                        "Wrong probability for {$condition->field_key}:{$condition->condition}=" . var_export($condition->value,
+                            true)
+                    );
+
+                    $I->assertEquals(
+                        is_array($requests) ? $requests[$condition->field_key] : $requests,
+                        $condition->requests,
+                        "Wrong request amount for condition {$condition->field_key}"
+                    );
+                    $conditionIndex++;
+                }
+                $ruleIndex++;
+            }
+        };
+
+        $I->loginAdmin();
+
+        $tableData = [
+            'default_decision' => 'Decline',
+            'default_title' => 'Title 100',
+            'default_description' => 'Description 220',
+            'title' => 'Test title',
+            'description' => 'Test description',
+            'matching_type' => 'first',
+            'fields' => [
+                [
+                    "key" => 'numeric',
+                    "title" => 'numeric',
+                    "source" => "request",
+                    "type" => 'numeric',
+                    "preset" => [
+                        'condition' => '$gte',
+                        'value' => 400,
+                    ]
+                ],
+                [
+                    "key" => 'string',
+                    "title" => 'string',
+                    "source" => "request",
+                    "type" => 'string',
+                ],
+                [
+                    "key" => 'bool',
+                    "title" => 'bool',
+                    "source" => "request",
+                    "type" => 'boolean',
+                ]
+            ],
+            'rules' => [
+                [
+                    'than' => 'Approve',
+                    'title' => 'Valid rule title',
+                    'description' => 'Valid rule description',
+                    'conditions' => [
+                        [
+                            'field_key' => 'numeric',
+                            'condition' => '$eq',
+                            'value' => true
+                        ],
+                        [
+                            'field_key' => 'string',
+                            'condition' => '$eq',
+                            'value' => 'Yes'
+                        ],
+                        [
+                            'field_key' => 'bool',
+                            'condition' => '$eq',
+                            'value' => false
+                        ]
+                    ]
+                ],
+                [
+                    'than' => 'Decline',
+                    'title' => 'Second title',
+                    'description' => 'Second description',
+                    'conditions' => [
+                        [
+                            'field_key' => 'numeric',
+                            'condition' => '$eq',
+                            'value' => false
+                        ],
+                        [
+                            'field_key' => 'string',
+                            'condition' => '$eq',
+                            'value' => 'Not'
+                        ],
+                        [
+                            'field_key' => 'bool',
+                            'condition' => '$eq',
+                            'value' => true
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        $table = $I->createTable($tableData);
+
+        $checkData = [
+            ['numeric' => 340, 'string' => 'Bad', 'bool' => false],
+            ['numeric' => 350, 'string' => 'Yes', 'bool' => false],
+            ['numeric' => 360, 'string' => 'Not', 'bool' => false],
+            ['numeric' => 370, 'string' => 'Yes', 'bool' => false],
+            ['numeric' => 380, 'string' => 'Not', 'bool' => false],
+            ['numeric' => 390, 'string' => 'Yes', 'bool' => true],
+            ['numeric' => 400, 'string' => 'Yes', 'bool' => true],
+            ['numeric' => 410, 'string' => 'Not', 'bool' => true],
+            ['numeric' => 420, 'string' => 'Bad', 'bool' => true],
+        ];
+        foreach ($checkData as $data) {
+            $I->checkDecision($table->_id, $data);
+        }
+        $I->sendGET("api/v1/admin/tables/{$table->_id}/analytics");
+        $I->assertTableWithAnalytics();
+
+        $checkProbabilities([
+            [
+                round(3 / 9, 2),
+                round(4 / 9, 2),
+                round(5 / 9, 2),
+            ],
+            [
+                round(6 / 9, 2),
+                round(3 / 9, 2),
+                round(4 / 9, 2),
+            ],
+        ], 9);
+
+        $tableData['fields'][3] = [
+            "key" => 'last',
+            "title" => 'last',
+            "source" => "request",
+            "type" => 'numeric',
+        ];
+        $tableData['rules'][0]['conditions'][] = [
+            'field_key' => 'last',
+            'condition' => '$lte',
+            'value' => 300
+        ];
+        $tableData['rules'][1]['conditions'][] = [
+            'field_key' => 'last',
+            'condition' => '$lt',
+            'value' => 500
+        ];
+        $I->sendPUT('api/v1/admin/tables/' . $table->_id, ['table' => $tableData]);
+        $I->seeResponseCodeIs(200);
+
+        $checkData = [
+            ['numeric' => 380, 'string' => 'Bad', 'last' => 250, 'bool' => false],
+            ['numeric' => 390, 'string' => 'Yes', 'last' => 300, 'bool' => false],
+            ['numeric' => 400, 'string' => 'Yes', 'last' => 450, 'bool' => true],
+            ['numeric' => 410, 'string' => 'Not', 'last' => 550, 'bool' => true],
+            ['numeric' => 420, 'string' => 'Bad', 'last' => 650, 'bool' => true],
+        ];
+        foreach ($checkData as $data) {
+            $I->checkDecision($table->_id, $data);
+        }
+
+        $I->sendGET("api/v1/admin/tables/{$table->_id}/analytics");
+        $I->assertTableWithAnalytics();
+        $checkProbabilities([
+            [
+                round(6 / 14, 2),
+                round(6 / 14, 2),
+                round(7 / 14, 2),
+                round(2 / 5, 2),
+            ],
+            [
+                round(8 / 14, 2),
+                round(4 / 14, 2),
+                round(7 / 14, 2),
+                round(3 / 5, 2),
+            ],
+        ], [
+            'last' => 5,
+            'bool' => 14,
+            'string' => 14,
+            'numeric' => 14,
+        ]);
+    }
 }

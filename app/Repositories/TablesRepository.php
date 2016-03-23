@@ -40,7 +40,7 @@ class TablesRepository extends AbstractRepository
     public function getDecisions($size = null, $table_id = null)
     {
         if ($table_id) {
-            $query = Decision::where('table._id', new \MongoId($table_id));
+            $query = Decision::where('table._id', $table_id);
             if ($query->count() <= 0) {
                 $e = new ModelNotFoundException;
                 $e->setModel(Decision::class);
@@ -57,6 +57,56 @@ class TablesRepository extends AbstractRepository
     public function getDecisionById($id)
     {
         return Decision::findById($id);
+    }
+
+    public function analyzeTableDecisions($table_id)
+    {
+        $table = $this->read($table_id);
+        $decisions = Decision::where('table._id', $table_id)->get();
+        $map = [];
+        /** @var Decision $decision */
+
+        foreach ($decisions as $decision) {
+            $rule_index = 0;
+            foreach ($decision->rules as $rule) {
+                $condition_index = 0;
+                foreach ($rule->conditions as $condition) {
+                    $index = "$rule_index@$condition_index";
+                    if (!isset($map[$index])) {
+                        $map[$index] = ['matched' => 0, 'requests' => 0];
+                    }
+
+                    if ($condition->matched === true) {
+                        $map[$index]['matched']++;
+                    }
+                    $map[$index]['requests']++;
+
+                    $condition_index++;
+                }
+                $rule_index++;
+            }
+        }
+
+        $rule_index = 0;
+        foreach ($table->rules as $rule) {
+            $condition_index = 0;
+            foreach ($rule->conditions as $condition) {
+                $index = "$rule_index@$condition_index";
+                if (array_key_exists($index, $map)) {
+                    $condition->probability = round($map[$index]['matched'] / $map[$index]['requests'], 2);
+                } else {
+                    $condition->probability = null;
+                }
+                $condition->requests = $map[$index]['requests'];
+                $rule->conditions()->associate($condition);
+
+                $condition_index++;
+            }
+            $rule_index++;
+            $table->rules()->associate($rule);
+        }
+
+        return $table;
     }
 
     public function getConsumerDecisions($size = null)

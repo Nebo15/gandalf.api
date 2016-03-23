@@ -284,6 +284,56 @@
         }
       }
     },
+    "/admin/tables/{id}/analytics" : {
+      "get": {
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ],
+        "summary": "Table Analytics",
+        "description": "Get Table analytics by all made Decisions",
+        "tags": [
+          "Admin",
+          "Tables",
+          "Analytics"
+        ],
+        "responses": {
+          "200": {
+            "description": "Table object with matched probabilities and requests amount for each condition",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/TableWithAnalytics",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/admin/decisions": {
       "get": {
         "summary": "Decisions List",
@@ -623,6 +673,76 @@
         }
       }
     },
+    "TableWithAnalytics": {
+      "type": "object",
+      "description": "It consist of columns that describes API request structure, rows that describe decision-making logic, and cells that represents a single validation rule.",
+      "required": [
+        "_id",
+        "title",
+        "description",
+        "matching_type",
+        "default_decision",
+        "default_title",
+        "default_description",
+        "rules",
+        "fields"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of Table.",
+          "example": "Some title"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of Table.",
+          "example": "Some description"
+        },
+        "matching_type": {
+          "type": "string",
+          "description": "Matching type for Table.",
+          "example": "first",
+          "enum": [
+            "first",
+            "all"
+          ]
+        },
+        "default_decision": {
+          "type": "string",
+          "description": "If there are no rows with all validations passed, this decision will be set for Decision.",
+          "example": "Decline"
+        },
+        "default_title": {
+          "type": "string",
+          "description": "If there are no rows with all validations passed, this title will be set for Decision.",
+          "example": "Default title"
+        },
+        "default_description": {
+          "type": "string",
+          "description": "If there are no rows with all validations passed, this description will be set for Decision.",
+          "example": "Default description"
+        },
+        "fields": {
+          "type": "array",
+          "description": "Array of Field objects.",
+          "items": {
+            "$ref": "#/definitions/Field"
+          }
+        },
+        "rules": {
+          "type": "array",
+          "description": "Array of Rule objects with analytics data.",
+          "items": {
+            "$ref": "#/definitions/RuleAnalytics"
+          }
+        }
+      }
+    },
     "Field": {
       "type": "object",
       "required": [
@@ -763,6 +883,88 @@
           "type": "string|numeric|boolean",
           "description": "Value type can be different depends on condition",
           "example": 1000
+        }
+      }
+    },
+    "RuleAnalytics": {
+      "type": "object",
+      "discriminator": "than",
+      "required": [
+        "than",
+        "title",
+        "description",
+        "conditions"
+      ],
+      "properties": {
+        "than": {
+          "type": "string",
+          "description": "Decision, when this rule is matched",
+          "example": "Approve"
+        },
+        "title": {
+          "type": "string",
+          "description": "Rule title.",
+          "example": "Rule title."
+        },
+        "description": {
+          "type": "string",
+          "description": "Rule description.",
+          "example": "Rule description."
+        },
+        "conditions": {
+          "type": "array",
+          "description": "Array of Condition objects with analytics data",
+          "items": {
+            "$ref": "#/definitions/ConditionAnalytics"
+          }
+        }
+      }
+    },
+    "ConditionAnalytics": {
+      "type": "object",
+      "required": [
+        "field_key",
+        "condition",
+        "value",
+        "probability",
+        "requests"
+      ],
+      "properties": {
+        "field_key": {
+          "type": "string",
+          "description": "Key for API field key.",
+          "example": "salary"
+        },
+        "condition": {
+          "type": "string",
+          "description": "Condition",
+          "example": "$lte",
+          "enum": [
+            "$is_set",
+            "$eq",
+            "$ne",
+            "$gt",
+            "$gte",
+            "$lt",
+            "$lte",
+            "$in",
+            "$nin"
+          ]
+        },
+        "value": {
+          "type": "string|numeric|boolean",
+          "description": "Value type can be different depends on condition",
+          "example": 1000
+        },
+        "probability": {
+          "type": "numeric",
+          "description": "Probability value between 0-1, where 1 is 100% matched result",
+          "example": 0.67
+        },
+        "requests": {
+          "type": "numeric",
+          "description": "Requests amount for current condition.",
+          "example": 213
         }
       }
     },

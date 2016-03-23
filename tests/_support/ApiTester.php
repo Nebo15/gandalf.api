@@ -147,6 +147,15 @@ class ApiTester extends \Codeception\Actor
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.fields[*]._id]");
     }
 
+    public function assertTableWithAnalytics($jsonPath = '$.data', $code = 200)
+    {
+        $this->assertTable($jsonPath, $code);
+        $this->seeResponseMatchesJsonType([
+            'probability' => 'integer|float',
+            'requests' => 'integer'
+        ], "$jsonPath.rules[*].conditions[*]");
+    }
+
     public function assertTableDecisionsForAdmin($matching_rules_type = 'first', $jsonPath = '$.data')
     {
         $type = $matching_rules_type == 'all' ? 'integer' : 'string';
@@ -236,7 +245,7 @@ class ApiTester extends \Codeception\Actor
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions");
     }
 
-    public function checkDecision($id, array $data = [], $matching_rules_type = 'first', $route = 'tables')
+    public function checkDecision($table_id, array $data = [], $matching_rules_type = 'first', $route = 'tables')
     {
         $data = $data ?: [
             'borrowers_phone_verification' => 'Positive',
@@ -248,7 +257,7 @@ class ApiTester extends \Codeception\Actor
         if (!array_key_exists('matching_rules_type', $data)) {
             $data['matching_rules_type'] = $matching_rules_type;
         }
-        $this->sendPOST("api/v1/$route/$id/decisions", $data);
+        $this->sendPOST("api/v1/$route/$table_id/decisions", $data);
         $this->assertTableDecisionsForConsumer($matching_rules_type);
 
         return $this->getResponseFields()->data;
