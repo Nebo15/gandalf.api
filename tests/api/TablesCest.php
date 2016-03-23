@@ -543,7 +543,7 @@ class TablesCest
         }
     }
 
-    public function all(ApiTester $I)
+    public function readList(ApiTester $I)
     {
         $I->loginAdmin();
         $I->createTable();
@@ -658,80 +658,6 @@ class TablesCest
 
         $I->sendGET('api/v1/admin/tables/' . $id2);
         $I->assertTable();
-    }
-
-    public function decisionsFirst(ApiTester $I)
-    {
-        $I->loginAdmin();
-        $table_data = $I->createTable();
-        $table_id_no_decisions = $table_data->_id;
-
-        $table_data = $I->createTable();
-
-        $table_id_with_decisions = $table_data->_id;
-        $decision_table = $I->checkDecision($table_id_with_decisions);
-        $I->assertEquals('Approve', $decision_table->final_decision);
-
-        $I->sendGET('api/v1/admin/decisions?table_id=' . $table_id_no_decisions);
-        $I->seeResponseCodeIs(404);
-
-        # filter by table_id
-        $I->sendGET('api/v1/admin/decisions?table_id=' . $table_id_with_decisions);
-        $I->assertTableDecisionsForAdmin('first', '$.data[*]');
-        foreach ($I->getResponseFields()->data as $item) {
-            $I->sendGET('api/v1/admin/decisions/' . $item->_id);
-            $I->assertTableDecisionsForAdmin();
-        }
-
-        $decision_data = $I->checkDecision($table_id_with_decisions, [
-            'borrowers_phone_verification' => 'invalid',
-            'contact_person_phone_verification' => 'invalid',
-            'internal_credit_history' => 'invalid',
-            'employment' => false,
-            'property' => false,
-        ]);
-        $I->assertEquals($table_data->default_decision, $decision_data->final_decision);
-
-        $I->sendGET('api/v1/admin/decisions');
-        $I->assertTableDecisionsForAdmin('first', '$.data[*]');
-
-        $decisions = $I->getResponseFields()->data;
-        $I->assertEquals('invalid', $decisions[0]->request->borrowers_phone_verification);
-        $I->assertEquals('Positive', $decisions[1]->request->borrowers_phone_verification);
-
-        foreach ($I->getResponseFields()->data as $item) {
-            $I->sendGET('api/v1/admin/decisions/' . $item->_id);
-            $I->assertTableDecisionsForAdmin();
-        }
-
-        $I->loginConsumer();
-        $I->sendGET('api/v1/admin/decisions');
-        $I->seeResponseCodeIs(401);
-    }
-
-    public function invalidDecisions(ApiTester $I)
-    {
-        $I->loginAdmin();
-        $table_id = $I->createTable()->_id;
-
-        $I->sendPOST("api/v1/tables/$table_id/decisions", ['internal_credit_history' => 'okay']);
-        $I->seeResponseCodeIs(422);
-        $I->seeResponseMatchesJsonType([
-            'borrowers_phone_verification' => 'array',
-            'contact_person_phone_verification' => 'array',
-            'property' => 'array',
-            'employment' => 'array',
-        ], '$.data');
-
-        $I->sendPOST("api/v1/tables/$table_id/decisions", [
-            'internal_credit_history' => 'okay',
-            'borrowers_phone_verification' => 'okay',
-            'contact_person_phone_verification' => 'okay',
-            'property' => 'okay',
-            'employment' => 'okay',
-        ]);
-        $I->seeResponseCodeIs(422);
-        $I->seeResponseMatchesJsonType(['property' => 'array', 'employment' => 'array'], '$.data');
     }
 
     public function analytics(ApiTester $I)

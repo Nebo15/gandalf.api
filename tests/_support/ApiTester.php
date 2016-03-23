@@ -43,6 +43,12 @@ class ApiTester extends \Codeception\Actor
                 ];
             }
         }
+        if(!isset($data['title'])){
+            $data['title'] = 'Group title';
+        }
+        if(!isset($data['description'])){
+            $data['description'] = 'Group description';
+        }
         $data['probability'] = $probability;
         $this->sendPOST('api/v1/admin/groups', $data);
         $this->assertGroup('$.data', 201);
@@ -61,6 +67,8 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseMatchesJsonType([
             '_id' => 'string',
             'tables' => 'array',
+            'title' => 'string',
+            'description' => 'string',
             'probability' => 'string:regex(@^(random)$@)',
         ], $jsonPath);
 
@@ -163,6 +171,7 @@ class ApiTester extends \Codeception\Actor
         $rules = [
             '_id' => 'string',
             'table' => 'array',
+            'group' => 'array|null',
             'default_decision' => $type,
             'final_decision' => $type,
             'updated_at' => 'string',
@@ -240,6 +249,7 @@ class ApiTester extends \Codeception\Actor
         ], "$jsonPath.table");
 
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.fields");
+        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.group");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.default_decision");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].than");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions");

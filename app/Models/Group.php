@@ -12,21 +12,36 @@ use Nebo15\REST\Interfaces\ListableInterface;
  * Class Group
  * @package App\Models
  * @property array $tables;
+ * @property string $title;
+ * @property string $description;
  * @property string $probability;
  */
 class Group extends Base implements ListableInterface
 {
     use ListableTrait;
 
-    protected $fillable = ['tables', 'probability'];
+    protected $fillable = ['tables', 'title', 'description', 'probability'];
 
-    protected $listable = ['_id', 'probability', 'tables'];
+    protected $listable = ['_id', 'title', 'probability', 'tables'];
 
-    protected $visible = ['_id', 'probability', 'tables'];
+    protected $visible = ['_id', 'title', 'description', 'probability', 'tables'];
+
+    protected $attributes = [
+        'title' => '',
+        'description' => ''
+    ];
 
     protected $casts = [
         '_id' => 'string',
     ];
+
+    public function toArray()
+    {
+        $data = parent::toArray();
+        $data['tables'] = $this->getTablesAttribute($data['tables']);
+
+        return $data;
+    }
 
     public function setTablesAttribute($tables)
     {
