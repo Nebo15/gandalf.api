@@ -10,7 +10,13 @@ use Nebo15\REST\AbstractController;
 use Nebo15\REST\Response;
 use Illuminate\Http\Request;
 use App\Services\ConditionsTypes;
+use Nebo15\REST\Interfaces\ListableInterface;
 
+/**
+ * Class TablesController
+ * @package App\Http\Controllers
+ * @method \App\Repositories\TablesRepository getRepository()
+ */
 class TablesController extends AbstractController
 {
     protected $repositoryClassName = 'App\Repositories\TablesRepository';
@@ -18,6 +24,10 @@ class TablesController extends AbstractController
     protected $validationRules = [
         'create' => [],
         'update' => [],
+        'readList' => [
+            'title' => 'sometimes|min:2',
+            'description' => 'sometimes|min:2',
+        ]
     ];
 
     public function __construct(Request $request, Response $response, ConditionsTypes $conditionsTypes)
@@ -68,15 +78,31 @@ class TablesController extends AbstractController
         );
     }
 
-    public function history()
+    public function readList()
     {
         return $this->response->jsonPaginator(
-            $this->getRepository()->history($this->request->input('size'), $this->request->input('table_id'))
+            $this->getRepository()->readListWithFilters($this->request->all()),
+            [],
+            function (ListableInterface $model) {
+                return $model->toListArray();
+            }
         );
     }
 
-    public function historyItem($id)
+    public function decisions()
     {
-        return $this->response->json($this->getRepository()->historyItem($id)->toArray());
+        return $this->response->jsonPaginator(
+            $this->getRepository()->getDecisions($this->request->input('size'), $this->request->input('table_id'))
+        );
+    }
+
+    public function decision($id)
+    {
+        return $this->response->json($this->getRepository()->getDecisionById($id)->toArray());
+    }
+
+    public function analytics($id)
+    {
+        return $this->response->json($this->getRepository()->analyzeTableDecisions($id)->toArray());
     }
 }

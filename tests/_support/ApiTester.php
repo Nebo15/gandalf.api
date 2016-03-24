@@ -43,6 +43,12 @@ class ApiTester extends \Codeception\Actor
                 ];
             }
         }
+        if(!isset($data['title'])){
+            $data['title'] = 'Group title';
+        }
+        if(!isset($data['description'])){
+            $data['description'] = 'Group description';
+        }
         $data['probability'] = $probability;
         $this->sendPOST('api/v1/admin/groups', $data);
         $this->assertGroup('$.data', 201);
@@ -60,8 +66,9 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseCodeIs($code);
         $this->seeResponseMatchesJsonType([
             '_id' => 'string',
-            'applications' => 'array',
             'tables' => 'array',
+            'title' => 'string',
+            'description' => 'string',
             'probability' => 'string:regex(@^(random)$@)',
         ], $jsonPath);
 
@@ -115,7 +122,6 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseMatchesJsonType([
             '_id' => 'string',
             'title' => 'string',
-            'applications' => 'array',
             'description' => 'string',
             'default_decision' => 'string|integer',
             'default_title' => 'string',
@@ -149,6 +155,15 @@ class ApiTester extends \Codeception\Actor
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.fields[*]._id]");
     }
 
+    public function assertTableWithAnalytics($jsonPath = '$.data', $code = 200)
+    {
+        $this->assertTable($jsonPath, $code);
+        $this->seeResponseMatchesJsonType([
+            'probability' => 'integer|float',
+            'requests' => 'integer'
+        ], "$jsonPath.rules[*].conditions[*]");
+    }
+
     public function assertTableDecisionsForAdmin($matching_rules_type = 'first', $jsonPath = '$.data')
     {
         $type = $matching_rules_type == 'all' ? 'integer' : 'string';
@@ -156,6 +171,7 @@ class ApiTester extends \Codeception\Actor
         $rules = [
             '_id' => 'string',
             'table' => 'array',
+            'group' => 'array|null',
             'default_decision' => $type,
             'final_decision' => $type,
             'updated_at' => 'string',
@@ -233,12 +249,13 @@ class ApiTester extends \Codeception\Actor
         ], "$jsonPath.table");
 
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.fields");
+        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.group");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.default_decision");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].than");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions");
     }
 
-    public function checkDecision($id, array $data = [], $matching_rules_type = 'first', $route = 'tables')
+    public function checkDecision($table_id, array $data = [], $matching_rules_type = 'first', $route = 'tables')
     {
         $data = $data ?: [
             'borrowers_phone_verification' => 'Positive',
@@ -250,10 +267,92 @@ class ApiTester extends \Codeception\Actor
         if (!array_key_exists('matching_rules_type', $data)) {
             $data['matching_rules_type'] = $matching_rules_type;
         }
-        $this->sendPOST("api/v1/$route/$id/decisions", $data);
+        $this->sendPOST("api/v1/$route/$table_id/decisions", $data);
         $this->assertTableDecisionsForConsumer($matching_rules_type);
 
         return $this->getResponseFields()->data;
+    }
+
+    public function getTableShortData()
+    {
+        return [
+            'default_decision' => 'Decline',
+            'default_title' => 'Title 100',
+            'default_description' => 'Description 220',
+            'title' => 'Test title',
+            'description' => 'Test description',
+            'matching_type' => 'first',
+            'fields' => [
+                [
+                    "key" => 'numeric',
+                    "title" => 'numeric',
+                    "source" => "request",
+                    "type" => 'numeric',
+                    "preset" => [
+                        'condition' => '$gte',
+                        'value' => 400,
+                    ]
+                ],
+                [
+                    "key" => 'string',
+                    "title" => 'string',
+                    "source" => "request",
+                    "type" => 'string',
+                ],
+                [
+                    "key" => 'bool',
+                    "title" => 'bool',
+                    "source" => "request",
+                    "type" => 'boolean',
+                ]
+            ],
+            'rules' => [
+                [
+                    'than' => 'Approve',
+                    'title' => 'Valid rule title',
+                    'description' => 'Valid rule description',
+                    'conditions' => [
+                        [
+                            'field_key' => 'numeric',
+                            'condition' => '$eq',
+                            'value' => true
+                        ],
+                        [
+                            'field_key' => 'string',
+                            'condition' => '$eq',
+                            'value' => 'Yes'
+                        ],
+                        [
+                            'field_key' => 'bool',
+                            'condition' => '$eq',
+                            'value' => false
+                        ]
+                    ]
+                ],
+                [
+                    'than' => 'Decline',
+                    'title' => 'Second title',
+                    'description' => 'Second description',
+                    'conditions' => [
+                        [
+                            'field_key' => 'numeric',
+                            'condition' => '$eq',
+                            'value' => false
+                        ],
+                        [
+                            'field_key' => 'string',
+                            'condition' => '$eq',
+                            'value' => 'Not'
+                        ],
+                        [
+                            'field_key' => 'bool',
+                            'condition' => '$eq',
+                            'value' => true
+                        ]
+                    ]
+                ]
+            ]
+        ];
     }
 
     public function getTableData()
@@ -299,6 +398,7 @@ class ApiTester extends \Codeception\Actor
                 "title" => $field,
                 "source" => "request",
                 "type" => $type,
+                "preset" => null
             ];
         }
         foreach ($csv as $rule) {
@@ -370,12 +470,20 @@ class ApiTester extends \Codeception\Actor
 
     public function loginConsumer()
     {
+        $this->amHttpAuthenticated('consumer', 'consumer');
+    }
+
+    /*
+     * Waiting for SaaS
+    public function loginConsumer()
+    {
         $this->createProjectAndSetHeader();
         $this->sendPOST('api/v1/projects/consumer', ['description' => $this->getFaker()->text('20'), 'scope' => ['check']]);
         $consumer = json_decode($this->grabResponse())->data->consumers[0];
         $this->logout();
         $this->amHttpAuthenticated($consumer->client_id, $consumer->client_secret);
     }
+    */
 
     public function getMongo()
     {
@@ -476,6 +584,11 @@ class ApiTester extends \Codeception\Actor
 
     public function logout()
     {
-        $this->deleteHeader('Authorization');
+        $this->amHttpAuthenticated(null, null);
+    }
+
+    public function stdToArray($std)
+    {
+        return json_decode(json_encode($std), true);
     }
 }

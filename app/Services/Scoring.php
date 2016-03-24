@@ -11,6 +11,7 @@ use App\Models\Table;
 use App\Models\Field;
 use App\Models\Decision;
 use App\Models\Condition;
+use App\Repositories\GroupsRepository;
 use App\Repositories\TablesRepository;
 use Illuminate\Contracts\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -23,13 +24,16 @@ class Scoring
 
     private $tablesRepository;
 
-    public function __construct(TablesRepository $tablesRepository)
+    private $groupsRepository;
+
+    public function __construct(TablesRepository $tablesRepository, GroupsRepository $groupsRepository)
     {
         $this->tablesRepository = $tablesRepository;
+        $this->groupsRepository = $groupsRepository;
         $this->conditionsTypes = new ConditionsTypes;
     }
 
-    public function check($id, $values)
+    public function check($id, $values, $groupId = null)
     {
         $table = $this->tablesRepository->read($id);
         $validator = \Validator::make($values, $this->createValidationRules($table));
@@ -37,6 +41,15 @@ class Scoring
             throw new ValidationException($validator);
         }
         $fields = $table->fields();
+        $group = null;
+        if ($groupId) {
+            $groupDoc = $this->groupsRepository->read($groupId);
+            $group = [
+                '_id' => $groupId,
+                'title' => $groupDoc->title,
+                'description' => $groupDoc->description,
+            ];
+        }
 
         $webhook = isset($values['webhook']) ? $values['webhook'] : null;
         $scoring_data = [
@@ -44,8 +57,9 @@ class Scoring
                 '_id' => new \MongoId($table->getId()),
                 'title' => $table->title,
                 'description' => $table->description,
-                'matching_type' => $table->matching_type
+                'matching_type' => $table->matching_type,
             ],
+            'group' => $group,
             'title' => $table->default_title,
             'description' => $table->default_description,
             'default_decision' => $table->default_decision,

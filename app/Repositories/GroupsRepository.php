@@ -17,4 +17,9 @@ class GroupsRepository extends AbstractRepository
     protected $modelClassName = 'App\Models\Group';
 
     protected $observerClassName = 'App\Observers\GroupObserver';
+
+    public function getGroupsByTableId($id)
+    {
+        return $this->getModel()->query()->where('tables._id', $id)->get();
+    }
 }

@@ -1,0 +1,1256 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Gandalf API",
+    "description": "`Gandalf` is a **Open-Source** Decision Engine for Big-Data. \n\nYou can find source code on our [GitHub account](https://github.com/Nebo15/gandalf.api/). It’s build on top of PHP Lumen framework and MongoDB.",
+    "version": "1.0.0"
+  },
+  "host": "gandalf-api.nebo15.com",
+  "schemes": [
+    "http"
+  ],
+  "basePath": "/api/v1",
+  "produces": [
+    "application/json"
+  ],
+  "securityDefinitions": {
+    "basicAuth": {
+      "type": "basic",
+      "description": "HTTP Basic Authentication."
+    }
+  },
+  "paths": {
+    "/admin/tables": {
+      "get": {
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ],
+        "summary": "Tables List",
+        "description": "Get list of Tables\n",
+        "tags": [
+          "Admin",
+          "Tables"
+        ],
+        "parameters": [
+          {
+            "name": "size",
+            "in": "request",
+            "description": "Amount of Tables on page",
+            "required": false
+          },
+          {
+            "name": "page",
+            "in": "request",
+            "description": "Page for pagination",
+            "required": false
+          },
+          {
+            "name": "title",
+            "in": "request",
+            "description": "Filter by Table.title",
+            "required": false
+          },
+          {
+            "name": "description",
+            "in": "request",
+            "description": "Filter by Table.description",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of Tables",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "type": "array",
+                  "description": "Response data object",
+                  "items": {
+                    "$ref": "#/definitions/TableList"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ],
+        "summary": "Table Create",
+        "description": "Create a new Table",
+        "tags": [
+          "Admin",
+          "Tables"
+        ],
+        "parameters": [
+          {
+            "name": "table",
+            "in": "body",
+            "description": "Table object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "_id",
+                "title",
+                "description",
+                "matching_type",
+                "default_decision",
+                "default_title",
+                "default_description",
+                "rules",
+                "fields"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "Title of Table.",
+                  "example": "Some title"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description of Table.",
+                  "example": "Some description"
+                },
+                "matching_type": {
+                  "type": "string",
+                  "description": "Matching type for Table.",
+                  "example": "first",
+                  "enum": [
+                    "first",
+                    "all"
+                  ]
+                },
+                "default_decision": {
+                  "type": "string",
+                  "description": "If there are no rows with all validations passed, this decision will be set for Decision.",
+                  "example": "Decline"
+                },
+                "default_title": {
+                  "type": "string",
+                  "description": "If there are no rows with all validations passed, this title will be set for Decision.",
+                  "example": "Default title"
+                },
+                "default_description": {
+                  "type": "string",
+                  "description": "If there are no rows with all validations passed, this description will be set for Decision.",
+                  "example": "Default description"
+                },
+                "fields": {
+                  "type": "array",
+                  "description": "Array of Field objects.",
+                  "items": {
+                    "$ref": "#/definitions/Field"
+                  }
+                },
+                "rules": {
+                  "type": "array",
+                  "description": "Array of Rule objects.",
+                  "items": {
+                    "$ref": "#/definitions/Rule"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Created Table",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Table"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/tables/{id}": {
+      "get": {
+        "summary": "Table Read",
+        "description": "Get Table by id",
+        "tags": [
+          "Admin",
+          "Tables"
+        ],
+        "responses": {
+          "200": {
+            "description": "Table object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Table",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Table Update",
+        "description": "Update Table by id",
+        "tags": [
+          "Admin",
+          "Tables"
+        ],
+        "responses": {
+          "200": {
+            "description": "Table object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Table",
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Table Delete",
+        "description": "Delete Table by id",
+        "tags": [
+          "Admin",
+          "Tables"
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/tables/{id}/copy": {
+      "post": {
+        "summary": "Table Copy",
+        "description": "Create new Table from existing Table by id",
+        "tags": [
+          "Admin",
+          "Tables"
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Table",
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/tables/{id}/analytics": {
+      "get": {
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ],
+        "summary": "Table Analytics",
+        "description": "Get Table analytics by all made Decisions",
+        "tags": [
+          "Admin",
+          "Tables",
+          "Analytics"
+        ],
+        "responses": {
+          "200": {
+            "description": "Table object with matched probabilities and requests amount for each condition",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/TableWithAnalytics",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/decisions": {
+      "get": {
+        "summary": "Decisions List",
+        "description": "Get list of Decision objects",
+        "tags": [
+          "Decision",
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of Decision objects",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "type": "array",
+                  "description": "Response data object",
+                  "items": {
+                    "$ref": "#/definitions/Decision"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/decisions/{id}": {
+      "get": {
+        "summary": "Decision Read",
+        "description": "Get Decision by id",
+        "tags": [
+          "Decision",
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "Decision object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Decision",
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tables/{id}/decisions": {
+      "post": {
+        "summary": "Decision Make",
+        "description": "Making Decision from Table",
+        "tags": [
+          "Consumer"
+        ],
+        "responses": {
+          "200": {
+            "description": "Decision Consumer object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/ConsumerDecision",
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/groups/{id}/decisions": {
+      "post": {
+        "summary": "Decision Group Make",
+        "description": "Making Decision from Table",
+        "tags": [
+          "Consumer"
+        ],
+        "responses": {
+          "200": {
+            "description": "Decision Consumer object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/ConsumerDecision",
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/decisions/{id}": {
+      "get": {
+        "summary": "Decision Read",
+        "description": "Get Decision Consumer by id",
+        "tags": [
+          "Consumer"
+        ],
+        "responses": {
+          "200": {
+            "description": "Decision Consumer object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/ConsumerDecision",
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "Table": {
+      "title": {
+        "type": "string",
+        "description": "Title of Table.",
+        "example": "Some title"
+      },
+      "description": {
+        "type": "string",
+        "description": "Description of Table.",
+        "example": "Some description"
+      },
+      "matching_type": {
+        "type": "string",
+        "description": "Matching type for Table.",
+        "example": "first",
+        "enum": [
+          "first",
+          "all"
+        ]
+      },
+      "default_decision": {
+        "type": "string",
+        "description": "If there are no rows with all validations passed, this decision will be set for Decision.",
+        "example": "Decline"
+      },
+      "default_title": {
+        "type": "string",
+        "description": "If there are no rows with all validations passed, this title will be set for Decision.",
+        "example": "Default title"
+      },
+      "default_description": {
+        "type": "string",
+        "description": "If there are no rows with all validations passed, this description will be set for Decision.",
+        "example": "Default description"
+      },
+      "fields": {
+        "type": "array",
+        "description": "Array of Field objects.",
+        "items": {
+          "$ref": "#/definitions/Field"
+        }
+      },
+      "rules": {
+        "type": "array",
+        "description": "Array of Rule objects.",
+        "items": {
+          "$ref": "#/definitions/Rule"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Meta": {
+      "type": "object",
+      "required": [
+        "code"
+      ],
+      "properties": {
+        "code": {
+          "type": "integer",
+          "description": "HTTP response code",
+          "example": 200
+        }
+      }
+    },
+    "TableList": {
+      "type": "object",
+      "description": "Short view of Table for list",
+      "required": [
+        "_id",
+        "title",
+        "description",
+        "matching_type",
+        "default_decision"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of Table.",
+          "example": "Some title"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of Table.",
+          "example": "Some description"
+        },
+        "matching_type": {
+          "type": "string",
+          "description": "Matching type for Table.",
+          "example": "first",
+          "enum": [
+            "first",
+            "all"
+          ]
+        },
+        "default_decision": {
+          "type": "string",
+          "description": "If there are no rows with all validations passed, this decision will be set for Decision.",
+          "example": "Decline"
+        }
+      }
+    },
+    "Table": {
+      "type": "object",
+      "description": "It consist of columns that describes API request structure, rows that describe decision-making logic, and cells that represents a single validation rule.",
+      "required": [
+        "_id",
+        "title",
+        "description",
+        "matching_type",
+        "default_decision",
+        "default_title",
+        "default_description",
+        "rules",
+        "fields"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of Table.",
+          "example": "Some title"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of Table.",
+          "example": "Some description"
+        },
+        "matching_type": {
+          "type": "string",
+          "description": "Matching type for Table.",
+          "example": "first",
+          "enum": [
+            "first",
+            "all"
+          ]
+        },
+        "default_decision": {
+          "type": "string",
+          "description": "If there are no rows with all validations passed, this decision will be set for Decision.",
+          "example": "Decline"
+        },
+        "default_title": {
+          "type": "string",
+          "description": "If there are no rows with all validations passed, this title will be set for Decision.",
+          "example": "Default title"
+        },
+        "default_description": {
+          "type": "string",
+          "description": "If there are no rows with all validations passed, this description will be set for Decision.",
+          "example": "Default description"
+        },
+        "fields": {
+          "type": "array",
+          "description": "Array of Field objects.",
+          "items": {
+            "$ref": "#/definitions/Field"
+          }
+        },
+        "rules": {
+          "type": "array",
+          "description": "Array of Rule objects.",
+          "items": {
+            "$ref": "#/definitions/Rule"
+          }
+        }
+      }
+    },
+    "TableWithAnalytics": {
+      "type": "object",
+      "description": "It consist of columns that describes API request structure, rows that describe decision-making logic, and cells that represents a single validation rule.",
+      "required": [
+        "_id",
+        "title",
+        "description",
+        "matching_type",
+        "default_decision",
+        "default_title",
+        "default_description",
+        "rules",
+        "fields"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of Table.",
+          "example": "Some title"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of Table.",
+          "example": "Some description"
+        },
+        "matching_type": {
+          "type": "string",
+          "description": "Matching type for Table.",
+          "example": "first",
+          "enum": [
+            "first",
+            "all"
+          ]
+        },
+        "default_decision": {
+          "type": "string",
+          "description": "If there are no rows with all validations passed, this decision will be set for Decision.",
+          "example": "Decline"
+        },
+        "default_title": {
+          "type": "string",
+          "description": "If there are no rows with all validations passed, this title will be set for Decision.",
+          "example": "Default title"
+        },
+        "default_description": {
+          "type": "string",
+          "description": "If there are no rows with all validations passed, this description will be set for Decision.",
+          "example": "Default description"
+        },
+        "fields": {
+          "type": "array",
+          "description": "Array of Field objects.",
+          "items": {
+            "$ref": "#/definitions/Field"
+          }
+        },
+        "rules": {
+          "type": "array",
+          "description": "Array of Rule objects with analytics data.",
+          "items": {
+            "$ref": "#/definitions/RuleAnalytics"
+          }
+        }
+      }
+    },
+    "Field": {
+      "type": "object",
+      "required": [
+        "key",
+        "title",
+        "source",
+        "type"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "description": "API Field for request",
+          "example": "salary"
+        },
+        "title": {
+          "type": "string",
+          "description": "Field title",
+          "example": "Field title"
+        },
+        "source": {
+          "type": "string",
+          "description": "Source type.",
+          "example": "request",
+          "enum": [
+            "request"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "description": "Available field data types",
+          "example": "string",
+          "enum": [
+            "numeric",
+            "boolean",
+            "string"
+          ]
+        },
+        "preset": {
+          "description": "Preset object. You can modify field value for table rows by adding field preset.",
+          "$ref": "#/definitions/Preset"
+        }
+      }
+    },
+    "Preset": {
+      "type": "object",
+      "required": [
+        "condition",
+        "value"
+      ],
+      "properties": {
+        "condition": {
+          "type": "string",
+          "description": "Available rules",
+          "example": "$gte",
+          "enum": [
+            "$is_set",
+            "$eq",
+            "$ne",
+            "$gt",
+            "$gte",
+            "$lt",
+            "$lte",
+            "$in",
+            "$nin"
+          ]
+        },
+        "value": {
+          "type": "string|numeric|boolean",
+          "description": "Value type can be different depends on condition",
+          "example": 1000
+        }
+      }
+    },
+    "Rule": {
+      "type": "object",
+      "discriminator": "than",
+      "required": [
+        "than",
+        "title",
+        "description",
+        "conditions"
+      ],
+      "properties": {
+        "than": {
+          "type": "string",
+          "description": "Decision, when this rule is matched",
+          "example": "Approve"
+        },
+        "title": {
+          "type": "string",
+          "description": "Rule title.",
+          "example": "Rule title."
+        },
+        "description": {
+          "type": "string",
+          "description": "Rule description.",
+          "example": "Rule description."
+        },
+        "conditions": {
+          "type": "array",
+          "description": "Array of Condition objects",
+          "items": {
+            "$ref": "#/definitions/Condition"
+          }
+        }
+      }
+    },
+    "Condition": {
+      "type": "object",
+      "required": [
+        "field_key",
+        "condition",
+        "value"
+      ],
+      "properties": {
+        "field_key": {
+          "type": "string",
+          "description": "Key for API field key.",
+          "example": "salary"
+        },
+        "condition": {
+          "type": "string",
+          "description": "Condition",
+          "example": "$eq",
+          "enum": [
+            "$is_set",
+            "$eq",
+            "$ne",
+            "$gt",
+            "$gte",
+            "$lt",
+            "$lte",
+            "$in",
+            "$nin"
+          ]
+        },
+        "value": {
+          "type": "string|numeric|boolean",
+          "description": "Value type can be different depends on condition",
+          "example": 1000
+        }
+      }
+    },
+    "RuleAnalytics": {
+      "type": "object",
+      "discriminator": "than",
+      "required": [
+        "than",
+        "title",
+        "description",
+        "conditions"
+      ],
+      "properties": {
+        "than": {
+          "type": "string",
+          "description": "Decision, when this rule is matched",
+          "example": "Approve"
+        },
+        "title": {
+          "type": "string",
+          "description": "Rule title.",
+          "example": "Rule title."
+        },
+        "description": {
+          "type": "string",
+          "description": "Rule description.",
+          "example": "Rule description."
+        },
+        "conditions": {
+          "type": "array",
+          "description": "Array of Condition objects with analytics data",
+          "items": {
+            "$ref": "#/definitions/ConditionAnalytics"
+          }
+        }
+      }
+    },
+    "ConditionAnalytics": {
+      "type": "object",
+      "required": [
+        "field_key",
+        "condition",
+        "value",
+        "probability",
+        "requests"
+      ],
+      "properties": {
+        "field_key": {
+          "type": "string",
+          "description": "Key for API field key.",
+          "example": "salary"
+        },
+        "condition": {
+          "type": "string",
+          "description": "Condition",
+          "example": "$lte",
+          "enum": [
+            "$is_set",
+            "$eq",
+            "$ne",
+            "$gt",
+            "$gte",
+            "$lt",
+            "$lte",
+            "$in",
+            "$nin"
+          ]
+        },
+        "value": {
+          "type": "string|numeric|boolean",
+          "description": "Value type can be different depends on condition",
+          "example": 1000
+        },
+        "probability": {
+          "type": "numeric",
+          "description": "Probability value between 0-1, where 1 is 100% matched result",
+          "example": 0.67
+        },
+        "requests": {
+          "type": "numeric",
+          "description": "Requests amount for current condition.",
+          "example": 213
+        }
+      }
+    },
+    "Decision": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the matched rule or Table.default_title.",
+          "example": "Some title"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the matched rule or Table.default_description.",
+          "example": "Some description"
+        },
+        "request": {
+          "type": "object",
+          "description": "All passed parameters from request",
+          "example": {
+            "salary": 1000
+          }
+        },
+        "table": {
+          "type": "object",
+          "description": "Short Table object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "description": "Table ID. MongoID",
+              "example": "56c31536a60ad644060041af"
+            },
+            "title": {
+              "type": "string",
+              "description": "Matched Rule.title if no one rules is matched Table.default_title.",
+              "example": "Table default_title"
+            },
+            "description": {
+              "type": "string",
+              "description": "Matched Rule.description or if no one rules is matched - Table.default_description.",
+              "example": "Table default_description"
+            },
+            "matching_type": {
+              "type": "string",
+              "description": "Matched_type rule. The same as in Table.matching_type.",
+              "example": "first"
+            }
+          }
+        },
+        "group": {
+          "type": "object",
+          "description": "Short Group object. May be null if decision was made not from Group",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "description": "Group ID. MongoID",
+              "example": "56c31536a60ad644060041af"
+            },
+            "title": {
+              "type": "string",
+              "description": "Group title",
+              "example": "Group.title value"
+            },
+            "description": {
+              "type": "string",
+              "description": "Group description.",
+              "example": "Group.description value"
+            }
+          }
+        },
+        "final_decision": {
+          "type": "string|integer",
+          "description": "Depends of the Table.matching_type could be as highest row in a table with all validations passed or sum of scoring points",
+          "example": "Approve"
+        },
+        "fields": {
+          "type": "array",
+          "description": "Array of Field objects.",
+          "items": {
+            "$ref": "#/definitions/Field"
+          }
+        },
+        "rules": {
+          "type": "array",
+          "description": "Array of Rule objects.",
+          "items": {
+            "$ref": "#/definitions/DecisionRule"
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "description": "Created Datetime",
+          "example": "2016-02-16 14:15:30"
+        },
+        "updated_at": {
+          "type": "string",
+          "description": "Updated Datetime",
+          "example": "2016-02-17 11:25:31"
+        }
+      }
+    },
+    "DecisionRule": {
+      "type": "object",
+      "discriminator": "than",
+      "required": [
+        "than",
+        "title",
+        "description",
+        "conditions"
+      ],
+      "properties": {
+        "than": {
+          "type": "string",
+          "description": "Decision, when this rule is matched",
+          "example": "Approve"
+        },
+        "decision": {
+          "type": "string|integer|null",
+          "description": "Current decision for this rule. If not matched - null",
+          "example": "Approve"
+        },
+        "title": {
+          "type": "string",
+          "description": "Rule title.",
+          "example": "Rule title."
+        },
+        "description": {
+          "type": "string",
+          "description": "Rule description.",
+          "example": "Rule description."
+        },
+        "conditions": {
+          "type": "array",
+          "description": "Array of Condition objects",
+          "items": {
+            "$ref": "#/definitions/DecisionCondition"
+          }
+        }
+      }
+    },
+    "DecisionCondition": {
+      "type": "object",
+      "required": [
+        "field_key",
+        "condition",
+        "value"
+      ],
+      "properties": {
+        "field_key": {
+          "type": "string",
+          "description": "Key for API field key.",
+          "example": "salary"
+        },
+        "condition": {
+          "type": "string",
+          "description": "Condition",
+          "example": "$eq",
+          "enum": [
+            "$is_set",
+            "$eq",
+            "$ne",
+            "$gt",
+            "$gte",
+            "$lt",
+            "$lte",
+            "$in",
+            "$nin"
+          ]
+        },
+        "value": {
+          "type": "string|numeric|boolean",
+          "description": "Value type can be different depends on condition",
+          "example": 1000
+        },
+        "matched": {
+          "type": "boolean",
+          "description": "Is current condition matched",
+          "example": true
+        }
+      }
+    },
+    "ConsumerDecision": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the matched rule or Table.default_title.",
+          "example": "Some title"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the matched rule or Table.default_description.",
+          "example": "Some description"
+        },
+        "request": {
+          "type": "object",
+          "description": "All passed parameters from request",
+          "example": {
+            "salary": 1000
+          }
+        },
+        "table": {
+          "type": "object",
+          "description": "Short Table object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "description": "Table ID. MongoID",
+              "example": "56c31536a60ad644060041af"
+            },
+            "title": {
+              "type": "string",
+              "description": "Matched Rule.title if no one rules is matched Table.default_title.",
+              "example": "Table default_title"
+            },
+            "description": {
+              "type": "string",
+              "description": "Matched Rule.description or if no one rules is matched - Table.default_description.",
+              "example": "Table default_description"
+            },
+            "matching_type": {
+              "type": "string",
+              "description": "Matched_type rule. The same as in Table.matching_type.",
+              "example": "first"
+            }
+          }
+        },
+        "final_decision": {
+          "type": "string|integer",
+          "description": "Depends of the Table.matching_type could be as highest row in a table with all validations passed or sum of scoring points",
+          "example": "Approve"
+        },
+        "rules": {
+          "type": "array",
+          "description": "Array of Rule objects.",
+          "items": {
+            "$ref": "#/definitions/DecisionRule"
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "description": "Created Datetime",
+          "example": "2016-02-16 14:15:30"
+        },
+        "updated_at": {
+          "type": "string",
+          "description": "Updated Datetime",
+          "example": "2016-02-17 11:25:31"
+        }
+      }
+    }
+  }
+}
