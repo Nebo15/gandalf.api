@@ -1447,16 +1447,16 @@
         },
         {
             "name": "nebo15/eloquent.changelog",
-            "version": "0.0.1",
+            "version": "0.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/eloquent-changelog.git",
-                "reference": "7a9c500d8a6f3a41b9e1c12ef8ec4fe64e3fb3fc"
+                "reference": "8b88fd629764d85e572cbbc2b8a9016a7007c9cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/eloquent-changelog/zipball/7a9c500d8a6f3a41b9e1c12ef8ec4fe64e3fb3fc",
-                "reference": "7a9c500d8a6f3a41b9e1c12ef8ec4fe64e3fb3fc",
+                "url": "https://api.github.com/repos/Nebo15/eloquent-changelog/zipball/8b88fd629764d85e572cbbc2b8a9016a7007c9cb",
+                "reference": "8b88fd629764d85e572cbbc2b8a9016a7007c9cb",
                 "shasum": ""
             },
             "require": {
@@ -1489,7 +1489,7 @@
                 "eloquent",
                 "laravel"
             ],
-            "time": "2016-03-14 15:20:17"
+            "time": "2016-03-24 13:47:27"
         },
         {
             "name": "nebo15/lumen.applicationable",
