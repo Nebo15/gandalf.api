@@ -155,7 +155,7 @@ class Scoring
         $rules = ['webhook' => 'sometimes|required|url'];
         if ($fields = $table->fields) {
             foreach ($fields as $item) {
-                $rules[$item->key] = 'required|' . $this->getValidationRuleByType($item->type);
+                $rules[$item->key] = 'present|' . $this->getValidationRuleByType($item->type);
             }
         }
 
