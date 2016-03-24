@@ -273,6 +273,88 @@ class ApiTester extends \Codeception\Actor
         return $this->getResponseFields()->data;
     }
 
+    public function getTableShortData()
+    {
+        return [
+            'default_decision' => 'Decline',
+            'default_title' => 'Title 100',
+            'default_description' => 'Description 220',
+            'title' => 'Test title',
+            'description' => 'Test description',
+            'matching_type' => 'first',
+            'fields' => [
+                [
+                    "key" => 'numeric',
+                    "title" => 'numeric',
+                    "source" => "request",
+                    "type" => 'numeric',
+                    "preset" => [
+                        'condition' => '$gte',
+                        'value' => 400,
+                    ]
+                ],
+                [
+                    "key" => 'string',
+                    "title" => 'string',
+                    "source" => "request",
+                    "type" => 'string',
+                ],
+                [
+                    "key" => 'bool',
+                    "title" => 'bool',
+                    "source" => "request",
+                    "type" => 'boolean',
+                ]
+            ],
+            'rules' => [
+                [
+                    'than' => 'Approve',
+                    'title' => 'Valid rule title',
+                    'description' => 'Valid rule description',
+                    'conditions' => [
+                        [
+                            'field_key' => 'numeric',
+                            'condition' => '$eq',
+                            'value' => true
+                        ],
+                        [
+                            'field_key' => 'string',
+                            'condition' => '$eq',
+                            'value' => 'Yes'
+                        ],
+                        [
+                            'field_key' => 'bool',
+                            'condition' => '$eq',
+                            'value' => false
+                        ]
+                    ]
+                ],
+                [
+                    'than' => 'Decline',
+                    'title' => 'Second title',
+                    'description' => 'Second description',
+                    'conditions' => [
+                        [
+                            'field_key' => 'numeric',
+                            'condition' => '$eq',
+                            'value' => false
+                        ],
+                        [
+                            'field_key' => 'string',
+                            'condition' => '$eq',
+                            'value' => 'Not'
+                        ],
+                        [
+                            'field_key' => 'bool',
+                            'condition' => '$eq',
+                            'value' => true
+                        ]
+                    ]
+                ]
+            ]
+        ];
+    }
+
     public function getTableData()
     {
         if (!$this->tableData) {

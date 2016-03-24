@@ -598,11 +598,59 @@ class TablesCest
         $I->createTable();
         $I->createTable();
 
+        $tableData = $I->getTableShortData();
+        $tableData['title'] = 'Search';
+        $tableData['description'] = 'Concrete';
+        $table1 = $I->createTable($tableData);
+
+        $tableData['title'] = 'Search';
+        $tableData['description'] = 'Another';
+        $table2 = $I->createTable($tableData);
+
+        $tableData['title'] = 'caps';
+        $tableData['description'] = 'EXAMPLE';
+        $table3 = $I->createTable($tableData);
+
+        $tableData['title'] = 'mank@34ind';
+        $tableData['description'] = 'example';
+        $table4 = $I->createTable($tableData);
+
         $I->sendGET('api/v1/admin/tables');
         $I->assertListTable();
         foreach ($I->getResponseFields()->data as $item) {
             $I->sendGET('api/v1/admin/tables/' . $item->_id);
             $I->assertTable();
+        }
+
+        $queries = [
+            'title=arc' => [
+                'amount' => 2,
+                'ids' => [$table1->_id, $table2->_id]
+            ],
+            'title=@34' => [
+                'amount' => 1,
+                'ids' => [$table4->_id]
+            ],
+            'description=EXA' => [
+                'amount' => 2,
+                'ids' => [$table3->_id, $table4->_id]
+            ],
+        ];
+        foreach ($queries as $query => $data) {
+            $I->sendGET("api/v1/admin/tables?$query");
+            $I->assertListTable();
+
+            $response = $I->getResponseFields()->data;
+            $I->assertEquals($data['amount'], count($response), "Wrong amount of the tables for query $query");
+            for ($i = 0; $i < count($response); ++$i) {
+                $id = $response[$i]->_id;
+                $I->assertTrue(in_array($id, $data['ids']), "Id '$id' should not be in response for query $query");
+                unset($data['ids'][$i]);
+            }
+            $I->assertTrue(
+                0 == count($data['ids']),
+                "Next ids should be in response: " . implode(',', $data['ids']) . ". Query: $query"
+            );
         }
 
         $I->logout();
@@ -740,84 +788,7 @@ class TablesCest
         $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
 
-        $tableData = [
-            'default_decision' => 'Decline',
-            'default_title' => 'Title 100',
-            'default_description' => 'Description 220',
-            'title' => 'Test title',
-            'description' => 'Test description',
-            'matching_type' => 'first',
-            'fields' => [
-                [
-                    "key" => 'numeric',
-                    "title" => 'numeric',
-                    "source" => "request",
-                    "type" => 'numeric',
-                    "preset" => [
-                        'condition' => '$gte',
-                        'value' => 400,
-                    ]
-                ],
-                [
-                    "key" => 'string',
-                    "title" => 'string',
-                    "source" => "request",
-                    "type" => 'string',
-                ],
-                [
-                    "key" => 'bool',
-                    "title" => 'bool',
-                    "source" => "request",
-                    "type" => 'boolean',
-                ]
-            ],
-            'rules' => [
-                [
-                    'than' => 'Approve',
-                    'title' => 'Valid rule title',
-                    'description' => 'Valid rule description',
-                    'conditions' => [
-                        [
-                            'field_key' => 'numeric',
-                            'condition' => '$eq',
-                            'value' => true
-                        ],
-                        [
-                            'field_key' => 'string',
-                            'condition' => '$eq',
-                            'value' => 'Yes'
-                        ],
-                        [
-                            'field_key' => 'bool',
-                            'condition' => '$eq',
-                            'value' => false
-                        ]
-                    ]
-                ],
-                [
-                    'than' => 'Decline',
-                    'title' => 'Second title',
-                    'description' => 'Second description',
-                    'conditions' => [
-                        [
-                            'field_key' => 'numeric',
-                            'condition' => '$eq',
-                            'value' => false
-                        ],
-                        [
-                            'field_key' => 'string',
-                            'condition' => '$eq',
-                            'value' => 'Not'
-                        ],
-                        [
-                            'field_key' => 'bool',
-                            'condition' => '$eq',
-                            'value' => true
-                        ]
-                    ]
-                ]
-            ]
-        ];
+        $tableData = $I->getTableShortData();
         $table = $I->createTable($tableData);
 
         $checkData = [
