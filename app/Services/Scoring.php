@@ -105,7 +105,7 @@ class Scoring
             }
             if ($table->matching_type == 'all') {
                 if ($conditions_matched) {
-                    $final_decision += intval($rule->than);
+                    $final_decision += floatval($rule->than);
                 }
             } else {
 

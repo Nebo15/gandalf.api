@@ -138,7 +138,7 @@ class ApiTester extends \Codeception\Actor
         ], "$jsonPath.fields[*]");
 
         $this->seeResponseMatchesJsonType([
-            'than' => 'string|integer',
+            'than' => 'string|integer|float',
             'description' => 'string',
             'conditions' => 'array',
         ], "$jsonPath.rules[*]");
@@ -166,7 +166,7 @@ class ApiTester extends \Codeception\Actor
 
     public function assertTableDecisionsForAdmin($matching_rules_type = 'first', $jsonPath = '$.data')
     {
-        $type = $matching_rules_type == 'all' ? 'integer' : 'string';
+        $type = $matching_rules_type == 'all' ? 'integer|float' : 'string';
         $this->seeResponseCodeIs(200);
         $rules = [
             '_id' => 'string',
@@ -221,7 +221,7 @@ class ApiTester extends \Codeception\Actor
 
     public function assertTableDecisionsForConsumer($matching_rules_type = 'first', $jsonPath = '$.data')
     {
-        $type = $matching_rules_type == 'all' ? 'integer' : 'string';
+        $type = $matching_rules_type == 'all' ? 'integer|float' : 'string';
         $this->seeResponseCodeIs(200);
         $rules = [
             '_id' => 'string',
