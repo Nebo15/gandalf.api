@@ -427,6 +427,171 @@
         }
       }
     },
+    "/admin/changelog/tables": {
+      "get": {
+        "summary": "Changelog Tables List",
+        "description": "Get list of all Changelog Tables",
+        "tags": [
+          "Admin",
+          "Tables",
+          "Changelog"
+        ],
+        "responses": {
+          "200": {
+            "description": "Changelog objects",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "type": "array",
+                  "description": "Response data object",
+                  "items": {
+                    "$ref": "#/definitions/ChangelogTablesList"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/changelog/tables/{id}": {
+      "get": {
+        "summary": "Changelog by Table",
+        "description": "Get Changelog by specific Table",
+        "tags": [
+          "Admin",
+          "Tables",
+          "Changelog"
+        ],
+        "responses": {
+          "200": {
+            "description": "Changelog objects",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "type": "array",
+                  "description": "Response data object",
+                  "items": {
+                    "$ref": "#/definitions/ChangelogTablesList"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/changelog/table/{id}/diff": {
+      "get": {
+        "summary": "Changelog Tables Diff",
+        "description": "View changes between two Tables.",
+        "tags": [
+          "Admin",
+          "Tables",
+          "Changelog"
+        ],
+        "parameters": [
+          {
+            "name": "compare_with",
+            "in": "request",
+            "description": "Changelog ID. View changes relative from current (if not passed `original` parameter) Table state to passed Table state",
+            "required": true
+          },
+          {
+            "name": "original",
+            "in": "request",
+            "description": "Changelog ID. Set Table state, that will be compared with `compare_with` Table state",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Changelog Table object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "type": "object",
+                  "description": "Response data object",
+                  "properties": {
+                    "original": {
+                      "$ref": "#/definitions/ChangelogTablesDiff"
+                    },
+                    "compare_with": {
+                      "$ref": "#/definitions/ChangelogTablesDiff"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "admin/changelog/tables/{table_id}/rollback/{changelog_id}": {
+      "get": {
+        "summary": "Changelog Table Rollback",
+        "description": "Rollback Table to some state that described in passed Changelog",
+        "tags": [
+          "Admin",
+          "Tables",
+          "Changelog"
+        ],
+        "responses": {
+          "200": {
+            "description": "Changelog Table object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "type": "object",
+                  "description": "Response data object",
+                  "properties": {
+                    "reverted": {
+                      "$ref": "#/definitions/Table"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/tables/{id}/decisions": {
       "post": {
         "summary": "Decision Make",
@@ -462,37 +627,6 @@
       "post": {
         "summary": "Decision Group Make",
         "description": "Making Decision from Table",
-        "tags": [
-          "Consumer"
-        ],
-        "responses": {
-          "200": {
-            "description": "Decision Consumer object",
-            "schema": {
-              "type": "object",
-              "required": [
-                "meta",
-                "data"
-              ],
-              "properties": {
-                "meta": {
-                  "$ref": "#/definitions/Meta",
-                  "description": "Meta data"
-                },
-                "data": {
-                  "$ref": "#/definitions/ConsumerDecision",
-                  "description": "Response data object"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/decisions/{id}": {
-      "get": {
-        "summary": "Decision Read",
-        "description": "Get Decision Consumer by id",
         "tags": [
           "Consumer"
         ],
@@ -766,6 +900,117 @@
           "items": {
             "$ref": "#/definitions/RuleAnalytics"
           }
+        }
+      }
+    },
+    "ChangelogTablesList": {
+      "type": "object",
+      "description": "It consist of columns that describes API request structure, rows that describe decision-making logic, and cells that represents a single validation rule.",
+      "required": [
+        "_id",
+        "author",
+        "model",
+        "created_at",
+        "updated_at"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "author": {
+          "type": "string",
+          "description": "Author of changes of the current model.",
+          "example": "Admin"
+        },
+        "model": {
+          "type": "object",
+          "description": "Information about Table.",
+          "required": [
+            "_id",
+            "table"
+          ],
+          "properties": {
+            "_id": {
+              "type": "string",
+              "description": "Model ID",
+              "example": "56f3e34b4db07f8226010d65"
+            },
+            "table": {
+              "type": "string",
+              "description": "Model table name",
+              "example": "tables"
+            }
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "description": "Created Datetime",
+          "example": "2016-02-16 14:15:30"
+        },
+        "updated_at": {
+          "type": "string",
+          "description": "Updated Datetime",
+          "example": "2016-02-17 11:25:31"
+        }
+      }
+    },
+    "ChangelogTablesDiff": {
+      "type": "object",
+      "description": "It consist of columns that describes API request structure, rows that describe decision-making logic, and cells that represents a single validation rule.",
+      "required": [
+        "_id",
+        "author",
+        "model",
+        "created_at",
+        "updated_at"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "author": {
+          "type": "string",
+          "description": "Author of changes of the current model.",
+          "example": "Admin"
+        },
+        "model": {
+          "type": "object",
+          "description": "Information about Table.",
+          "required": [
+            "_id",
+            "table"
+          ],
+          "properties": {
+            "_id": {
+              "type": "string",
+              "description": "Model ID",
+              "example": "56f3e34b4db07f8226010d65"
+            },
+            "table": {
+              "type": "string",
+              "description": "Model table name",
+              "example": "tables"
+            },
+            "attributes": {
+              "type": "object",
+              "description": "All Table attributes, with Embed IDs",
+              "$ref": "#/definitions/Table"
+            }
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "description": "Created Datetime",
+          "example": "2016-02-16 14:15:30"
+        },
+        "updated_at": {
+          "type": "string",
+          "description": "Updated Datetime",
+          "example": "2016-02-17 11:25:31"
         }
       }
     },
