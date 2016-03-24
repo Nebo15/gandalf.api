@@ -75,7 +75,8 @@ class DecisionsCest
 
     public function createAll(ApiTester $I)
     {
-        $I->loginAdmin();
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
         $tableData = $I->getTableShortData();
         $tableData['matching_type'] = 'all';
         $tableData['default_decision'] = 15;
