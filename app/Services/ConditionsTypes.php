@@ -20,6 +20,12 @@ class ConditionsTypes
                     return true;
                 }
             ],
+            '$is_null' => [
+                'input_type' => '',
+                'function' => function ($condition_value, $field_value) {
+                    return null === $field_value;
+                }
+            ],
             '$eq' => [
                 'input_type' => '',
                 'function' => function ($condition_value, $field_value) {
@@ -78,6 +84,9 @@ class ConditionsTypes
 
     public function checkConditionValue($condition_key, $condition_value, $field_value)
     {
+        if ($field_value === null and $condition_key != '$is_null') {
+            return false;
+        }
         $condition = $this->getCondition($condition_key);
 
         return $condition['function']($condition_value, $field_value);
