@@ -73,7 +73,91 @@ class DecisionsCest
 
     public function createAll(ApiTester $I)
     {
-
+        $I->loginAdmin();
+        $tableData = $I->getTableShortData();
+        $tableData['matching_type'] = 'all';
+        $tableData['default_decision'] = 15;
+        $tableData['rules'] = [
+            [
+                'than' => 100,
+                'title' => 'Valid rule title',
+                'description' => 'Valid rule description',
+                'conditions' => [
+                    [
+                        'field_key' => 'numeric',
+                        'condition' => '$eq',
+                        'value' => true
+                    ],
+                    [
+                        'field_key' => 'string',
+                        'condition' => '$eq',
+                        'value' => 'Yes'
+                    ],
+                    [
+                        'field_key' => 'bool',
+                        'condition' => '$eq',
+                        'value' => false
+                    ]
+                ]
+            ],
+            [
+                'than' => -50.745,
+                'title' => 'Second title',
+                'description' => 'Second description',
+                'conditions' => [
+                    [
+                        'field_key' => 'numeric',
+                        'condition' => '$eq',
+                        'value' => false
+                    ],
+                    [
+                        'field_key' => 'string',
+                        'condition' => '$eq',
+                        'value' => 'Not'
+                    ],
+                    [
+                        'field_key' => 'bool',
+                        'condition' => '$eq',
+                        'value' => true
+                    ]
+                ]
+            ],
+            [
+                'than' => 25.245,
+                'title' => 'Third title',
+                'description' => 'Third description',
+                'conditions' => [
+                    [
+                        'field_key' => 'numeric',
+                        'condition' => '$eq',
+                        'value' => false
+                    ],
+                    [
+                        'field_key' => 'string',
+                        'condition' => '$eq',
+                        'value' => 'Not'
+                    ],
+                    [
+                        'field_key' => 'bool',
+                        'condition' => '$eq',
+                        'value' => true
+                    ]
+                ]
+            ]
+        ];
+        $table = $I->createTable($tableData);
+        $decisionsData = [
+            # default decision
+            ['points' => 15, 'request' => ['string' => 'Invalid', 'numeric' => 1, 'bool' => false]],
+            # first rule matched
+            ['points' => 100, 'request' => ['string' => 'Yes', 'numeric' => 500, 'bool' => false]],
+            # second and third rule matched
+            ['points' => -25.5, 'request' => ['string' => 'Not', 'numeric' => 200, 'bool' => true]],
+        ];
+        foreach ($decisionsData as $item) {
+            $I->checkDecision($table->_id, $item['request'], 'all');
+            $I->assertResponseDataFields(['final_decision' => $item['points']]);
+        }
     }
 
     public function createGroup(ApiTester $I)
