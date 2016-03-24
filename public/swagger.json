@@ -17,14 +17,335 @@
     "basicAuth": {
       "type": "basic",
       "description": "HTTP Basic Authentication."
+    },
+    "basicConsumer": {
+      "type": "basic",
+      "description": "HTTP Basic Consumer Authentication."
+    },
+    "oauth2": {
+      "type": "oauth2",
+      "description": "Oauth"
     }
   },
   "paths": {
+    "/users/": {
+      "post": {
+        "summary": "Create new User",
+        "description": "Create new application user",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "username",
+                "email",
+                "password"
+              ],
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "description": "User nickname",
+                  "example": "special_user",
+                  "required": true
+                },
+                "email": {
+                  "type": "string",
+                  "description": "User email",
+                  "example": "test@site.com",
+                  "required": true
+                },
+                "password": {
+                  "type": "string",
+                  "description": "User password",
+                  "example": "p@ssword!1!",
+                  "required": true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Decision Consumer object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/User",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/oauth/": {
+      "post": {
+        "summary": "Get user access token",
+        "description": "Get user access token, grant_type password scenario <br/>**Every request should be with Access Token**<br/>**-H 'Authorization: token_type access_token_here'**",
+        "tags": [
+          "User"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "grant_type",
+            "description": "Grant Type",
+            "required": true,
+            "type": "string",
+            "enum" : [
+              "password",
+              "refresh_token"
+            ]
+          },
+          {
+            "name": "username",
+            "description": "Username, required if grant_type == password",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "description": "User password, required if grant_type == password",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "refresh_token",
+            "description": "Refresh token, required if grant_type == refresh_token",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Access Token object",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/AccessToken",
+              "description": "Response data object"
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/": {
+      "post": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Create project",
+        "description": "Can create project and in the feature link tables to it.<br/> When you created project, your feature requests should be with Header <br />**-H 'X-Application: project_id'**",
+        "tags": [
+          "Project"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "title",
+            "description": "Title of project",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta"
+              ],
+              "$ref": "#/definitions/Project",
+              "description": "Response data object"
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/consumers": {
+      "post": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Create consumer",
+        "description": "Every into existing project user can create consumer with own scopes. <br/>For login as consumer you should make Basic Auth client_id:client_secret",
+        "tags": [
+          "Project"
+        ],
+        "parameters": [
+          {
+            "name": "description",
+            "description": "Description of consumer",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "description": "Scopes of consumer",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type" : "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta"
+              ],
+              "$ref": "#/definitions/Project",
+              "description": "Response data object"
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/users": {
+      "post": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Add User to the Project",
+        "description": "Adding existing user to the current project. Share project with other users with different scopes",
+        "tags": [
+          "Project",
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "description": "Id of existing user",
+            "required": true,
+            "type": "string"
+
+          },
+          {
+            "name": "role",
+            "description": "Role of user",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "description": "Scopes of consumer",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type" : "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta"
+              ],
+              "$ref": "#/definitions/Project",
+              "description": "Response data object"
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/admin/tables": {
       "get": {
         "security": [
           {
-            "basicAuth": []
+            "oauth2": []
           }
         ],
         "summary": "Tables List",
@@ -62,7 +383,7 @@
       "post": {
         "security": [
           {
-            "basicAuth": []
+            "oauth2": []
           }
         ],
         "summary": "Table Create",
@@ -158,6 +479,11 @@
     },
     "/admin/tables/{id}": {
       "get": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
         "summary": "Table Read",
         "description": "Get Table by id",
         "tags": [
@@ -200,6 +526,11 @@
         }
       },
       "put": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
         "summary": "Table Update",
         "description": "Update Table by id",
         "tags": [
@@ -230,6 +561,11 @@
         }
       },
       "delete": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
         "summary": "Table Delete",
         "description": "Delete Table by id",
         "tags": [
@@ -256,6 +592,11 @@
     },
     "/admin/tables/{id}/copy": {
       "post": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
         "summary": "Table Copy",
         "description": "Create new Table from existing Table by id",
         "tags": [
@@ -288,7 +629,7 @@
       "get": {
         "security": [
           {
-            "basicAuth": []
+            "oauth2": []
           }
         ],
         "summary": "Table Analytics",
@@ -336,6 +677,11 @@
     },
     "/admin/decisions": {
       "get": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
         "summary": "Decisions List",
         "description": "Get list of Decision objects",
         "tags": [
@@ -371,6 +717,11 @@
     },
     "/admin/decisions/{id}": {
       "get": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
         "summary": "Decision Read",
         "description": "Get Decision by id",
         "tags": [
@@ -403,6 +754,12 @@
     },
     "/tables/{id}/decisions": {
       "post": {
+        "security": [
+          {
+            "oauth2": [],
+            "basicConsumer": []
+          }
+        ],
         "summary": "Decision Make",
         "description": "Making Decision from Table",
         "tags": [
@@ -432,8 +789,15 @@
         }
       }
     },
+
     "/groups/{id}/decisions": {
       "post": {
+        "security": [
+          {
+            "oauth2": [],
+            "basicConsumer": []
+          }
+        ],
         "summary": "Decision Group Make",
         "description": "Making Decision from Table",
         "tags": [
@@ -465,6 +829,12 @@
     },
     "/decisions/{id}": {
       "get": {
+        "security": [
+          {
+            "oauth2": [],
+            "basicConsumer": []
+          }
+        ],
         "summary": "Decision Read",
         "description": "Get Decision Consumer by id",
         "tags": [
@@ -487,310 +857,6 @@
                 "data": {
                   "$ref": "#/definitions/ConsumerDecision",
                   "description": "Response data object"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/users/": {
-      "post": {
-        "summary": "Create new User",
-        "description": "Create new application user",
-        "tags": [
-          "User"
-        ],
-        "parameters": [
-          {
-            "name": "user",
-            "in": "body",
-            "description": "User object",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "required": [
-                "username",
-                "email",
-                "password"
-              ],
-              "properties": {
-                "username": {
-                  "type": "string",
-                  "description": "User nickname",
-                  "example": "special_user",
-                  "required": true
-                },
-                "email": {
-                  "type": "string",
-                  "description": "User email",
-                  "example": "test@site.com",
-                  "required": true
-                },
-                "password": {
-                  "type": "string",
-                  "description": "User password",
-                  "example": "p@ssword!1!",
-                  "required": true
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Decision Consumer object",
-            "schema": {
-              "type": "object",
-              "required": [
-                "meta",
-                "data"
-              ],
-              "properties": {
-                "meta": {
-                  "$ref": "#/definitions/Meta",
-                  "description": "Meta data"
-                },
-                "data": {
-                  "$ref": "#/definitions/User",
-                  "description": "Response data object"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation error",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "meta": {
-                  "$ref": "#/definitions/Meta",
-                  "description": "Meta data"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/oauth/": {
-      "post": {
-        "summary": "Get user access token",
-        "description": "Get user access token, grant_type password scenario <br/>**Every request should be with Access Token**<br/>**-H 'Authorization: token_type access_token_here'**",
-        "tags": [
-          "User"
-        ],
-        "produces": [
-          "text/html"
-        ],
-        "parameters": [
-          {
-            "name": "grant_type",
-            "description": "Grant Type",
-            "required": true,
-            "type": "string",
-            "enum" : [
-              "password",
-              "refresh_token"
-            ]
-          },
-          {
-            "name": "username",
-            "description": "Username, required if grant_type == password",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "password",
-            "description": "User password, required if grant_type == password",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "refresh_token",
-            "description": "Refresh token, required if grant_type == refresh_token",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Access Token object",
-            "schema": {
-              "type": "object",
-              "$ref": "#/definitions/AccessToken",
-              "description": "Response data object"
-            }
-          },
-          "422": {
-            "description": "Validation error",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "meta": {
-                  "$ref": "#/definitions/Meta",
-                  "description": "Meta data"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/projects/": {
-      "post": {
-        "summary": "Create project",
-        "description": "Can create project and in the feature link tables to it.<br/> When you created project, your feature requests should be with Header <br />**-H 'X-Application: project_id'**",
-        "tags": [
-          "Project"
-        ],
-        "produces": [
-          "text/html"
-        ],
-        "parameters": [
-          {
-            "name": "title",
-            "description": "Title of project",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Project Object",
-            "schema": {
-              "type": "object",
-              "required": [
-                "meta"
-              ],
-              "$ref": "#/definitions/Project",
-              "description": "Response data object"
-            }
-          },
-          "422": {
-            "description": "Validation error",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "meta": {
-                  "$ref": "#/definitions/Meta",
-                  "description": "Meta data"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/projects/consumers": {
-      "post": {
-        "summary": "Create consumer",
-        "description": "Every into existing project user can create consumer with own scopes",
-        "tags": [
-          "Project"
-        ],
-        "produces": [
-          "text/html"
-        ],
-        "parameters": [
-          {
-            "name": "description",
-            "description": "Description of consumer",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "scope",
-            "description": "Scopes of consumer",
-            "required": true,
-            "type": "array",
-            "items": {
-              "type" : "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Project Object",
-            "schema": {
-              "type": "object",
-              "required": [
-                "meta"
-              ],
-              "$ref": "#/definitions/Project",
-              "description": "Response data object"
-            }
-          },
-          "422": {
-            "description": "Validation error",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "meta": {
-                  "$ref": "#/definitions/Meta",
-                  "description": "Meta data"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/projects/users": {
-      "post": {
-        "summary": "Add User to the Project",
-        "description": "Adding existing user to the current project. Share project with other users with different scopes",
-        "tags": [
-          "Project",
-          "User"
-        ],
-        "produces": [
-          "text/html"
-        ],
-        "parameters": [
-          {
-            "name": "user_id",
-            "description": "Id of existing user",
-            "required": true,
-            "type": "string"
-
-          },
-          {
-            "name": "role",
-            "description": "Role of user",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "scope",
-            "description": "Scopes of consumer",
-            "required": true,
-            "type": "array",
-            "items": {
-              "type" : "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Project Object",
-            "schema": {
-              "type": "object",
-              "required": [
-                "meta"
-              ],
-              "$ref": "#/definitions/Project",
-              "description": "Response data object"
-            }
-          },
-          "422": {
-            "description": "Validation error",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "meta": {
-                  "$ref": "#/definitions/Meta",
-                  "description": "Meta data"
                 }
               }
             }
