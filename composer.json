@@ -10,7 +10,8 @@
         "vlucas/phpdotenv": "~2.2",
         "jenssegers/mongodb": "2.*",
         "nebo15/lumen.rest": "*",
-        "nebo15/eloquent.changelog": "*"
+        "nebo15/eloquent.changelog": "*",
+        "bugsnag/bugsnag-laravel": "1.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
