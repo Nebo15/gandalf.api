@@ -17,6 +17,24 @@ class ValidationServiceProvider extends ServiceProvider
         Validator::extend('ruleThanType', 'App\Validators\TableValidator@ruleThanType');
         Validator::extend('groupTablesFields', 'App\Validators\GroupValidator@tablesFields');
         Validator::extend('groupTablesExists', 'App\Validators\GroupValidator@tablesExists');
+        Validator::extend('betweenString', function ($attribute, $value) {
+            if (strpos($value, ';') === false) {
+                return false;
+            }
+
+            $between = array_map(function ($item) {
+                return floatval(str_replace(',', '.', $item));
+            }, explode(';', $value));
+
+            if (count($between) > 2) {
+                return false;
+            }
+            if (!is_numeric($between[0]) or !is_numeric($between[1])) {
+                return false;
+            }
+
+            return $between[0] < $between[1];
+        });
     }
 
     public function register()
