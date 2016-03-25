@@ -101,7 +101,7 @@ class DecisionsCest
                 ]
             ],
             [
-                'than' => -50.745,
+                'than' => -50.74445,
                 'title' => 'Second title',
                 'description' => 'Second description',
                 'conditions' => [
@@ -123,7 +123,7 @@ class DecisionsCest
                 ]
             ],
             [
-                'than' => 25.245,
+                'than' => 25.24445,
                 'title' => 'Third title',
                 'description' => 'Third description',
                 'conditions' => [

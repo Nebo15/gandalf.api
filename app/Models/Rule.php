@@ -51,6 +51,6 @@ class Rule extends Base
 
     public function setThanAttribute($value)
     {
-        $this->attributes['than'] = is_float($value) ? round($value, 2) : $value;
+        $this->attributes['than'] = is_float($value) ? round($value, 5) : $value;
     }
 }
