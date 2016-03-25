@@ -10,6 +10,7 @@ class ValidationServiceProvider extends ServiceProvider
 {
     public function boot()
     {
+        Validator::extend('fieldPreset', 'App\Validators\TableValidator@fieldPreset');
         Validator::extend('conditionType', 'App\Validators\TableValidator@conditionType');
         Validator::extend('conditionsCount', 'App\Validators\TableValidator@conditionsCount');
         Validator::extend('conditionsField', 'App\Validators\TableValidator@conditionsField');

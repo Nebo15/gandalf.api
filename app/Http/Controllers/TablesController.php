@@ -45,6 +45,7 @@ class TablesController extends AbstractController
             'table.fields.*.key' => 'required|string|not_in:webhook',
             'table.fields.*.type' => 'required|in:numeric,boolean,string',
             'table.fields.*.source' => 'required|in:request',
+            'table.fields.*.preset' => 'present|fieldPreset',
             'table.rules' => 'required|array',
             'table.rules.*.than' => 'required|ruleThanType',
             'table.rules.*.description' => 'sometimes|string',

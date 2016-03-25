@@ -19,6 +19,17 @@ class TableValidator
         $this->conditionsTypes = $conditionsTypes;
     }
 
+    public function fieldPreset($attribute, $value)
+    {
+        if (is_array($value)) {
+            var_dump($value);
+            die();
+            return (array_key_exists('condition', $value) and array_key_exists('condition', $value));
+        }
+
+        return null == $value;
+    }
+
     public function conditionType($attribute, $value, $parameters, Validator $validator)
     {
         $condition = $this->conditionsTypes->getCondition(
@@ -57,13 +68,21 @@ class TableValidator
     public function conditionsCount($attribute, $value, $parameters, Validator $validator)
     {
         $fields = array_get($validator->getData(), 'table.fields');
+
         $unique_fields = [];
+        $i = 0;
         foreach ($fields as $field) {
-            $unique_fields[$field['key']] = $field['title'];
+            $key = isset($field['key']) ? $field['key'] : $i;
+            $unique_fields[$key] = $i;
+            $i++;
         }
+
         $unique_conditions = [];
+        $n = 0;
         foreach ($value as $condition) {
-            $unique_conditions[$condition['field_key']] = $condition['condition'];
+            $key = isset($condition['field_key']) ? $condition['field_key'] : $n;
+            $unique_conditions[$key] = $n;
+            $n++;
         }
 
         return count($unique_conditions) == count($unique_fields);

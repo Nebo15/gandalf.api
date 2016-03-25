@@ -144,18 +144,20 @@ class TablesCest
                         "title" => 'Test',
                         "source" => "request",
                         "type" => 'numeric',
+                        "preset" => null,
                     ],
                     [
                         "key" => '2',
                         "title" => 'Test 2',
                         "source" => "request",
                         "type" => 'numeric',
+                        "preset" => 'shit',
                     ],
                     [
-                        "key" => '3',
                         "title" => 'Test 3',
                         "source" => "request",
                         "type" => 'numeric',
+                        "preset" => [],
                     ],
                 ],
                 'rules' => [
@@ -166,7 +168,7 @@ class TablesCest
                         'conditions' => [
                             [
                                 'field_key' => '3',
-                                'condition' => '$eq',
+                                'condition' => 'invalid',
                                 'value' => true,
                             ],
                             [
@@ -189,11 +191,14 @@ class TablesCest
                         'conditions' => [
                             [
                                 'field_key' => '3',
-                                'condition' => '$eq',
                                 'value' => true,
                             ],
                             [
                                 'field_key' => '2',
+                                'condition' => '$eq',
+                                'value' => false,
+                            ],
+                            [
                                 'condition' => '$eq',
                                 'value' => false,
                             ],
@@ -207,6 +212,11 @@ class TablesCest
         $I->seeResponseContains('table.default_description');
         $I->seeResponseContains('table.rules.1.conditions');
         $I->seeResponseContains('table.matching_type');
+        $I->seeResponseContains('table.rules.0.conditions.0');
+        $I->seeResponseContains('table.rules.1.conditions.0');
+        $I->seeResponseContains('table.rules.1.conditions.2');
+        $I->seeResponseContains('table.fields.1.preset');
+        $I->seeResponseContains('table.fields.2.preset');
 
         $I->sendPOST('api/v1/admin/tables', [
             'table' => [
