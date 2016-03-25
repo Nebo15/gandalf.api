@@ -543,6 +543,59 @@ class TablesCest
         }
     }
 
+    public function ruleBetween(ApiTester $I)
+    {
+        $I->loginAdmin();
+        $tableData = [
+            'title' => 'Test title',
+            'description' => 'Test description',
+            'default_decision' => 'Decline',
+            'matching_type' => 'first',
+            'fields' => [
+                [
+                    "key" => 'between',
+                    "title" => 'Second',
+                    "source" => "request",
+                    "type" => 'numeric'
+                ]
+            ],
+            'rules' => [
+                [
+                    'than' => 'Approve',
+                    'title' => '',
+                    'description' => '',
+                    'conditions' => [
+                        [
+                            'field_key' => 'between',
+                            'condition' => '$between',
+                            'value' => '0.5;5,5',
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        $table = $I->createTable($tableData);
+        $I->seeResponseContains('0.5;5,5');
+
+        $data = [
+            '0.5' => 'Approve',
+            '0.444445' => 'Decline',
+            '5.5' => 'Approve',
+            '5.6' => 'Decline',
+        ];
+        foreach ($data as $value => $result) {
+            $decision = $I->checkDecision($table->_id, ['between' => floatval($value)]);
+            $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
+            $I->assertResponseDataFields(['final_decision' => $result]);
+        }
+
+        foreach (['1.223.33', 100.01, '10;8', '1;2;3', '3,3'] as $item) {
+            $tableData['rules'][0]['conditions'][0]['value'] = $item;
+            $I->sendPOST('api/v1/admin/tables', ['table' => $tableData]);
+            $I->seeResponseCodeIs(422);
+        }
+    }
+
     public function readList(ApiTester $I)
     {
         $I->loginAdmin();

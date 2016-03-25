@@ -62,6 +62,15 @@ class ConditionsTypes
                     return $field_value <= $condition_value;
                 }
             ],
+            '$between' => [
+                'input_type' => 'betweenString',
+                'function' => function ($condition_value, $field_value) {
+                    $between = array_map(function ($item) {
+                        return floatval(str_replace(',', '.', $item));
+                    }, explode(';', $condition_value));
+                    return ($between[0] <= $field_value and $between[1] >= $field_value);
+                }
+            ],
             '$in' => [
                 'input_type' => '',
                 'function' => function ($condition_value, $field_value) {
