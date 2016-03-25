@@ -456,11 +456,11 @@ class TablesCest
             $I->checkDecision($table->_id, ['boolean' => $value]);
             $I->assertResponseDataFields(['final_decision' => 'Approve']);
         }
-        foreach ([false, '0', 0] as $value) {
+        foreach ([false, '0', 0, null] as $value) {
             $I->checkDecision($table->_id, ['boolean' => $value]);
             $I->assertResponseDataFields(['final_decision' => 'Decline']);
         }
-        foreach (['invalid', 'true', "true", 100, null] as $value) {
+        foreach (['invalid', 'true', "true", 100] as $value) {
             $I->sendPOST("api/v1/tables/$table->_id/decisions", ['boolean' => $value]);
             $I->seeResponseCodeIs(422);
         }
@@ -469,7 +469,7 @@ class TablesCest
         $table_data['fields'][0]['type'] = 'string';
         $table_data['rules'][0]['conditions'][0]['value'] = 'string';
         $table = $I->createTable($table_data);
-        foreach ([true, null, 1, ''] as $value) {
+        foreach ([true, 1, false, 0.99] as $value) {
             $I->sendPOST("api/v1/tables/$table->_id/decisions", ['boolean' => $value]);
             $I->seeResponseCodeIs(422);
         }
@@ -484,7 +484,7 @@ class TablesCest
         $table_data['fields'][0]['type'] = 'numeric';
         $table_data['rules'][0]['conditions'][0]['value'] = 100.15;
         $table = $I->createTable($table_data);
-        foreach ([true, null, 'invalid', '100.15i'] as $value) {
+        foreach ([true, 'invalid', '100.15i'] as $value) {
             $I->sendPOST("api/v1/tables/$table->_id/decisions", ['boolean' => $value]);
             $I->seeResponseCodeIs(422);
         }
@@ -529,7 +529,7 @@ class TablesCest
                 ]
             ]
         ]);
-        foreach ([true, null, 'invalid', '100.15i'] as $value) {
+        foreach ([true, 'invalid', '100.15i'] as $value) {
             $I->sendPOST("api/v1/tables/$table->_id/decisions", ['boolean' => $value]);
             $I->seeResponseCodeIs(422);
         }
@@ -755,14 +755,14 @@ class TablesCest
 
         $checkProbabilities([
             [
-                round(3 / 9, 2),
-                round(4 / 9, 2),
-                round(5 / 9, 2),
+                round(3 / 9, 5),
+                round(4 / 9, 5),
+                round(5 / 9, 5),
             ],
             [
-                round(6 / 9, 2),
-                round(3 / 9, 2),
-                round(4 / 9, 2),
+                round(6 / 9, 5),
+                round(3 / 9, 5),
+                round(4 / 9, 5),
             ],
         ], 9);
 
@@ -800,16 +800,16 @@ class TablesCest
         $I->assertTableWithAnalytics();
         $checkProbabilities([
             [
-                round(6 / 14, 2),
-                round(6 / 14, 2),
-                round(7 / 14, 2),
-                round(2 / 5, 2),
+                round(6 / 14, 5),
+                round(6 / 14, 5),
+                round(7 / 14, 5),
+                round(2 / 5, 5),
             ],
             [
-                round(8 / 14, 2),
-                round(4 / 14, 2),
-                round(7 / 14, 2),
-                round(3 / 5, 2),
+                round(8 / 14, 5),
+                round(4 / 14, 5),
+                round(7 / 14, 5),
+                round(3 / 5, 5),
             ],
         ], [
             'last' => 5,

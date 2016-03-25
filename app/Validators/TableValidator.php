@@ -41,7 +41,7 @@ class TableValidator
 
     public function ruleThanType($attribute, $value, $parameters, Validator $validator)
     {
-        $type = 'alpha_num';
+        $type = 'alpha_dash';
         $rule_matching = array_get($validator->getData(), 'table.matching_type', 'first');
         if ($rule_matching == 'all') {
             $type = 'numeric';
