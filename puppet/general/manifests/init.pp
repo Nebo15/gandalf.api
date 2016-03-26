@@ -32,7 +32,7 @@ node default {
     name    => 'uuid-runtime',
     ensure  => installed,
   }
-  class {'php56':} -> class{ 'mongo_3': }
+#  class {'php56':} -> class{ 'mongo_3': }
 
   package { "openssh-server": ensure => "installed" }
 
