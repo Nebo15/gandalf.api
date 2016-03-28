@@ -171,16 +171,16 @@
         },
         {
             "name": "illuminate/auth",
-            "version": "v5.2.24",
+            "version": "v5.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/auth.git",
-                "reference": "ab1847d5239e5884575fcea1882f6ad949e83f94"
+                "reference": "2110f0225de8223821903ba8f698dba904da04c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/auth/zipball/ab1847d5239e5884575fcea1882f6ad949e83f94",
-                "reference": "ab1847d5239e5884575fcea1882f6ad949e83f94",
+                "url": "https://api.github.com/repos/illuminate/auth/zipball/2110f0225de8223821903ba8f698dba904da04c3",
+                "reference": "2110f0225de8223821903ba8f698dba904da04c3",
                 "shasum": ""
             },
             "require": {
@@ -217,11 +217,11 @@
             ],
             "description": "The Illuminate Auth package.",
             "homepage": "http://laravel.com",
-            "time": "2016-03-22 13:35:28"
+            "time": "2016-03-23 17:46:22"
         },
         {
             "name": "illuminate/broadcasting",
-            "version": "v5.2.24",
+            "version": "v5.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/broadcasting.git",
@@ -268,7 +268,7 @@
         },
         {
             "name": "illuminate/bus",
-            "version": "v5.2.24",
+            "version": "v5.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/bus.git",
@@ -313,7 +313,7 @@
         },
         {
             "name": "illuminate/cache",
-            "version": "v5.2.24",
+            "version": "v5.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/cache.git",
@@ -363,7 +363,7 @@
         },
         {
             "name": "illuminate/config",
-            "version": "v5.2.24",
+            "version": "v5.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/config.git",
@@ -408,7 +408,7 @@
         },
         {
             "name": "illuminate/console",
-            "version": "v5.2.24",
+            "version": "v5.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/console.git",
@@ -459,7 +459,7 @@
         },
         {
             "name": "illuminate/container",
-            "version": "v5.2.24",
+            "version": "v5.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
@@ -502,7 +502,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v5.2.24",
+            "version": "v5.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -544,16 +544,16 @@
         },
         {
             "name": "illuminate/database",
-            "version": "v5.2.24",
+            "version": "v5.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "b0e87c20bb38631cf2376f3152e4e61a88551c97"
+                "reference": "96dfde902ed1279fba22055ff2b0152f57a4d9c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/b0e87c20bb38631cf2376f3152e4e61a88551c97",
-                "reference": "b0e87c20bb38631cf2376f3152e4e61a88551c97",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/96dfde902ed1279fba22055ff2b0152f57a4d9c6",
+                "reference": "96dfde902ed1279fba22055ff2b0152f57a4d9c6",
                 "shasum": ""
             },
             "require": {
@@ -600,20 +600,20 @@
                 "orm",
                 "sql"
             ],
-            "time": "2016-03-22 13:37:01"
+            "time": "2016-03-23 13:51:46"
         },
         {
             "name": "illuminate/encryption",
-            "version": "v5.2.24",
+            "version": "v5.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/encryption.git",
-                "reference": "ef00da2adab399900daf1ccdd90aa1fa22c0a860"
+                "reference": "223c3c9a82363325f03014826e055b3196da43ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/encryption/zipball/ef00da2adab399900daf1ccdd90aa1fa22c0a860",
-                "reference": "ef00da2adab399900daf1ccdd90aa1fa22c0a860",
+                "url": "https://api.github.com/repos/illuminate/encryption/zipball/223c3c9a82363325f03014826e055b3196da43ff",
+                "reference": "223c3c9a82363325f03014826e055b3196da43ff",
                 "shasum": ""
             },
             "require": {
@@ -647,11 +647,11 @@
             ],
             "description": "The Illuminate Encryption package.",
             "homepage": "http://laravel.com",
-            "time": "2016-03-18 20:30:25"
+            "time": "2016-03-25 13:10:16"
         },
         {
             "name": "illuminate/events",
-            "version": "v5.2.24",
+            "version": "v5.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/events.git",
@@ -696,7 +696,7 @@
         },
         {
             "name": "illuminate/filesystem",
-            "version": "v5.2.24",
+            "version": "v5.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/filesystem.git",
@@ -746,7 +746,7 @@
         },
         {
             "name": "illuminate/hashing",
-            "version": "v5.2.24",
+            "version": "v5.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/hashing.git",
@@ -790,16 +790,16 @@
         },
         {
             "name": "illuminate/http",
-            "version": "v5.2.24",
+            "version": "v5.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/http.git",
-                "reference": "f149cfca849bfb5b8d1f55440adef962edbc8e14"
+                "reference": "906b677c83ae4917f3e14cd966d8b22518de0bbd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/http/zipball/f149cfca849bfb5b8d1f55440adef962edbc8e14",
-                "reference": "f149cfca849bfb5b8d1f55440adef962edbc8e14",
+                "url": "https://api.github.com/repos/illuminate/http/zipball/906b677c83ae4917f3e14cd966d8b22518de0bbd",
+                "reference": "906b677c83ae4917f3e14cd966d8b22518de0bbd",
                 "shasum": ""
             },
             "require": {
@@ -832,11 +832,11 @@
             ],
             "description": "The Illuminate Http package.",
             "homepage": "http://laravel.com",
-            "time": "2016-02-29 21:54:32"
+            "time": "2016-03-24 14:57:22"
         },
         {
             "name": "illuminate/pagination",
-            "version": "v5.2.24",
+            "version": "v5.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/pagination.git",
@@ -880,7 +880,7 @@
         },
         {
             "name": "illuminate/pipeline",
-            "version": "v5.2.24",
+            "version": "v5.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/pipeline.git",
@@ -924,7 +924,7 @@
         },
         {
             "name": "illuminate/queue",
-            "version": "v5.2.24",
+            "version": "v5.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/queue.git",
@@ -980,7 +980,7 @@
         },
         {
             "name": "illuminate/session",
-            "version": "v5.2.24",
+            "version": "v5.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/session.git",
@@ -1030,7 +1030,7 @@
         },
         {
             "name": "illuminate/support",
-            "version": "v5.2.24",
+            "version": "v5.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
@@ -1086,7 +1086,7 @@
         },
         {
             "name": "illuminate/translation",
-            "version": "v5.2.24",
+            "version": "v5.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/translation.git",
@@ -1131,16 +1131,16 @@
         },
         {
             "name": "illuminate/validation",
-            "version": "v5.2.24",
+            "version": "v5.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/validation.git",
-                "reference": "cc317159f6230c7abcf1a6e0b0fe49504a314a34"
+                "reference": "ba6a8fb3fcd9cbc6744811bef734ad5022183810"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/validation/zipball/cc317159f6230c7abcf1a6e0b0fe49504a314a34",
-                "reference": "cc317159f6230c7abcf1a6e0b0fe49504a314a34",
+                "url": "https://api.github.com/repos/illuminate/validation/zipball/ba6a8fb3fcd9cbc6744811bef734ad5022183810",
+                "reference": "ba6a8fb3fcd9cbc6744811bef734ad5022183810",
                 "shasum": ""
             },
             "require": {
@@ -1177,20 +1177,20 @@
             ],
             "description": "The Illuminate Validation package.",
             "homepage": "http://laravel.com",
-            "time": "2016-03-15 20:32:40"
+            "time": "2016-03-22 18:28:33"
         },
         {
             "name": "illuminate/view",
-            "version": "v5.2.24",
+            "version": "v5.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/view.git",
-                "reference": "7c248fdf27e14f3a0b5da059ba33e19b1d6fcb5e"
+                "reference": "1ece5ddb5928e7273bf52d4bcba04aae6d534f5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/view/zipball/7c248fdf27e14f3a0b5da059ba33e19b1d6fcb5e",
-                "reference": "7c248fdf27e14f3a0b5da059ba33e19b1d6fcb5e",
+                "url": "https://api.github.com/repos/illuminate/view/zipball/1ece5ddb5928e7273bf52d4bcba04aae6d534f5c",
+                "reference": "1ece5ddb5928e7273bf52d4bcba04aae6d534f5c",
                 "shasum": ""
             },
             "require": {
@@ -1224,7 +1224,7 @@
             ],
             "description": "The Illuminate View package.",
             "homepage": "http://laravel.com",
-            "time": "2016-03-21 20:08:53"
+            "time": "2016-03-23 14:09:45"
         },
         {
             "name": "jenssegers/mongodb",
@@ -1539,16 +1539,16 @@
         },
         {
             "name": "nebo15/lumen.rest",
-            "version": "0.0.5",
+            "version": "0.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/lumen-rest.git",
-                "reference": "2ab7c4dc6a756c945213c7193cdc2c92fea66fcf"
+                "reference": "70eed8e13371ba13b764749930a1b16829e9ef7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-rest/zipball/2ab7c4dc6a756c945213c7193cdc2c92fea66fcf",
-                "reference": "2ab7c4dc6a756c945213c7193cdc2c92fea66fcf",
+                "url": "https://api.github.com/repos/Nebo15/lumen-rest/zipball/70eed8e13371ba13b764749930a1b16829e9ef7c",
+                "reference": "70eed8e13371ba13b764749930a1b16829e9ef7c",
                 "shasum": ""
             },
             "require-dev": {
@@ -1577,7 +1577,7 @@
                 "lumen",
                 "rest"
             ],
-            "time": "2016-03-22 12:29:42"
+            "time": "2016-03-28 14:28:21"
         },
         {
             "name": "nesbot/carbon",
@@ -1757,16 +1757,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v2.8.3",
+            "version": "v2.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "56cc5caf051189720b8de974e4746090aaa10d44"
+                "reference": "9a5aef5fc0d4eff86853d44202b02be8d5a20154"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/56cc5caf051189720b8de974e4746090aaa10d44",
-                "reference": "56cc5caf051189720b8de974e4746090aaa10d44",
+                "url": "https://api.github.com/repos/symfony/console/zipball/9a5aef5fc0d4eff86853d44202b02be8d5a20154",
+                "reference": "9a5aef5fc0d4eff86853d44202b02be8d5a20154",
                 "shasum": ""
             },
             "require": {
@@ -1813,7 +1813,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2016-02-28 16:20:50"
+            "time": "2016-03-17 09:19:04"
         },
         {
             "name": "symfony/debug",
@@ -1874,16 +1874,16 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.8.3",
+            "version": "v2.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "78c468665c9568c3faaa9c416a7134308f2d85c3"
+                "reference": "47d2d8cade9b1c3987573d2943bb9352536cdb87"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/78c468665c9568c3faaa9c416a7134308f2d85c3",
-                "reference": "78c468665c9568c3faaa9c416a7134308f2d85c3",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/47d2d8cade9b1c3987573d2943bb9352536cdb87",
+                "reference": "47d2d8cade9b1c3987573d2943bb9352536cdb87",
                 "shasum": ""
             },
             "require": {
@@ -1930,7 +1930,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2016-01-27 05:14:19"
+            "time": "2016-03-07 14:04:32"
         },
         {
             "name": "symfony/finder",
@@ -4308,16 +4308,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.3",
+            "version": "v2.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "2a4ee40acb880c56f29fb1b8886e7ffe94f3b995"
+                "reference": "584e52cb8f788a887553ba82db6caacb1d6260bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/2a4ee40acb880c56f29fb1b8886e7ffe94f3b995",
-                "reference": "2a4ee40acb880c56f29fb1b8886e7ffe94f3b995",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/584e52cb8f788a887553ba82db6caacb1d6260bb",
+                "reference": "584e52cb8f788a887553ba82db6caacb1d6260bb",
                 "shasum": ""
             },
             "require": {
@@ -4353,7 +4353,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-02-23 07:41:20"
+            "time": "2016-03-04 07:54:35"
         }
     ],
     "aliases": [],
