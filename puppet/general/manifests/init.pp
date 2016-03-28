@@ -40,8 +40,6 @@ node default {
     locales         => ['en_US.UTF-8 UTF-8'],
   }->
 
-  class {'php56':} ->
-
   /**
    Mongo part start
   */
@@ -66,6 +64,7 @@ node default {
    Mongo part end
   */
 
+  -> class {'php56':}
   package { "openssh-server": ensure => "installed" }
 
   service { "ssh":
