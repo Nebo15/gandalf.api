@@ -28,7 +28,7 @@
           }
         ],
         "summary": "Tables List",
-        "description": "Get list of Tables\n",
+        "description": "Get list of Tables",
         "tags": [
           "Admin",
           "Tables"
@@ -92,7 +92,7 @@
           }
         ],
         "summary": "Table Create",
-        "description": "Create a new Table",
+        "description": "###Create a new Table.\nAvailable rules are: \n* `$is_set` - field key exists in request and its value can be any\n* `$is_null` - **(null)** value must be NULL\n* `$eq` - **(string, numeric, boolean)** value must be EQUAL to the condition value\n* `$ne` - **(string, numeric, boolean)** value must be NOT EQUAL to the condition value\n* `$gt` - **(numeric)** value must be GREATER THAN condition value\n* `$gte` - **(numeric)** value must be GREATER THAN OR EQUAL to condition value\n* `$lt` - **(numeric)** value must be LESS THAN to condition value\n* `$lte` - **(numeric)** value must be LESS THAN OR EQUAL to condition value\n* `$between` - **(numeric)** value must be in range of condition value. Condition value must be separated by semicolon: *12,3;30* \n* `$in` - **(string, numeric)** value must be one of the following in condition value. Condition value must be separated by comma: *10.8,'hello world'*\n* `$nin` - **(string, numeric)** value must NOT be one of the following in condition value. Condition value must be separated by comma: *10.8,'hello world'*\n",
         "tags": [
           "Admin",
           "Tables"
