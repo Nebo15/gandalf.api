@@ -39,10 +39,6 @@ node default {
     default_locale  => 'en_US.UTF-8',
     locales         => ['en_US.UTF-8 UTF-8'],
   }->
-  exec{ 'locale-gen UTF-8':
-    command => 'locale-gen UTF-8',
-    require => Class["locales"]
-  }
 
   class {'php56':} ->
 
