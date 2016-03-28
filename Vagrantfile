@@ -19,17 +19,6 @@ $virtualbox_script_app = <<SCRIPT
 #!/bin/bash
 set -o nounset -o errexit -o pipefail -o errtrace
 trap 'error "${BASH_SOURCE}" "${LINENO}"' ERR
-TIMEZONE="Europe/Kiev"
-LOCALE_LANGUAGE="en_US"
-LOCALE_CODESET="en_US.UTF-8"
-sudo locale-gen ${LOCALE_LANGUAGE} ${LOCALE_CODESET}
-sudo echo "export LANGUAGE=${LOCALE_CODESET}
-export LANG=${LOCALE_CODESET}
-export LC_ALL=${LOCALE_CODESET} " | sudo tee --append /etc/bash.bashrc
-echo ${TIMEZONE} | sudo tee /etc/timezone
-export LANGUAGE=${LOCALE_CODESET}
-export LANG=${LOCALE_CODESET}
-export LC_ALL=${LOCALE_CODESET}
-sudo dpkg-reconfigure locales
-echo 127.0.0.1 mbill.dev | sudo tee -a /etc/hosts
+echo 127.0.0.1 gandalf.dev | sudo tee -a /etc/hosts
+sudo /bin/bash /vagrant/puppet/initial/init.sh
 SCRIPT
