@@ -52,6 +52,13 @@ node default {
     command => "/usr/bin/apt-get update",
     require => Apt::Source['mongo_3.2']
   }->
+  package { 'mongodb_server':
+    ensure => present,
+    name   => 'mongodb-org-server=3.2.0',
+    tag    => 'mongodb',
+    install_options => ['-y', '--force-yes'],
+    require  => Exec['apt-get update'],
+  }->
   package { 'mongodb_client':
     ensure => present,
     name   => 'mongodb-org=3.2.0',

@@ -4,7 +4,7 @@ cache:
     directories:
       - vendor/
 php:
-  - 5.6
+  #- 5.6
   #- 7.0 test
 before_script:
   - ls -la ./
@@ -25,9 +25,9 @@ before_script:
   - cp ./.env.example ./.env
   - bash puppet/initial/init.sh
   - echo 127.0.0.1 gandalf.dev | sudo tee -a /etc/hosts
-  - sudo service nginx restart
-  - sudo service php5-fpm restart
-  - php5-fpm -i
+  #- sudo service nginx restart
+  #- sudo service php5-fpm restart
+  #- php5-fpm -i
   - composer install --prefer-source
 script:
   - vendor/bin/codecept run
