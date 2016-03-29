@@ -83,7 +83,7 @@ node default {
   }
 
   class { 'nginx':
-    daemon_user => 'www-data',
+    daemon_user => 'travis',
     worker_processes => 4,
     pid => '/run/nginx.pid',
     worker_connections => 1024,
