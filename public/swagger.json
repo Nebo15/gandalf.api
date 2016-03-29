@@ -1474,6 +1474,7 @@
         "title",
         "source",
         "type"
+        "preset",
       ],
       "properties": {
         "key": {
