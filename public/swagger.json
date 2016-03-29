@@ -28,7 +28,7 @@
           }
         ],
         "summary": "Tables List",
-        "description": "Get list of Tables\n",
+        "description": "Get list of Tables",
         "tags": [
           "Admin",
           "Tables"
@@ -79,6 +79,10 @@
                   "items": {
                     "$ref": "#/definitions/TableList"
                   }
+                },
+                "paging": {
+                  "$ref": "#/definitions/Paging",
+                  "description": "Paging object"
                 }
               }
             }
@@ -92,7 +96,7 @@
           }
         ],
         "summary": "Table Create",
-        "description": "Create a new Table",
+        "description": "###Create a new Table.\nAvailable rules are: \n* `$is_set` - field key exists in request and its value can be any\n* `$is_null` - **(null)** value must be NULL\n* `$eq` - **(string, numeric, boolean)** value must be EQUAL to the condition value\n* `$ne` - **(string, numeric, boolean)** value must be NOT EQUAL to the condition value\n* `$gt` - **(numeric)** value must be GREATER THAN condition value\n* `$gte` - **(numeric)** value must be GREATER THAN OR EQUAL to condition value\n* `$lt` - **(numeric)** value must be LESS THAN to condition value\n* `$lte` - **(numeric)** value must be LESS THAN OR EQUAL to condition value\n* `$between` - **(numeric)** value must be in range of condition value. Condition value must be separated by semicolon: *12,3;30* \n* `$in` - **(string, numeric)** value must be one of the following in condition value. Condition value must be separated by comma: *10.8,'hello world'*\n* `$nin` - **(string, numeric)** value must NOT be one of the following in condition value. Condition value must be separated by comma: *10.8,'hello world'*\n",
         "tags": [
           "Admin",
           "Tables"
@@ -232,6 +236,78 @@
           "Admin",
           "Tables"
         ],
+        "parameters": [
+          {
+            "name": "table",
+            "in": "body",
+            "description": "Table object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "_id",
+                "title",
+                "description",
+                "matching_type",
+                "default_decision",
+                "default_title",
+                "default_description",
+                "rules",
+                "fields"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "Title of Table.",
+                  "example": "Some title"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description of Table.",
+                  "example": "Some description"
+                },
+                "matching_type": {
+                  "type": "string",
+                  "description": "Matching type for Table.",
+                  "example": "first",
+                  "enum": [
+                    "first",
+                    "all"
+                  ]
+                },
+                "default_decision": {
+                  "type": "string",
+                  "description": "If there are no rows with all validations passed, this decision will be set for Decision.",
+                  "example": "Decline"
+                },
+                "default_title": {
+                  "type": "string",
+                  "description": "If there are no rows with all validations passed, this title will be set for Decision.",
+                  "example": "Default title"
+                },
+                "default_description": {
+                  "type": "string",
+                  "description": "If there are no rows with all validations passed, this description will be set for Decision.",
+                  "example": "Default description"
+                },
+                "fields": {
+                  "type": "array",
+                  "description": "Array of Field objects.",
+                  "items": {
+                    "$ref": "#/definitions/Field"
+                  }
+                },
+                "rules": {
+                  "type": "array",
+                  "description": "Array of Rule objects.",
+                  "items": {
+                    "$ref": "#/definitions/Rule"
+                  }
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Table object",
@@ -353,6 +429,308 @@
                 "meta": {
                   "$ref": "#/definitions/Meta",
                   "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/group": {
+      "get": {
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ],
+        "summary": "Groups List",
+        "description": "Get list of Groups",
+        "tags": [
+          "Admin",
+          "Groups"
+        ],
+        "parameters": [
+          {
+            "name": "size",
+            "in": "request",
+            "description": "Amount of Groups on page",
+            "required": false
+          },
+          {
+            "name": "page",
+            "in": "request",
+            "description": "Page for pagination",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of Groups",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "type": "array",
+                  "description": "Response data object",
+                  "items": {
+                    "$ref": "#/definitions/GroupList"
+                  }
+                },
+                "paging": {
+                  "$ref": "#/definitions/Paging",
+                  "description": "Paging object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ],
+        "summary": "Group Create",
+        "description": "###Create a new Group.\n All tables must contain the same Field keys.When Field keys of Table which belongs to some Group will be updated, other Field keys of Tables in Group will be also updated to make them the same for the entire group. If a new Field key is added to the table, for each Table in the Group will be added a new condition `$is_set` for all Rules",
+        "tags": [
+          "Admin",
+          "Groups"
+        ],
+        "parameters": [
+          {
+            "name": "table",
+            "in": "body",
+            "description": "Group object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "tables",
+                "title",
+                "description",
+                "probability"
+              ],
+              "properties": {
+                "tables": {
+                  "type": "array",
+                  "description": "Array of Short Table objects.",
+                  "items": {
+                    "type": "object",
+                    "description": "Short Table object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "description": "Table ID. MongoID",
+                        "example": "56c31536a60ad644060041af"
+                      }
+                    }
+                  }
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Group.title value",
+                  "example": "Some title"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Group.description value",
+                  "example": "Some description"
+                },
+                "probability": {
+                  "type": "string",
+                  "description": "Group.probability value",
+                  "example": "Some probability"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Created Group",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Group"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/group/{id}": {
+      "get": {
+        "summary": "Group Read",
+        "description": "Get Group by id",
+        "tags": [
+          "Admin",
+          "Groups"
+        ],
+        "responses": {
+          "200": {
+            "description": "Group object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Group",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Group Update",
+        "description": "Update Group by id",
+        "tags": [
+          "Admin",
+          "Groups"
+        ],
+        "parameters": [
+          {
+            "name": "table",
+            "in": "body",
+            "description": "Group object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "tables": {
+                  "type": "array",
+                  "description": "Array of Short Table objects.",
+                  "items": {
+                    "type": "object",
+                    "description": "Short Table object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "description": "Table ID. MongoID",
+                        "example": "56c31536a60ad644060041af"
+                      }
+                    }
+                  }
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Group.title value",
+                  "example": "Some title"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Group.description value",
+                  "example": "Some description"
+                },
+                "probability": {
+                  "type": "string",
+                  "description": "Group.probability value",
+                  "example": "Some probability"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Group object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Group",
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Group Delete",
+        "description": "Delete Group by id",
+        "tags": [
+          "Admin",
+          "Groups"
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/group/{id}/copy": {
+      "post": {
+        "summary": "Group Copy",
+        "description": "Create new Group from existing Group by id",
+        "tags": [
+          "Admin",
+          "Groups"
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Group",
+                  "description": "Response data object"
                 }
               }
             }
@@ -554,7 +932,7 @@
         }
       }
     },
-    "admin/changelog/tables/{table_id}/rollback/{changelog_id}": {
+    "/admin/changelog/tables/{table_id}/rollback/{changelog_id}": {
       "get": {
         "summary": "Changelog Table Rollback",
         "description": "Rollback Table to some state that described in passed Changelog",
@@ -655,58 +1033,6 @@
       }
     }
   },
-  "parameters": {
-    "Table": {
-      "title": {
-        "type": "string",
-        "description": "Title of Table.",
-        "example": "Some title"
-      },
-      "description": {
-        "type": "string",
-        "description": "Description of Table.",
-        "example": "Some description"
-      },
-      "matching_type": {
-        "type": "string",
-        "description": "Matching type for Table.",
-        "example": "first",
-        "enum": [
-          "first",
-          "all"
-        ]
-      },
-      "default_decision": {
-        "type": "string",
-        "description": "If there are no rows with all validations passed, this decision will be set for Decision.",
-        "example": "Decline"
-      },
-      "default_title": {
-        "type": "string",
-        "description": "If there are no rows with all validations passed, this title will be set for Decision.",
-        "example": "Default title"
-      },
-      "default_description": {
-        "type": "string",
-        "description": "If there are no rows with all validations passed, this description will be set for Decision.",
-        "example": "Default description"
-      },
-      "fields": {
-        "type": "array",
-        "description": "Array of Field objects.",
-        "items": {
-          "$ref": "#/definitions/Field"
-        }
-      },
-      "rules": {
-        "type": "array",
-        "description": "Array of Rule objects.",
-        "items": {
-          "$ref": "#/definitions/Rule"
-        }
-      }
-    }
-  },
   "definitions": {
     "Meta": {
       "type": "object",
@@ -718,6 +1044,133 @@
           "type": "integer",
           "description": "HTTP response code",
           "example": 200
+        }
+      }
+    },
+    "Paging": {
+      "type": "object",
+      "required": [
+        "size",
+        "total",
+        "current_page",
+        "last_page"
+      ],
+      "properties": {
+        "size": {
+          "type": "integer",
+          "description": "Items per page",
+          "example": 20
+        },
+        "total": {
+          "type": "integer",
+          "description": "Total items in collection",
+          "example": 20
+        },
+        "current_page": {
+          "type": "integer",
+          "description": "Current page",
+          "example": 20
+        },
+        "last_page": {
+          "type": "integer",
+          "description": "Items per page",
+          "example": 20
+        }
+      }
+    },
+    "GroupList": {
+      "type": "object",
+      "description": "",
+      "required": [
+        "_id",
+        "title",
+        "probability",
+        "tables"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Group. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "tables": {
+          "type": "array",
+          "description": "Array of tables",
+          "items": {
+            "type": "object",
+            "description": "Short Table object",
+            "properties": {
+              "_id": {
+                "type": "string",
+                "description": "Table ID. MongoID",
+                "example": "56c31536a60ad644060041af"
+              }
+            }
+          }
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of Group",
+          "example": "Some title"
+        },
+        "probability": {
+          "type": "string",
+          "description": "Probability type",
+          "example": "random",
+          "enum": [
+            "random"
+          ]
+        }
+      }
+    },
+    "Group": {
+      "type": "object",
+      "description": "",
+      "required": [
+        "_id",
+        "tables",
+        "title",
+        "description",
+        "probability"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Group. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "tables": {
+          "type": "array",
+          "description": "Array of tables",
+          "items": {
+            "type": "object",
+            "description": "Short Table object",
+            "properties": {
+              "_id": {
+                "type": "string",
+                "description": "Table ID. MongoID",
+                "example": "56c31536a60ad644060041af"
+              }
+            }
+          }
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of Group",
+          "example": "Some title"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of Group",
+          "example": "Some description"
+        },
+        "probability": {
+          "type": "string",
+          "description": "Probability type",
+          "example": "random",
+          "enum": [
+            "random"
+          ]
         }
       }
     },
