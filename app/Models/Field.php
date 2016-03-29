@@ -23,21 +23,23 @@ class Field extends Base
 
     protected $visible = ['key', 'title', 'source', 'type', 'preset'];
 
+    protected $attributes = [
+        'preset' => null
+    ];
+
     protected $casts = [
         '_id' => 'string',
     ];
 
     protected function getArrayableRelations()
     {
-        return ['preset' => $this->preset];
+        return ['preset' => $this->preset ?: null];
     }
 
     public function preset()
     {
         return $this->embedsOne('App\Models\Preset');
     }
-
-    # mutators
 
     public function setKeyAttribute($value)
     {

@@ -86,17 +86,20 @@ class DecisionsCest
                     [
                         'field_key' => 'numeric',
                         'condition' => '$eq',
-                        'value' => true
+                        'value' => true,
+                        'preset' => null
                     ],
                     [
                         'field_key' => 'string',
                         'condition' => '$eq',
-                        'value' => 'Yes'
+                        'value' => 'Yes',
+                        'preset' => null
                     ],
                     [
                         'field_key' => 'bool',
                         'condition' => '$eq',
-                        'value' => false
+                        'value' => false,
+                        'preset' => null
                     ]
                 ]
             ],
