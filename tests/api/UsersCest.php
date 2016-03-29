@@ -12,8 +12,10 @@ class UsersCest
     {
         $I->createAndLoginClient();
         $faker = $I->getFaker();
-        $I->sendPOST('api/v1/user/',
-            ['email' => $faker->email, 'password' => $faker->password(), 'username' => $faker->firstName]);
+        $I->sendPOST(
+            'api/v1/user/',
+            ['email' => $faker->email, 'password' => $faker->password(), 'username' => $faker->firstName]
+        );
         $I->seeResponseCodeIs(201);
     }
 
@@ -43,8 +45,10 @@ class UsersCest
             ],
         ];
         /** Normal user for Test Duplicate Username */
-        $I->sendPOST('api/v1/user/',
-            ['email' => $faker->email, 'password' => $faker->password(), 'username' => 'duplicate']);
+        $I->sendPOST(
+            'api/v1/user/',
+            ['email' => $faker->email, 'password' => $faker->password(), 'username' => 'duplicate']
+        );
         $I->seeResponseCodeIs(201);
         foreach ($badData as $key => $data) {
             $normalUserData = [
@@ -79,5 +83,4 @@ class UsersCest
         $I->sendPOST('api/v1/projects/consumer', ['description' => $faker->text('20'), 'scope' => ['check']]);
         $I->assertProject('$.data', 201);
     }
-
 }
