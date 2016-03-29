@@ -28,8 +28,10 @@ before_script:
   - echo 127.0.0.1 gandalf.dev | sudo tee -a /etc/hosts
   #- sudo service nginx restart
   #- sudo service php5-fpm restart
-  #- php5-fpm -i
+  - php5-fpm -i
   - composer install --prefer-source
+  - sudo service nginx restart
+  - sudo service php5-fpm restart
 script:
   - vendor/bin/codecept run
   - vendor/bin/phpcs ./app --standard=PSR2 --warning-severity=0
