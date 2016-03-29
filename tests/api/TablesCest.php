@@ -157,7 +157,13 @@ class TablesCest
                         "title" => 'Test 3',
                         "source" => "request",
                         "type" => 'numeric',
-                        "preset" => [],
+                        "preset" => ['invalid' => 'bad'],
+                    ],
+                    [
+                        "title" => 'Test 3',
+                        "source" => "request",
+                        "type" => 'numeric',
+                        "preset" => ['condition' => '$is_between', 'value' => 'bad'],
                     ],
                 ],
                 'rules' => [
@@ -181,7 +187,6 @@ class TablesCest
                                 'condition' => '$eq',
                                 'value' => true,
                             ],
-
                         ]
                     ],
                     [
@@ -216,7 +221,9 @@ class TablesCest
         $I->seeResponseContains('table.rules.1.conditions.0');
         $I->seeResponseContains('table.rules.1.conditions.2');
         $I->seeResponseContains('table.fields.1.preset');
-        $I->seeResponseContains('table.fields.2.preset');
+        $I->seeResponseContains('table.fields.3.preset.condition');
+        $I->seeResponseContains('table.fields.3.preset.condition');
+        $I->cantSeeResponseContains('table.fields.3.preset.value');
 
         $I->sendPOST('api/v1/admin/tables', [
             'table' => [
@@ -272,7 +279,8 @@ class TablesCest
                     "key" => 'Second ',
                     "title" => 'Second',
                     "source" => "request",
-                    "type" => 'string'
+                    "type" => 'string',
+                    'preset' => null
                 ]
             ],
             'rules' => [
@@ -346,7 +354,8 @@ class TablesCest
                     "key" => 'test',
                     "title" => 'Test',
                     "source" => "request",
-                    "type" => 'string'
+                    "type" => 'string',
+                    'preset' => null
                 ],
                 [
                     "key" => 'test',
@@ -441,7 +450,8 @@ class TablesCest
                     "key" => 'boolean',
                     "title" => 'Test',
                     "source" => "request",
-                    "type" => 'boolean'
+                    "type" => 'boolean',
+                    'preset' => null
                 ]
             ],
             'rules' => [
@@ -521,7 +531,8 @@ class TablesCest
                     "key" => 'boolean',
                     "title" => 'Test',
                     "source" => "request",
-                    "type" => 'numeric'
+                    "type" => 'numeric',
+                    'preset' => null
                 ]
             ],
             'rules' => [
@@ -566,7 +577,8 @@ class TablesCest
                     "key" => 'between',
                     "title" => 'Second',
                     "source" => "request",
-                    "type" => 'numeric'
+                    "type" => 'numeric',
+                    'preset' => null
                 ]
             ],
             'rules' => [
@@ -688,6 +700,7 @@ class TablesCest
                 "title" => 'Test key',
                 "source" => "request",
                 "type" => 'string',
+                'preset' => null
             ]
         ];
         $data['rules'] = [
@@ -714,6 +727,7 @@ class TablesCest
                     "title" => 'Test key',
                     "source" => "request",
                     "type" => 'string',
+                    'preset' => null
                 ]
             ],
             'rules' => [
@@ -779,8 +793,10 @@ class TablesCest
                     $I->assertEquals(
                         $probabilities[$ruleIndex][$conditionIndex],
                         $condition->probability,
-                        "Wrong probability for {$condition->field_key}:{$condition->condition}=" . var_export($condition->value,
-                            true)
+                        "Wrong probability for {$condition->field_key}:{$condition->condition}=" . var_export(
+                            $condition->value,
+                            true
+                        )
                     );
 
                     $I->assertEquals(
@@ -834,6 +850,7 @@ class TablesCest
             "title" => 'last',
             "source" => "request",
             "type" => 'numeric',
+            'preset' => null
         ];
         $tableData['rules'][0]['conditions'][] = [
             'field_key' => 'last',

@@ -7,6 +7,8 @@
 
 namespace App\Services;
 
+use App\Exceptions\ConditionException;
+
 class ConditionsTypes
 {
     private $conditions;
@@ -104,7 +106,7 @@ class ConditionsTypes
     public function getCondition($condition_key)
     {
         if (!array_key_exists($condition_key, $this->conditions)) {
-            throw new \Exception("Undefined condition rule '$condition_key'");
+            throw new ConditionException("Undefined condition rule '$condition_key'");
         }
 
         return $this->conditions[$condition_key];

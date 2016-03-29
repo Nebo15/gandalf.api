@@ -9,6 +9,7 @@ namespace App\Validators;
 
 use App\Services\ConditionsTypes;
 use Illuminate\Validation\Validator;
+use App\Exceptions\ConditionException;
 
 class TableValidator
 {
@@ -19,25 +20,18 @@ class TableValidator
         $this->conditionsTypes = $conditionsTypes;
     }
 
-    public function fieldPreset($attribute, $value)
-    {
-        if (is_array($value)) {
-            var_dump($value);
-            die();
-            return (array_key_exists('condition', $value) and array_key_exists('condition', $value));
-        }
-
-        return null == $value;
-    }
-
     public function conditionType($attribute, $value, $parameters, Validator $validator)
     {
-        $condition = $this->conditionsTypes->getCondition(
-            array_get(
-                $validator->getData(),
-                str_replace('value', 'condition', $attribute)
-            )
-        );
+        try {
+            $condition = $this->conditionsTypes->getCondition(
+                array_get(
+                    $validator->getData(),
+                    str_replace('value', 'condition', $attribute)
+                )
+            );
+        } catch (ConditionException $e) {
+            return false;
+        }
 
         if ($type = $condition['input_type']) {
             $validator = \Validator::make(

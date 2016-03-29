@@ -307,12 +307,14 @@ class ApiTester extends \Codeception\Actor
                     "title" => 'string',
                     "source" => "request",
                     "type" => 'string',
+                    'preset' => null
                 ],
                 [
                     "key" => 'bool',
                     "title" => 'bool',
                     "source" => "request",
                     "type" => 'boolean',
+                    'preset' => null
                 ]
             ],
             'rules' => [
