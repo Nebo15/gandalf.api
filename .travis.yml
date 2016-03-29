@@ -1,4 +1,4 @@
-language: с
+language: generic
 sudo: true
 cache:
     directories:
