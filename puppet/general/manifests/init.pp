@@ -16,9 +16,9 @@ class sethostname(
 }
 
 node default {
+
   $host_name = "gandalf.dev"
   $nginx_configuration_file = 'local'
-  $ssh_port = 'Port 22'
 
   include stdlib
   include apt
@@ -32,8 +32,42 @@ node default {
     name    => 'uuid-runtime',
     ensure  => installed,
   }
-  class {'php56':} -> class{ 'mongo_3': }
+  class { 'timezone':
+    timezone => 'UTC',
+  } ->
+  class { 'locales':
+    default_locale  => 'en_US.UTF-8',
+    locales         => ['en_US.UTF-8 UTF-8'],
+  }->
 
+  /**
+   Mongo part start
+  */
+  apt::source { 'mongo_3.2':
+    location => 'http://repo.mongodb.org/apt/ubuntu/ trusty/mongodb-org/3.2',
+    key => 'EA312927',
+    release => 'multiverse', repos => "multiverse", include => { 'deb' => true,}
+  }->
+  exec { "apt-get update":
+    command => "/usr/bin/apt-get update",
+    require => Apt::Source['mongo_3.2']
+  }->
+  package { 'mongodb_client':
+    ensure => present,
+    name   => 'mongodb-org=3.2.0',
+    tag    => 'mongodb',
+    install_options => ['-y', '--force-yes'],
+    require  => Exec['apt-get update'],
+  }
+
+  /**
+   Mongo part end
+  */
+
+  -> class {'php56':
+    user => $daemon_user,
+    group => $daemon_user,
+  }
   package { "openssh-server": ensure => "installed" }
 
   service { "ssh":
@@ -42,15 +76,17 @@ node default {
     require => Package["openssh-server"]
   }
 
-  file_line { 'change_ssh_port':
-    path  => '/etc/ssh/sshd_config',
-    line  => $ssh_port,
-    match => '^Port *',
-    notify => Service["ssh"]
+  if ($ssh_port) {
+    file_line { 'change_ssh_port':
+      path   => '/etc/ssh/sshd_config',
+      line   => "Port ${ssh_port}",
+      match  => '^Port *',
+      notify => Service["ssh"]
+    }
   }
 
   class { 'nginx':
-    daemon_user => 'www-data',
+    daemon_user => $daemon_user,
     worker_processes => 4,
     pid => '/run/nginx.pid',
     worker_connections => 1024,
@@ -61,7 +97,8 @@ node default {
     http_tcp_nodelay => 'on',
     keepalive_timeout => '65',
     types_hash_max_size => '2048',
-    server_tokens => 'off'
+    server_tokens => 'off',
+    gzip => 'off'
   }
 
   file { "gandalf_config":
@@ -69,9 +106,10 @@ node default {
     content => "
     server {
     listen 80;
+    error_log /var/log/nginx.log;
     server_name gandalf.dev;
-    root /www/gandalf.api/public;
-    include /www/gandalf.api/config/nginx/nginx.conf;
+    root ${project_dir}/public;
+    include ${project_dir}/config/nginx/nginx.conf;
 }
     ",
     notify => Service["nginx"]

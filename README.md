@@ -124,7 +124,7 @@ $ curl -uAPI_USER:API_TOKEN http://gandalf-api.nebo15.com/api/v1/admin/tables
 
 # Installation Guide
 
-TODO.
+Vagrant up
 
 # API Docs
 

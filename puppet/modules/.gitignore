@@ -1,0 +1,5 @@
+*
+!.gitignore
+!php56/
+!php56/manifests/*
+!php56/templates/*

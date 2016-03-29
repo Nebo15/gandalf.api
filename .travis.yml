@@ -1,32 +1,19 @@
-language: php
+language: generic
+dist: trusty
 sudo: true
 cache:
     directories:
       - vendor/
-php:
-  - 5.6
-  #- 7.0 test
 before_script:
   - ls -la ./
-  - sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
-  - echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
-  - sudo apt-get update
-  - sudo apt-get install -y mongodb-org=3.0.2 mongodb-org-server=3.0.2 mongodb-org-shell=3.0.2 mongodb-org-mongos=3.0.2 mongodb-org-tools=3.0.2
-  - mongo --version
-  - sudo echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - export TZ=UTC
-  - echo 'date.timezone = "UTC"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-  - composer self-update
   - touch storage/logs/lumen.log
   - sudo chmod 777 -Rf storage/
   - echo $PWD
   - sudo mkdir /www
   - sudo ln -s $PWD /www/gandalf.api
   - cp ./.env.example ./.env
-  - bash puppet/initial/travis.sh
+  - bash puppet/initial/init.sh -u travis
   - echo 127.0.0.1 gandalf.dev | sudo tee -a /etc/hosts
-  - sudo service nginx restart
-  - sudo service php5-fpm restart
   - php5-fpm -i
   - composer install --prefer-source
 script:
@@ -36,11 +23,12 @@ after_failure:
   - ls -l /etc/nginx
   - ls -l /etc/nginx/sites-enabled
   - echo $PWD
-  - ls -l ./
-  - ls -l ../
+  - ls -la ./
+  - ls -la ../
   - ls -l /www
   - cat /etc/nginx/sites-enabled/*
   - cat /etc/nginx/nginx.conf
   - cat /var/log/www/*.log;
   - cat /var/log/php-fpm.log;
+  - cat /var/log/nginx.log;
   - cat $PWD/storage/logs/lumen.log;
