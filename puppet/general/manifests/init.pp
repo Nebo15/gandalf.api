@@ -46,7 +46,7 @@ node default {
   apt::source { 'mongo_3.2':
     location => 'http://repo.mongodb.org/apt/ubuntu/ trusty/mongodb-org/3.2',
     key => 'EA312927',
-    release => 'multiverse', repos => "multiverse", include => { 'deb' => true,}
+    release => 'main', repos => "main", include => { 'deb' => true,}
   }->
   exec { "apt-get update":
     command => "/usr/bin/apt-get update",
