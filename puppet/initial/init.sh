@@ -21,8 +21,8 @@ if [ ! -e /usr/bin/puppet ]; then
     ' | sudo tee --append /etc/default/puppet
     sudo service puppet start
 else
-    echo 1;
-    #sudo apt-get update
+    #echo 1;
+    sudo apt-get update
 fi;
 
 if [ ! -e /www ]; then
