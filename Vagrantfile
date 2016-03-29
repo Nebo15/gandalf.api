@@ -20,5 +20,5 @@ $virtualbox_script_app = <<SCRIPT
 set -o nounset -o errexit -o pipefail -o errtrace
 trap 'error "${BASH_SOURCE}" "${LINENO}"' ERR
 echo 127.0.0.1 gandalf.dev | sudo tee -a /etc/hosts
-sudo /bin/bash /vagrant/puppet/initial/init.sh
+sudo /bin/bash /vagrant/puppet/initial/init.sh -u "www-data"
 SCRIPT

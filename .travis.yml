@@ -6,33 +6,16 @@ cache:
       - vendor/
 before_script:
   - ls -la ./
-  #- sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
-  #- echo "deb http://repo.mongodb.org/apt/debian wheezy/mongodb-org/3.2 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
-  #- sudo apt-get update
-  #- sudo apt-get -y --force-yes remove mongodb-org mongodb-org-mongos mongodb-org-server mongodb-org-shell mongodb-org-tools
-  #- sudo dpkg --get-selections | grep mongo
-  #- mongo --version
-  #- sudo echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-
-  #- export TZ=UTC
-  #- echo 'date.timezone = "UTC"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-  #- composer self-update
   - touch storage/logs/lumen.log
   - sudo chmod 777 -Rf storage/
   - echo $PWD
   - sudo mkdir /www
   - sudo ln -s $PWD /www/gandalf.api
   - cp ./.env.example ./.env
-  #- sudo apt-get remove -y --force-yes mongodb-*
-  #- sudo apt-get remove -y --force-yes php*
-  - bash puppet/initial/init.sh
+  - bash puppet/initial/init.sh -u travis
   - echo 127.0.0.1 gandalf.dev | sudo tee -a /etc/hosts
-  #- sudo service nginx restart
-  #- sudo service php5-fpm restart
   - php5-fpm -i
   - composer install --prefer-source
-  - sudo service nginx restart
-  - sudo service php5-fpm restart
 script:
   - vendor/bin/codecept run
   - vendor/bin/phpcs ./app --standard=PSR2 --warning-severity=0

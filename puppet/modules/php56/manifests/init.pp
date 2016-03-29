@@ -1,4 +1,7 @@
-class php56 {
+class php56(
+  $user = 'www-data',
+  $group = 'www-data'
+) {
   $enhancers = [
     'php5-fpm',
     'php5-cli',
@@ -29,6 +32,7 @@ class php56 {
     require => Package[$enhancers],
     notify => Service['php5-fpm']
   }
+
   file { "/etc/php5/fpm/php-fpm.conf":
     path => "/etc/php5/fpm/php-fpm.conf",
     content => template('php56/php-fpm.conf.erb'),

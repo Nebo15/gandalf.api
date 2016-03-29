@@ -2,6 +2,34 @@
 modules_dir=$(dirname $0)/../modules
 cd ${modules_dir}/../..
 project_dir=$(pwd)
+daemon_user='www-data'
+
+show_help()
+{
+cat << EOF
+This script download files from remote server and download tar.gz to local machine or remote host.
+Usage: $0 options
+OPTIONS:
+    -u  daemon user
+    -h  show this message
+EOF
+}
+
+while getopts "u:h:" OPTION
+do
+     case ${OPTION} in
+         u)
+             daemon_user=$OPTARG
+             ;;
+         h)
+             show_help
+             ;;
+         ?)
+             show_help
+             exit
+             ;;
+     esac
+done
 
 if [ ! -e /usr/bin/puppet ]; then
     source /etc/lsb-release
@@ -41,4 +69,4 @@ sudo puppet module install --force jfryman-nginx --target-dir ${modules_dir}
 sudo puppet module install --force saz-timezone --target-dir ${modules_dir}
 sudo puppet module install --force saz-locales --target-dir ${modules_dir}
 
-sudo FACTER_project_dir="${project_dir}" puppet apply --modulepath ${modules_dir} ${modules_dir}/../general/manifests/init.pp
+sudo FACTER_project_dir="${project_dir}" FACTER_daemon_user="${daemon_user}" puppet apply --modulepath ${modules_dir} ${modules_dir}/../general/manifests/init.pp

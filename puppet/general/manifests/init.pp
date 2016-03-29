@@ -64,7 +64,10 @@ node default {
    Mongo part end
   */
 
-  -> class {'php56':}
+  -> class {'php56':
+    user => $daemon_user,
+    group => $daemon_user,
+  }
   package { "openssh-server": ensure => "installed" }
 
   service { "ssh":
@@ -83,7 +86,7 @@ node default {
   }
 
   class { 'nginx':
-    daemon_user => 'travis',
+    daemon_user => $daemon_user,
     worker_processes => 4,
     pid => '/run/nginx.pid',
     worker_connections => 1024,
