@@ -103,6 +103,7 @@ node default {
     content => "
     server {
     listen 80;
+    error_log /var/log/nginx.log;
     server_name gandalf.dev;
     root ${project_dir}/public;
     include ${project_dir}/config/nginx/nginx.conf;

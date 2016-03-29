@@ -39,11 +39,12 @@ after_failure:
   - ls -l /etc/nginx
   - ls -l /etc/nginx/sites-enabled
   - echo $PWD
-  - ls -l ./
-  - ls -l ../
+  - ls -la ./
+  - ls -la ../
   - ls -l /www
   - cat /etc/nginx/sites-enabled/*
   - cat /etc/nginx/nginx.conf
   - cat /var/log/www/*.log;
   - cat /var/log/php-fpm.log;
+  - cat /var/log/nginx.log;
   - cat $PWD/storage/logs/lumen.log;
