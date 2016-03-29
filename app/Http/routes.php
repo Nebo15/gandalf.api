@@ -18,6 +18,7 @@ $app->get('/', function () use ($app) {
 
 /** @var Nebo15\REST\Router $api */
 $api = $app->make('Nebo15\REST\Router');
+$api->api('trees', 'TreesController', ['auth.admin']);
 $api->api('groups', 'GroupsController', ['auth.admin']);
 $api->api('tables', 'TablesController', ['auth.admin']);
 
@@ -62,5 +63,6 @@ $app->group(
         $app->get('/decisions/{id}', ['uses' => 'ConsumerController@decision']);
         $app->post('/tables/{id}/decisions', ['uses' => 'ConsumerController@tableCheck']);
         $app->post('/groups/{id}/decisions', ['uses' => 'ConsumerController@groupCheck']);
+        $app->post('/trees/{id}/decisions', ['uses' => 'ConsumerController@treeCheck']);
     }
 );

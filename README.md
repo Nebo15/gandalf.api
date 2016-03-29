@@ -108,7 +108,7 @@ If there are no rows with all validations passed, we will return ```final_decisi
 
 There are many cases when you need to make decision based on input data. One good example is a decision to approve or decline lending application. You can setup set of cut-off risk rules to decline applications for a high-risk applicants or to use a decision table to specify what categories of users will receive loan on automatic basis.
 
-## Scoring Table
+## DecisionsMaker Table
 
 Instead of rule decision you can set a score point that will be added to a final result. (Also you need to pick another type of decision picking called "Sum of passed decisions").
 

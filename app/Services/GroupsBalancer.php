@@ -13,6 +13,8 @@ class GroupsBalancer
 {
     private $groupsRepository;
 
+    private $lastGroup = null;
+
     public function __construct(GroupsRepository $groupsRepository)
     {
         $this->groupsRepository = $groupsRepository;
@@ -24,8 +26,14 @@ class GroupsBalancer
      */
     public function getTable($groupId)
     {
-        $tables = $this->groupsRepository->read($groupId)->tables;
+        $this->lastGroup = $this->groupsRepository->read($groupId);
+        $tables = $this->lastGroup->tables;
 
         return strval($tables[rand(0, count($tables) - 1)]['_id']);
+    }
+
+    public function getLastGroup()
+    {
+        return $this->lastGroup;
     }
 }

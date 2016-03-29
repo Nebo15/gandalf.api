@@ -1539,16 +1539,16 @@
         },
         {
             "name": "nebo15/lumen.rest",
-            "version": "0.0.6",
+            "version": "0.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/lumen-rest.git",
-                "reference": "70eed8e13371ba13b764749930a1b16829e9ef7c"
+                "reference": "fdfea7ec9680147fead3e9265af52419d6cec112"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-rest/zipball/70eed8e13371ba13b764749930a1b16829e9ef7c",
-                "reference": "70eed8e13371ba13b764749930a1b16829e9ef7c",
+                "url": "https://api.github.com/repos/Nebo15/lumen-rest/zipball/fdfea7ec9680147fead3e9265af52419d6cec112",
+                "reference": "fdfea7ec9680147fead3e9265af52419d6cec112",
                 "shasum": ""
             },
             "require-dev": {
@@ -1577,7 +1577,7 @@
                 "lumen",
                 "rest"
             ],
-            "time": "2016-03-28 14:28:21"
+            "time": "2016-03-29 12:12:36"
         },
         {
             "name": "nesbot/carbon",

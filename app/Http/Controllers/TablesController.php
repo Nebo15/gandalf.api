@@ -34,8 +34,8 @@ class TablesController extends AbstractController
     {
         $rules = [
             'table' => 'required|array',
-            'table.title' => 'sometimes|string',
-            'table.description' => 'sometimes|string',
+            'table.title' => 'sometimes|string|between:2,128',
+            'table.description' => 'sometimes|string|between:2,512',
             'table.default_decision' => 'required|ruleThanType',
             'table.default_title' => 'sometimes|required|between:2,128',
             'table.default_description' => 'sometimes|required|between:2,512',

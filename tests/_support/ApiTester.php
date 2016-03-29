@@ -35,7 +35,7 @@ class ApiTester extends \Codeception\Actor
 
     public function createGroup($tablesAmount = 2, $probability = 'random', array $data = null)
     {
-        if (!$data) {
+        if (!$data['tables']) {
             $data['tables'] = [];
             for ($i = 0; $i < $tablesAmount; $i++) {
                 $data['tables'][$i] = [
@@ -43,10 +43,10 @@ class ApiTester extends \Codeception\Actor
                 ];
             }
         }
-        if(!isset($data['title'])){
+        if (!isset($data['title'])) {
             $data['title'] = 'Group title';
         }
-        if(!isset($data['description'])){
+        if (!isset($data['description'])) {
             $data['description'] = 'Group description';
         }
         $data['probability'] = $probability;
@@ -54,6 +54,39 @@ class ApiTester extends \Codeception\Actor
         $this->assertGroup('$.data', 201);
 
         return $this->getResponseFields()->data;
+    }
+
+    public function createTree($depth = 3, array $data = [])
+    {
+        if (!isset($data['transitions'])) {
+            $data = array_merge($data, $this->generateTreeNodesData(3));
+        }
+
+        if (!isset($data['title'])) {
+            $data['title'] = 'Tree title';
+        }
+        if (!isset($data['description'])) {
+            $data['description'] = 'Tree description';
+        }
+        $this->sendPOST('api/v1/admin/trees', $data);
+        $this->assertTree('$.data', 201);
+
+        return $this->getResponseFields()->data;
+    }
+
+    private function generateTreeNodesData($depth, array $data = [], $current_depth = 1)
+    {
+        if ($depth == $current_depth) {
+            return $data;
+        }
+        $current_depth++;
+        $data['table_id'] = $this->createTable($this->getTableShortData(), false)->_id;
+        $data['transitions'] = [
+            'approve' => $this->generateTreeNodesData($depth, $data, $current_depth),
+            'decline' => $this->generateTreeNodesData($depth, $data, $current_depth),
+        ];
+
+        return $data;
     }
 
     public function getFaker($locale = 'en_US')
@@ -75,6 +108,18 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseMatchesJsonType([
             '_id' => 'string',
         ], "$jsonPath.tables[*]");
+    }
+
+    public function assertTree($jsonPath = '$.data', $code = 200)
+    {
+        $this->seeResponseCodeIs($code);
+        $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
+            'table_id' => 'string',
+            'title' => 'string',
+            'description' => 'string',
+            'transitions' => 'array',
+        ], $jsonPath);
     }
 
     public function assertListGroup($jsonPath = '$.data[*]')
@@ -139,7 +184,7 @@ class ApiTester extends \Codeception\Actor
         ], "$jsonPath.fields[*]");
 
         foreach ($this->getResponseFields()->data->fields as $field) {
-            if(is_array($field->preset)){
+            if (is_array($field->preset)) {
                 foreach (['value', 'condition'] as $item) {
                     $this->assertTrue(array_key_exists($item, $field->preset), "Preset must contains '$item' field");
                 }
@@ -262,6 +307,25 @@ class ApiTester extends \Codeception\Actor
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.default_decision");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].than");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions");
+    }
+
+    public function checkTreeDecision($tree_id, array $data = [], $jsonPath = '$.data')
+    {
+        $data = $data ?: [
+            'bool' => true,
+            'string' => 'Yes',
+            'numeric' => 450,
+        ];
+        $this->sendPOST("api/v1/trees/$tree_id/decisions", $data);
+        $this->seeResponseCodeIs(200);
+        $this->seeResponseMatchesJsonType([
+            'final_decision' => 'string',
+            'decisions' => 'array',
+        ], $jsonPath);
+
+        $this->assertTableDecisionsForConsumer('first', "$jsonPath.decisions[*]");
+
+        return $this->getResponseFields()->data;
     }
 
     public function checkDecision($table_id, array $data = [], $matching_rules_type = 'first', $route = 'tables')
@@ -590,7 +654,8 @@ class ApiTester extends \Codeception\Actor
 
     public function loginClient($client)
     {
-        $this->setHeader('Authorization', 'Basic ' . base64_encode($client['client_id'].':'.$client['client_secret']));
+        $this->setHeader('Authorization',
+            'Basic ' . base64_encode($client['client_id'] . ':' . $client['client_secret']));
     }
 
     public function logout()

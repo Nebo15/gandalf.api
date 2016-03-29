@@ -7,24 +7,26 @@
 
 namespace App\Services;
 
+use App\Models\Group;
 use App\Models\Table;
 use App\Models\Field;
 use App\Models\Decision;
 use App\Models\Condition;
+use App\Models\Tree;
 use App\Repositories\GroupsRepository;
 use App\Repositories\TablesRepository;
 use Illuminate\Contracts\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class Scoring
+class DecisionsMaker
 {
-    private $presets = [];
+    protected $presets = [];
 
-    private $conditionsTypes;
+    protected $conditionsTypes;
 
-    private $tablesRepository;
+    protected $tablesRepository;
 
-    private $groupsRepository;
+    protected $groupsRepository;
 
     public function __construct(TablesRepository $tablesRepository, GroupsRepository $groupsRepository)
     {
@@ -33,26 +35,44 @@ class Scoring
         $this->conditionsTypes = new ConditionsTypes;
     }
 
-    public function check($id, $values, $groupId = null)
+    public function check($tableId, $values, Group $group = null)
     {
-        $table = $this->tablesRepository->read($id);
+        $table = $this->tablesRepository->read($tableId);
+        $this->validateFields($table, $values);
+
+        $decisionData = array_merge(
+            $this->prepareDecisionData($table, $values, $group),
+            $this->makeDecision($table, $values)
+        );
+
+        if ($decisionData['webhook']) {
+            # create webhook service
+        }
+
+        return Decision::create($decisionData)->toConsumerArray();
+    }
+
+    protected function validateFields(Table $table, $values)
+    {
         $validator = \Validator::make($values, $this->createValidationRules($table));
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
-        $fields = $table->fields();
-        $group = null;
-        if ($groupId) {
-            $groupDoc = $this->groupsRepository->read($groupId);
-            $group = [
-                '_id' => $groupId,
-                'title' => $groupDoc->title,
-                'description' => $groupDoc->description,
-            ];
+    }
+
+    protected function prepareDecisionData(Table $table, $values, Group $group = null, Tree $tree = null)
+    {
+        foreach (['group', 'tree'] as $item) {
+            if ($$item) {
+                $$item = [
+                    '_id' => $$item->getKey(),
+                    'title' => $$item->title,
+                    'description' => $$item->description,
+                ];
+            }
         }
 
-        $webhook = isset($values['webhook']) ? $values['webhook'] : null;
-        $scoring_data = [
+        return [
             'table' => [
                 '_id' => new \MongoId($table->getId()),
                 'title' => $table->title,
@@ -60,20 +80,25 @@ class Scoring
                 'matching_type' => $table->matching_type,
             ],
             'group' => $group,
+            'tree' => $tree,
             'title' => $table->default_title,
             'description' => $table->default_description,
             'default_decision' => $table->default_decision,
-            'fields' => $fields->toArray(),
+            'fields' => $table->fields()->toArray(),
             'rules' => [],
             'request' => $values,
-            'webhook' => $webhook
+            'webhook' => isset($values['webhook']) ? $values['webhook'] : null
         ];
+    }
+
+    protected function makeDecision(Table $table, $values)
+    {
         $final_decision = null;
-        $fieldsCollection = $fields->get();
+        $fieldsCollection = $table->fields()->get();
 
         /** @var \App\Models\Rule $rule */
         foreach ($table->rules()->get() as $rule) {
-            $scoring_rule = [
+            $decisionsRule = [
                 'than' => $rule->than,
                 'title' => $rule->title,
                 'description' => $rule->description,
@@ -99,7 +124,7 @@ class Scoring
                 }
                 $condition = $condition->getAttributes();
                 unset($condition[Condition::PRIMARY_KEY]);
-                $scoring_rule['conditions'][] = $condition;
+                $decisionsRule['conditions'][] = $condition;
 
                 $fieldIndex++;
             }
@@ -111,21 +136,17 @@ class Scoring
 
                 if (!$final_decision and $conditions_matched) {
                     $final_decision = $rule->than;
-                    $scoring_data['title'] = $rule->title;
-                    $scoring_data['description'] = $rule->description;
+                    $decisionData['title'] = $rule->title;
+                    $decisionData['description'] = $rule->description;
                 }
             }
 
-            $scoring_rule['decision'] = $conditions_matched ? $rule->than : null;
-            $scoring_data['rules'][] = $scoring_rule;
+            $decisionsRule['decision'] = $conditions_matched ? $rule->than : null;
+            $decisionData['rules'][] = $decisionsRule;
         }
+        $decisionData['final_decision'] = $final_decision ?: $table->default_decision;
 
-        $scoring_data['final_decision'] = $final_decision ?: $table->default_decision;
-        if ($webhook) {
-            # create webhook service
-        }
-
-        return Decision::create($scoring_data)->toConsumerArray();
+        return $decisionData;
     }
 
     private function checkCondition(Condition $condition, $value)

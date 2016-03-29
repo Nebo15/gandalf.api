@@ -9,7 +9,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Decision;
 use App\Services\GroupsBalancer;
-use App\Services\Scoring;
+use App\Services\DecisionsMaker;
+use App\Services\TreeDecisionsMaker;
 use Nebo15\REST\Response;
 use Illuminate\Http\Request;
 use App\Repositories\TablesRepository;
@@ -28,14 +29,23 @@ class ConsumerController extends Controller
         $this->tablesRepository = $tablesRepository;
     }
 
-    public function tableCheck(Request $request, Scoring $scoring, $id)
+    public function tableCheck(Request $request, DecisionsMaker $decisionsMaker, $id)
     {
-        return $this->response->json($scoring->check($id, $request->all()));
+        return $this->response->json($decisionsMaker->check($id, $request->all()));
     }
 
-    public function groupCheck(Request $request, GroupsBalancer $balancer, Scoring $scoring, $id)
+    public function groupCheck(Request $request, GroupsBalancer $balancer, DecisionsMaker $decisionsMaker, $id)
     {
-        return $this->response->json($scoring->check($balancer->getTable($id), $request->all(), $id));
+        return $this->response->json($decisionsMaker->check(
+            $balancer->getTable($id),
+            $request->all(),
+            $balancer->getLastGroup()
+        ));
+    }
+
+    public function treeCheck(Request $request, TreeDecisionsMaker $treeDecisionsMaker, $id)
+    {
+        return $this->response->json($treeDecisionsMaker->make($id, $request->all()));
     }
 
     public function decisions(Request $request)

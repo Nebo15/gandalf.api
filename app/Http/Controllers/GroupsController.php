@@ -13,6 +13,8 @@ class GroupsController extends AbstractController
 
     protected $validationRules = [
         'create' => [
+            'title' => 'sometimes|string|between:2,128',
+            'description' => 'sometimes|string|between:2,512',
             'probability' => 'required|in:random',
             'tables' => 'required|array',
             'tables.*' => 'sometimes|required|array',
@@ -20,6 +22,8 @@ class GroupsController extends AbstractController
             'tables.*.percent' => 'required_if:probability,percent|numeric',
         ],
         'update' => [
+            'title' => 'sometimes|string|between:2,128',
+            'description' => 'sometimes|string|between:2,512',
             'probability' => 'sometimes|required|in:random,percent',
             'tables' => 'sometimes|required|array',
             'tables.*' => 'sometimes|required|array',
