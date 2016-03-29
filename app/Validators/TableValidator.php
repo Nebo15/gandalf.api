@@ -69,7 +69,7 @@ class TableValidator
         return count($unique_conditions) == count($unique_fields);
     }
 
-    public function conditionsField($attribute, $value, $parameters, Validator $validator)
+    public function conditionsFieldKey($attribute, $value, $parameters, Validator $validator)
     {
         $data = $validator->getData();
 

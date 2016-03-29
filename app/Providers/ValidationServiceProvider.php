@@ -12,8 +12,7 @@ class ValidationServiceProvider extends ServiceProvider
     {
         Validator::extend('conditionType', 'App\Validators\TableValidator@conditionType');
         Validator::extend('conditionsCount', 'App\Validators\TableValidator@conditionsCount');
-        Validator::extend('conditionsField', 'App\Validators\TableValidator@conditionsField');
-        Validator::extend('ruleThanType', 'App\Validators\TableValidator@ruleThanType');
+        Validator::extend('conditionsFieldKey', 'App\Validators\TableValidator@conditionsFieldKey');
         Validator::extend('ruleThanType', 'App\Validators\TableValidator@ruleThanType');
         Validator::extend('groupTablesFields', 'App\Validators\GroupValidator@tablesFields');
         Validator::extend('groupTablesExists', 'App\Validators\GroupValidator@tablesExists');
