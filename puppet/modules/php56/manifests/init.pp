@@ -8,11 +8,11 @@ class php56 {
 
   include apt
 
-  apt::ppa { 'ppa:ondrej/php': }
+  apt::ppa { 'ppa:ondrej/php5-5.6': }
 
   exec { "apt-get update php56":
     command => "/usr/bin/apt-get update",
-    require => Apt::Ppa['ppa:ondrej/php']
+    require => Apt::Ppa['ppa:ondrej/php5-5.6']
   }->
 
   package { $enhancers: ensure  => 'installed',install_options => ['-y', '--force-yes'],require  => Exec['apt-get update php56'], }

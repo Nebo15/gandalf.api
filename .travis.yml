@@ -21,7 +21,7 @@ before_script:
   #- sudo apt-get -y --force-yes autoremove --purge mongodb-server
   #- sudo apt-get -y --force-yes autoremove --purge mongodb-org
   #- sudo apt-get -y --force-yes autoremove --purge mongodb-org-server
-  #- mongo --version
+  - mongo --version
   #- sudo echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
   #- export TZ=UTC
