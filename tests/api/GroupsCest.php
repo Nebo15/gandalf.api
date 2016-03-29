@@ -123,7 +123,7 @@ class GroupsCest
                 $conditionsActual = ['new_key', 'updated_key'];
                 $conditionUpdated = [];
                 foreach ($rule->conditions as $condition) {
-                    if(in_array($condition->field_key, $conditionsActual)){
+                    if (in_array($condition->field_key, $conditionsActual)) {
                         $conditionUpdated[] = $condition->field_key;
                     }
                 }
