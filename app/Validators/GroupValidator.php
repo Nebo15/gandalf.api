@@ -8,12 +8,14 @@
 namespace App\Validators;
 
 use App\Models\Table;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\Validator;
 use App\Repositories\TablesRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class GroupValidator
 {
+    private static $tables;
     private $tablesRepository;
 
     public function __construct(TablesRepository $tablesRepository)
@@ -50,6 +52,13 @@ class GroupValidator
         return true;
     }
 
+    public function tableMatchingType($attribute, $value, $parameters, Validator $validator)
+    {
+        return $this->getTables($validator)->filter(function ($item) use ($value) {
+            return $item->_id == $value;
+        })->first()->matching_type == 'first';
+    }
+
     public function tablesExists($attribute, $value, $parameters, Validator $validator)
     {
         $this->getTables($validator);
@@ -59,19 +68,22 @@ class GroupValidator
 
     private function getTables(Validator $validator)
     {
-        $tablesData = $validator->getData()['tables'];
-        try {
-            $tables = $this->tablesRepository->findByIds(array_column($tablesData, '_id'));
-        } catch (\MongoException $e) {
-            $this->throw404();
+        if (!$this::$tables) {
+            $tablesData = $validator->getData()['tables'];
+            try {
+                $tables = $this->tablesRepository->findByIds(array_column($tablesData, '_id'));
+            } catch (\MongoException $e) {
+                $this->throw404();
+            }
+
+            $tablesAmount = $tables->count();
+            if ($tablesAmount < count($tablesData)) {
+                $this->throw404();
+            }
+            $this::$tables = $tables;
         }
 
-        $tablesAmount = $tables->count();
-        if ($tablesAmount < count($tablesData)) {
-            $this->throw404();
-        }
-
-        return $tables;
+        return $this::$tables;
     }
 
     private function throw404()

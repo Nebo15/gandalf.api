@@ -80,6 +80,7 @@ return [
     'rule_than_type' => 'Value must be alpha_numeric_dash for matching_type=all or numeric for matching_type=first',
     'group_tables_fields' => 'All Table.fields must be identical',
     'group_tables_exists' => 'Table must exist',
+    'group_table_matching_type' => 'All Table.matching_type must be defined as "first"',
     'between_string' => 'Value must be separated by a semicolon. Value before the semicolon must be less than after the semicolon',
     'meta_keys_amount' => 'Amount of keys for Meta Data must be less or equal to 24',
 
