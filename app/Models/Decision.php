@@ -16,6 +16,7 @@ namespace App\Models;
  * @property string $final_decision
  * @property array $request
  * @property array $table
+ * @property array $meta
  * @property array $group
  * @property Rule[] $rules
  * @property Field[] $fields
@@ -27,12 +28,13 @@ class Decision extends Base
 {
     protected $visible = [
         '_id',
-        'request',
-        'table',
-        'group',
         'title',
         'description',
+        'meta',
+        'table',
+        'group',
         'fields',
+        'request',
         'rules',
         'default_decision',
         'final_decision',
@@ -43,6 +45,7 @@ class Decision extends Base
     protected $fillable = [
         'title',
         'description',
+        'meta',
         'table',
         'group',
         'fields',
@@ -50,6 +53,13 @@ class Decision extends Base
         'rules',
         'default_decision',
         'final_decision'
+    ];
+
+    protected $attributes = [
+        'title' => '',
+        'description' => '',
+        'meta' => [],
+        'group' => null,
     ];
 
     protected $perPage = 20;

@@ -206,4 +206,67 @@ class DecisionsCest
         $I->seeResponseCodeIs(422);
         $I->seeResponseMatchesJsonType(['property' => 'array', 'employment' => 'array'], '$.data');
     }
+
+    public function updateMetaOk(ApiTester $I)
+    {
+        $I->loginAdmin();
+        $I->createTable($I->getTableShortData());
+
+        $decision = $I->checkDecision(
+            $I->getResponseFields()->data->_id,
+            ['bool' => true, 'numeric' => 123, 'string' => 'Yes']
+        );
+
+        $data = [
+            'ok' => '0981723qweasdzxcTYUGHJBNBNM!@#$%^&*()_+{}|":>?<~`',
+            'json' => '{"type":{"num":123}}'
+        ];
+        $I->sendPUT("api/v1/admin/decisions/{$decision->_id}/meta", ['meta' => $data]);
+        $I->assertTableDecisionsForAdmin();
+        $I->assertResponseDataFields(['meta' => $data]);
+
+        $data = [
+            'updated' => '0981723qweasdzxcTYUGHJBNBNM!@#$%^&*()_+{}|":>?<~`',
+        ];
+        $I->sendPUT("api/v1/admin/decisions/{$decision->_id}/meta", ['meta' => $data]);
+        $I->assertTableDecisionsForAdmin();
+        $I->assertResponseDataFields(['meta' => $data]);
+        $I->cantSeeResponseJsonMatchesJsonPath('$.data.meta.ok');
+        $I->cantSeeResponseJsonMatchesJsonPath('$.data.meta.json');
+    }
+
+    public function updateMetaInvalid(ApiTester $I)
+    {
+        $I->loginAdmin();
+        $I->createTable($I->getTableShortData());
+
+        $decision = $I->checkDecision(
+            $I->getResponseFields()->data->_id,
+            ['bool' => true, 'numeric' => 123, 'string' => 'Yes']
+        );
+
+        $data = array_fill(0, 20, 'test');
+        $data[str_repeat('2', 101)] = 'ok';
+        $data['invalid#'] = 'ok';
+        $data['stringLength'] = str_repeat('1', 501);
+        $data['array'] = [];
+        $data[] = [['array']];
+
+        $I->sendPUT("api/v1/admin/decisions/{$decision->_id}/meta", ['meta' => $data]);
+        $I->seeResponseCodeIs(422);
+        $I->canSeeResponseJsonMatchesJsonPath('$.data.meta_keys_amount');
+        $I->canSeeResponseJsonMatchesJsonPath('$.data.key_20');
+        $I->canSeeResponseJsonMatchesJsonPath('$.data.key_21');
+        $I->canSeeResponseJsonMatchesJsonPath('$.data.key_22_value');
+        $I->canSeeResponseJsonMatchesJsonPath('$.data.key_23_value');
+        $I->canSeeResponseJsonMatchesJsonPath('$.data.key_24_value');
+
+        $I->sendPUT("api/v1/admin/decisions/{$decision->_id}/meta", $data);
+        $I->seeResponseCodeIs(422);
+        $I->canSeeResponseJsonMatchesJsonPath('$.data.meta');
+
+        $I->sendPUT("api/v1/admin/decisions/{$decision->_id}/meta", []);
+        $I->seeResponseCodeIs(422);
+        $I->canSeeResponseJsonMatchesJsonPath('$.data.meta');
+    }
 }
