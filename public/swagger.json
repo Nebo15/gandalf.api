@@ -805,6 +805,65 @@
         }
       }
     },
+    "/admin/decisions/{id}/meta": {
+      "put": {
+        "summary": "Decision Update Meta",
+        "description": "###Set or update Decision Meta by id. \n\nMetadata field supports key-value pairs with the following limitations:\n* Up to 24 keys.\n* Up to 100 characters for the key (alphanumeric characters, hyphens and underscores).\n* Up to 500 characters for the value.\n* String, integer, decimals and boolean values only. All other types will be converted into string.",
+        "tags": [
+          "Decision",
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "table",
+            "in": "body",
+            "description": "Any object. Up to 24 keys, up to 100 characters for the key, up to 500 characters for the value.",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta"
+              ],
+              "properties": {
+                "meta": {
+                  "type": "object",
+                  "description": "Meta Data object. ",
+                  "properties": {
+                    "customerKey": {
+                      "type": "string",
+                      "description": "Customer value",
+                      "example": "Any string up to 500 symbols"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Decision object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Decision",
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/admin/changelog/tables": {
       "get": {
         "summary": "Changelog Tables List",
@@ -1473,8 +1532,8 @@
         "key",
         "title",
         "source",
-        "type"
-        "preset",
+        "type",
+        "preset"
       ],
       "properties": {
         "key": {
@@ -1716,6 +1775,24 @@
           "type": "string",
           "description": "Description of the matched rule or Table.default_description.",
           "example": "Some description"
+        },
+        "meta": {
+          "type": "array",
+          "description": "Array of customer meta data objects. ",
+          "items": {
+            "type": "object",
+            "description": "Meta Data object. ",
+            "properties": {
+              "customerKey": {
+                "type": "string",
+                "description": "Customer value",
+                "example": "Any string up to 500 symbols"
+              }
+            }
+          },
+          "example": {
+            "customerKey": "Customer value"
+          }
         },
         "request": {
           "type": "object",

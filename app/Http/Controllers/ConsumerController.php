@@ -8,11 +8,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Decision;
-use App\Services\GroupsBalancer;
 use App\Services\Scoring;
 use Nebo15\REST\Response;
 use Illuminate\Http\Request;
-use App\Repositories\TablesRepository;
+use App\Services\GroupsBalancer;
+use App\Repositories\DecisionsRepository;
 use Nebo15\REST\Traits\ValidatesRequestsTrait;
 
 class ConsumerController extends Controller
@@ -20,12 +20,12 @@ class ConsumerController extends Controller
     use ValidatesRequestsTrait;
 
     private $response;
-    private $tablesRepository;
+    private $decisionsRepository;
 
-    public function __construct(Response $response, TablesRepository $tablesRepository)
+    public function __construct(Response $response, DecisionsRepository $decisionsRepository)
     {
         $this->response = $response;
-        $this->tablesRepository = $tablesRepository;
+        $this->decisionsRepository = $decisionsRepository;
     }
 
     public function tableCheck(Request $request, Scoring $scoring, $id)
@@ -41,7 +41,7 @@ class ConsumerController extends Controller
     public function decisions(Request $request)
     {
         return $this->response->jsonPaginator(
-            $this->tablesRepository->getConsumerDecisions($request->input('size')),
+            $this->decisionsRepository->readList($request->input('size')),
             [],
             function (Decision $decision) {
                 return $decision->toConsumerArray();
@@ -51,6 +51,6 @@ class ConsumerController extends Controller
 
     public function decision($id)
     {
-        return $this->response->json($this->tablesRepository->getConsumerDecision($id));
+        return $this->response->json($this->decisionsRepository->getConsumerDecision($id));
     }
 }

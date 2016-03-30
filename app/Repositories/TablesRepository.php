@@ -58,28 +58,6 @@ class TablesRepository extends AbstractRepository
         return $model;
     }
 
-    public function getDecisions($size = null, $table_id = null)
-    {
-        if ($table_id) {
-            $query = Decision::where('table._id', $table_id);
-            if ($query->count() <= 0) {
-                $e = new ModelNotFoundException;
-                $e->setModel(Decision::class);
-                throw $e;
-            }
-            $query = $query->orderBy(Decision::CREATED_AT, 'DESC');
-        } else {
-            $query = Decision::orderBy(Decision::CREATED_AT, 'DESC');
-        }
-
-        return $query->paginate(intval($size));
-    }
-
-    public function getDecisionById($id)
-    {
-        return Decision::findById($id);
-    }
-
     public function analyzeTableDecisions($table_id)
     {
         $table = $this->read($table_id);
@@ -128,15 +106,5 @@ class TablesRepository extends AbstractRepository
         }
 
         return $table;
-    }
-
-    public function getConsumerDecisions($size = null)
-    {
-        return Decision::orderBy(Decision::CREATED_AT, 'DESC')->paginate(intval($size));
-    }
-
-    public function getConsumerDecision($id)
-    {
-        return Decision::findById($id)->toConsumerArray();
     }
 }

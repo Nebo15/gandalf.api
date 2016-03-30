@@ -81,6 +81,7 @@ return [
     'group_tables_fields' => 'All Table.fields must be identical',
     'group_tables_exists' => 'Table must exist',
     'between_string' => 'Value must be separated by a semicolon. Value before the semicolon must be less than after the semicolon',
+    'meta_keys_amount' => 'Amount of keys for Meta Data must be less or equal to 24',
 
     /*
     |--------------------------------------------------------------------------

@@ -92,18 +92,6 @@ class TablesController extends AbstractController
         );
     }
 
-    public function decisions()
-    {
-        return $this->response->jsonPaginator(
-            $this->getRepository()->getDecisions($this->request->input('size'), $this->request->input('table_id'))
-        );
-    }
-
-    public function decision($id)
-    {
-        return $this->response->json($this->getRepository()->getDecisionById($id)->toArray());
-    }
-
     public function analytics($id)
     {
         return $this->response->json($this->getRepository()->analyzeTableDecisions($id)->toArray());

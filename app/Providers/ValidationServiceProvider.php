@@ -16,6 +16,9 @@ class ValidationServiceProvider extends ServiceProvider
         Validator::extend('ruleThanType', 'App\Validators\TableValidator@ruleThanType');
         Validator::extend('groupTablesFields', 'App\Validators\GroupValidator@tablesFields');
         Validator::extend('groupTablesExists', 'App\Validators\GroupValidator@tablesExists');
+        Validator::extend('metaKeysAmount', function ($attribute, $value) {
+            return $value <= 24;
+        });
         Validator::extend('betweenString', function ($attribute, $value) {
             if (strpos($value, ';') === false) {
                 return false;

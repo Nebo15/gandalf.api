@@ -181,6 +181,7 @@ class ApiTester extends \Codeception\Actor
             '_id' => 'string',
             'table' => 'array',
             'group' => 'array|null',
+            'meta' => 'array',
             'default_decision' => $type,
             'final_decision' => $type,
             'updated_at' => 'string',
@@ -259,6 +260,7 @@ class ApiTester extends \Codeception\Actor
 
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.fields");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.group");
+        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.meta");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.default_decision");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].than");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions");
