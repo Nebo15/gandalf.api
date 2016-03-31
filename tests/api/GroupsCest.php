@@ -42,12 +42,14 @@ class GroupsCest
         $I->loginAdmin();
 
         $table = $I->createTable();
+        $table2 = $I->createTable($I->getShortTableDataMatchingTypeAll());
 
         $invalid_data = [
             ['probability' => 'random'],
             ['tables' => ['_id' => $table->_id], 'probability' => 'random'],
             ['tables' => [['_id' => $table->_id]], 'probability' => 'invalid'],
             ['tables' => [['invalid' => 'test']], 'probability' => 'random'],
+            ['tables' => [['_id' => $table2->_id]], 'probability' => 'random'],
         ];
         foreach ($invalid_data as $data) {
             $I->sendPOST($this->api_prefix, $data);

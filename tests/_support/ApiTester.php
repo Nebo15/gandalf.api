@@ -43,10 +43,10 @@ class ApiTester extends \Codeception\Actor
                 ];
             }
         }
-        if(!isset($data['title'])){
+        if (!isset($data['title'])) {
             $data['title'] = 'Group title';
         }
-        if(!isset($data['description'])){
+        if (!isset($data['description'])) {
             $data['description'] = 'Group description';
         }
         $data['probability'] = $probability;
@@ -139,7 +139,7 @@ class ApiTester extends \Codeception\Actor
         ], "$jsonPath.fields[*]");
 
         foreach ($this->getResponseFields()->data->fields as $field) {
-            if(is_array($field->preset)){
+            if (is_array($field->preset)) {
                 foreach (['value', 'condition'] as $item) {
                     $this->assertTrue(array_key_exists($item, $field->preset), "Preset must contains '$item' field");
                 }
@@ -366,6 +366,86 @@ class ApiTester extends \Codeception\Actor
                 ]
             ]
         ];
+    }
+
+    public function getShortTableDataMatchingTypeAll()
+    {
+        $tableData = $this->getTableShortData();
+        $tableData['matching_type'] = 'all';
+        $tableData['default_decision'] = 15;
+        $tableData['rules'] = [
+            [
+                'than' => 100,
+                'title' => 'Valid rule title',
+                'description' => 'Valid rule description',
+                'conditions' => [
+                    [
+                        'field_key' => 'numeric',
+                        'condition' => '$eq',
+                        'value' => true,
+                        'preset' => null
+                    ],
+                    [
+                        'field_key' => 'string',
+                        'condition' => '$eq',
+                        'value' => 'Yes',
+                        'preset' => null
+                    ],
+                    [
+                        'field_key' => 'bool',
+                        'condition' => '$eq',
+                        'value' => false,
+                        'preset' => null
+                    ]
+                ]
+            ],
+            [
+                'than' => -50.74445,
+                'title' => 'Second title',
+                'description' => 'Second description',
+                'conditions' => [
+                    [
+                        'field_key' => 'numeric',
+                        'condition' => '$eq',
+                        'value' => false
+                    ],
+                    [
+                        'field_key' => 'string',
+                        'condition' => '$eq',
+                        'value' => 'Not'
+                    ],
+                    [
+                        'field_key' => 'bool',
+                        'condition' => '$eq',
+                        'value' => true
+                    ]
+                ]
+            ],
+            [
+                'than' => 25.24445,
+                'title' => 'Third title',
+                'description' => 'Third description',
+                'conditions' => [
+                    [
+                        'field_key' => 'numeric',
+                        'condition' => '$eq',
+                        'value' => false
+                    ],
+                    [
+                        'field_key' => 'string',
+                        'condition' => '$eq',
+                        'value' => 'Not'
+                    ],
+                    [
+                        'field_key' => 'bool',
+                        'condition' => '$eq',
+                        'value' => true
+                    ]
+                ]
+            ]
+        ];
+
+        return $tableData;
     }
 
     public function getTableData()

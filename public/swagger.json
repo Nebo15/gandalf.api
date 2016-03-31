@@ -500,7 +500,7 @@
           }
         ],
         "summary": "Group Create",
-        "description": "###Create a new Group.\n All tables must contain the same Field keys.When Field keys of Table which belongs to some Group will be updated, other Field keys of Tables in Group will be also updated to make them the same for the entire group. If a new Field key is added to the table, for each Table in the Group will be added a new condition `$is_set` for all Rules",
+        "description": "###Create a new Group.\n All tables must contain the same Field keys and matchyng_type must be defined as 'first'. When Field keys of Table which belongs to some Group will be updated, other Field keys of Tables in Group will be also updated to make them the same for the entire group. If a new Field key is added to the table, for each Table in the Group will be added a new condition `$is_set` for all Rules",
         "tags": [
           "Admin",
           "Groups"
