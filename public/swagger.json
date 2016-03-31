@@ -992,7 +992,7 @@
       }
     },
     "/admin/changelog/tables/{table_id}/rollback/{changelog_id}": {
-      "get": {
+      "post": {
         "summary": "Changelog Table Rollback",
         "description": "Rollback Table to some state that described in passed Changelog",
         "tags": [
