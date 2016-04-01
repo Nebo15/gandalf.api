@@ -188,18 +188,26 @@ class TablesCest
                         "title" => 'Test',
                         "source" => "request",
                         "type" => 'numeric',
+                        "preset" => null,
                     ],
                     [
                         "key" => '2',
                         "title" => 'Test 2',
                         "source" => "request",
                         "type" => 'numeric',
+                        "preset" => 'shit',
                     ],
                     [
-                        "key" => '3',
                         "title" => 'Test 3',
                         "source" => "request",
                         "type" => 'numeric',
+                        "preset" => ['invalid' => 'bad'],
+                    ],
+                    [
+                        "title" => 'Test 3',
+                        "source" => "request",
+                        "type" => 'numeric',
+                        "preset" => ['condition' => '$is_between', 'value' => 'bad'],
                     ],
                 ],
                 'rules' => [
@@ -210,7 +218,7 @@ class TablesCest
                         'conditions' => [
                             [
                                 'field_key' => '3',
-                                'condition' => '$eq',
+                                'condition' => 'invalid',
                                 'value' => true,
                             ],
                             [
@@ -223,7 +231,6 @@ class TablesCest
                                 'condition' => '$eq',
                                 'value' => true,
                             ],
-
                         ],
                     ],
                     [
@@ -233,11 +240,14 @@ class TablesCest
                         'conditions' => [
                             [
                                 'field_key' => '3',
-                                'condition' => '$eq',
                                 'value' => true,
                             ],
                             [
                                 'field_key' => '2',
+                                'condition' => '$eq',
+                                'value' => false,
+                            ],
+                            [
                                 'condition' => '$eq',
                                 'value' => false,
                             ],
@@ -251,6 +261,13 @@ class TablesCest
         $I->seeResponseContains('table.default_description');
         $I->seeResponseContains('table.rules.1.conditions');
         $I->seeResponseContains('table.matching_type');
+        $I->seeResponseContains('table.rules.0.conditions.0');
+        $I->seeResponseContains('table.rules.1.conditions.0');
+        $I->seeResponseContains('table.rules.1.conditions.2');
+        $I->seeResponseContains('table.fields.1.preset');
+        $I->seeResponseContains('table.fields.3.preset.condition');
+        $I->seeResponseContains('table.fields.3.preset.condition');
+        $I->cantSeeResponseContains('table.fields.3.preset.value');
 
         $I->sendPOST('api/v1/admin/tables', [
             'table' => [
@@ -308,7 +325,8 @@ class TablesCest
                     "title" => 'Second',
                     "source" => "request",
                     "type" => 'string',
-                ],
+                    'preset' => null
+                ]
             ],
             'rules' => [
                 [
@@ -383,6 +401,7 @@ class TablesCest
                     "title" => 'Test',
                     "source" => "request",
                     "type" => 'string',
+                    'preset' => null
                 ],
                 [
                     "key" => 'test',
@@ -479,7 +498,8 @@ class TablesCest
                     "title" => 'Test',
                     "source" => "request",
                     "type" => 'boolean',
-                ],
+                    'preset' => null
+                ]
             ],
             'rules' => [
                 [
@@ -503,11 +523,11 @@ class TablesCest
             $I->checkDecision($table->_id, ['boolean' => $value]);
             $I->assertResponseDataFields(['final_decision' => 'Approve']);
         }
-        foreach ([false, '0', 0] as $value) {
+        foreach ([false, '0', 0, null] as $value) {
             $I->checkDecision($table->_id, ['boolean' => $value]);
             $I->assertResponseDataFields(['final_decision' => 'Decline']);
         }
-        foreach (['invalid', 'true', "true", 100, null] as $value) {
+        foreach (['invalid', 'true', "true", 100] as $value) {
             $I->sendPOST("api/v1/tables/$table->_id/decisions", ['boolean' => $value]);
             $I->seeResponseCodeIs(422);
         }
@@ -516,7 +536,7 @@ class TablesCest
         $table_data['fields'][0]['type'] = 'string';
         $table_data['rules'][0]['conditions'][0]['value'] = 'string';
         $table = $I->createTable($table_data);
-        foreach ([true, null, 1, ''] as $value) {
+        foreach ([true, 1, false, 0.99] as $value) {
             $I->sendPOST("api/v1/tables/$table->_id/decisions", ['boolean' => $value]);
             $I->seeResponseCodeIs(422);
         }
@@ -531,7 +551,7 @@ class TablesCest
         $table_data['fields'][0]['type'] = 'numeric';
         $table_data['rules'][0]['conditions'][0]['value'] = 100.15;
         $table = $I->createTable($table_data);
-        foreach ([true, null, 'invalid', '100.15i'] as $value) {
+        foreach ([true, 'invalid', '100.15i'] as $value) {
             $I->sendPOST("api/v1/tables/$table->_id/decisions", ['boolean' => $value]);
             $I->seeResponseCodeIs(422);
         }
@@ -560,7 +580,8 @@ class TablesCest
                     "title" => 'Test',
                     "source" => "request",
                     "type" => 'numeric',
-                ],
+                    'preset' => null
+                ]
             ],
             'rules' => [
                 [
@@ -577,7 +598,7 @@ class TablesCest
                 ],
             ],
         ]);
-        foreach ([true, null, 'invalid', '100.15i'] as $value) {
+        foreach ([true, 'invalid', '100.15i'] as $value) {
             $I->sendPOST("api/v1/tables/$table->_id/decisions", ['boolean' => $value]);
             $I->seeResponseCodeIs(422);
         }
@@ -591,12 +612,64 @@ class TablesCest
         }
     }
 
+    public function ruleBetween(ApiTester $I)
+    {
+        $I->loginAdmin();
+        $tableData = [
+            'title' => 'Test title',
+            'description' => 'Test description',
+            'default_decision' => 'Decline',
+            'matching_type' => 'first',
+            'fields' => [
+                [
+                    "key" => 'between',
+                    "title" => 'Second',
+                    "source" => "request",
+                    "type" => 'numeric',
+                    'preset' => null
+                ]
+            ],
+            'rules' => [
+                [
+                    'than' => 'Approve',
+                    'title' => '',
+                    'description' => '',
+                    'conditions' => [
+                        [
+                            'field_key' => 'between',
+                            'condition' => '$between',
+                            'value' => '0.5;5,5',
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        $table = $I->createTable($tableData);
+        $I->seeResponseContains('0.5;5,5');
+
+        $data = [
+            '0.5' => 'Approve',
+            '0.444445' => 'Decline',
+            '5.5' => 'Approve',
+            '5.6' => 'Decline',
+        ];
+        foreach ($data as $value => $result) {
+            $decision = $I->checkDecision($table->_id, ['between' => floatval($value)]);
+            $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
+            $I->assertResponseDataFields(['final_decision' => $result]);
+        }
+
+        foreach (['1.223.33', 100.01, '10;8', '1;2;3', '3,3'] as $item) {
+            $tableData['rules'][0]['conditions'][0]['value'] = $item;
+            $I->sendPOST('api/v1/admin/tables', ['table' => $tableData]);
+            $I->seeResponseCodeIs(422);
+        }
+    }
+
     public function readList(ApiTester $I)
     {
         $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
-        $I->createTable();
-        $I->createTable();
 
         $tableData = $I->getTableShortData();
         $tableData['title'] = 'Search';
@@ -677,7 +750,8 @@ class TablesCest
                 "title" => 'Test key',
                 "source" => "request",
                 "type" => 'string',
-            ],
+                'preset' => null
+            ]
         ];
         $data['rules'] = [
             [
@@ -703,7 +777,8 @@ class TablesCest
                     "title" => 'Test key',
                     "source" => "request",
                     "type" => 'string',
-                ],
+                    'preset' => null
+                ]
             ],
             'rules' => [
                 [
@@ -770,8 +845,10 @@ class TablesCest
                     $I->assertEquals(
                         $probabilities[$ruleIndex][$conditionIndex],
                         $condition->probability,
-                        "Wrong probability for {$condition->field_key}:{$condition->condition}=" . var_export($condition->value,
-                            true)
+                        "Wrong probability for {$condition->field_key}:{$condition->condition}=" . var_export(
+                            $condition->value,
+                            true
+                        )
                     );
 
                     $I->assertEquals(
@@ -810,14 +887,14 @@ class TablesCest
 
         $checkProbabilities([
             [
-                round(3 / 9, 2),
-                round(4 / 9, 2),
-                round(5 / 9, 2),
+                round(3 / 9, 5),
+                round(4 / 9, 5),
+                round(5 / 9, 5),
             ],
             [
-                round(6 / 9, 2),
-                round(3 / 9, 2),
-                round(4 / 9, 2),
+                round(6 / 9, 5),
+                round(3 / 9, 5),
+                round(4 / 9, 5),
             ],
         ], 9);
 
@@ -826,6 +903,7 @@ class TablesCest
             "title" => 'last',
             "source" => "request",
             "type" => 'numeric',
+            'preset' => null
         ];
         $tableData['rules'][0]['conditions'][] = [
             'field_key' => 'last',
@@ -855,16 +933,16 @@ class TablesCest
         $I->assertTableWithAnalytics();
         $checkProbabilities([
             [
-                round(6 / 14, 2),
-                round(6 / 14, 2),
-                round(7 / 14, 2),
-                round(2 / 5, 2),
+                round(6 / 14, 5),
+                round(6 / 14, 5),
+                round(7 / 14, 5),
+                round(2 / 5, 5),
             ],
             [
-                round(8 / 14, 2),
-                round(4 / 14, 2),
-                round(7 / 14, 2),
-                round(3 / 5, 2),
+                round(8 / 14, 5),
+                round(4 / 14, 5),
+                round(7 / 14, 5),
+                round(3 / 5, 5),
             ],
         ], [
             'last' => 5,

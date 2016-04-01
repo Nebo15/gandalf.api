@@ -7,6 +7,8 @@
 
 namespace App\Services;
 
+use App\Exceptions\ConditionException;
+
 class ConditionsTypes
 {
     private $conditions;
@@ -18,6 +20,12 @@ class ConditionsTypes
                 'input_type' => '',
                 'function' => function () {
                     return true;
+                }
+            ],
+            '$is_null' => [
+                'input_type' => '',
+                'function' => function ($condition_value, $field_value) {
+                    return null === $field_value;
                 }
             ],
             '$eq' => [
@@ -56,6 +64,15 @@ class ConditionsTypes
                     return $field_value <= $condition_value;
                 }
             ],
+            '$between' => [
+                'input_type' => 'betweenString',
+                'function' => function ($condition_value, $field_value) {
+                    $between = array_map(function ($item) {
+                        return floatval(str_replace(',', '.', $item));
+                    }, explode(';', $condition_value));
+                    return ($between[0] <= $field_value and $between[1] >= $field_value);
+                }
+            ],
             '$in' => [
                 'input_type' => '',
                 'function' => function ($condition_value, $field_value) {
@@ -78,6 +95,9 @@ class ConditionsTypes
 
     public function checkConditionValue($condition_key, $condition_value, $field_value)
     {
+        if ($field_value === null and $condition_key != '$is_null') {
+            return false;
+        }
         $condition = $this->getCondition($condition_key);
 
         return $condition['function']($condition_value, $field_value);
@@ -86,7 +106,7 @@ class ConditionsTypes
     public function getCondition($condition_key)
     {
         if (!array_key_exists($condition_key, $this->conditions)) {
-            throw new \Exception("Undefined condition rule '$condition_key'");
+            throw new ConditionException("Undefined condition rule '$condition_key'");
         }
 
         return $this->conditions[$condition_key];

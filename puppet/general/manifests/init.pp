@@ -18,7 +18,6 @@ class sethostname(
 node default {
   $host_name = "gandalf.dev"
   $nginx_configuration_file = 'local'
-  $dhparam = undef
   $ssh_port = 'Port 22'
 
   include stdlib
@@ -62,8 +61,7 @@ node default {
     http_tcp_nodelay => 'on',
     keepalive_timeout => '65',
     types_hash_max_size => '2048',
-    server_tokens => 'off',
-    ssl_dhparam => $dhparam
+    server_tokens => 'off'
   }
 
   file { "gandalf_config":

@@ -135,7 +135,16 @@ class ApiTester extends \Codeception\Actor
             'title' => 'string',
             'source' => 'string',
             'type' => 'string',
+            'preset' => 'null|array',
         ], "$jsonPath.fields[*]");
+
+        foreach ($this->getResponseFields()->data->fields as $field) {
+            if(is_array($field->preset)){
+                foreach (['value', 'condition'] as $item) {
+                    $this->assertTrue(array_key_exists($item, $field->preset), "Preset must contains '$item' field");
+                }
+            }
+        }
 
         $this->seeResponseMatchesJsonType([
             'than' => 'string|integer|float',
@@ -298,12 +307,14 @@ class ApiTester extends \Codeception\Actor
                     "title" => 'string',
                     "source" => "request",
                     "type" => 'string',
+                    'preset' => null
                 ],
                 [
                     "key" => 'bool',
                     "title" => 'bool',
                     "source" => "request",
                     "type" => 'boolean',
+                    'preset' => null
                 ]
             ],
             'rules' => [

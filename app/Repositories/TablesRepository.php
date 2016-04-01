@@ -114,7 +114,7 @@ class TablesRepository extends AbstractRepository
             foreach ($rule->conditions as $condition) {
                 $index = "$rule_index@$condition_index";
                 if (array_key_exists($index, $map)) {
-                    $condition->probability = round($map[$index]['matched'] / $map[$index]['requests'], 2);
+                    $condition->probability = round($map[$index]['matched'] / $map[$index]['requests'], 5);
                 } else {
                     $condition->probability = null;
                 }
