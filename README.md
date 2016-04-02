@@ -124,7 +124,22 @@ $ curl -uAPI_USER:API_TOKEN http://gandalf-api.nebo15.com/api/v1/admin/tables
 
 # Installation Guide
 
-Vagrant up
+You can use [Vagrant](https://www.vagrantup.com/) to intialize a development environment. Simply install it, ```cd``` into your project directory and run:
+
+```
+vagrant up
+```
+
+Also you can notice that we use [Puppet](https://puppetlabs.com/puppet/puppet-open-source) as our configuration tool. Scripts located in [/puppet](https://github.com/Nebo15/gandalf.api/tree/master/puppet) directory of this repo. You can deploy code to your server and simply run:
+
+```
+set -o nounset -o errexit -o pipefail -o errtrace
+trap 'error "${BASH_SOURCE}" "${LINENO}"' ERR
+echo 127.0.0.1 gandalf.yourdomain.com | sudo tee -a /etc/hosts
+sudo /bin/bash puppet/initial/init.sh -u "www-data"
+```
+
+And your server will be ready for production use!
 
 # API Docs
 
