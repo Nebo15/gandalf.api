@@ -96,7 +96,7 @@ class TablesRepository extends AbstractRepository
                 } else {
                     $condition->probability = null;
                 }
-                $condition->requests = $map[$index]['requests'];
+                $condition->requests = array_key_exists($index, $map) ? $map[$index]['requests'] : 0;
                 $rule->conditions()->associate($condition);
 
                 $condition_index++;
