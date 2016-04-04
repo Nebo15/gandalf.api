@@ -141,6 +141,7 @@ class TablesCest
         $table = $I->createTable();
         $I->sendGET('api/v1/admin/tables/' . $table->_id);
         $I->seeResponseCodeIs(200);
+        $I->logout();
         $I->loginUser($second_user);
         $I->sendGET('api/v1/admin/tables/' . $table->_id);
         $I->seeResponseCodeIs(403);
@@ -614,7 +615,8 @@ class TablesCest
 
     public function ruleBetween(ApiTester $I)
     {
-        $I->loginAdmin();
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
         $tableData = [
             'title' => 'Test title',
             'description' => 'Test description',

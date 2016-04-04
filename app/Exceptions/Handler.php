@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Contracts\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Nebo15\LumenApplicationable\Exceptions\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 
@@ -76,6 +77,11 @@ class Handler extends ExceptionHandler
         } elseif ($e instanceof HttpException) {
             $http_code = $e->getStatusCode();
             $error_code = $e->getMessage() ?: 'http';
+        } elseif ($e instanceof AccessDeniedException) {
+            $http_code = 403;
+            $error_code = 'access_denied';
+            $meta['error_message'] = $e->getMessage();
+
         }
 
         if ($http_code === 500 and env('APP_DEBUG') === true) {
