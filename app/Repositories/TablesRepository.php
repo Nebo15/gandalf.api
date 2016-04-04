@@ -61,21 +61,22 @@ class TablesRepository extends AbstractRepository
     public function analyzeTableDecisions($table_id)
     {
         $table = $this->read($table_id);
-        $decisions = Decision::where('table._id', $table_id)->get();
+        $decisions = Decision::where('table._id', $table_id)->getQuery()->get(['rules']);
         $map = [];
-        /** @var Decision $decision */
 
-        foreach ($decisions as $decision) {
+        for ($i = 0; $i < count($decisions); $i++) {
+            $rules = $decisions[$i]['rules'];
+            $decisions[$i] = null;
             $rule_index = 0;
-            foreach ($decision->rules as $rule) {
+            foreach ($rules as $rule) {
                 $condition_index = 0;
-                foreach ($rule->conditions as $condition) {
+                foreach ($rule['conditions'] as $condition) {
                     $index = "$rule_index@$condition_index";
                     if (!isset($map[$index])) {
                         $map[$index] = ['matched' => 0, 'requests' => 0];
                     }
 
-                    if ($condition->matched === true) {
+                    if ($condition['matched'] === true) {
                         $map[$index]['matched']++;
                     }
                     $map[$index]['requests']++;
