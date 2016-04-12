@@ -64,34 +64,44 @@ class TablesRepository extends AbstractRepository
         $decisions = Decision::where('table._id', $table_id)->getQuery()->get(['rules']);
         $map = [];
 
-        for ($i = 0; $i < count($decisions); $i++) {
-            $rules = $decisions[$i]['rules'];
-            $decisions[$i] = null;
-            $rule_index = 0;
-            foreach ($rules as $rule) {
-                $condition_index = 0;
-                foreach ($rule['conditions'] as $condition) {
-                    $index = "$rule_index@$condition_index";
-                    if (!isset($map[$index])) {
-                        $map[$index] = ['matched' => 0, 'requests' => 0];
+        if (($decisionsAmount = count($decisions)) > 0) {
+            for ($i = 0; $i < $decisionsAmount; $i++) {
+                $rules = $decisions[$i]['rules'];
+                $decisions[$i] = null;
+                $ruleIndex = 0;
+                foreach ($rules as $rule) {
+                    $conditionIndex = 0;
+                    foreach ($rule['conditions'] as $condition) {
+                        $index = "$ruleIndex@$conditionIndex";
+                        if (!isset($map[$index])) {
+                            $map[$index] = ['matched' => 0, 'requests' => 0];
+                        }
+
+                        if ($condition['matched'] === true) {
+                            $map[$index]['matched']++;
+                        }
+                        $map[$index]['requests']++;
+
+                        $conditionIndex++;
+                    }
+                    if (!isset($map[$ruleIndex])) {
+                        $map[$ruleIndex] = ['matched' => 0, 'requests' => 0];
+                    }
+                    $map[$ruleIndex]['requests']++;
+                    if ($rule['than'] === $rule['decision']) {
+                        $map[$ruleIndex]['matched']++;
                     }
 
-                    if ($condition['matched'] === true) {
-                        $map[$index]['matched']++;
-                    }
-                    $map[$index]['requests']++;
-
-                    $condition_index++;
+                    $ruleIndex++;
                 }
-                $rule_index++;
             }
         }
 
-        $rule_index = 0;
+        $ruleIndex = 0;
         foreach ($table->rules as $rule) {
-            $condition_index = 0;
+            $conditionIndex = 0;
             foreach ($rule->conditions as $condition) {
-                $index = "$rule_index@$condition_index";
+                $index = "$ruleIndex@$conditionIndex";
                 if (array_key_exists($index, $map)) {
                     $condition->probability = round($map[$index]['matched'] / $map[$index]['requests'], 5);
                 } else {
@@ -100,9 +110,14 @@ class TablesRepository extends AbstractRepository
                 $condition->requests = array_key_exists($index, $map) ? $map[$index]['requests'] : 0;
                 $rule->conditions()->associate($condition);
 
-                $condition_index++;
+                $conditionIndex++;
             }
-            $rule_index++;
+            $ruleHasRequests = array_key_exists($ruleIndex, $map);
+            $rule->probability = $ruleHasRequests ?
+                round($map[$ruleIndex]['matched'] / $map[$ruleIndex]['requests'], 5) :
+                0;
+            $rule->requests = $ruleHasRequests ? $map[$ruleIndex]['requests'] : 0;
+            $ruleIndex++;
             $table->rules()->associate($rule);
         }
 

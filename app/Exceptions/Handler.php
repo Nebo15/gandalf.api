@@ -63,16 +63,13 @@ class Handler extends ExceptionHandler
                 ],
                 'data' => $e->errors(),
             ], 422, ['Content-Type' => 'application/json']);
-
         } elseif ($e instanceof AuthorizationException) {
             $http_code = 401;
             $error_code = 'unauthorized';
             $meta['error_message'] = $e->getMessage();
-
         } elseif ($e instanceof ModelNotFoundException) {
             $http_code = 404;
             $error_code = $this->formatModelName($e->getModel()) . '_not_found';
-
         } elseif ($e instanceof HttpException) {
             $http_code = $e->getStatusCode();
             $error_code = $e->getMessage() ?: 'http';

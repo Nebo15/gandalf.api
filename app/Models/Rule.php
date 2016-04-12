@@ -14,12 +14,14 @@ namespace App\Models;
  * @property string $description
  * @property string $decision
  * @property string $than
+ * @property float $probability
+ * @property integer $requests
  * @property Condition[] $conditions
  *
  */
 class Rule extends Base
 {
-    protected $visible = ['title', 'decision', 'description', 'than', 'conditions'];
+    protected $visible = ['title', 'decision', 'description', 'than', 'probability', 'requests', 'conditions'];
 
     protected $fillable = ['title', 'description', 'than'];
 
