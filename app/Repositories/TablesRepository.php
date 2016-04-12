@@ -61,13 +61,14 @@ class TablesRepository extends AbstractRepository
     public function analyzeTableDecisions($table_id)
     {
         $table = $this->read($table_id);
-        $decisions = Decision::where('table._id', $table_id)->getQuery()->get(['rules']);
+        $decisions = (new \MongoClient())->selectDB(env('DB_DATABASE'))
+            ->selectCollection((new Decision)->getTable())
+            ->find([], ['rules']);
         $map = [];
 
-        if (($decisionsAmount = count($decisions)) > 0) {
-            for ($i = 0; $i < $decisionsAmount; $i++) {
-                $rules = $decisions[$i]['rules'];
-                $decisions[$i] = null;
+        if (($decisionsAmount = $decisions->count()) > 0) {
+            foreach ($decisions as $decision) {
+                $rules = $decision['rules'];
                 $ruleIndex = 0;
                 foreach ($rules as $rule) {
                     $conditionIndex = 0;
