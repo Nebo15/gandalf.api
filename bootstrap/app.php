@@ -85,6 +85,7 @@ $app->routeMiddleware([
 |
 */
 
+$app->register(App\Providers\ObserverServiceProvider::class);
 $app->register(Nebo15\REST\ServiceProvider::class);
 $app->register(Nebo15\Changelog\ServiceProvider::class);
 $app->register(App\Providers\ValidationServiceProvider::class);
