@@ -170,6 +170,11 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseMatchesJsonType([
             'probability' => 'integer|float',
             'requests' => 'integer'
+        ], "$jsonPath.rules[*]");
+
+        $this->seeResponseMatchesJsonType([
+            'probability' => 'integer|float',
+            'requests' => 'integer'
         ], "$jsonPath.rules[*].conditions[*]");
     }
 
@@ -672,7 +677,8 @@ class ApiTester extends \Codeception\Actor
 
     public function loginClient($client)
     {
-        $this->setHeader('Authorization', 'Basic ' . base64_encode($client['client_id'].':'.$client['client_secret']));
+        $this->setHeader('Authorization',
+            'Basic ' . base64_encode($client['client_id'] . ':' . $client['client_secret']));
     }
 
     public function logout()

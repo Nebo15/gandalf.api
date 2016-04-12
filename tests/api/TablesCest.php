@@ -785,27 +785,38 @@ class TablesCest
 
     public function analytics(ApiTester $I)
     {
-        $checkProbabilities = function ($probabilities, $requests) use ($I) {
+        $checkProbabilities = function ($probabilities, $requestsConditions, $requestsRule) use ($I) {
             $ruleIndex = 0;
             foreach ($I->getResponseFields()->data->rules as $rule) {
                 $conditionIndex = 0;
                 foreach ($rule->conditions as $condition) {
                     $I->assertEquals(
-                        $probabilities[$ruleIndex][$conditionIndex],
+                        $probabilities[$ruleIndex]['conditions'][$conditionIndex],
                         $condition->probability,
-                        "Wrong probability for {$condition->field_key}:{$condition->condition}=" . var_export(
+                        "Wrong probability for  condition {$condition->field_key}:{$condition->condition}=" .
+                        var_export(
                             $condition->value,
                             true
                         )
                     );
 
                     $I->assertEquals(
-                        is_array($requests) ? $requests[$condition->field_key] : $requests,
+                        is_array($requestsConditions) ? $requestsConditions[$condition->field_key] : $requestsConditions,
                         $condition->requests,
                         "Wrong request amount for condition {$condition->field_key}"
                     );
                     $conditionIndex++;
                 }
+                $I->assertEquals(
+                    $probabilities[$ruleIndex]['rule'],
+                    $rule->probability,
+                    "Wrong probability for rule {$rule->title}"
+                );
+                $I->assertEquals(
+                    is_array($requestsRule) ? $requestsRule[$ruleIndex] : $requestsRule,
+                    $rule->requests,
+                    "Wrong request amount for rule {$rule->title}"
+                );
                 $ruleIndex++;
             }
         };
@@ -816,15 +827,15 @@ class TablesCest
         $table = $I->createTable($tableData);
 
         $checkData = [
-            ['numeric' => 340, 'string' => 'Bad', 'bool' => false],
+            ['numeric' => 340, 'string' => 'Bad', 'bool' => true],
             ['numeric' => 350, 'string' => 'Yes', 'bool' => false],
             ['numeric' => 360, 'string' => 'Not', 'bool' => false],
             ['numeric' => 370, 'string' => 'Yes', 'bool' => false],
             ['numeric' => 380, 'string' => 'Not', 'bool' => false],
             ['numeric' => 390, 'string' => 'Yes', 'bool' => true],
-            ['numeric' => 400, 'string' => 'Yes', 'bool' => true],
+            ['numeric' => 400, 'string' => 'Bad', 'bool' => true],
             ['numeric' => 410, 'string' => 'Not', 'bool' => true],
-            ['numeric' => 420, 'string' => 'Bad', 'bool' => true],
+            ['numeric' => 420, 'string' => 'Yes', 'bool' => false],
         ];
         foreach ($checkData as $data) {
             $I->checkDecision($table->_id, $data);
@@ -834,16 +845,22 @@ class TablesCest
 
         $checkProbabilities([
             [
-                round(3 / 9, 5),
-                round(4 / 9, 5),
-                round(5 / 9, 5),
+                'rule' => round(1 / 9, 5),
+                'conditions' => [
+                    round(3 / 9, 5),
+                    round(4 / 9, 5),
+                    round(5 / 9, 5),
+                ]
             ],
             [
-                round(6 / 9, 5),
-                round(3 / 9, 5),
-                round(4 / 9, 5),
+                'rule' => 0,
+                'conditions' => [
+                    round(6 / 9, 5),
+                    round(3 / 9, 5),
+                    round(4 / 9, 5),
+                ]
             ],
-        ], 9);
+        ], 9, 9);
 
         $tableData['fields'][3] = [
             "key" => 'last',
@@ -866,10 +883,10 @@ class TablesCest
         $I->seeResponseCodeIs(200);
 
         $checkData = [
-            ['numeric' => 380, 'string' => 'Bad', 'last' => 250, 'bool' => false],
-            ['numeric' => 390, 'string' => 'Yes', 'last' => 300, 'bool' => false],
-            ['numeric' => 400, 'string' => 'Yes', 'last' => 450, 'bool' => true],
-            ['numeric' => 410, 'string' => 'Not', 'last' => 550, 'bool' => true],
+            ['numeric' => 380, 'string' => 'Not', 'last' => 250, 'bool' => true],
+            ['numeric' => 390, 'string' => 'Not', 'last' => 300, 'bool' => true],
+            ['numeric' => 400, 'string' => 'Yes', 'last' => 450, 'bool' => false],
+            ['numeric' => 410, 'string' => 'Bad', 'last' => 550, 'bool' => false],
             ['numeric' => 420, 'string' => 'Bad', 'last' => 650, 'bool' => true],
         ];
         foreach ($checkData as $data) {
@@ -880,22 +897,28 @@ class TablesCest
         $I->assertTableWithAnalytics();
         $checkProbabilities([
             [
-                round(6 / 14, 5),
-                round(6 / 14, 5),
-                round(7 / 14, 5),
-                round(2 / 5, 5),
+                'rule' => round(1 / 14, 5),
+                'conditions' => [
+                    round(6 / 14, 5),
+                    round(5 / 14, 5),
+                    round(7 / 14, 5),
+                    round(2 / 5, 5),
+                ]
             ],
             [
-                round(8 / 14, 5),
-                round(4 / 14, 5),
-                round(7 / 14, 5),
-                round(3 / 5, 5),
+                'rule' => round(2 / 14, 5),
+                'conditions' => [
+                    round(8 / 14, 5),
+                    round(5 / 14, 5),
+                    round(7 / 14, 5),
+                    round(3 / 5, 5),
+                ]
             ],
         ], [
             'last' => 5,
             'bool' => 14,
             'string' => 14,
             'numeric' => 14,
-        ]);
+        ], 14);
     }
 }

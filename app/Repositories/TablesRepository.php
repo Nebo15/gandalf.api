@@ -83,6 +83,14 @@ class TablesRepository extends AbstractRepository
 
                     $condition_index++;
                 }
+                if (!isset($map[$rule_index])) {
+                    $map[$rule_index] = ['matched' => 0, 'requests' => 0];
+                }
+                $map[$rule_index]['requests']++;
+                if ($rule['than'] === $rule['decision']) {
+                    $map[$rule_index]['matched']++;
+                }
+
                 $rule_index++;
             }
         }
@@ -102,6 +110,8 @@ class TablesRepository extends AbstractRepository
 
                 $condition_index++;
             }
+            $rule->probability = round($map[$rule_index]['matched'] / $map[$rule_index]['requests'], 5);
+            $rule->requests = array_key_exists($rule_index, $map) ? $map[$rule_index]['requests'] : 0;
             $rule_index++;
             $table->rules()->associate($rule);
         }
