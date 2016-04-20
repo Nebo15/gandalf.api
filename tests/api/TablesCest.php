@@ -770,7 +770,7 @@ class TablesCest
                     $I->assertEquals(
                         $probabilities[$ruleIndex]['conditions'][$conditionIndex],
                         $condition->probability,
-                        "Wrong probability for  condition {$condition->field_key}:{$condition->condition}=" .
+                        "Wrong probability for condition {$condition->field_key}:{$condition->condition}=" .
                         var_export(
                             $condition->value,
                             true

@@ -230,10 +230,6 @@ class ApiTester extends \Codeception\Actor
             'title' => 'string',
             'description' => 'string',
         ], "$jsonPath.table");
-
-        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions[*]._id]");
-        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*]._id]");
-        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.fields[*]._id]");
     }
 
     public function assertTableDecisionsForConsumer($matching_rules_type = 'first', $jsonPath = '$.data')
@@ -291,6 +287,11 @@ class ApiTester extends \Codeception\Actor
         return $this->getResponseFields()->data;
     }
 
+    public function getMongoId()
+    {
+        return strval(new MongoId);
+    }
+
     public function getTableShortData()
     {
         return [
@@ -302,6 +303,7 @@ class ApiTester extends \Codeception\Actor
             'matching_type' => 'first',
             'fields' => [
                 [
+                    "_id" => $this->getMongoId(),
                     "key" => 'numeric',
                     "title" => 'numeric',
                     "source" => "request",
@@ -312,6 +314,7 @@ class ApiTester extends \Codeception\Actor
                     ]
                 ],
                 [
+                    "_id" => $this->getMongoId(),
                     "key" => 'string',
                     "title" => 'string',
                     "source" => "request",
@@ -319,6 +322,7 @@ class ApiTester extends \Codeception\Actor
                     'preset' => null
                 ],
                 [
+                    "_id" => $this->getMongoId(),
                     "key" => 'bool',
                     "title" => 'bool',
                     "source" => "request",
@@ -328,21 +332,25 @@ class ApiTester extends \Codeception\Actor
             ],
             'rules' => [
                 [
+                    "_id" => $this->getMongoId(),
                     'than' => 'Approve',
                     'title' => 'Valid rule title',
                     'description' => 'Valid rule description',
                     'conditions' => [
                         [
+                            "_id" => $this->getMongoId(),
                             'field_key' => 'numeric',
                             'condition' => '$eq',
                             'value' => true
                         ],
                         [
+                            "_id" => $this->getMongoId(),
                             'field_key' => 'string',
                             'condition' => '$eq',
                             'value' => 'Yes'
                         ],
                         [
+                            "_id" => $this->getMongoId(),
                             'field_key' => 'bool',
                             'condition' => '$eq',
                             'value' => false
@@ -350,21 +358,25 @@ class ApiTester extends \Codeception\Actor
                     ]
                 ],
                 [
+                    "_id" => $this->getMongoId(),
                     'than' => 'Decline',
                     'title' => 'Second title',
                     'description' => 'Second description',
                     'conditions' => [
                         [
+                            "_id" => $this->getMongoId(),
                             'field_key' => 'numeric',
                             'condition' => '$eq',
                             'value' => false
                         ],
                         [
+                            "_id" => $this->getMongoId(),
                             'field_key' => 'string',
                             'condition' => '$eq',
                             'value' => 'Not'
                         ],
                         [
+                            "_id" => $this->getMongoId(),
                             'field_key' => 'bool',
                             'condition' => '$eq',
                             'value' => true
@@ -494,7 +506,7 @@ class ApiTester extends \Codeception\Actor
             }
             $key = strtolower(str_replace(' ', '_', $field));
             $data['fields'][] = [
-                '_id' => new MongoId,
+                '_id' => $this->getMongoId(),
                 "key" => $key,
                 "title" => $field,
                 "source" => "request",
@@ -514,14 +526,14 @@ class ApiTester extends \Codeception\Actor
                     $value = false;
                 }
                 $conditions[] = [
-                    '_id' => new MongoId,
+                    '_id' => $this->getMongoId(),
                     'field_key' => strtolower(str_replace(' ', '_', $key)),
                     'condition' => '$eq',
                     'value' => $value,
                 ];
             }
             $data['rules'][] = [
-                '_id' => new MongoId,
+                '_id' => $this->getMongoId(),
                 'than' => $than,
                 'title' => '',
                 'description' => '',
@@ -694,5 +706,14 @@ class ApiTester extends \Codeception\Actor
     public function stdToArray($std)
     {
         return json_decode(json_encode($std), true);
+    }
+
+    public function removeIdsFromArray(array $array)
+    {
+        return array_map(function ($item) {
+            unset($item['_id']);
+
+            return $item;
+        }, $array);
     }
 }

@@ -84,7 +84,9 @@ class GroupsCest
         $I->seeResponseCodeIs(200);
 
         $tableData = $I->getTableData();
-        $fields = $tableData['fields'];
+
+        # remove ids from array, because different Group Tables has different _id for Field
+        $fields = $I->removeIdsFromArray($tableData['fields']);
         $fields[4] = [
             'key' => 'updated_key',
             'title' => 'new title',
@@ -119,7 +121,7 @@ class GroupsCest
         foreach ($tableIds as $table_id) {
             $I->sendGET("api/v1/admin/tables/$table_id");
             $data = $I->getResponseFields()->data;
-            $I->assertEquals($fields, $I->stdToArray($data->fields));
+            $I->assertEquals($fields, $I->removeIdsFromArray($I->stdToArray($data->fields)));
             foreach ($data->rules as $rule) {
                 $I->assertEquals(6, count($rule->conditions), "Wrong amount of Rule.Conditions after Table update");
                 $conditionsActual = ['new_key', 'updated_key'];

@@ -74,6 +74,7 @@ class Scoring
         /** @var \App\Models\Rule $rule */
         foreach ($table->rules()->get() as $rule) {
             $scoring_rule = [
+                '_id' => new \MongoId($rule->_id),
                 'than' => $rule->than,
                 'title' => $rule->title,
                 'description' => $rule->description,
@@ -98,7 +99,6 @@ class Scoring
                     $conditions_matched = false;
                 }
                 $condition = $condition->getAttributes();
-                unset($condition[Condition::PRIMARY_KEY]);
                 $scoring_rule['conditions'][] = $condition;
 
                 $fieldIndex++;

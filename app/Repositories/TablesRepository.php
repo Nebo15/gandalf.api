@@ -69,11 +69,15 @@ class TablesRepository extends AbstractRepository
         if (($decisionsAmount = $decisions->count()) > 0) {
             foreach ($decisions as $decision) {
                 $rules = $decision['rules'];
-                $ruleIndex = 0;
+
                 foreach ($rules as $rule) {
-                    $conditionIndex = 0;
+                    if (!isset($rule['_id'])) {
+                        # ignore old decisions without Rule._id
+                        continue;
+                    }
+                    $ruleIndex = strval($rule['_id']);
                     foreach ($rule['conditions'] as $condition) {
-                        $index = "$ruleIndex@$conditionIndex";
+                        $index = "$ruleIndex@" . strval($condition['_id']);
                         if (!isset($map[$index])) {
                             $map[$index] = ['matched' => 0, 'requests' => 0];
                         }
@@ -82,8 +86,6 @@ class TablesRepository extends AbstractRepository
                             $map[$index]['matched']++;
                         }
                         $map[$index]['requests']++;
-
-                        $conditionIndex++;
                     }
                     if (!isset($map[$ruleIndex])) {
                         $map[$ruleIndex] = ['matched' => 0, 'requests' => 0];
@@ -92,17 +94,14 @@ class TablesRepository extends AbstractRepository
                     if ($rule['than'] === $rule['decision']) {
                         $map[$ruleIndex]['matched']++;
                     }
-
-                    $ruleIndex++;
                 }
             }
         }
 
-        $ruleIndex = 0;
         foreach ($table->rules as $rule) {
-            $conditionIndex = 0;
+            $ruleIndex = $rule->_id;
             foreach ($rule->conditions as $condition) {
-                $index = "$ruleIndex@$conditionIndex";
+                $index = "$ruleIndex@" . strval($condition['_id']);
                 if (array_key_exists($index, $map)) {
                     $condition->probability = round($map[$index]['matched'] / $map[$index]['requests'], 5);
                 } else {
@@ -110,15 +109,12 @@ class TablesRepository extends AbstractRepository
                 }
                 $condition->requests = array_key_exists($index, $map) ? $map[$index]['requests'] : 0;
                 $rule->conditions()->associate($condition);
-
-                $conditionIndex++;
             }
             $ruleHasRequests = array_key_exists($ruleIndex, $map);
             $rule->probability = $ruleHasRequests ?
                 round($map[$ruleIndex]['matched'] / $map[$ruleIndex]['requests'], 5) :
                 0;
             $rule->requests = $ruleHasRequests ? $map[$ruleIndex]['requests'] : 0;
-            $ruleIndex++;
             $table->rules()->associate($rule);
         }
 
