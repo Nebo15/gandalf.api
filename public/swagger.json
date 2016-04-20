@@ -238,6 +238,7 @@
         ],
         "parameters": [
           {
+            "_id": "56cde35ff7046652308b4572",
             "name": "table",
             "in": "body",
             "description": "Table object",
@@ -548,7 +549,7 @@
                 "probability": {
                   "type": "string",
                   "description": "Group.probability value",
-                  "example": "Some probability"
+                  "example": "random"
                 }
               }
             }
@@ -1529,6 +1530,7 @@
     "Field": {
       "type": "object",
       "required": [
+        "_id",
         "key",
         "title",
         "source",
@@ -1536,6 +1538,11 @@
         "preset"
       ],
       "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
         "key": {
           "type": "string",
           "description": "API Field for request",
@@ -1573,10 +1580,16 @@
     "Preset": {
       "type": "object",
       "required": [
+        "_id",
         "condition",
         "value"
       ],
       "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
         "condition": {
           "type": "string",
           "description": "Available rules",
@@ -1612,6 +1625,11 @@
         "conditions"
       ],
       "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
         "than": {
           "type": "string",
           "description": "Decision, when this rule is matched",
@@ -1639,11 +1657,17 @@
     "Condition": {
       "type": "object",
       "required": [
+        "_id",
         "field_key",
         "condition",
         "value"
       ],
       "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
         "field_key": {
           "type": "string",
           "description": "Key for API field key.",
@@ -1678,12 +1702,18 @@
       "type": "object",
       "discriminator": "than",
       "required": [
+        "_id",
         "than",
         "title",
         "description",
         "conditions"
       ],
       "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
         "than": {
           "type": "string",
           "description": "Decision, when this rule is matched",
@@ -1711,6 +1741,7 @@
     "ConditionAnalytics": {
       "type": "object",
       "required": [
+        "_id",
         "field_key",
         "condition",
         "value",
@@ -1718,6 +1749,11 @@
         "requests"
       ],
       "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
         "field_key": {
           "type": "string",
           "description": "Key for API field key.",
@@ -1883,12 +1919,18 @@
       "type": "object",
       "discriminator": "than",
       "required": [
+        "_id"
         "than",
         "title",
         "description",
         "conditions"
       ],
       "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
         "than": {
           "type": "string",
           "description": "Decision, when this rule is matched",
@@ -1921,11 +1963,17 @@
     "DecisionCondition": {
       "type": "object",
       "required": [
+        "_id",
         "field_key",
         "condition",
         "value"
       ],
       "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
         "field_key": {
           "type": "string",
           "description": "Key for API field key.",

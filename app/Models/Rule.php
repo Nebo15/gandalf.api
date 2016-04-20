@@ -21,9 +21,9 @@ namespace App\Models;
  */
 class Rule extends Base
 {
-    protected $visible = ['title', 'decision', 'description', 'than', 'probability', 'requests', 'conditions'];
+    protected $visible = ['_id', 'title', 'decision', 'description', 'than', 'probability', 'requests', 'conditions'];
 
-    protected $fillable = ['title', 'description', 'than'];
+    protected $fillable = ['_id', 'title', 'description', 'than'];
 
     protected $casts = [
         '_id' => 'string',

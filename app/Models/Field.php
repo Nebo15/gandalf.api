@@ -19,9 +19,9 @@ namespace App\Models;
  */
 class Field extends Base
 {
-    protected $fillable = ['key', 'title', 'source', 'type'];
+    protected $fillable = ['_id', 'key', 'title', 'source', 'type'];
 
-    protected $visible = ['key', 'title', 'source', 'type', 'preset'];
+    protected $visible = ['_id', 'key', 'title', 'source', 'type', 'preset'];
 
     protected $attributes = [
         'preset' => null

@@ -19,9 +19,9 @@ namespace App\Models;
  */
 class Condition extends Base
 {
-    protected $visible = ['field_key', 'condition', 'value', 'probability', 'requests'];
+    protected $visible = ['_id', 'field_key', 'condition', 'value', 'probability', 'requests'];
 
-    protected $fillable = ['field_key', 'condition', 'value'];
+    protected $fillable = ['_id', 'field_key', 'condition', 'value'];
 
     public function setFieldKeyAttribute($value)
     {

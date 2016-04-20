@@ -133,6 +133,7 @@ class ApiTester extends \Codeception\Actor
         ], $jsonPath);
 
         $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
             'key' => 'string:regex(@^[a-z_]+$@)',
             'title' => 'string',
             'source' => 'string',
@@ -149,21 +150,20 @@ class ApiTester extends \Codeception\Actor
         }
 
         $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
             'than' => 'string|integer|float',
             'description' => 'string',
             'conditions' => 'array',
         ], "$jsonPath.rules[*]");
 
         $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
             'field_key' => 'string',
             'condition' => 'string',
             'value' => 'string|integer|float|boolean',
         ], "$jsonPath.rules[*].conditions[*]");
 
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions[*].matched");
-        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions[*]._id]");
-        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*]._id]");
-        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.fields[*]._id]");
     }
 
     public function assertTableWithAnalytics($jsonPath = '$.data', $code = 200)
@@ -494,6 +494,7 @@ class ApiTester extends \Codeception\Actor
             }
             $key = strtolower(str_replace(' ', '_', $field));
             $data['fields'][] = [
+                '_id' => new MongoId,
                 "key" => $key,
                 "title" => $field,
                 "source" => "request",
@@ -513,12 +514,14 @@ class ApiTester extends \Codeception\Actor
                     $value = false;
                 }
                 $conditions[] = [
+                    '_id' => new MongoId,
                     'field_key' => strtolower(str_replace(' ', '_', $key)),
                     'condition' => '$eq',
                     'value' => $value,
                 ];
             }
             $data['rules'][] = [
+                '_id' => new MongoId,
                 'than' => $than,
                 'title' => '',
                 'description' => '',

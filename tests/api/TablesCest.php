@@ -705,10 +705,12 @@ class TablesCest
         ];
         $data['rules'] = [
             [
+                '_id' => strval(new MongoId),
                 'than' => 'Approve',
                 'description' => 'New rule',
                 'conditions' => [
                     [
+                        '_id' => strval(new MongoId),
                         'field_key' => 'test_key',
                         'condition' => '$eq',
                         'value' => 'test'
@@ -718,32 +720,7 @@ class TablesCest
         ];
         $I->sendPUT('api/v1/admin/tables/' . $id, ['table' => $data]);
         $I->assertTable();
-        $I->assertResponseDataFields([
-            'title' => $data['title'],
-            'description' => $data['description'],
-            'fields' => [
-                [
-                    "key" => 'test_key',
-                    "title" => 'Test key',
-                    "source" => "request",
-                    "type" => 'string',
-                    'preset' => null
-                ]
-            ],
-            'rules' => [
-                [
-                    'than' => 'Approve',
-                    'description' => 'New rule',
-                    'conditions' => [
-                        [
-                            'field_key' => 'test_key',
-                            'condition' => '$eq',
-                            'value' => 'test'
-                        ]
-                    ]
-                ]
-            ]
-        ]);
+        $I->assertResponseDataFields($data);
     }
 
     public function copy(ApiTester $I)
