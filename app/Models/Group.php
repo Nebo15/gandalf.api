@@ -5,6 +5,7 @@
 
 namespace App\Models;
 
+use App\Repositories\TablesRepository;
 use Nebo15\REST\Traits\ListableTrait;
 use Nebo15\REST\Interfaces\ListableInterface;
 
@@ -55,9 +56,23 @@ class Group extends Base implements ListableInterface
 
     public function getTablesAttribute($tables)
     {
-        return array_map(function ($item) {
-            $item['_id'] = strval($item['_id']);
-            return $item;
-        }, $tables);
+        if ($tables) {
+            $ids = [];
+            foreach ($tables as $table) {
+                $ids[] = strval($table['_id']);
+            }
+            $tables = [];
+            $tableModels = (new TablesRepository)->findByIds($ids);
+            foreach ($tableModels as $tableModel) {
+                $tables[] = [
+                    '_id' => $tableModel->getId(),
+                    'title' => $tableModel->title,
+                    'description' => $tableModel->description,
+                ];
+            }
+            return $tables;
+        }
+
+        return [];
     }
 }

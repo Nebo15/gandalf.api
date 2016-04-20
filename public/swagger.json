@@ -567,7 +567,7 @@
         }
       }
     },
-    "/admin/group/{id}": {
+    "/admin/groups/{id}": {
       "get": {
         "summary": "Group Read",
         "description": "Get Group by id",
@@ -708,7 +708,7 @@
         }
       }
     },
-    "/admin/group/{id}/copy": {
+    "/admin/groups/{id}/copy": {
       "post": {
         "summary": "Group Copy",
         "description": "Create new Group from existing Group by id",
