@@ -254,6 +254,70 @@ class TablesCest
         ]);
         $I->seeResponseCodeIs(422);
         $I->seeResponseContains('table.rules.0.conditions.0.value');
+
+        $I->sendPOST('api/v1/admin/tables', ['table' => [
+            'default_decision' => 'Decline',
+            'default_title' => 'Title 100',
+            'default_description' => 'Description 220',
+            'title' => 'Test title',
+            'description' => 'Test description',
+            'matching_type' => 'first',
+            'fields' => [
+                [
+                    "key" => 'numeric',
+                    "title" => 'numeric',
+                    "source" => "request",
+                    "type" => 'numeric',
+                    "preset" => [
+                        'condition' => '$gte',
+                        'value' => 400,
+                    ]
+                ],
+                [
+                    "key" => 'string',
+                    "title" => 'string',
+                    "source" => "request",
+                    "type" => 'string',
+                    'preset' => null
+                ],
+                [
+                    '_id' => 'invalid',
+                    "key" => 'bool',
+                    "title" => 'bool',
+                    "source" => "request",
+                    "type" => 'boolean',
+                    'preset' => null
+                ]
+            ],
+            'rules' => [
+                [
+                    'than' => 'Approve',
+                    'title' => 'Valid rule title',
+                    'description' => 'Valid rule description',
+                    'conditions' => [
+                        [
+                            'field_key' => 'numeric',
+                            'condition' => '$eq',
+                            'value' => true
+                        ],
+                        [
+                            '_id' => 'invalid',
+                            'field_key' => 'string',
+                            'condition' => '$eq',
+                            'value' => 'Yes'
+                        ],
+                        [
+                            'field_key' => 'bool',
+                            'condition' => '$eq',
+                            'value' => false
+                        ]
+                    ]
+                ]
+            ]
+        ]]);
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseContains('table.fields.2._id');
+        $I->seeResponseContains('table.rules.0.conditions.1._id');
     }
 
     public function ruleIsset(ApiTester $I)
