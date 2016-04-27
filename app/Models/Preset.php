@@ -16,9 +16,9 @@ namespace App\Models;
  */
 class Preset extends Base
 {
-    protected $visible = ['condition', 'value'];
+    protected $visible = ['_id', 'condition', 'value'];
 
-    protected $fillable = ['condition', 'value'];
+    protected $fillable = ['_id', 'condition', 'value'];
 
     protected $casts = [
         '_id' => 'string',

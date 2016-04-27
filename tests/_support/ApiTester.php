@@ -74,6 +74,8 @@ class ApiTester extends \Codeception\Actor
 
         $this->seeResponseMatchesJsonType([
             '_id' => 'string',
+            'title' => 'string',
+            'description' => 'string',
         ], "$jsonPath.tables[*]");
     }
 
@@ -131,6 +133,7 @@ class ApiTester extends \Codeception\Actor
         ], $jsonPath);
 
         $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
             'key' => 'string:regex(@^[a-z_]+$@)',
             'title' => 'string',
             'source' => 'string',
@@ -139,7 +142,7 @@ class ApiTester extends \Codeception\Actor
         ], "$jsonPath.fields[*]");
 
         foreach ($this->getResponseFields()->data->fields as $field) {
-            if(is_array($field->preset)){
+            if (is_array($field->preset)) {
                 foreach (['value', 'condition'] as $item) {
                     $this->assertTrue(array_key_exists($item, $field->preset), "Preset must contains '$item' field");
                 }
@@ -147,21 +150,20 @@ class ApiTester extends \Codeception\Actor
         }
 
         $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
             'than' => 'string|integer|float',
             'description' => 'string',
             'conditions' => 'array',
         ], "$jsonPath.rules[*]");
 
         $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
             'field_key' => 'string',
             'condition' => 'string',
             'value' => 'string|integer|float|boolean',
         ], "$jsonPath.rules[*].conditions[*]");
 
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions[*].matched");
-        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions[*]._id]");
-        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*]._id]");
-        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.fields[*]._id]");
     }
 
     public function assertTableWithAnalytics($jsonPath = '$.data', $code = 200)
@@ -169,7 +171,12 @@ class ApiTester extends \Codeception\Actor
         $this->assertTable($jsonPath, $code);
         $this->seeResponseMatchesJsonType([
             'probability' => 'integer|float',
-            'requests' => 'integer',
+            'requests' => 'integer'
+        ], "$jsonPath.rules[*]");
+
+        $this->seeResponseMatchesJsonType([
+            'probability' => 'integer|float',
+            'requests' => 'integer'
         ], "$jsonPath.rules[*].conditions[*]");
     }
 
@@ -181,6 +188,7 @@ class ApiTester extends \Codeception\Actor
             '_id' => 'string',
             'table' => 'array',
             'group' => 'array|null',
+            'meta' => 'array',
             'default_decision' => $type,
             'final_decision' => $type,
             'updated_at' => 'string',
@@ -222,10 +230,6 @@ class ApiTester extends \Codeception\Actor
             'title' => 'string',
             'description' => 'string',
         ], "$jsonPath.table");
-
-        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions[*]._id]");
-        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*]._id]");
-        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.fields[*]._id]");
     }
 
     public function assertTableDecisionsForConsumer($matching_rules_type = 'first', $jsonPath = '$.data')
@@ -259,6 +263,7 @@ class ApiTester extends \Codeception\Actor
 
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.fields");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.group");
+        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.meta");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.default_decision");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].than");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions");
@@ -282,6 +287,11 @@ class ApiTester extends \Codeception\Actor
         return $this->getResponseFields()->data;
     }
 
+    public function getMongoId()
+    {
+        return strval(new MongoId);
+    }
+
     public function getTableShortData()
     {
         return [
@@ -293,6 +303,7 @@ class ApiTester extends \Codeception\Actor
             'matching_type' => 'first',
             'fields' => [
                 [
+                    "_id" => $this->getMongoId(),
                     "key" => 'numeric',
                     "title" => 'numeric',
                     "source" => "request",
@@ -303,6 +314,7 @@ class ApiTester extends \Codeception\Actor
                     ]
                 ],
                 [
+                    "_id" => $this->getMongoId(),
                     "key" => 'string',
                     "title" => 'string',
                     "source" => "request",
@@ -310,6 +322,7 @@ class ApiTester extends \Codeception\Actor
                     'preset' => null
                 ],
                 [
+                    "_id" => $this->getMongoId(),
                     "key" => 'bool',
                     "title" => 'bool',
                     "source" => "request",
@@ -319,21 +332,25 @@ class ApiTester extends \Codeception\Actor
             ],
             'rules' => [
                 [
+                    "_id" => $this->getMongoId(),
                     'than' => 'Approve',
                     'title' => 'Valid rule title',
                     'description' => 'Valid rule description',
                     'conditions' => [
                         [
+                            "_id" => $this->getMongoId(),
                             'field_key' => 'numeric',
                             'condition' => '$eq',
                             'value' => true
                         ],
                         [
+                            "_id" => $this->getMongoId(),
                             'field_key' => 'string',
                             'condition' => '$eq',
                             'value' => 'Yes'
                         ],
                         [
+                            "_id" => $this->getMongoId(),
                             'field_key' => 'bool',
                             'condition' => '$eq',
                             'value' => false
@@ -341,21 +358,25 @@ class ApiTester extends \Codeception\Actor
                     ]
                 ],
                 [
+                    "_id" => $this->getMongoId(),
                     'than' => 'Decline',
                     'title' => 'Second title',
                     'description' => 'Second description',
                     'conditions' => [
                         [
+                            "_id" => $this->getMongoId(),
                             'field_key' => 'numeric',
                             'condition' => '$eq',
                             'value' => false
                         ],
                         [
+                            "_id" => $this->getMongoId(),
                             'field_key' => 'string',
                             'condition' => '$eq',
                             'value' => 'Not'
                         ],
                         [
+                            "_id" => $this->getMongoId(),
                             'field_key' => 'bool',
                             'condition' => '$eq',
                             'value' => true
@@ -364,6 +385,86 @@ class ApiTester extends \Codeception\Actor
                 ]
             ]
         ];
+    }
+
+    public function getShortTableDataMatchingTypeAll()
+    {
+        $tableData = $this->getTableShortData();
+        $tableData['matching_type'] = 'all';
+        $tableData['default_decision'] = 15;
+        $tableData['rules'] = [
+            [
+                'than' => 100,
+                'title' => 'Valid rule title',
+                'description' => 'Valid rule description',
+                'conditions' => [
+                    [
+                        'field_key' => 'numeric',
+                        'condition' => '$eq',
+                        'value' => true,
+                        'preset' => null
+                    ],
+                    [
+                        'field_key' => 'string',
+                        'condition' => '$eq',
+                        'value' => 'Yes',
+                        'preset' => null
+                    ],
+                    [
+                        'field_key' => 'bool',
+                        'condition' => '$eq',
+                        'value' => false,
+                        'preset' => null
+                    ]
+                ]
+            ],
+            [
+                'than' => -50.74445,
+                'title' => 'Second title',
+                'description' => 'Second description',
+                'conditions' => [
+                    [
+                        'field_key' => 'numeric',
+                        'condition' => '$eq',
+                        'value' => false
+                    ],
+                    [
+                        'field_key' => 'string',
+                        'condition' => '$eq',
+                        'value' => 'Not'
+                    ],
+                    [
+                        'field_key' => 'bool',
+                        'condition' => '$eq',
+                        'value' => true
+                    ]
+                ]
+            ],
+            [
+                'than' => 25.24445,
+                'title' => 'Third title',
+                'description' => 'Third description',
+                'conditions' => [
+                    [
+                        'field_key' => 'numeric',
+                        'condition' => '$eq',
+                        'value' => false
+                    ],
+                    [
+                        'field_key' => 'string',
+                        'condition' => '$eq',
+                        'value' => 'Not'
+                    ],
+                    [
+                        'field_key' => 'bool',
+                        'condition' => '$eq',
+                        'value' => true
+                    ]
+                ]
+            ]
+        ];
+
+        return $tableData;
     }
 
     public function getTableData()
@@ -405,6 +506,7 @@ class ApiTester extends \Codeception\Actor
             }
             $key = strtolower(str_replace(' ', '_', $field));
             $data['fields'][] = [
+                '_id' => $this->getMongoId(),
                 "key" => $key,
                 "title" => $field,
                 "source" => "request",
@@ -424,12 +526,14 @@ class ApiTester extends \Codeception\Actor
                     $value = false;
                 }
                 $conditions[] = [
+                    '_id' => $this->getMongoId(),
                     'field_key' => strtolower(str_replace(' ', '_', $key)),
                     'condition' => '$eq',
                     'value' => $value,
                 ];
             }
             $data['rules'][] = [
+                '_id' => $this->getMongoId(),
                 'than' => $than,
                 'title' => '',
                 'description' => '',
@@ -604,5 +708,14 @@ class ApiTester extends \Codeception\Actor
     public function stdToArray($std)
     {
         return json_decode(json_encode($std), true);
+    }
+
+    public function removeIdsFromArray(array $array)
+    {
+        return array_map(function ($item) {
+            unset($item['_id']);
+
+            return $item;
+        }, $array);
     }
 }

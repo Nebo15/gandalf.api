@@ -238,6 +238,7 @@
         ],
         "parameters": [
           {
+            "_id": "56cde35ff7046652308b4572",
             "name": "table",
             "in": "body",
             "description": "Table object",
@@ -500,7 +501,7 @@
           }
         ],
         "summary": "Group Create",
-        "description": "###Create a new Group.\n All tables must contain the same Field keys.When Field keys of Table which belongs to some Group will be updated, other Field keys of Tables in Group will be also updated to make them the same for the entire group. If a new Field key is added to the table, for each Table in the Group will be added a new condition `$is_set` for all Rules",
+        "description": "###Create a new Group.\n All tables must contain the same Field keys and matchyng_type must be defined as 'first'. When Field keys of Table which belongs to some Group will be updated, other Field keys of Tables in Group will be also updated to make them the same for the entire group. If a new Field key is added to the table, for each Table in the Group will be added a new condition `$is_set` for all Rules",
         "tags": [
           "Admin",
           "Groups"
@@ -548,7 +549,7 @@
                 "probability": {
                   "type": "string",
                   "description": "Group.probability value",
-                  "example": "Some probability"
+                  "example": "random"
                 }
               }
             }
@@ -567,7 +568,7 @@
         }
       }
     },
-    "/admin/group/{id}": {
+    "/admin/groups/{id}": {
       "get": {
         "summary": "Group Read",
         "description": "Get Group by id",
@@ -708,7 +709,7 @@
         }
       }
     },
-    "/admin/group/{id}/copy": {
+    "/admin/groups/{id}/copy": {
       "post": {
         "summary": "Group Copy",
         "description": "Create new Group from existing Group by id",
@@ -780,6 +781,65 @@
         "tags": [
           "Decision",
           "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "Decision object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Decision",
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/decisions/{id}/meta": {
+      "put": {
+        "summary": "Decision Update Meta",
+        "description": "###Set or update Decision Meta by id. \n\nMetadata field supports key-value pairs with the following limitations:\n* Up to 24 keys.\n* Up to 100 characters for the key (alphanumeric characters, hyphens and underscores).\n* Up to 500 characters for the value.\n* String, integer, decimals and boolean values only. All other types will be converted into string.",
+        "tags": [
+          "Decision",
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "table",
+            "in": "body",
+            "description": "Any object. Up to 24 keys, up to 100 characters for the key, up to 500 characters for the value.",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta"
+              ],
+              "properties": {
+                "meta": {
+                  "type": "object",
+                  "description": "Meta Data object. ",
+                  "properties": {
+                    "customerKey": {
+                      "type": "string",
+                      "description": "Customer value",
+                      "example": "Any string up to 500 symbols"
+                    }
+                  }
+                }
+              }
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -933,7 +993,7 @@
       }
     },
     "/admin/changelog/tables/{table_id}/rollback/{changelog_id}": {
-      "get": {
+      "post": {
         "summary": "Changelog Table Rollback",
         "description": "Rollback Table to some state that described in passed Changelog",
         "tags": [
@@ -1470,13 +1530,19 @@
     "Field": {
       "type": "object",
       "required": [
+        "_id",
         "key",
         "title",
         "source",
-        "type"
-        "preset",
+        "type",
+        "preset"
       ],
       "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
         "key": {
           "type": "string",
           "description": "API Field for request",
@@ -1514,10 +1580,16 @@
     "Preset": {
       "type": "object",
       "required": [
+        "_id",
         "condition",
         "value"
       ],
       "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
         "condition": {
           "type": "string",
           "description": "Available rules",
@@ -1553,6 +1625,11 @@
         "conditions"
       ],
       "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
         "than": {
           "type": "string",
           "description": "Decision, when this rule is matched",
@@ -1580,11 +1657,17 @@
     "Condition": {
       "type": "object",
       "required": [
+        "_id",
         "field_key",
         "condition",
         "value"
       ],
       "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
         "field_key": {
           "type": "string",
           "description": "Key for API field key.",
@@ -1619,12 +1702,18 @@
       "type": "object",
       "discriminator": "than",
       "required": [
+        "_id",
         "than",
         "title",
         "description",
         "conditions"
       ],
       "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
         "than": {
           "type": "string",
           "description": "Decision, when this rule is matched",
@@ -1652,6 +1741,7 @@
     "ConditionAnalytics": {
       "type": "object",
       "required": [
+        "_id",
         "field_key",
         "condition",
         "value",
@@ -1659,6 +1749,11 @@
         "requests"
       ],
       "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
         "field_key": {
           "type": "string",
           "description": "Key for API field key.",
@@ -1716,6 +1811,24 @@
           "type": "string",
           "description": "Description of the matched rule or Table.default_description.",
           "example": "Some description"
+        },
+        "meta": {
+          "type": "array",
+          "description": "Array of customer meta data objects. ",
+          "items": {
+            "type": "object",
+            "description": "Meta Data object. ",
+            "properties": {
+              "customerKey": {
+                "type": "string",
+                "description": "Customer value",
+                "example": "Any string up to 500 symbols"
+              }
+            }
+          },
+          "example": {
+            "customerKey": "Customer value"
+          }
         },
         "request": {
           "type": "object",
@@ -1806,12 +1919,18 @@
       "type": "object",
       "discriminator": "than",
       "required": [
+        "_id"
         "than",
         "title",
         "description",
         "conditions"
       ],
       "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
         "than": {
           "type": "string",
           "description": "Decision, when this rule is matched",
@@ -1844,11 +1963,17 @@
     "DecisionCondition": {
       "type": "object",
       "required": [
+        "_id",
         "field_key",
         "condition",
         "value"
       ],
       "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
         "field_key": {
           "type": "string",
           "description": "Key for API field key.",

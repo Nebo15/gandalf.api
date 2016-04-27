@@ -299,6 +299,70 @@ class TablesCest
         ]);
         $I->seeResponseCodeIs(422);
         $I->seeResponseContains('table.rules.0.conditions.0.value');
+
+        $I->sendPOST('api/v1/admin/tables', ['table' => [
+            'default_decision' => 'Decline',
+            'default_title' => 'Title 100',
+            'default_description' => 'Description 220',
+            'title' => 'Test title',
+            'description' => 'Test description',
+            'matching_type' => 'first',
+            'fields' => [
+                [
+                    "key" => 'numeric',
+                    "title" => 'numeric',
+                    "source" => "request",
+                    "type" => 'numeric',
+                    "preset" => [
+                        'condition' => '$gte',
+                        'value' => 400,
+                    ]
+                ],
+                [
+                    "key" => 'string',
+                    "title" => 'string',
+                    "source" => "request",
+                    "type" => 'string',
+                    'preset' => null
+                ],
+                [
+                    '_id' => 'invalid',
+                    "key" => 'bool',
+                    "title" => 'bool',
+                    "source" => "request",
+                    "type" => 'boolean',
+                    'preset' => null
+                ]
+            ],
+            'rules' => [
+                [
+                    'than' => 'Approve',
+                    'title' => 'Valid rule title',
+                    'description' => 'Valid rule description',
+                    'conditions' => [
+                        [
+                            'field_key' => 'numeric',
+                            'condition' => '$eq',
+                            'value' => true
+                        ],
+                        [
+                            '_id' => 'invalid',
+                            'field_key' => 'string',
+                            'condition' => '$eq',
+                            'value' => 'Yes'
+                        ],
+                        [
+                            'field_key' => 'bool',
+                            'condition' => '$eq',
+                            'value' => false
+                        ]
+                    ]
+                ]
+            ]
+        ]]);
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseContains('table.fields.2._id');
+        $I->seeResponseContains('table.rules.0.conditions.1._id');
     }
 
     public function ruleIsset(ApiTester $I)
@@ -757,10 +821,12 @@ class TablesCest
         ];
         $data['rules'] = [
             [
+                '_id' => strval(new MongoId),
                 'than' => 'Approve',
                 'description' => 'New rule',
                 'conditions' => [
                     [
+                        '_id' => strval(new MongoId),
                         'field_key' => 'test_key',
                         'condition' => '$eq',
                         'value' => 'test',
@@ -770,32 +836,7 @@ class TablesCest
         ];
         $I->sendPUT('api/v1/admin/tables/' . $id, ['table' => $data]);
         $I->assertTable();
-        $I->assertResponseDataFields([
-            'title' => $data['title'],
-            'description' => $data['description'],
-            'fields' => [
-                [
-                    "key" => 'test_key',
-                    "title" => 'Test key',
-                    "source" => "request",
-                    "type" => 'string',
-                    'preset' => null
-                ]
-            ],
-            'rules' => [
-                [
-                    'than' => 'Approve',
-                    'description' => 'New rule',
-                    'conditions' => [
-                        [
-                            'field_key' => 'test_key',
-                            'condition' => '$eq',
-                            'value' => 'test',
-                        ],
-                    ],
-                ],
-            ],
-        ]);
+        $I->assertResponseDataFields($data);
     }
 
     public function copy(ApiTester $I)
@@ -839,27 +880,38 @@ class TablesCest
 
     public function analytics(ApiTester $I)
     {
-        $checkProbabilities = function ($probabilities, $requests) use ($I) {
+        $checkProbabilities = function ($probabilities, $requestsConditions, $requestsRule) use ($I) {
             $ruleIndex = 0;
             foreach ($I->getResponseFields()->data->rules as $rule) {
                 $conditionIndex = 0;
                 foreach ($rule->conditions as $condition) {
                     $I->assertEquals(
-                        $probabilities[$ruleIndex][$conditionIndex],
+                        $probabilities[$ruleIndex]['conditions'][$conditionIndex],
                         $condition->probability,
-                        "Wrong probability for {$condition->field_key}:{$condition->condition}=" . var_export(
+                        "Wrong probability for condition {$condition->field_key}:{$condition->condition}=" .
+                        var_export(
                             $condition->value,
                             true
                         )
                     );
 
                     $I->assertEquals(
-                        is_array($requests) ? $requests[$condition->field_key] : $requests,
+                        is_array($requestsConditions) ? $requestsConditions[$condition->field_key] : $requestsConditions,
                         $condition->requests,
                         "Wrong request amount for condition {$condition->field_key}"
                     );
                     $conditionIndex++;
                 }
+                $I->assertEquals(
+                    $probabilities[$ruleIndex]['rule'],
+                    $rule->probability,
+                    "Wrong probability for rule {$rule->title}"
+                );
+                $I->assertEquals(
+                    is_array($requestsRule) ? $requestsRule[$ruleIndex] : $requestsRule,
+                    $rule->requests,
+                    "Wrong request amount for rule {$rule->title}"
+                );
                 $ruleIndex++;
             }
         };
@@ -871,15 +923,15 @@ class TablesCest
         $table = $I->createTable($tableData);
 
         $checkData = [
-            ['numeric' => 340, 'string' => 'Bad', 'bool' => false],
+            ['numeric' => 340, 'string' => 'Bad', 'bool' => true],
             ['numeric' => 350, 'string' => 'Yes', 'bool' => false],
             ['numeric' => 360, 'string' => 'Not', 'bool' => false],
             ['numeric' => 370, 'string' => 'Yes', 'bool' => false],
             ['numeric' => 380, 'string' => 'Not', 'bool' => false],
             ['numeric' => 390, 'string' => 'Yes', 'bool' => true],
-            ['numeric' => 400, 'string' => 'Yes', 'bool' => true],
+            ['numeric' => 400, 'string' => 'Bad', 'bool' => true],
             ['numeric' => 410, 'string' => 'Not', 'bool' => true],
-            ['numeric' => 420, 'string' => 'Bad', 'bool' => true],
+            ['numeric' => 420, 'string' => 'Yes', 'bool' => false],
         ];
         foreach ($checkData as $data) {
             $I->checkDecision($table->_id, $data);
@@ -889,16 +941,22 @@ class TablesCest
 
         $checkProbabilities([
             [
-                round(3 / 9, 5),
-                round(4 / 9, 5),
-                round(5 / 9, 5),
+                'rule' => round(1 / 9, 5),
+                'conditions' => [
+                    round(3 / 9, 5),
+                    round(4 / 9, 5),
+                    round(5 / 9, 5),
+                ]
             ],
             [
-                round(6 / 9, 5),
-                round(3 / 9, 5),
-                round(4 / 9, 5),
+                'rule' => 0,
+                'conditions' => [
+                    round(6 / 9, 5),
+                    round(3 / 9, 5),
+                    round(4 / 9, 5),
+                ]
             ],
-        ], 9);
+        ], 9, 9);
 
         $tableData['fields'][3] = [
             "key" => 'last',
@@ -921,10 +979,10 @@ class TablesCest
         $I->seeResponseCodeIs(200);
 
         $checkData = [
-            ['numeric' => 380, 'string' => 'Bad', 'last' => 250, 'bool' => false],
-            ['numeric' => 390, 'string' => 'Yes', 'last' => 300, 'bool' => false],
-            ['numeric' => 400, 'string' => 'Yes', 'last' => 450, 'bool' => true],
-            ['numeric' => 410, 'string' => 'Not', 'last' => 550, 'bool' => true],
+            ['numeric' => 380, 'string' => 'Not', 'last' => 250, 'bool' => true],
+            ['numeric' => 390, 'string' => 'Not', 'last' => 300, 'bool' => true],
+            ['numeric' => 400, 'string' => 'Yes', 'last' => 450, 'bool' => false],
+            ['numeric' => 410, 'string' => 'Bad', 'last' => 550, 'bool' => false],
             ['numeric' => 420, 'string' => 'Bad', 'last' => 650, 'bool' => true],
         ];
         foreach ($checkData as $data) {
@@ -935,22 +993,28 @@ class TablesCest
         $I->assertTableWithAnalytics();
         $checkProbabilities([
             [
-                round(6 / 14, 5),
-                round(6 / 14, 5),
-                round(7 / 14, 5),
-                round(2 / 5, 5),
+                'rule' => round(1 / 14, 5),
+                'conditions' => [
+                    round(6 / 14, 5),
+                    round(5 / 14, 5),
+                    round(7 / 14, 5),
+                    round(2 / 5, 5),
+                ]
             ],
             [
-                round(8 / 14, 5),
-                round(4 / 14, 5),
-                round(7 / 14, 5),
-                round(3 / 5, 5),
+                'rule' => round(2 / 14, 5),
+                'conditions' => [
+                    round(8 / 14, 5),
+                    round(5 / 14, 5),
+                    round(7 / 14, 5),
+                    round(3 / 5, 5),
+                ]
             ],
         ], [
             'last' => 5,
             'bool' => 14,
             'string' => 14,
             'numeric' => 14,
-        ]);
+        ], 14);
     }
 }

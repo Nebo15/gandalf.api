@@ -12,11 +12,17 @@ class ValidationServiceProvider extends ServiceProvider
     {
         Validator::extend('conditionType', 'App\Validators\TableValidator@conditionType');
         Validator::extend('conditionsCount', 'App\Validators\TableValidator@conditionsCount');
-        Validator::extend('conditionsField', 'App\Validators\TableValidator@conditionsField');
-        Validator::extend('ruleThanType', 'App\Validators\TableValidator@ruleThanType');
+        Validator::extend('conditionsFieldKey', 'App\Validators\TableValidator@conditionsFieldKey');
         Validator::extend('ruleThanType', 'App\Validators\TableValidator@ruleThanType');
         Validator::extend('groupTablesFields', 'App\Validators\GroupValidator@tablesFields');
         Validator::extend('groupTablesExists', 'App\Validators\GroupValidator@tablesExists');
+        Validator::extend('groupTableMatchingType', 'App\Validators\GroupValidator@tableMatchingType');
+        Validator::extend('mongoId', function ($attribute, $value) {
+            return \MongoId::isValid($value);
+        });
+        Validator::extend('metaKeysAmount', function ($attribute, $value) {
+            return $value <= 24;
+        });
         Validator::extend('betweenString', function ($attribute, $value) {
             if (strpos($value, ';') === false) {
                 return false;

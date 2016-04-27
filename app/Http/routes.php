@@ -42,8 +42,9 @@ $app->group(
     ],
     function ($app) use ($api) {
         /** @var Laravel\Lumen\Application $app */
-        $app->get('/decisions', ['uses' => 'TablesController@decisions']);
-        $app->get('/decisions/{id}', ['uses' => 'TablesController@decision']);
+        $app->get('/decisions', ['uses' => 'DecisionsController@readList']);
+        $app->get('/decisions/{id}', ['uses' => 'DecisionsController@read']);
+        $app->put('/decisions/{id}/meta', ['uses' => 'DecisionsController@updateMeta']);
         $app->get('/tables/{id}/analytics', ['uses' => 'TablesController@analytics']);
     }
 );

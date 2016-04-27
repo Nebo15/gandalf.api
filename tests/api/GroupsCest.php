@@ -44,12 +44,14 @@ class GroupsCest
         $I->createProjectAndSetHeader();
 
         $table = $I->createTable();
+        $table2 = $I->createTable($I->getShortTableDataMatchingTypeAll());
 
         $invalid_data = [
             ['probability' => 'random'],
             ['tables' => ['_id' => $table->_id], 'probability' => 'random'],
             ['tables' => [['_id' => $table->_id]], 'probability' => 'invalid'],
             ['tables' => [['invalid' => 'test']], 'probability' => 'random'],
+            ['tables' => [['_id' => $table2->_id]], 'probability' => 'random'],
         ];
         foreach ($invalid_data as $data) {
             $I->sendPOST($this->api_prefix, $data);
@@ -85,7 +87,9 @@ class GroupsCest
         $I->seeResponseCodeIs(200);
 
         $tableData = $I->getTableData();
-        $fields = $tableData['fields'];
+
+        # remove ids from array, because different Group Tables has different _id for Field
+        $fields = $I->removeIdsFromArray($tableData['fields']);
         $fields[4] = [
             'key' => 'updated_key',
             'title' => 'new title',
@@ -120,7 +124,7 @@ class GroupsCest
         foreach ($tableIds as $table_id) {
             $I->sendGET("api/v1/admin/tables/$table_id");
             $data = $I->getResponseFields()->data;
-            $I->assertEquals($fields, $I->stdToArray($data->fields));
+            $I->assertEquals($fields, $I->removeIdsFromArray($I->stdToArray($data->fields)));
             foreach ($data->rules as $rule) {
                 $I->assertEquals(6, count($rule->conditions), "Wrong amount of Rule.Conditions after Table update");
                 $conditionsActual = ['new_key', 'updated_key'];

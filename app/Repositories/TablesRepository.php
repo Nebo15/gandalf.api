@@ -58,85 +58,66 @@ class TablesRepository extends AbstractRepository
         return $model;
     }
 
-    public function getDecisions($size = null, $table_id = null)
-    {
-        if ($table_id) {
-            $query = Decision::where('table._id', $table_id);
-            if ($query->count() <= 0) {
-                $e = new ModelNotFoundException;
-                $e->setModel(Decision::class);
-                throw $e;
-            }
-            $query = $query->orderBy(Decision::CREATED_AT, 'DESC');
-        } else {
-            $query = Decision::orderBy(Decision::CREATED_AT, 'DESC');
-        }
-
-        return $query->paginate(intval($size));
-    }
-
-    public function getDecisionById($id)
-    {
-        return Decision::findById($id);
-    }
-
     public function analyzeTableDecisions($table_id)
     {
         $table = $this->read($table_id);
-        $decisions = Decision::where('table._id', $table_id)->get();
+        $decisions = (new \MongoClient())->selectDB(env('DB_DATABASE'))
+            ->selectCollection((new Decision)->getTable())
+            ->find([], ['rules']);
         $map = [];
-        /** @var Decision $decision */
 
-        foreach ($decisions as $decision) {
-            $rule_index = 0;
-            foreach ($decision->rules as $rule) {
-                $condition_index = 0;
-                foreach ($rule->conditions as $condition) {
-                    $index = "$rule_index@$condition_index";
-                    if (!isset($map[$index])) {
-                        $map[$index] = ['matched' => 0, 'requests' => 0];
+        if (($decisionsAmount = $decisions->count()) > 0) {
+            foreach ($decisions as $decision) {
+                $rules = $decision['rules'];
+
+                foreach ($rules as $rule) {
+                    if (!isset($rule['_id'])) {
+                        # ignore old decisions without Rule._id
+                        continue;
                     }
+                    $ruleIndex = strval($rule['_id']);
+                    foreach ($rule['conditions'] as $condition) {
+                        $index = "$ruleIndex@" . strval($condition['_id']);
+                        if (!isset($map[$index])) {
+                            $map[$index] = ['matched' => 0, 'requests' => 0];
+                        }
 
-                    if ($condition->matched === true) {
-                        $map[$index]['matched']++;
+                        if ($condition['matched'] === true) {
+                            $map[$index]['matched']++;
+                        }
+                        $map[$index]['requests']++;
                     }
-                    $map[$index]['requests']++;
-
-                    $condition_index++;
+                    if (!isset($map[$ruleIndex])) {
+                        $map[$ruleIndex] = ['matched' => 0, 'requests' => 0];
+                    }
+                    $map[$ruleIndex]['requests']++;
+                    if ($rule['than'] === $rule['decision']) {
+                        $map[$ruleIndex]['matched']++;
+                    }
                 }
-                $rule_index++;
             }
         }
 
-        $rule_index = 0;
         foreach ($table->rules as $rule) {
-            $condition_index = 0;
+            $ruleIndex = $rule->_id;
             foreach ($rule->conditions as $condition) {
-                $index = "$rule_index@$condition_index";
+                $index = "$ruleIndex@" . strval($condition['_id']);
                 if (array_key_exists($index, $map)) {
                     $condition->probability = round($map[$index]['matched'] / $map[$index]['requests'], 5);
                 } else {
                     $condition->probability = null;
                 }
-                $condition->requests = $map[$index]['requests'];
+                $condition->requests = array_key_exists($index, $map) ? $map[$index]['requests'] : 0;
                 $rule->conditions()->associate($condition);
-
-                $condition_index++;
             }
-            $rule_index++;
+            $ruleHasRequests = array_key_exists($ruleIndex, $map);
+            $rule->probability = $ruleHasRequests ?
+                round($map[$ruleIndex]['matched'] / $map[$ruleIndex]['requests'], 5) :
+                0;
+            $rule->requests = $ruleHasRequests ? $map[$ruleIndex]['requests'] : 0;
             $table->rules()->associate($rule);
         }
 
         return $table;
-    }
-
-    public function getConsumerDecisions($size = null)
-    {
-        return Decision::orderBy(Decision::CREATED_AT, 'DESC')->paginate(intval($size));
-    }
-
-    public function getConsumerDecision($id)
-    {
-        return Decision::findById($id)->toConsumerArray();
     }
 }

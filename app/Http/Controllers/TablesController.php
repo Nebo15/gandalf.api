@@ -41,18 +41,22 @@ class TablesController extends AbstractController
             'table.default_description' => 'sometimes|required|between:2,512',
             'table.matching_type' => 'required|in:first,all',
             'table.fields' => 'required|array',
+            'table.fields.*._id' => 'sometimes|mongoId',
             'table.fields.*.title' => 'required|string',
             'table.fields.*.key' => 'required|string|not_in:webhook',
             'table.fields.*.type' => 'required|in:numeric,boolean,string',
             'table.fields.*.source' => 'required|in:request',
             'table.fields.*.preset' => 'present|array',
+            'table.fields.*.preset._id' => 'mongoId',
             'table.fields.*.preset.value' => 'required_with:table.fields.*.preset',
             'table.fields.*.preset.condition' => 'required_with:table.fields.*.preset|in:' . $conditionsTypes->getConditionsRules(),
             'table.rules' => 'required|array',
+            'table.rules.*._id' => 'mongoId',
             'table.rules.*.than' => 'required|ruleThanType',
             'table.rules.*.description' => 'sometimes|string',
             'table.rules.*.conditions' => 'required|array|conditionsCount',
-            'table.rules.*.conditions.*.field_key' => 'required|string|conditionsField',
+            'table.rules.*.conditions.*._id' => 'mongoId',
+            'table.rules.*.conditions.*.field_key' => 'required|string|conditionsFieldKey',
             'table.rules.*.conditions.*.condition' => 'required|in:' . $conditionsTypes->getConditionsRules(),
             'table.rules.*.conditions.*.value' => 'required|conditionType',
         ];
@@ -90,18 +94,6 @@ class TablesController extends AbstractController
                 return $model->toListArray();
             }
         );
-    }
-
-    public function decisions()
-    {
-        return $this->response->jsonPaginator(
-            $this->getRepository()->getDecisions($this->request->input('size'), $this->request->input('table_id'))
-        );
-    }
-
-    public function decision($id)
-    {
-        return $this->response->json($this->getRepository()->getDecisionById($id)->toArray());
     }
 
     public function analytics($id)

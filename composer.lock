@@ -4,58 +4,9 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "791dea1a2ee684e1382c8cdea921e36f",
-    "content-hash": "4f8828047b4a1478c74f14103f25090e",
+    "hash": "19c377648f5602055a88adb45da7883f",
+    "content-hash": "c90d11fe6129ba3124e1d3c7729bc0e1",
     "packages": [
-        {
-            "name": "bshaffer/oauth2-server-php",
-            "version": "v1.8.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/bshaffer/oauth2-server-php.git",
-                "reference": "058c98f73209f9c49495e1799d32c035196fe8b8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/bshaffer/oauth2-server-php/zipball/058c98f73209f9c49495e1799d32c035196fe8b8",
-                "reference": "058c98f73209f9c49495e1799d32c035196fe8b8",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.9"
-            },
-            "suggest": {
-                "aws/aws-sdk-php": "~2.8 is required to use the DynamoDB storage engine",
-                "firebase/php-jwt": "~2.2 is required to use JWT features",
-                "predis/predis": "Required to use the Redis storage engine",
-                "thobbs/phpcassa": "Required to use the Cassandra storage engine"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "OAuth2": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Brent Shaffer",
-                    "email": "bshafs@gmail.com",
-                    "homepage": "http://brentertainment.com"
-                }
-            ],
-            "description": "OAuth2 Server for PHP",
-            "homepage": "http://github.com/bshaffer/oauth2-server-php",
-            "keywords": [
-                "auth",
-                "oauth",
-                "oauth2"
-            ],
-            "time": "2015-09-18 18:05:10"
-        },
         {
             "name": "bugsnag/bugsnag",
             "version": "v2.7.0",
@@ -1420,16 +1371,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.18.2",
+            "version": "1.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "064b38c16790249488e7a8b987acf1c9d7383c09"
+                "reference": "5f56ed5212dc509c8dc8caeba2715732abb32dbf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/064b38c16790249488e7a8b987acf1c9d7383c09",
-                "reference": "064b38c16790249488e7a8b987acf1c9d7383c09",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/5f56ed5212dc509c8dc8caeba2715732abb32dbf",
+                "reference": "5f56ed5212dc509c8dc8caeba2715732abb32dbf",
                 "shasum": ""
             },
             "require": {
@@ -1494,7 +1445,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-04-02 13:12:58"
+            "time": "2016-04-12 18:29:35"
         },
         {
             "name": "mtdowling/cron-expression",
@@ -1542,16 +1493,16 @@
         },
         {
             "name": "nebo15/eloquent.changelog",
-            "version": "0.0.3",
+            "version": "0.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/eloquent-changelog.git",
-                "reference": "8b88fd629764d85e572cbbc2b8a9016a7007c9cb"
+                "reference": "cc4373a44de9a2cae4f2b7560ce2730985cfb8e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/eloquent-changelog/zipball/8b88fd629764d85e572cbbc2b8a9016a7007c9cb",
-                "reference": "8b88fd629764d85e572cbbc2b8a9016a7007c9cb",
+                "url": "https://api.github.com/repos/Nebo15/eloquent-changelog/zipball/cc4373a44de9a2cae4f2b7560ce2730985cfb8e7",
+                "reference": "cc4373a44de9a2cae4f2b7560ce2730985cfb8e7",
                 "shasum": ""
             },
             "require": {
@@ -1584,107 +1535,20 @@
                 "eloquent",
                 "laravel"
             ],
-            "time": "2016-03-24 13:47:27"
-        },
-        {
-            "name": "nebo15/lumen.applicationable",
-            "version": "0.0.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Nebo15/lumen-applicationable.git",
-                "reference": "cad31b2c52a1a6a7daa52f886b10c353ede134b0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/cad31b2c52a1a6a7daa52f886b10c353ede134b0",
-                "reference": "cad31b2c52a1a6a7daa52f886b10c353ede134b0",
-                "shasum": ""
-            },
-            "require-dev": {
-                "jenssegers/mongodb": "2.*",
-                "laravel/lumen-framework": "5.2.*",
-                "squizlabs/php_codesniffer": "2.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Nebo15\\LumenApplicationable\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Oleh Samorai"
-                }
-            ],
-            "description": "Interfaces and Traits for applicationable models",
-            "keywords": [
-                "applicationable",
-                "lumen",
-                "mongodb"
-            ],
-            "time": "2016-04-04 13:44:53"
-        },
-        {
-            "name": "nebo15/lumen.oauth2-mongodb",
-            "version": "0.0.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Nebo15/lumen-oauth2-mongo.git",
-                "reference": "dd4835314e04d92ff27acbf1e776ad1728f128fc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-oauth2-mongo/zipball/dd4835314e04d92ff27acbf1e776ad1728f128fc",
-                "reference": "dd4835314e04d92ff27acbf1e776ad1728f128fc",
-                "shasum": ""
-            },
-            "require": {
-                "bshaffer/oauth2-server-php": "~1.8"
-            },
-            "require-dev": {
-                "jenssegers/mongodb": "2.*",
-                "laravel/lumen-framework": "5.2.*",
-                "squizlabs/php_codesniffer": "2.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Nebo15\\LumenOauth2\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Oleh Samorai"
-                }
-            ],
-            "description": "Oauth2 Storage + Oauthable interface with trait for user model",
-            "keywords": [
-                "lumen",
-                "mongo",
-                "oauth2"
-            ],
-            "time": "2016-03-23 14:57:30"
+            "time": "2016-04-12 10:02:31"
         },
         {
             "name": "nebo15/lumen.rest",
-            "version": "0.0.8",
+            "version": "0.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/lumen-rest.git",
-                "reference": "fdfea7ec9680147fead3e9265af52419d6cec112"
+                "reference": "f8d3c816cfb1c833c1b60b1bad9532a59a56fab3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-rest/zipball/fdfea7ec9680147fead3e9265af52419d6cec112",
-                "reference": "fdfea7ec9680147fead3e9265af52419d6cec112",
+                "url": "https://api.github.com/repos/Nebo15/lumen-rest/zipball/f8d3c816cfb1c833c1b60b1bad9532a59a56fab3",
+                "reference": "f8d3c816cfb1c833c1b60b1bad9532a59a56fab3",
                 "shasum": ""
             },
             "require-dev": {
@@ -1713,7 +1577,7 @@
                 "lumen",
                 "rest"
             ],
-            "time": "2016-03-29 12:12:36"
+            "time": "2016-04-12 11:59:44"
         },
         {
             "name": "nesbot/carbon",
@@ -2650,16 +2514,16 @@
         },
         {
             "name": "codeception/codeception",
-            "version": "2.1.7",
+            "version": "2.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/Codeception.git",
-                "reference": "65971b0dee4972710365b6102154cd412a9bf7b1"
+                "reference": "f3daa61f0f11c531b33eb3623ab0daa599d88a79"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/65971b0dee4972710365b6102154cd412a9bf7b1",
-                "reference": "65971b0dee4972710365b6102154cd412a9bf7b1",
+                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/f3daa61f0f11c531b33eb3623ab0daa599d88a79",
+                "reference": "f3daa61f0f11c531b33eb3623ab0daa599d88a79",
                 "shasum": ""
             },
             "require": {
@@ -2727,7 +2591,7 @@
                 "functional testing",
                 "unit testing"
             ],
-            "time": "2016-03-12 01:15:25"
+            "time": "2016-04-15 02:56:43"
         },
         {
             "name": "doctrine/instantiator",
@@ -3031,16 +2895,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.2.3",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "2e89629ff057ebb49492ba08e6995d3a6a80021b"
+                "reference": "31382fef2889136415751badebbd1cb022a4ed72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/2e89629ff057ebb49492ba08e6995d3a6a80021b",
-                "reference": "2e89629ff057ebb49492ba08e6995d3a6a80021b",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/31382fef2889136415751badebbd1cb022a4ed72",
+                "reference": "31382fef2889136415751badebbd1cb022a4ed72",
                 "shasum": ""
             },
             "require": {
@@ -3085,7 +2949,7 @@
                 "stream",
                 "uri"
             ],
-            "time": "2016-02-18 21:54:00"
+            "time": "2016-04-13 19:56:01"
         },
         {
             "name": "jmikola/geojson",

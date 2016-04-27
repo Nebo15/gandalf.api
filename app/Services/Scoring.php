@@ -74,6 +74,7 @@ class Scoring
         /** @var \App\Models\Rule $rule */
         foreach ($table->rules()->get() as $rule) {
             $scoring_rule = [
+                '_id' => new \MongoId($rule->_id),
                 'than' => $rule->than,
                 'title' => $rule->title,
                 'description' => $rule->description,
@@ -98,7 +99,6 @@ class Scoring
                     $conditions_matched = false;
                 }
                 $condition = $condition->getAttributes();
-                unset($condition[Condition::PRIMARY_KEY]);
                 $scoring_rule['conditions'][] = $condition;
 
                 $fieldIndex++;
@@ -108,7 +108,6 @@ class Scoring
                     $final_decision += floatval($rule->than);
                 }
             } else {
-
                 if (!$final_decision and $conditions_matched) {
                     $final_decision = $rule->than;
                     $scoring_data['title'] = $rule->title;
@@ -141,7 +140,6 @@ class Scoring
     {
         if (array_key_exists($field->index, $this->presets)) {
             $value = $this->presets[$field->index];
-
         } elseif ($preset = $field->preset and $preset->condition) {
             $value = $this->conditionsTypes->checkConditionValue($preset->condition, $preset->value, $value);
             $this->presets[$field->index] = $value;
