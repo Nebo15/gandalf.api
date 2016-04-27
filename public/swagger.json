@@ -1919,7 +1919,7 @@
       "type": "object",
       "discriminator": "than",
       "required": [
-        "_id"
+        "_id",
         "than",
         "title",
         "description",
