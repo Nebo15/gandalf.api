@@ -141,7 +141,8 @@ class DecisionsCest
 
     public function updateMetaOk(ApiTester $I)
     {
-        $I->loginAdmin();
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
         $I->createTable($I->getTableShortData());
 
         $decision = $I->checkDecision(
@@ -169,7 +170,8 @@ class DecisionsCest
 
     public function updateMetaInvalid(ApiTester $I)
     {
-        $I->loginAdmin();
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
         $I->createTable($I->getTableShortData());
 
         $decision = $I->checkDecision(
