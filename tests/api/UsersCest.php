@@ -12,7 +12,7 @@ class UsersCest
         $I->createAndLoginClient();
         $faker = $I->getFaker();
         $I->sendPOST(
-            'api/v1/user/',
+            'api/v1/users/',
             ['email' => $faker->email, 'password' => $faker->password(), 'username' => $faker->firstName]
         );
         $I->seeResponseCodeIs(201);
@@ -45,7 +45,7 @@ class UsersCest
         ];
         /** Normal user for Test Duplicate Username */
         $I->sendPOST(
-            'api/v1/user/',
+            'api/v1/users/',
             ['email' => $faker->email, 'password' => $faker->password(), 'username' => 'duplicate']
         );
         $I->seeResponseCodeIs(201);
@@ -57,7 +57,7 @@ class UsersCest
             ];
             foreach ($data as $item) {
                 $normalUserData[$key] = $item;
-                $I->sendPOST('api/v1/user/', $normalUserData);
+                $I->sendPOST('api/v1/users/', $normalUserData);
                 $I->seeResponseCodeIs(422);
                 $I->seeResponseContains('"error":"validation"}');
                 $I->seeResponseContains($key);

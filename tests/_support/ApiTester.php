@@ -644,7 +644,7 @@ class ApiTester extends \Codeception\Actor
                 'username' => $faker->firstName,
             ];
 
-            $this->sendPOST('api/v1/user/', $user_data);
+            $this->sendPOST('api/v1/users/', $user_data);
             $this->seeResponseCodeIs(201);
             $user_info = json_decode($this->grabResponse())->data;
 
