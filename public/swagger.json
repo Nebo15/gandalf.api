@@ -105,6 +105,64 @@
             }
           }
         }
+      },
+      "get": {
+        "summary": "List of Users",
+        "description": "Get list of users with pagging and live search",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "request",
+            "description": "Parameter searching users by usernames. If name == jo, in the response users will be with usernames which starts on jo, Jo, JO",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "size",
+            "in": "request",
+            "description": "Amount of Tables on page",
+            "required": false
+          },
+          {
+            "name": "page",
+            "in": "request",
+            "description": "Page for pagination",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Decision Consumer object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data",
+                "paging"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/UserInList"
+                  },
+                  "description": "Response data object"
+                },
+                "paging": {
+                  "$ref": "#/definitions/Paging",
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/oauth/": {
@@ -123,7 +181,7 @@
             "description": "Grant Type",
             "required": true,
             "type": "string",
-            "enum" : [
+            "enum": [
               "password",
               "refresh_token"
             ]
@@ -171,6 +229,45 @@
         }
       }
     },
+    "/projects/current": {
+      "get": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Get current project",
+        "description": "Get info about current project",
+        "tags": [
+          "Project"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Project",
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/projects/": {
       "post": {
         "security": [
@@ -200,10 +297,19 @@
             "schema": {
               "type": "object",
               "required": [
-                "meta"
+                "meta",
+                "data"
               ],
-              "$ref": "#/definitions/Project",
-              "description": "Response data object"
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/User",
+                  "description": "Response data object"
+                }
+              }
             }
           },
           "422": {
@@ -214,6 +320,46 @@
                 "meta": {
                   "$ref": "#/definitions/Meta",
                   "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Get list of projects",
+        "description": "Get list of projects for current user",
+        "tags": [
+          "Project"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Projects Objects",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Project"
+                  },
+                  "description": "Response data object"
                 }
               }
             }
@@ -246,7 +392,7 @@
             "required": true,
             "type": "array",
             "items": {
-              "type" : "string"
+              "type": "string"
             }
           }
         ],
@@ -296,7 +442,6 @@
             "description": "Id of existing user",
             "required": true,
             "type": "string"
-
           },
           {
             "name": "role",
@@ -310,8 +455,89 @@
             "required": true,
             "type": "array",
             "items": {
-              "type" : "string"
+              "type": "string"
             }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta"
+              ],
+              "$ref": "#/definitions/Project",
+              "description": "Response data object"
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Get Current user info",
+        "description": "Get info about current user",
+        "tags": [
+          "Project",
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Applicationable user object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "description": "Response data object",
+                  "$ref": "#/definitions/ProjectUser"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Remove user from project",
+        "description": "Adding existing user to the current project. Share project with other users with different scopes",
+        "tags": [
+          "Project",
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "description": "Id of existing user",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
@@ -1995,6 +2221,56 @@
           "items": {
             "type": "string"
           }
+        },
+        "username": {
+          "type": "string",
+          "description": "User nickname",
+          "example": "user123"
+        },
+        "email": {
+          "type": "string",
+          "description": "User email",
+          "example": "test@mail.com"
+        }
+      }
+    },
+    "UserInList": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific project user. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "username": {
+          "type": "string",
+          "description": "User nickname",
+          "example": "user123"
+        }
+      }
+    },
+    "Paging": {
+      "type": "object",
+      "properties": {
+        "size": {
+          "type": "integer",
+          "description": "",
+          "example": 15
+        },
+        "total": {
+          "type": "integer",
+          "description": "",
+          "example": 40
+        },
+        "current_page": {
+          "type": "integer",
+          "description": "",
+          "example": 1
+        },
+        "last_page": {
+          "type": "integer",
+          "description": "",
+          "example": 3
         }
       }
     },

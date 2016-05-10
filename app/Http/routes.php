@@ -34,6 +34,14 @@ $app->post('api/v1/users/', [
     'middleware' => 'oauth.basic.client'
 ]);
 
+/**
+ * Get list of users
+ */
+$app->get('api/v1/users/', [
+    'uses' => 'App\Http\Controllers\UsersController@readListWithFilters',
+    'middleware' => 'oauth'
+]);
+
 $app->group(
     [
         'prefix' => 'api/v1/admin',

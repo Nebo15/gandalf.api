@@ -1,9 +1,11 @@
 <?php
 return [
     'middleware' => ['oauth', 'applicationable.acl'],
+    'user_model' => 'App\Models\User',
     'routes' => [
         'prefix' => '/api/v1/',
         'applications' => '/projects',
+        'current_application' => '/projects/current',
         'consumers' => '/projects/consumers',
         'users' => '/projects/users',
     ],

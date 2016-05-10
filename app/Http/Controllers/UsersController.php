@@ -6,6 +6,7 @@
 namespace App\Http\Controllers;
 
 use Nebo15\REST\AbstractController;
+use Nebo15\REST\Interfaces\ListableInterface;
 
 class UsersController extends AbstractController
 {
@@ -23,4 +24,19 @@ class UsersController extends AbstractController
             'password' => 'sometimes|required',
         ],
     ];
+
+    public function readListWithFilters()
+    {
+        return $this->response->jsonPaginator(
+            $this->getRepository()
+                ->getModel()
+                ->query()
+                ->where(['username' => new \MongoRegex('/^' . ($this->request->input('name', '.')) . '.*/\i')])
+                ->paginate(intval($this->request->input('size'))),
+            [],
+            function (ListableInterface $model) {
+                return $model->toListArray();
+            }
+        );
+    }
 }
