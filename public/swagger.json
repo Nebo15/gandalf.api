@@ -165,6 +165,40 @@
         }
       }
     },
+    "/users/current": {
+      "get": {
+        "summary": "Info about current user",
+        "description": "Get info about current user",
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "User object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/User"
+                  },
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/oauth/": {
       "post": {
         "summary": "Get user access token",

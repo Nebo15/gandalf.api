@@ -29,6 +29,11 @@ $changelog->api('api/v1/admin', ['auth.admin']);
 $app->make('oauth.routes')->makeRestRoutes();
 $app->make('Applicationable.routes')->makeRoutes();
 
+$app->get('api/v1/users/current', [
+    'uses' => 'App\Http\Controllers\UsersController@getUserInfo',
+    'middleware' => ['oauth']
+]);
+
 $app->post('api/v1/users/', [
     'uses' => 'App\Http\Controllers\UsersController@create',
     'middleware' => 'oauth.basic.client'

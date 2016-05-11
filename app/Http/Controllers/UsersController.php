@@ -39,4 +39,10 @@ class UsersController extends AbstractController
             }
         );
     }
+
+    public function getUserInfo()
+    {
+        return $this->response->json($this->request->user()->toArray());
+    }
+
 }

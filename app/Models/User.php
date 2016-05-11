@@ -28,7 +28,7 @@ class User extends Base implements
         '_id', 'username'
     ];
 
-    protected $visible = [];
+    protected $visible = ['_id', 'username', 'email'];
 
     protected $fillable = ['username', 'email', 'password'];
 
