@@ -660,7 +660,7 @@
         "summary": "Update user into Project",
         "description": "Updating existing user into project.",
         "tags": [
-          "Project",
+          "Project"
         ],
         "parameters": [
           {
