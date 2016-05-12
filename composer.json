@@ -13,8 +13,7 @@
         "nebo15/eloquent.changelog": "*",
         "bugsnag/bugsnag-laravel": "1.*",
         "nebo15/lumen.applicationable": "*",
-        "nebo15/lumen.oauth2-mongodb": "*",
-        "nebo15/eloquent.changelog": "*"
+        "nebo15/lumen.oauth2-mongodb": "*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
