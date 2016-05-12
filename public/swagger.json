@@ -455,6 +455,129 @@
             }
           }
         }
+      },
+      "put": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Update consumer",
+        "description": "Update description or scopes of consumer, by client_id",
+        "tags": [
+          "Project"
+        ],
+        "parameters": [
+          {
+            "name": "client_id",
+            "description": "Client_id from consumer info",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "description": "Description of consumer",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "description": "Scopes of consumer",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Project",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Delete consumer",
+        "description": "Remove consumer from the project by client_id",
+        "tags": [
+          "Project"
+        ],
+        "parameters": [
+          {
+            "name": "client_id",
+            "description": "Client id of your consumer",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Project",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/projects/users": {
@@ -499,10 +622,88 @@
             "schema": {
               "type": "object",
               "required": [
-                "meta"
+                "meta",
+                "data"
               ],
-              "$ref": "#/definitions/Project",
-              "description": "Response data object"
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Project",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Update user into Project",
+        "description": "Updating existing user into project.",
+        "tags": [
+          "Project",
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "description": "Id of existing user",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "role",
+            "description": "Role of user",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "description": "Scopes of consumer",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Project",
+                  "description": "Response data object"
+                }
+              }
             }
           },
           "422": {
@@ -580,10 +781,19 @@
             "schema": {
               "type": "object",
               "required": [
-                "meta"
+                "meta",
+                "data"
               ],
-              "$ref": "#/definitions/Project",
-              "description": "Response data object"
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Project",
+                  "description": "Response data object"
+                }
+              }
             }
           },
           "422": {
