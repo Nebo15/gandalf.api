@@ -1632,16 +1632,16 @@
         },
         {
             "name": "nebo15/lumen.oauth2-mongodb",
-            "version": "0.0.10",
+            "version": "0.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/lumen-oauth2-mongo.git",
-                "reference": "d9aa8fab85514275f17059d8123ed55a833b1466"
+                "reference": "17094b48ec1171654f9da2354133fcd82af8d87a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-oauth2-mongo/zipball/d9aa8fab85514275f17059d8123ed55a833b1466",
-                "reference": "d9aa8fab85514275f17059d8123ed55a833b1466",
+                "url": "https://api.github.com/repos/Nebo15/lumen-oauth2-mongo/zipball/17094b48ec1171654f9da2354133fcd82af8d87a",
+                "reference": "17094b48ec1171654f9da2354133fcd82af8d87a",
                 "shasum": ""
             },
             "require": {
@@ -1673,7 +1673,7 @@
                 "mongo",
                 "oauth2"
             ],
-            "time": "2016-05-12 11:08:09"
+            "time": "2016-05-12 14:24:54"
         },
         {
             "name": "nebo15/lumen.rest",
