@@ -6,6 +6,8 @@
 namespace App\Repositories;
 
 use App\Models\Decision;
+use Nebo15\LumenApplicationable\ApplicationableHelper;
+use Nebo15\LumenApplicationable\Contracts\Applicationable;
 use Nebo15\REST\AbstractRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -46,6 +48,9 @@ class TablesRepository extends AbstractRepository
     {
         /** @var \App\Models\Table $model */
         $model = $id ? $this->read($id) : $this->getModel()->newInstance();
+        if ($model instanceof Applicationable) {
+            ApplicationableHelper::addApplication($model);
+        }
         $model->fill($values);
         if (isset($values['fields'])) {
             $model->setFields($values['fields']);

@@ -649,7 +649,7 @@ class ApiTester extends \Codeception\Actor
             $user_info = json_decode($this->grabResponse())->data;
 
 
-            $this->sendPOST('oauth/',
+            $this->sendPOST('api/v1/oauth/',
                 [
                     'grant_type' => 'password',
                     'username' => $user_data['username'],
