@@ -35,6 +35,10 @@ class TablesRepository extends AbstractRepository
                 $where[$field] = new \MongoRegex("/$filter/i");
             }
         }
+        if (!empty($filters['matching_type'])) {
+            $where['matching_type'] = $filters['matching_type'];
+        }
+
         if (!$where) {
             return $this->readList($size);
         }
