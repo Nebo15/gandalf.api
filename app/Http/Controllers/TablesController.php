@@ -27,6 +27,7 @@ class TablesController extends AbstractController
         'readList' => [
             'title' => 'sometimes|min:2',
             'description' => 'sometimes|min:2',
+            'matching_type' => 'sometimes|in:first,all',
         ]
     ];
 
@@ -87,6 +88,8 @@ class TablesController extends AbstractController
 
     public function readList()
     {
+        $this->validateRoute();
+
         return $this->response->jsonPaginator(
             $this->getRepository()->readListWithFilters($this->request->all()),
             [],
