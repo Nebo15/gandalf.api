@@ -300,66 +300,68 @@ class TablesCest
         $I->seeResponseCodeIs(422);
         $I->seeResponseContains('table.rules.0.conditions.0.value');
 
-        $I->sendPOST('api/v1/admin/tables', ['table' => [
-            'default_decision' => 'Decline',
-            'default_title' => 'Title 100',
-            'default_description' => 'Description 220',
-            'title' => 'Test title',
-            'description' => 'Test description',
-            'matching_type' => 'first',
-            'fields' => [
-                [
-                    "key" => 'numeric',
-                    "title" => 'numeric',
-                    "source" => "request",
-                    "type" => 'numeric',
-                    "preset" => [
-                        'condition' => '$gte',
-                        'value' => 400,
+        $I->sendPOST('api/v1/admin/tables', [
+            'table' => [
+                'default_decision' => 'Decline',
+                'default_title' => 'Title 100',
+                'default_description' => 'Description 220',
+                'title' => 'Test title',
+                'description' => 'Test description',
+                'matching_type' => 'first',
+                'fields' => [
+                    [
+                        "key" => 'numeric',
+                        "title" => 'numeric',
+                        "source" => "request",
+                        "type" => 'numeric',
+                        "preset" => [
+                            'condition' => '$gte',
+                            'value' => 400,
+                        ]
+                    ],
+                    [
+                        "key" => 'string',
+                        "title" => 'string',
+                        "source" => "request",
+                        "type" => 'string',
+                        'preset' => null
+                    ],
+                    [
+                        '_id' => 'invalid',
+                        "key" => 'bool',
+                        "title" => 'bool',
+                        "source" => "request",
+                        "type" => 'boolean',
+                        'preset' => null
                     ]
                 ],
-                [
-                    "key" => 'string',
-                    "title" => 'string',
-                    "source" => "request",
-                    "type" => 'string',
-                    'preset' => null
-                ],
-                [
-                    '_id' => 'invalid',
-                    "key" => 'bool',
-                    "title" => 'bool',
-                    "source" => "request",
-                    "type" => 'boolean',
-                    'preset' => null
-                ]
-            ],
-            'rules' => [
-                [
-                    'than' => 'Approve',
-                    'title' => 'Valid rule title',
-                    'description' => 'Valid rule description',
-                    'conditions' => [
-                        [
-                            'field_key' => 'numeric',
-                            'condition' => '$eq',
-                            'value' => true
-                        ],
-                        [
-                            '_id' => 'invalid',
-                            'field_key' => 'string',
-                            'condition' => '$eq',
-                            'value' => 'Yes'
-                        ],
-                        [
-                            'field_key' => 'bool',
-                            'condition' => '$eq',
-                            'value' => false
+                'rules' => [
+                    [
+                        'than' => 'Approve',
+                        'title' => 'Valid rule title',
+                        'description' => 'Valid rule description',
+                        'conditions' => [
+                            [
+                                'field_key' => 'numeric',
+                                'condition' => '$eq',
+                                'value' => true
+                            ],
+                            [
+                                '_id' => 'invalid',
+                                'field_key' => 'string',
+                                'condition' => '$eq',
+                                'value' => 'Yes'
+                            ],
+                            [
+                                'field_key' => 'bool',
+                                'condition' => '$eq',
+                                'value' => false
+                            ]
                         ]
                     ]
                 ]
             ]
-        ]]);
+        ]);
         $I->seeResponseCodeIs(422);
         $I->seeResponseContains('table.fields.2._id');
         $I->seeResponseContains('table.rules.0.conditions.1._id');
@@ -1016,5 +1018,35 @@ class TablesCest
             'string' => 14,
             'numeric' => 14,
         ], 14);
+    }
+
+    public function filters(ApiTester $I)
+    {
+        $I->loginAdmin();
+
+        $tableData = $I->getTableShortData();
+        $table = $I->createTable($tableData);
+
+        $tableDataAll = $I->getShortTableDataMatchingTypeAll();
+        $tableDataAll['description'] = 'Matching type all';
+        $tableAll = $I->createTable($tableDataAll);
+
+        $I->sendGET('api/v1/admin/tables?title=Title');
+        $I->assertTrue(count($I->getResponseFields()->data) == 2, "Wrong amount of the Tables by filter 'Title'");
+
+        $I->sendGET('api/v1/admin/tables?description=cription');
+        $I->assertEquals($table->_id, $I->getResponseFields()->data[0]->_id);
+
+        $I->sendGET('api/v1/admin/tables?description=ching');
+        $I->assertEquals($tableAll->_id, $I->getResponseFields()->data[0]->_id);
+
+        $I->sendGET('api/v1/admin/tables?matching_type=invalid');
+        $I->seeResponseCodeIs(422);
+
+        $I->sendGET('api/v1/admin/tables?matching_type=all');
+        $I->assertEquals($tableAll->_id, $I->getResponseFields()->data[0]->_id);
+
+        $I->sendGET('api/v1/admin/tables?matching_type=first');
+        $I->assertEquals($table->_id, $I->getResponseFields()->data[0]->_id);
     }
 }
