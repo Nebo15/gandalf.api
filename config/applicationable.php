@@ -48,6 +48,7 @@ return [
         ],
         'delete' => [
             '~^\/api\/v1\/admin\/groups\/(.+)$~' => ['read', 'delete'],
+            '~^\/api\/v1\/projects\/(.+)$~' => ['read', 'delete'],
             '~^\/api\/v1\/admin\/tables\/(.+)$~' => ['read', 'delete'],
         ],
     ],

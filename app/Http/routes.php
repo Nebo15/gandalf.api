@@ -47,6 +47,11 @@ $app->get('api/v1/users/', [
     'middleware' => 'oauth'
 ]);
 
+$app->delete('api/v1/projects', [
+    'uses' => 'App\Http\Controllers\ProjectsController@deleteProject',
+    'middleware' => ['oauth', 'applicationable', 'applicationable.acl']
+]);
+
 $app->group(
     [
         'prefix' => 'api/v1/admin',

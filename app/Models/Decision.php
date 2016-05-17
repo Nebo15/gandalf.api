@@ -22,7 +22,8 @@ namespace App\Models;
  * @property Field[] $fields
  * @method static Decision findById($id)
  * @method Decision save(array $options = [])
- * @method static \Illuminate\Pagination\LengthAwarePaginator paginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null)
+ * @method static \Illuminate\Pagination\LengthAwarePaginator paginate($perPage = 15, $columns = ['*'], $pageName =
+ *     'page', $page = null)
  */
 class Decision extends Base
 {
@@ -39,7 +40,7 @@ class Decision extends Base
         'default_decision',
         'final_decision',
         self::CREATED_AT,
-        self::UPDATED_AT
+        self::UPDATED_AT,
     ];
 
     protected $fillable = [
@@ -52,7 +53,7 @@ class Decision extends Base
         'request',
         'rules',
         'default_decision',
-        'final_decision'
+        'final_decision',
     ];
 
     protected $attributes = [
@@ -89,9 +90,9 @@ class Decision extends Base
                 return [
                     'title' => $rule->title,
                     'description' => $rule->description,
-                    'decision' => $rule->decision
+                    'decision' => $rule->decision,
                 ];
-            })->toArray()
+            })->toArray(),
         ];
     }
 

@@ -303,6 +303,46 @@
       }
     },
     "/projects/": {
+      "get": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Get list of projects",
+        "description": "Get list of projects for current user",
+        "tags": [
+          "Project"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Projects Objects",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Project"
+                  },
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "security": [
           {
@@ -429,14 +469,14 @@
           }
         }
       },
-      "get": {
+      "delete": {
         "security": [
           {
             "oauth2": []
           }
         ],
-        "summary": "Get list of projects",
-        "description": "Get list of projects for current user",
+        "summary": "Delete project",
+        "description": "***WARNING!!!*** This method will delete all Tables and Groups which connected to the project",
         "tags": [
           "Project"
         ],

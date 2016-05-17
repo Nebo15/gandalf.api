@@ -25,7 +25,8 @@ class User extends Base implements
     use ListableTrait, Authenticatable, Authorizable, Oauthable, ApplicationableUserTrait;
 
     protected $listable = [
-        '_id', 'username'
+        '_id',
+        'username',
     ];
 
     protected $visible = ['_id', 'username', 'email'];

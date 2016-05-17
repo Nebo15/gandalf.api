@@ -48,7 +48,7 @@ class Table extends Base implements ListableInterface, Applicationable
         'default_title',
         'default_description',
         'rules',
-        'fields'
+        'fields',
     ];
 
     protected $fillable = [
@@ -57,7 +57,7 @@ class Table extends Base implements ListableInterface, Applicationable
         'default_title',
         'default_description',
         'default_decision',
-        'matching_type'
+        'matching_type',
     ];
 
     protected $perPage = 20;
@@ -74,7 +74,7 @@ class Table extends Base implements ListableInterface, Applicationable
     {
         return [
             'fields' => $this->fields,
-            'rules' => $this->rules
+            'rules' => $this->rules,
         ];
     }
 

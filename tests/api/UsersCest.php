@@ -114,4 +114,12 @@ class UsersCest
         $I->sendPUT('api/v1/projects', ['description' => 'Edited']);
         $I->assertProject();
     }
+
+    public function deleteProject(ApiTester $I)
+    {
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
+        $I->createGroup(2);
+        $I->sendDELETE('api/v1/projects');
+    }
 }
