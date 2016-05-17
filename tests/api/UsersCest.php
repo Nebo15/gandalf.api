@@ -85,4 +85,33 @@ class UsersCest
         $I->sendPOST('api/v1/projects/consumers', ['description' => $faker->text('20'), 'scope' => ['check', 'undefined_scope']]);
         $I->seeResponseCodeIs(422);
     }
+
+    public function findUsers(ApiTester $I)
+    {
+        $usersList = [
+            $I->createUser(true),
+            $I->createUser(true),
+            $I->createUser(true),
+            $I->createUser(true),
+        ];
+        $I->createAndLoginUser();
+        $I->sendGET('api/v1/users');
+        $I->sendGET('api/v1/users?name=' . substr($usersList[0]->username,0, 3));
+        $foundUsers = json_encode($I->getResponseFields()->data);
+        $I->assertContains($usersList[0]->username, $foundUsers);
+        $I->assertContains($usersList[0]->_id, $foundUsers);
+        list($email) = explode('@', $usersList[1]->email);
+        $I->sendGET('api/v1/users?name=' . $email . '@');
+        $foundUsers = json_encode($I->getResponseFields()->data);
+        $I->assertContains($usersList[1]->username, $foundUsers);
+        $I->assertContains($usersList[1]->_id, $foundUsers);
+    }
+
+    public function updateProject(ApiTester $I)
+    {
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
+        $I->sendPUT('api/v1/projects', ['description' => 'Edited']);
+        $I->assertProject();
+    }
 }

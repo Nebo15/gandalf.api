@@ -30,6 +30,7 @@ return [
             '~^\/api\/v1\/admin\/tables\/(.+)$~' => ['read'],
             '~^\/api\/v1\/admin\/decisions$~' => ['read'],
             '~^\/api\/v1\/admin\/decisions\/(.+)$~' => ['read'],
+            '~^\/api\/v1\/admin\/changelog\/tables\/(.+)$~' => ['read'],
             '~^\/api\/v1\/decisions\/(.+)$~' => ['check'],
         ],
         'post' => [

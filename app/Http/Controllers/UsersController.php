@@ -27,11 +27,17 @@ class UsersController extends AbstractController
 
     public function readListWithFilters()
     {
+        $model = $this->getRepository()
+            ->getModel()
+            ->query();
+        if (strstr($this->request->input('name', ''), '@') === false) {
+            $model->where(['username' => new \MongoRegex('/^' . ($this->request->input('name', '.')) . '.*/\i')]);
+        } else {
+            $model->where(['email' => new \MongoRegex('/^' . ($this->request->input('name', '.')) . '.*/\i')]);
+        }
+
         return $this->response->jsonPaginator(
-            $this->getRepository()
-                ->getModel()
-                ->query()
-                ->where(['username' => new \MongoRegex('/^' . ($this->request->input('name', '.')) . '.*/\i')])
+            $model
                 ->paginate(intval($this->request->input('size'))),
             [],
             function (ListableInterface $model) {

@@ -116,7 +116,7 @@
           {
             "name": "name",
             "in": "request",
-            "description": "Parameter searching users by usernames. If name == jo, in the response users will be with usernames which starts on jo, Jo, JO",
+            "description": "Parameter searching users by usernames or emails. If name == jo, in the response users will be with usernames which starts on jo, Jo, JO. Searching by email enabled just when parameter has @",
             "required": false,
             "type": "string"
           },
@@ -135,7 +135,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Decision Consumer object",
+            "description": "List found users",
             "schema": {
               "type": "object",
               "required": [
@@ -320,8 +320,14 @@
         "parameters": [
           {
             "name": "title",
-            "description": "Title of project",
+            "description": "Title of the project",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "description": "Description of the project",
+            "required": false,
             "type": "string"
           }
         ],
@@ -340,7 +346,70 @@
                   "description": "Meta data"
                 },
                 "data": {
-                  "$ref": "#/definitions/User",
+                  "$ref": "#/definitions/Project",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Update project",
+        "description": "Can update project",
+        "tags": [
+          "Project"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "title",
+            "description": "Title of the project",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "description": "Description of the project",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Project",
                   "description": "Response data object"
                 }
               }
