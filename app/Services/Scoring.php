@@ -83,16 +83,16 @@ class Scoring
             $conditions_matched = true;
             $fieldIndex = 0;
             foreach ($rule->conditions as $condition) {
-
+                $fieldKey = $condition->field_key;
                 /** @var Field $field */
-                $field = $fieldsCollection->offsetGet($fieldIndex);
-                if ($field->key != $condition->field_key) {
-                    throw new HttpException(
-                        500,
-                        "Field key '{$field->key}' and condition key '{$condition->field_key}' does not matched"
-                    );
+                $field = $fieldsCollection->filter(function ($item) use ($fieldKey) {
+                    return $item->key == $fieldKey;
+                })->first();
+
+                if (!$field) {
+                    # skip, because file may not be exists
+                    continue;
                 }
-                $field->index = $fieldIndex;
                 $this->checkCondition($condition, $this->prepareFieldPreset($field, $values[$condition->field_key]));
 
                 if (!$condition->matched) {
@@ -138,11 +138,11 @@ class Scoring
 
     private function prepareFieldPreset(Field $field, $value)
     {
-        if (array_key_exists($field->index, $this->presets)) {
-            $value = $this->presets[$field->index];
+        if (array_key_exists($field->key, $this->presets)) {
+            $value = $this->presets[$field->key];
         } elseif ($preset = $field->preset and $preset->condition) {
             $value = $this->conditionsTypes->checkConditionValue($preset->condition, $preset->value, $value);
-            $this->presets[$field->index] = $value;
+            $this->presets[$field->key] = $value;
         }
 
         return $value;

@@ -57,7 +57,7 @@ class TablesController extends AbstractController
             'table.rules.*.description' => 'sometimes|string',
             'table.rules.*.conditions' => 'required|array|conditionsCount',
             'table.rules.*.conditions.*._id' => 'mongoId',
-            'table.rules.*.conditions.*.field_key' => 'required|string|conditionsFieldKey',
+            'table.rules.*.conditions.*.field_key' => 'required|string',
             'table.rules.*.conditions.*.condition' => 'required|in:' . $conditionsTypes->getConditionsRules(),
             'table.rules.*.conditions.*.value' => 'required|conditionType',
         ];

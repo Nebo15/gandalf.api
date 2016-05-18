@@ -86,18 +86,6 @@ class TableObserver
                                     ]));
                                 }
                             }
-                            if ($oldFieldsKeys) {
-                                foreach ($oldFieldsKeys as $oldFieldKey) {
-                                    $conditionsToRemove = [];
-                                    /** @var Condition $condition */
-                                    foreach ($rule->conditions()->get() as $condition) {
-                                        if ($condition->field_key == $oldFieldKey) {
-                                            $conditionsToRemove = $condition->_id;
-                                        }
-                                    }
-                                    $rule->conditions()->dissociate($conditionsToRemove);
-                                }
-                            }
                             $groupTable->rules()->associate($rule);
                         }
                     }
