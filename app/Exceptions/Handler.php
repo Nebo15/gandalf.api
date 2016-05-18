@@ -75,11 +75,7 @@ class Handler extends ExceptionHandler
         } elseif ($e instanceof HttpException) {
             $http_code = $e->getStatusCode();
             $error_code = $e->getMessage() ?: 'http';
-        } elseif ($e instanceof AccessDeniedException) {
-            $http_code = 403;
-            $error_code = 'access_denied';
-            $meta['error_message'] = $e->getMessage();
-        } elseif ($e instanceof MiddlewareException) {
+        } elseif ($e instanceof AccessDeniedException or $e instanceof MiddlewareException) {
             $http_code = 403;
             $error_code = 'access_denied';
             $meta['error_message'] = $e->getMessage();

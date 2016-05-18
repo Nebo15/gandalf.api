@@ -433,6 +433,8 @@ class TablesCest
         $I->seeResponseCodeIs(401);
 
         $I->loginUser($user);
+        $I->checkDecision($table->_id, ['is_set' => 1000, 'second' => 'test']);
+
         $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
         $I->assertResponseDataFields([
             'final_decision' => 'Approve',
@@ -1022,7 +1024,8 @@ class TablesCest
 
     public function filters(ApiTester $I)
     {
-        $I->loginAdmin();
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
 
         $tableData = $I->getTableShortData();
         $table = $I->createTable($tableData);

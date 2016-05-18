@@ -50,5 +50,4 @@ class UsersController extends AbstractController
     {
         return $this->response->json($this->request->user()->toArray());
     }
-
 }

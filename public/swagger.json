@@ -1280,6 +1280,308 @@
         }
       }
     },
+    "/admin/group": {
+      "get": {
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ],
+        "summary": "Groups List",
+        "description": "Get list of Groups",
+        "tags": [
+          "Admin",
+          "Groups"
+        ],
+        "parameters": [
+          {
+            "name": "size",
+            "in": "request",
+            "description": "Amount of Groups on page",
+            "required": false
+          },
+          {
+            "name": "page",
+            "in": "request",
+            "description": "Page for pagination",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of Groups",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "type": "array",
+                  "description": "Response data object",
+                  "items": {
+                    "$ref": "#/definitions/GroupList"
+                  }
+                },
+                "paging": {
+                  "$ref": "#/definitions/Paging",
+                  "description": "Paging object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ],
+        "summary": "Group Create",
+        "description": "###Create a new Group.\n All tables must contain the same Field keys and matchyng_type must be defined as 'first'. When Field keys of Table which belongs to some Group will be updated, other Field keys of Tables in Group will be also updated to make them the same for the entire group. If a new Field key is added to the table, for each Table in the Group will be added a new condition `$is_set` for all Rules",
+        "tags": [
+          "Admin",
+          "Groups"
+        ],
+        "parameters": [
+          {
+            "name": "table",
+            "in": "body",
+            "description": "Group object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "tables",
+                "title",
+                "description",
+                "probability"
+              ],
+              "properties": {
+                "tables": {
+                  "type": "array",
+                  "description": "Array of Short Table objects.",
+                  "items": {
+                    "type": "object",
+                    "description": "Short Table object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "description": "Table ID. MongoID",
+                        "example": "56c31536a60ad644060041af"
+                      }
+                    }
+                  }
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Group.title value",
+                  "example": "Some title"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Group.description value",
+                  "example": "Some description"
+                },
+                "probability": {
+                  "type": "string",
+                  "description": "Group.probability value",
+                  "example": "random"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Created Group",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Group"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/groups/{id}": {
+      "get": {
+        "summary": "Group Read",
+        "description": "Get Group by id",
+        "tags": [
+          "Admin",
+          "Groups"
+        ],
+        "responses": {
+          "200": {
+            "description": "Group object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Group",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Group Update",
+        "description": "Update Group by id",
+        "tags": [
+          "Admin",
+          "Groups"
+        ],
+        "parameters": [
+          {
+            "name": "table",
+            "in": "body",
+            "description": "Group object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "tables": {
+                  "type": "array",
+                  "description": "Array of Short Table objects.",
+                  "items": {
+                    "type": "object",
+                    "description": "Short Table object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "description": "Table ID. MongoID",
+                        "example": "56c31536a60ad644060041af"
+                      }
+                    }
+                  }
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Group.title value",
+                  "example": "Some title"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Group.description value",
+                  "example": "Some description"
+                },
+                "probability": {
+                  "type": "string",
+                  "description": "Group.probability value",
+                  "example": "Some probability"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Group object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Group",
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Group Delete",
+        "description": "Delete Group by id",
+        "tags": [
+          "Admin",
+          "Groups"
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/groups/{id}/copy": {
+      "post": {
+        "summary": "Group Copy",
+        "description": "Create new Group from existing Group by id",
+        "tags": [
+          "Admin",
+          "Groups"
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Group",
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/admin/decisions": {
       "get": {
         "security": [
@@ -1648,6 +1950,102 @@
           "type": "integer",
           "description": "HTTP response code",
           "example": 200
+        }
+      }
+    },
+    "GroupList": {
+      "type": "object",
+      "description": "",
+      "required": [
+        "_id",
+        "title",
+        "probability",
+        "tables"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Group. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "tables": {
+          "type": "array",
+          "description": "Array of tables",
+          "items": {
+            "type": "object",
+            "description": "Short Table object",
+            "properties": {
+              "_id": {
+                "type": "string",
+                "description": "Table ID. MongoID",
+                "example": "56c31536a60ad644060041af"
+              }
+            }
+          }
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of Group",
+          "example": "Some title"
+        },
+        "probability": {
+          "type": "string",
+          "description": "Probability type",
+          "example": "random",
+          "enum": [
+            "random"
+          ]
+        }
+      }
+    },
+    "Group": {
+      "type": "object",
+      "description": "",
+      "required": [
+        "_id",
+        "tables",
+        "title",
+        "description",
+        "probability"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Group. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "tables": {
+          "type": "array",
+          "description": "Array of tables",
+          "items": {
+            "type": "object",
+            "description": "Short Table object",
+            "properties": {
+              "_id": {
+                "type": "string",
+                "description": "Table ID. MongoID",
+                "example": "56c31536a60ad644060041af"
+              }
+            }
+          }
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of Group",
+          "example": "Some title"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of Group",
+          "example": "Some description"
+        },
+        "probability": {
+          "type": "string",
+          "description": "Probability type",
+          "example": "random",
+          "enum": [
+            "random"
+          ]
         }
       }
     },
