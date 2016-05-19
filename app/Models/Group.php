@@ -23,7 +23,7 @@ class Group extends Base implements ListableInterface
 
     protected $fillable = ['tables', 'title', 'description', 'probability'];
 
-    protected $listable = ['_id', 'title', 'probability', 'tables'];
+    protected $listable = ['_id', 'title', 'description', 'probability', 'tables'];
 
     protected $visible = ['_id', 'title', 'description', 'probability', 'tables'];
 
