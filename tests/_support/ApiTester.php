@@ -66,9 +66,9 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseCodeIs($code);
         $this->seeResponseMatchesJsonType([
             '_id' => 'string',
-            'tables' => 'array',
             'title' => 'string',
             'description' => 'string',
+            'tables' => 'array',
             'probability' => 'string:regex(@^(random)$@)',
         ], $jsonPath);
 
@@ -84,6 +84,8 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseCodeIs(200);
         $this->seeResponseMatchesJsonType([
             '_id' => 'string',
+            'title' => 'string',
+            'description' => 'string',
             'tables' => 'array',
             'probability' => 'string:regex(@^(random)$@)',
         ], $jsonPath);
