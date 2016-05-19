@@ -25,8 +25,8 @@ class TablesController extends AbstractController
         'create' => [],
         'update' => [],
         'readList' => [
-            'title' => 'sometimes|min:2',
-            'description' => 'sometimes|min:2',
+            'title' => 'sometimes|min:1',
+            'description' => 'sometimes|min:1',
             'matching_type' => 'sometimes|in:first,all',
         ]
     ];
