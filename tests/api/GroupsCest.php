@@ -90,6 +90,7 @@ class GroupsCest
 
         # remove ids from array, because different Group Tables has different _id for Field
         $fields = $I->removeIdsFromArray($tableData['fields']);
+        unset($fields[0]);
         $fields[4] = [
             'key' => 'updated_key',
             'title' => 'new title',
@@ -104,6 +105,7 @@ class GroupsCest
             'type' => 'string',
             'preset' => null,
         ];
+        $fields = array_values($fields);
         $rules = $tableData['rules'];
         $newRules = [];
         foreach ($rules as $rule) {
@@ -126,7 +128,7 @@ class GroupsCest
             $data = $I->getResponseFields()->data;
             $I->assertEquals($fields, $I->removeIdsFromArray($I->stdToArray($data->fields)));
             foreach ($data->rules as $rule) {
-                $I->assertEquals(6, count($rule->conditions), "Wrong amount of Rule.Conditions after Table update");
+                $I->assertGreaterThanOrEqual(6, count($rule->conditions), "Wrong amount of Rule.Conditions after Table update");
                 $conditionsActual = ['new_key', 'updated_key'];
                 $conditionUpdated = [];
                 foreach ($rule->conditions as $condition) {
@@ -213,5 +215,51 @@ class GroupsCest
 
         $I->sendGET('api/v1/admin/groups/' . $id2);
         $I->assertGroup();
+    }
+
+    public function tablesSync(ApiTester $I)
+    {
+        $I->loginAdmin();
+        $tables = $I->createGroup()->tables;
+
+        $data = $I->getTableShortData();
+        $data['fields'][] = [
+            "key" => 'test_key',
+            "title" => 'Test key',
+            "source" => "request",
+            "type" => 'string',
+            'preset' => null
+        ];
+        for ($i = 0; $i < count($data['rules']); $i++) {
+            $data['rules'][$i]['conditions'][] = [
+                '_id' => strval(new MongoId),
+                'field_key' => 'test_key',
+                'condition' => '$eq',
+                'value' => 'test'
+            ];
+        }
+
+        $I->sendPUT('api/v1/admin/tables/' . $tables[0]->_id, ['table' => $data]);
+        $I->assertTable();
+
+        $I->sendGET('api/v1/admin/tables/' . $tables[1]->_id);
+        $I->assertTable();
+        $I->assertResponseDataFields([
+            'fields' => ['key' => 'test_key'],
+            'rules' => ['conditions' => ['field_key' => 'test_key', 'condition' => '$is_set']]
+        ]);
+
+        unset($data['fields'][count($data['fields']) - 1]);
+        $I->sendPUT('api/v1/admin/tables/' . $tables[1]->_id, ['table' => $data]);
+        $I->assertTable();
+
+        $I->sendGET('api/v1/admin/tables/' . $tables[0]->_id);
+        $I->assertTable();
+        foreach ($I->getResponseFields()->data->fields as $field) {
+            $I->assertFalse($field->key == 'test_key', 'Field key "test_key" should be deleted');
+        }
+        foreach ($I->getResponseFields()->data->rules as $rule) {
+            $I->assertEquals(4, count($rule->conditions), 'Conditions should not be deleted by deleting field_key');
+        }
     }
 }

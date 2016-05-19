@@ -473,7 +473,7 @@ class TablesCest
                     'preset' => null
                 ],
                 [
-                    "key" => 'test',
+                    "key" => 'another',
                     "title" => 'Preset wow',
                     "source" => "request",
                     "type" => 'string',
@@ -483,7 +483,7 @@ class TablesCest
                     ],
                 ],
                 [
-                    "key" => 'test',
+                    "key" => 'more',
                     "title" => 'Preset third',
                     "source" => "request",
                     "type" => 'string',
@@ -505,12 +505,12 @@ class TablesCest
                             'value' => "1, 3, 'wow,comma'",
                         ],
                         [
-                            'field_key' => 'test',
+                            'field_key' => 'another',
                             'condition' => '$eq',
                             'value' => true,
                         ],
                         [
-                            'field_key' => 'test',
+                            'field_key' => 'more',
                             'condition' => '$eq',
                             'value' => true,
                         ],
@@ -524,7 +524,7 @@ class TablesCest
             'third,comma' => [false, true, true],
         ];
         foreach ($data as $value => $results) {
-            $id = $I->checkDecision($table->_id, ['test' => $value])->_id;
+            $id = $I->checkDecision($table->_id, ['test' => $value, 'another' => $value, 'more' => $value])->_id;
             $I->sendGET('api/v1/admin/decisions/' . $id);
             $I->assertResponseDataFields(
                 [
@@ -536,12 +536,12 @@ class TablesCest
                                 'matched' => $results[0],
                             ],
                             [
-                                'field_key' => 'test',
+                                'field_key' => 'another',
                                 'condition' => '$eq',
                                 'matched' => $results[1],
                             ],
                             [
-                                'field_key' => 'test',
+                                'field_key' => 'more',
                                 'condition' => '$eq',
                                 'matched' => $results[2],
                             ],
