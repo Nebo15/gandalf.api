@@ -20,10 +20,24 @@ class Applicationable extends \Sokil\Mongo\Migrator\AbstractMigration
                 'title' => 'migrated',
                 'description' => '',
                 'users' => [
-                    'user_id' => (string)$user->getId(),
-                    'role' => 'admin',
-                    'scope' => [
-                        'create', 'read', 'update', 'delete', 'check'
+                    [
+                        'user_id' => (string)$user->getId(),
+                        'role' => 'admin',
+                        'scope' => [
+                            'create',
+                            'read',
+                            'update',
+                            'delete',
+                            'check',
+                            'create_consumers',
+                            'delete_consumers',
+                            'update_users',
+                            'add_user',
+                            'edit_project',
+                            'delete_project',
+                            'delete_consumers',
+                            'delete_users',
+                        ]
                     ]
                 ],
                 'consumers' => []

@@ -26,17 +26,18 @@ $api->api('tables', 'TablesController', ['oauth', 'applicationable', 'applicatio
 $changelog = $app->make('Nebo15\Changelog\Router');
 $changelog->api('api/v1/admin', ['oauth', 'applicationable', 'applicationable.acl']);
 
+
 $app->make('oauth.routes')->makeRestRoutes();
 $app->make('Applicationable.routes')->makeRoutes();
 
 $app->get('api/v1/users/current', [
     'uses' => 'App\Http\Controllers\UsersController@getUserInfo',
-    'middleware' => ['oauth']
+    'middleware' => ['oauth'],
 ]);
 
 $app->post('api/v1/users/', [
     'uses' => 'App\Http\Controllers\UsersController@create',
-    'middleware' => 'oauth.basic.client'
+    'middleware' => 'oauth.basic.client',
 ]);
 
 /**
@@ -44,19 +45,19 @@ $app->post('api/v1/users/', [
  */
 $app->get('api/v1/users/', [
     'uses' => 'App\Http\Controllers\UsersController@readListWithFilters',
-    'middleware' => 'oauth'
+    'middleware' => 'oauth',
 ]);
 
 $app->delete('api/v1/projects', [
     'uses' => 'App\Http\Controllers\ProjectsController@deleteProject',
-    'middleware' => ['oauth', 'applicationable', 'applicationable.acl']
+    'middleware' => ['oauth', 'applicationable', 'applicationable.acl'],
 ]);
 
 $app->group(
     [
         'prefix' => 'api/v1/admin',
         'namespace' => 'App\Http\Controllers',
-        'middleware' => ['oauth', 'applicationable', 'applicationable.acl']
+        'middleware' => ['oauth', 'applicationable', 'applicationable.acl'],
     ],
     function ($app) use ($api) {
         /** @var Laravel\Lumen\Application $app */

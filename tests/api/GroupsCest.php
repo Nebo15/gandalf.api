@@ -219,7 +219,8 @@ class GroupsCest
 
     public function tablesSync(ApiTester $I)
     {
-        $I->loginAdmin();
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
         $tables = $I->createGroup()->tables;
 
         $data = $I->getTableShortData();
