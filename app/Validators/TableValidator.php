@@ -79,7 +79,7 @@ class TableValidator
             $n++;
         }
 
-        return count($unique_conditions) == count($unique_fields);
+        return count($unique_conditions) >= count($unique_fields);
     }
 
     public function conditionsFieldKey($attribute, $value, $parameters, Validator $validator)
