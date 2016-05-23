@@ -34,7 +34,7 @@ class UsersController extends AbstractController
         $model = $this->getRepository()
             ->getModel()
             ->query();
-        if (strstr($this->request->input('name', ''), '@') === false) {
+        if (strpos($this->request->input('name', ''), '@') === false) {
             $model->where(['username' => new \MongoRegex('/^' . ($this->request->input('name', '.')) . '.*/\i')]);
         } else {
             $model->where(['email' => new \MongoRegex('/^' . ($this->request->input('name', '.')) . '.*/\i')]);
