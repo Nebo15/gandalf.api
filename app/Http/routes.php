@@ -30,14 +30,19 @@ $changelog->api('api/v1/admin', ['oauth', 'applicationable', 'applicationable.ac
 $app->make('oauth.routes')->makeRestRoutes();
 $app->make('Applicationable.routes')->makeRoutes();
 
+$app->post('api/v1/users/', [
+    'uses' => 'App\Http\Controllers\UsersController@create',
+    'middleware' => 'oauth.basic.client',
+]);
+
 $app->get('api/v1/users/current', [
     'uses' => 'App\Http\Controllers\UsersController@getUserInfo',
     'middleware' => ['oauth'],
 ]);
 
-$app->post('api/v1/users/', [
-    'uses' => 'App\Http\Controllers\UsersController@create',
-    'middleware' => 'oauth.basic.client',
+$app->put('api/v1/users/current', [
+    'uses' => 'App\Http\Controllers\UsersController@updateUser',
+    'middleware' => 'oauth',
 ]);
 
 /**

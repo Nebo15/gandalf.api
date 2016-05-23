@@ -27,11 +27,19 @@ class User extends Base implements
     protected $listable = [
         '_id',
         'username',
+        'first_name',
+        'last_name',
     ];
 
-    protected $visible = ['_id', 'username', 'email'];
+    protected $visible = ['_id', 'username', 'temporary_email', 'email', 'first_name', 'last_name'];
 
-    protected $fillable = ['username', 'email', 'password'];
+    protected $fillable = ['username', 'temporary_email', 'email', 'active', 'password', 'first_name', 'last_name'];
+
+    protected $attributes = [
+        'active' => 0,
+        'email' => '',
+        'temporary_email' => '',
+    ];
 
     /**
      * The attributes excluded from the model's JSON form.

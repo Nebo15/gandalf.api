@@ -18,6 +18,21 @@ class UsersCest
         $I->seeResponseCodeIs(201);
     }
 
+    public function editUser(ApiTester $I)
+    {
+        $user = $I->createAndLoginUser();
+        $user_edited_data = [
+            'last_name' => $user->last_name . 'edited',
+            'first_name' => $user->first_name . 'edited',
+            'username' => $user->username . 'edited',
+        ];
+        $I->sendPUT('api/v1/users/current', $user_edited_data);
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseContains($user_edited_data['last_name']);
+        $I->seeResponseContains($user_edited_data['first_name']);
+        $I->seeResponseContains($user_edited_data['username']);
+    }
+
     public function createUserBadData(ApiTester $I)
     {
         $I->createAndLoginClient();

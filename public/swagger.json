@@ -49,11 +49,17 @@
                 "password"
               ],
               "properties": {
-                "username": {
+                "first_name": {
                   "type": "string",
-                  "description": "User nickname",
-                  "example": "special_user",
-                  "required": true
+                  "description": "User first name",
+                  "example": "John",
+                  "required": false
+                },
+                "last_name": {
+                  "type": "string",
+                  "description": "User last name",
+                  "example": "Tester",
+                  "required": false
                 },
                 "email": {
                   "type": "string",
@@ -197,7 +203,90 @@
             }
           }
         }
-      }
+      },
+      "put": {
+        "summary": "Update user",
+        "description": "Update user info and personal data",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "username",
+                "email",
+                "password"
+              ],
+              "properties": {
+                "first_name": {
+                  "type": "string",
+                  "description": "User first name",
+                  "example": "John",
+                  "required": false
+                },
+                "last_name": {
+                  "type": "string",
+                  "description": "User last name",
+                  "example": "Tester",
+                  "required": false
+                },
+                "email": {
+                  "type": "string",
+                  "description": "User email",
+                  "example": "test@site.com",
+                  "required": true
+                },
+                "password": {
+                  "type": "string",
+                  "description": "User password",
+                  "example": "p@ssword!1!",
+                  "required": true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Decision Consumer object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/User",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      },
     },
     "/oauth/": {
       "post": {
