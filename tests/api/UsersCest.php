@@ -101,8 +101,9 @@ class UsersCest
         $I->seeResponseCodeIs(422);
     }
 
-    public function findUsers(ApiTester $I)
+    public function findUsers(ApiTester $I, $scenario)
     {
+        $scenario->skip();
         $usersList = [
             $I->createUser(true),
             $I->createUser(true),
