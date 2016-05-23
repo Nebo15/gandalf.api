@@ -4,9 +4,58 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "19c377648f5602055a88adb45da7883f",
-    "content-hash": "c90d11fe6129ba3124e1d3c7729bc0e1",
+    "hash": "7492b659930ebdf8923044246fa473db",
+    "content-hash": "4f8828047b4a1478c74f14103f25090e",
     "packages": [
+        {
+            "name": "bshaffer/oauth2-server-php",
+            "version": "v1.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bshaffer/oauth2-server-php.git",
+                "reference": "058c98f73209f9c49495e1799d32c035196fe8b8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bshaffer/oauth2-server-php/zipball/058c98f73209f9c49495e1799d32c035196fe8b8",
+                "reference": "058c98f73209f9c49495e1799d32c035196fe8b8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9"
+            },
+            "suggest": {
+                "aws/aws-sdk-php": "~2.8 is required to use the DynamoDB storage engine",
+                "firebase/php-jwt": "~2.2 is required to use JWT features",
+                "predis/predis": "Required to use the Redis storage engine",
+                "thobbs/phpcassa": "Required to use the Cassandra storage engine"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "OAuth2": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Brent Shaffer",
+                    "email": "bshafs@gmail.com",
+                    "homepage": "http://brentertainment.com"
+                }
+            ],
+            "description": "OAuth2 Server for PHP",
+            "homepage": "http://github.com/bshaffer/oauth2-server-php",
+            "keywords": [
+                "auth",
+                "oauth",
+                "oauth2"
+            ],
+            "time": "2015-09-18 18:05:10"
+        },
         {
             "name": "bugsnag/bugsnag",
             "version": "v2.7.0",
@@ -1538,6 +1587,93 @@
                 "laravel"
             ],
             "time": "2016-04-12 10:02:31"
+        },
+        {
+            "name": "nebo15/lumen.applicationable",
+            "version": "0.0.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Nebo15/lumen-applicationable.git",
+                "reference": "024a36cfe0d28a40942e1f43c1e9c17a4c8c8faf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/024a36cfe0d28a40942e1f43c1e9c17a4c8c8faf",
+                "reference": "024a36cfe0d28a40942e1f43c1e9c17a4c8c8faf",
+                "shasum": ""
+            },
+            "require-dev": {
+                "jenssegers/mongodb": "2.*",
+                "laravel/lumen-framework": "5.2.*",
+                "squizlabs/php_codesniffer": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Nebo15\\LumenApplicationable\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oleh Samorai"
+                }
+            ],
+            "description": "Interfaces and Traits for applicationable models",
+            "keywords": [
+                "applicationable",
+                "lumen",
+                "mongodb"
+            ],
+            "time": "2016-05-17 07:27:49"
+        },
+        {
+            "name": "nebo15/lumen.oauth2-mongodb",
+            "version": "0.0.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Nebo15/lumen-oauth2-mongo.git",
+                "reference": "17094b48ec1171654f9da2354133fcd82af8d87a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Nebo15/lumen-oauth2-mongo/zipball/17094b48ec1171654f9da2354133fcd82af8d87a",
+                "reference": "17094b48ec1171654f9da2354133fcd82af8d87a",
+                "shasum": ""
+            },
+            "require": {
+                "bshaffer/oauth2-server-php": "~1.8"
+            },
+            "require-dev": {
+                "jenssegers/mongodb": "2.*",
+                "laravel/lumen-framework": "5.2.*",
+                "squizlabs/php_codesniffer": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Nebo15\\LumenOauth2\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oleh Samorai"
+                }
+            ],
+            "description": "Oauth2 Storage + Oauthable interface with trait for user model",
+            "keywords": [
+                "lumen",
+                "mongo",
+                "oauth2"
+            ],
+            "time": "2016-05-12 14:24:54"
         },
         {
             "name": "nebo15/lumen.rest",

@@ -24,7 +24,7 @@ class Field extends Base
     protected $visible = ['_id', 'key', 'title', 'source', 'type', 'preset'];
 
     protected $attributes = [
-        'preset' => null
+        'preset' => null,
     ];
 
     protected $casts = [

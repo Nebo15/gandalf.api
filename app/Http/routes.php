@@ -18,30 +18,51 @@ $app->get('/', function () use ($app) {
 
 /** @var Nebo15\REST\Router $api */
 $api = $app->make('Nebo15\REST\Router');
-$api->api('groups', 'GroupsController', ['auth.admin']);
-$api->api('tables', 'TablesController', ['auth.admin']);
+$api->api('groups', 'GroupsController', ['oauth', 'applicationable', 'applicationable.acl']);
+$api->api('tables', 'TablesController', ['oauth', 'applicationable', 'applicationable.acl']);
 
 
 /** @var Nebo15\Changelog\Router $changelog */
 $changelog = $app->make('Nebo15\Changelog\Router');
-$changelog->api('api/v1/admin', ['auth.admin']);
+$changelog->api('api/v1/admin', ['oauth', 'applicationable', 'applicationable.acl']);
 
-/*
- * Waiting for SaaS
-$app->make('Oauth.routes')->makeRestRoutes();
+
+$app->make('oauth.routes')->makeRestRoutes();
 $app->make('Applicationable.routes')->makeRoutes();
 
-$app->post('api/v1/user/', [
+$app->post('api/v1/users/', [
     'uses' => 'App\Http\Controllers\UsersController@create',
-    'middleware' => 'oauth.basic.client'
+    'middleware' => 'oauth.basic.client',
 ]);
-*/
+
+$app->get('api/v1/users/current', [
+    'uses' => 'App\Http\Controllers\UsersController@getUserInfo',
+    'middleware' => ['oauth'],
+]);
+
+$app->put('api/v1/users/current', [
+    'uses' => 'App\Http\Controllers\UsersController@updateUser',
+    'middleware' => 'oauth',
+]);
+
+/**
+ * Get list of users
+ */
+$app->get('api/v1/users/', [
+    'uses' => 'App\Http\Controllers\UsersController@readListWithFilters',
+    'middleware' => 'oauth',
+]);
+
+$app->delete('api/v1/projects', [
+    'uses' => 'App\Http\Controllers\ProjectsController@deleteProject',
+    'middleware' => ['oauth', 'applicationable', 'applicationable.acl'],
+]);
 
 $app->group(
     [
         'prefix' => 'api/v1/admin',
         'namespace' => 'App\Http\Controllers',
-        'middleware' => ['auth.admin']
+        'middleware' => ['oauth', 'applicationable', 'applicationable.acl'],
     ],
     function ($app) use ($api) {
         /** @var Laravel\Lumen\Application $app */
@@ -56,7 +77,7 @@ $app->group(
     [
         'prefix' => 'api/v1',
         'namespace' => 'App\Http\Controllers',
-        'middleware' => ['auth.consumer'],
+        'middleware' => ['applicationable', 'applicationable.user_or_client', 'applicationable.acl'],
     ],
     function ($app) {
         /** @var Laravel\Lumen\Application $app */

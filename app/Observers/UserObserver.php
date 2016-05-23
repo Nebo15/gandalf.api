@@ -11,6 +11,9 @@ class UserObserver
 {
     public function creating(User $user)
     {
+        $user->temporary_email = $user->email;
+        $user->email = null;
+
         if (!$user->nickname) {
             if ($user->temporary_email) {
                 list($user->nickname) = explode('@', $user->temporary_email);
@@ -24,6 +27,9 @@ class UserObserver
 
     public function updating(User $user)
     {
+        /**
+         * TODO: email is dirty set email to temporary
+         */
     }
 
     public function updated(User $user)

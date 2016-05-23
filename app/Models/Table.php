@@ -5,6 +5,8 @@
 
 namespace App\Models;
 
+use Nebo15\LumenApplicationable\Contracts\Applicationable;
+use Nebo15\LumenApplicationable\Traits\ApplicationableTrait;
 use Nebo15\REST\Traits\ListableTrait;
 use Nebo15\REST\Interfaces\ListableInterface;
 
@@ -24,9 +26,9 @@ use Nebo15\REST\Interfaces\ListableInterface;
  * @method Decision save(array $options = [])
  * @method static \Illuminate\Pagination\LengthAwarePaginator paginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null)
  */
-class Table extends Base implements ListableInterface
+class Table extends Base implements ListableInterface, Applicationable
 {
-    use ListableTrait;
+    use ListableTrait, ApplicationableTrait;
 
     protected $listable = ['_id', 'title', 'description', 'matching_type', 'default_decision'];
 
@@ -46,7 +48,7 @@ class Table extends Base implements ListableInterface
         'default_title',
         'default_description',
         'rules',
-        'fields'
+        'fields',
     ];
 
     protected $fillable = [
@@ -55,7 +57,7 @@ class Table extends Base implements ListableInterface
         'default_title',
         'default_description',
         'default_decision',
-        'matching_type'
+        'matching_type',
     ];
 
     protected $perPage = 20;
@@ -72,7 +74,7 @@ class Table extends Base implements ListableInterface
     {
         return [
             'fields' => $this->fields,
-            'rules' => $this->rules
+            'rules' => $this->rules,
         ];
     }
 

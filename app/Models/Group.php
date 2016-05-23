@@ -6,6 +6,8 @@
 namespace App\Models;
 
 use App\Repositories\TablesRepository;
+use Nebo15\LumenApplicationable\Contracts\Applicationable;
+use Nebo15\LumenApplicationable\Traits\ApplicationableTrait;
 use Nebo15\REST\Traits\ListableTrait;
 use Nebo15\REST\Interfaces\ListableInterface;
 
@@ -17,9 +19,9 @@ use Nebo15\REST\Interfaces\ListableInterface;
  * @property string $description;
  * @property string $probability;
  */
-class Group extends Base implements ListableInterface
+class Group extends Base implements ListableInterface, Applicationable
 {
-    use ListableTrait;
+    use ListableTrait, ApplicationableTrait;
 
     protected $fillable = ['tables', 'title', 'description', 'probability'];
 
@@ -29,7 +31,7 @@ class Group extends Base implements ListableInterface
 
     protected $attributes = [
         'title' => '',
-        'description' => ''
+        'description' => '',
     ];
 
     protected $casts = [
@@ -70,6 +72,7 @@ class Group extends Base implements ListableInterface
                     'description' => $tableModel->description,
                 ];
             }
+
             return $tables;
         }
 

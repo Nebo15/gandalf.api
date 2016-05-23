@@ -17,18 +17,1007 @@
     "basicAuth": {
       "type": "basic",
       "description": "HTTP Basic Authentication."
+    },
+    "basicConsumer": {
+      "type": "basic",
+      "description": "HTTP Basic Consumer Authentication."
+    },
+    "oauth2": {
+      "type": "oauth2",
+      "description": "Oauth"
     }
   },
   "paths": {
+    "/users/": {
+      "post": {
+        "summary": "Create new User",
+        "description": "Create new application user",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "username",
+                "email",
+                "password"
+              ],
+              "properties": {
+                "first_name": {
+                  "type": "string",
+                  "description": "User first name",
+                  "example": "John",
+                  "required": false
+                },
+                "last_name": {
+                  "type": "string",
+                  "description": "User last name",
+                  "example": "Tester",
+                  "required": false
+                },
+                "email": {
+                  "type": "string",
+                  "description": "User email",
+                  "example": "test@site.com",
+                  "required": true
+                },
+                "password": {
+                  "type": "string",
+                  "description": "User password",
+                  "example": "p@ssword!1!",
+                  "required": true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Decision Consumer object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/User",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "List of Users",
+        "description": "Get list of users with pagging and live search",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "request",
+            "description": "Parameter searching users by usernames or emails. If name == jo, in the response users will be with usernames which starts on jo, Jo, JO. Searching by email enabled just when parameter has @",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "size",
+            "in": "request",
+            "description": "Amount of Tables on page",
+            "required": false
+          },
+          {
+            "name": "page",
+            "in": "request",
+            "description": "Page for pagination",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List found users",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data",
+                "paging"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/UserInList"
+                  },
+                  "description": "Response data object"
+                },
+                "paging": {
+                  "$ref": "#/definitions/Paging",
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/current": {
+      "get": {
+        "summary": "Info about current user",
+        "description": "Get info about current user",
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "User object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/User"
+                  },
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update user",
+        "description": "Update user info and personal data",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "username",
+                "email",
+                "password"
+              ],
+              "properties": {
+                "first_name": {
+                  "type": "string",
+                  "description": "User first name",
+                  "example": "John",
+                  "required": false
+                },
+                "last_name": {
+                  "type": "string",
+                  "description": "User last name",
+                  "example": "Tester",
+                  "required": false
+                },
+                "email": {
+                  "type": "string",
+                  "description": "User email",
+                  "example": "test@site.com",
+                  "required": true
+                },
+                "password": {
+                  "type": "string",
+                  "description": "User password",
+                  "example": "p@ssword!1!",
+                  "required": true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Decision Consumer object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/User",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      },
+    },
+    "/oauth/": {
+      "post": {
+        "summary": "Get user access token",
+        "description": "Get user access token, grant_type password scenario <br/>**Every request should be with Access Token**<br/>**-H 'Authorization: token_type access_token_here'**",
+        "tags": [
+          "User"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "grant_type",
+            "description": "Grant Type",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "password",
+              "refresh_token"
+            ]
+          },
+          {
+            "name": "username",
+            "description": "Username, required if grant_type == password",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "description": "User password, required if grant_type == password",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "refresh_token",
+            "description": "Refresh token, required if grant_type == refresh_token",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Access Token object",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/AccessToken",
+              "description": "Response data object"
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/current": {
+      "get": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Get current project",
+        "description": "Get info about current project",
+        "tags": [
+          "Project"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Project",
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/": {
+      "get": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Get list of projects",
+        "description": "Get list of projects for current user",
+        "tags": [
+          "Project"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Projects Objects",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Project"
+                  },
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Create project",
+        "description": "Can create project and in the feature link tables to it.<br/> When you created project, your feature requests should be with Header <br />**-H 'X-Application: project_id'**",
+        "tags": [
+          "Project"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "title",
+            "description": "Title of the project",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "description": "Description of the project",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Project",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Update project",
+        "description": "Can update project",
+        "tags": [
+          "Project"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "title",
+            "description": "Title of the project",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "description": "Description of the project",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Project",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Delete project",
+        "description": "***WARNING!!!*** This method will delete all Tables and Groups which connected to the project",
+        "tags": [
+          "Project"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Projects Objects",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Project"
+                  },
+                  "description": "Response data object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/consumers": {
+      "post": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Create consumer",
+        "description": "Every into existing project user can create consumer with own scopes. <br/>For login as consumer you should make Basic Auth client_id:client_secret",
+        "tags": [
+          "Project"
+        ],
+        "parameters": [
+          {
+            "name": "description",
+            "description": "Description of consumer",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "description": "Scopes of consumer",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta"
+              ],
+              "$ref": "#/definitions/Project",
+              "description": "Response data object"
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Update consumer",
+        "description": "Update description or scopes of consumer, by client_id",
+        "tags": [
+          "Project"
+        ],
+        "parameters": [
+          {
+            "name": "client_id",
+            "description": "Client_id from consumer info",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "description": "Description of consumer",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "description": "Scopes of consumer",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Project",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Delete consumer",
+        "description": "Remove consumer from the project by client_id",
+        "tags": [
+          "Project"
+        ],
+        "parameters": [
+          {
+            "name": "client_id",
+            "description": "Client id of your consumer",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Project",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/users": {
+      "post": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Add User to the Project",
+        "description": "Adding existing user to the current project. Share project with other users with different scopes",
+        "tags": [
+          "Project",
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "description": "Id of existing user",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "role",
+            "description": "Role of user",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "description": "Scopes of consumer",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Project",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Update user into Project",
+        "description": "Updating existing user into project.",
+        "tags": [
+          "Project"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "description": "Id of existing user",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "role",
+            "description": "Role of user",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "description": "Scopes of consumer",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Project",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Get Current user info",
+        "description": "Get info about current user",
+        "tags": [
+          "Project",
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Applicationable user object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "description": "Response data object",
+                  "$ref": "#/definitions/ProjectUser"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Remove user from project",
+        "description": "Adding existing user to the current project. Share project with other users with different scopes",
+        "tags": [
+          "Project",
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "description": "Id of existing user",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Project",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/admin/tables": {
       "get": {
         "security": [
           {
-            "basicAuth": []
+            "oauth2": []
           }
         ],
         "summary": "Tables List",
-        "description": "Get list of Tables",
+        "description": "Get list of Tables\n",
         "tags": [
           "Admin",
           "Tables"
@@ -79,10 +1068,6 @@
                   "items": {
                     "$ref": "#/definitions/TableList"
                   }
-                },
-                "paging": {
-                  "$ref": "#/definitions/Paging",
-                  "description": "Paging object"
                 }
               }
             }
@@ -92,7 +1077,7 @@
       "post": {
         "security": [
           {
-            "basicAuth": []
+            "oauth2": []
           }
         ],
         "summary": "Table Create",
@@ -188,6 +1173,11 @@
     },
     "/admin/tables/{id}": {
       "get": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
         "summary": "Table Read",
         "description": "Get Table by id",
         "tags": [
@@ -230,84 +1220,16 @@
         }
       },
       "put": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
         "summary": "Table Update",
         "description": "Update Table by id",
         "tags": [
           "Admin",
           "Tables"
-        ],
-        "parameters": [
-          {
-            "_id": "56cde35ff7046652308b4572",
-            "name": "table",
-            "in": "body",
-            "description": "Table object",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "required": [
-                "_id",
-                "title",
-                "description",
-                "matching_type",
-                "default_decision",
-                "default_title",
-                "default_description",
-                "rules",
-                "fields"
-              ],
-              "properties": {
-                "title": {
-                  "type": "string",
-                  "description": "Title of Table.",
-                  "example": "Some title"
-                },
-                "description": {
-                  "type": "string",
-                  "description": "Description of Table.",
-                  "example": "Some description"
-                },
-                "matching_type": {
-                  "type": "string",
-                  "description": "Matching type for Table.",
-                  "example": "first",
-                  "enum": [
-                    "first",
-                    "all"
-                  ]
-                },
-                "default_decision": {
-                  "type": "string",
-                  "description": "If there are no rows with all validations passed, this decision will be set for Decision.",
-                  "example": "Decline"
-                },
-                "default_title": {
-                  "type": "string",
-                  "description": "If there are no rows with all validations passed, this title will be set for Decision.",
-                  "example": "Default title"
-                },
-                "default_description": {
-                  "type": "string",
-                  "description": "If there are no rows with all validations passed, this description will be set for Decision.",
-                  "example": "Default description"
-                },
-                "fields": {
-                  "type": "array",
-                  "description": "Array of Field objects.",
-                  "items": {
-                    "$ref": "#/definitions/Field"
-                  }
-                },
-                "rules": {
-                  "type": "array",
-                  "description": "Array of Rule objects.",
-                  "items": {
-                    "$ref": "#/definitions/Rule"
-                  }
-                }
-              }
-            }
-          }
         ],
         "responses": {
           "200": {
@@ -333,6 +1255,11 @@
         }
       },
       "delete": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
         "summary": "Table Delete",
         "description": "Delete Table by id",
         "tags": [
@@ -359,6 +1286,11 @@
     },
     "/admin/tables/{id}/copy": {
       "post": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
         "summary": "Table Copy",
         "description": "Create new Table from existing Table by id",
         "tags": [
@@ -391,7 +1323,7 @@
       "get": {
         "security": [
           {
-            "basicAuth": []
+            "oauth2": []
           }
         ],
         "summary": "Table Analytics",
@@ -741,6 +1673,11 @@
     },
     "/admin/decisions": {
       "get": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
         "summary": "Decisions List",
         "description": "Get list of Decision objects",
         "tags": [
@@ -776,70 +1713,16 @@
     },
     "/admin/decisions/{id}": {
       "get": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
         "summary": "Decision Read",
         "description": "Get Decision by id",
         "tags": [
           "Decision",
           "Admin"
-        ],
-        "responses": {
-          "200": {
-            "description": "Decision object",
-            "schema": {
-              "type": "object",
-              "required": [
-                "meta",
-                "data"
-              ],
-              "properties": {
-                "meta": {
-                  "$ref": "#/definitions/Meta",
-                  "description": "Meta data"
-                },
-                "data": {
-                  "$ref": "#/definitions/Decision",
-                  "description": "Response data object"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/admin/decisions/{id}/meta": {
-      "put": {
-        "summary": "Decision Update Meta",
-        "description": "###Set or update Decision Meta by id. \n\nMetadata field supports key-value pairs with the following limitations:\n* Up to 24 keys.\n* Up to 100 characters for the key (alphanumeric characters, hyphens and underscores).\n* Up to 500 characters for the value.\n* String, integer, decimals and boolean values only. All other types will be converted into string.",
-        "tags": [
-          "Decision",
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "table",
-            "in": "body",
-            "description": "Any object. Up to 24 keys, up to 100 characters for the key, up to 500 characters for the value.",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "required": [
-                "meta"
-              ],
-              "properties": {
-                "meta": {
-                  "type": "object",
-                  "description": "Meta Data object. ",
-                  "properties": {
-                    "customerKey": {
-                      "type": "string",
-                      "description": "Customer value",
-                      "example": "Any string up to 500 symbols"
-                    }
-                  }
-                }
-              }
-            }
-          }
         ],
         "responses": {
           "200": {
@@ -992,8 +1875,8 @@
         }
       }
     },
-    "/admin/changelog/tables/{table_id}/rollback/{changelog_id}": {
-      "post": {
+    "admin/changelog/tables/{table_id}/rollback/{changelog_id}": {
+      "get": {
         "summary": "Changelog Table Rollback",
         "description": "Rollback Table to some state that described in passed Changelog",
         "tags": [
@@ -1093,6 +1976,58 @@
       }
     }
   },
+  "parameters": {
+    "Table": {
+      "title": {
+        "type": "string",
+        "description": "Title of Table.",
+        "example": "Some title"
+      },
+      "description": {
+        "type": "string",
+        "description": "Description of Table.",
+        "example": "Some description"
+      },
+      "matching_type": {
+        "type": "string",
+        "description": "Matching type for Table.",
+        "example": "first",
+        "enum": [
+          "first",
+          "all"
+        ]
+      },
+      "default_decision": {
+        "type": "string",
+        "description": "If there are no rows with all validations passed, this decision will be set for Decision.",
+        "example": "Decline"
+      },
+      "default_title": {
+        "type": "string",
+        "description": "If there are no rows with all validations passed, this title will be set for Decision.",
+        "example": "Default title"
+      },
+      "default_description": {
+        "type": "string",
+        "description": "If there are no rows with all validations passed, this description will be set for Decision.",
+        "example": "Default description"
+      },
+      "fields": {
+        "type": "array",
+        "description": "Array of Field objects.",
+        "items": {
+          "$ref": "#/definitions/Field"
+        }
+      },
+      "rules": {
+        "type": "array",
+        "description": "Array of Rule objects.",
+        "items": {
+          "$ref": "#/definitions/Rule"
+        }
+      }
+    }
+  },
   "definitions": {
     "Meta": {
       "type": "object",
@@ -1104,37 +2039,6 @@
           "type": "integer",
           "description": "HTTP response code",
           "example": 200
-        }
-      }
-    },
-    "Paging": {
-      "type": "object",
-      "required": [
-        "size",
-        "total",
-        "current_page",
-        "last_page"
-      ],
-      "properties": {
-        "size": {
-          "type": "integer",
-          "description": "Items per page",
-          "example": 20
-        },
-        "total": {
-          "type": "integer",
-          "description": "Total items in collection",
-          "example": 20
-        },
-        "current_page": {
-          "type": "integer",
-          "description": "Current page",
-          "example": 20
-        },
-        "last_page": {
-          "type": "integer",
-          "description": "Items per page",
-          "example": 20
         }
       }
     },
@@ -1530,19 +2434,12 @@
     "Field": {
       "type": "object",
       "required": [
-        "_id",
         "key",
         "title",
         "source",
-        "type",
-        "preset"
+        "type"
       ],
       "properties": {
-        "_id": {
-          "type": "string",
-          "description": "Unique identifier representing a specific Table. MongoID",
-          "example": "56c31536a60ad644060041af"
-        },
         "key": {
           "type": "string",
           "description": "API Field for request",
@@ -1580,28 +2477,20 @@
     "Preset": {
       "type": "object",
       "required": [
-        "_id",
         "condition",
         "value"
       ],
       "properties": {
-        "_id": {
-          "type": "string",
-          "description": "Unique identifier representing a specific Table. MongoID",
-          "example": "56c31536a60ad644060041af"
-        },
         "condition": {
           "type": "string",
           "description": "Available rules",
           "example": "$gte",
           "enum": [
             "$is_set",
-            "$is_null",
             "$eq",
             "$ne",
             "$gt",
             "$gte",
-            "$between",
             "$lt",
             "$lte",
             "$in",
@@ -1625,11 +2514,6 @@
         "conditions"
       ],
       "properties": {
-        "_id": {
-          "type": "string",
-          "description": "Unique identifier representing a specific Table. MongoID",
-          "example": "56c31536a60ad644060041af"
-        },
         "than": {
           "type": "string",
           "description": "Decision, when this rule is matched",
@@ -1657,17 +2541,11 @@
     "Condition": {
       "type": "object",
       "required": [
-        "_id",
         "field_key",
         "condition",
         "value"
       ],
       "properties": {
-        "_id": {
-          "type": "string",
-          "description": "Unique identifier representing a specific Table. MongoID",
-          "example": "56c31536a60ad644060041af"
-        },
         "field_key": {
           "type": "string",
           "description": "Key for API field key.",
@@ -1679,12 +2557,10 @@
           "example": "$eq",
           "enum": [
             "$is_set",
-            "$is_null",
             "$eq",
             "$ne",
             "$gt",
             "$gte",
-            "$between",
             "$lt",
             "$lte",
             "$in",
@@ -1702,18 +2578,12 @@
       "type": "object",
       "discriminator": "than",
       "required": [
-        "_id",
         "than",
         "title",
         "description",
         "conditions"
       ],
       "properties": {
-        "_id": {
-          "type": "string",
-          "description": "Unique identifier representing a specific Table. MongoID",
-          "example": "56c31536a60ad644060041af"
-        },
         "than": {
           "type": "string",
           "description": "Decision, when this rule is matched",
@@ -1741,7 +2611,6 @@
     "ConditionAnalytics": {
       "type": "object",
       "required": [
-        "_id",
         "field_key",
         "condition",
         "value",
@@ -1749,11 +2618,6 @@
         "requests"
       ],
       "properties": {
-        "_id": {
-          "type": "string",
-          "description": "Unique identifier representing a specific Table. MongoID",
-          "example": "56c31536a60ad644060041af"
-        },
         "field_key": {
           "type": "string",
           "description": "Key for API field key.",
@@ -1765,12 +2629,10 @@
           "example": "$lte",
           "enum": [
             "$is_set",
-            "$is_null",
             "$eq",
             "$ne",
             "$gt",
             "$gte",
-            "$between",
             "$lt",
             "$lte",
             "$in",
@@ -1811,24 +2673,6 @@
           "type": "string",
           "description": "Description of the matched rule or Table.default_description.",
           "example": "Some description"
-        },
-        "meta": {
-          "type": "array",
-          "description": "Array of customer meta data objects. ",
-          "items": {
-            "type": "object",
-            "description": "Meta Data object. ",
-            "properties": {
-              "customerKey": {
-                "type": "string",
-                "description": "Customer value",
-                "example": "Any string up to 500 symbols"
-              }
-            }
-          },
-          "example": {
-            "customerKey": "Customer value"
-          }
         },
         "request": {
           "type": "object",
@@ -1919,18 +2763,12 @@
       "type": "object",
       "discriminator": "than",
       "required": [
-        "_id"
         "than",
         "title",
         "description",
         "conditions"
       ],
       "properties": {
-        "_id": {
-          "type": "string",
-          "description": "Unique identifier representing a specific Table. MongoID",
-          "example": "56c31536a60ad644060041af"
-        },
         "than": {
           "type": "string",
           "description": "Decision, when this rule is matched",
@@ -1963,17 +2801,11 @@
     "DecisionCondition": {
       "type": "object",
       "required": [
-        "_id",
         "field_key",
         "condition",
         "value"
       ],
       "properties": {
-        "_id": {
-          "type": "string",
-          "description": "Unique identifier representing a specific Table. MongoID",
-          "example": "56c31536a60ad644060041af"
-        },
         "field_key": {
           "type": "string",
           "description": "Key for API field key.",
@@ -1985,12 +2817,10 @@
           "example": "$eq",
           "enum": [
             "$is_set",
-            "$is_null",
             "$eq",
             "$ne",
             "$gt",
             "$gte",
-            "$between",
             "$lt",
             "$lte",
             "$in",
@@ -2081,6 +2911,238 @@
           "type": "string",
           "description": "Updated Datetime",
           "example": "2016-02-17 11:25:31"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "username": {
+          "type": "string",
+          "description": "Title of the matched rule or Table.default_title.",
+          "example": "special_user"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the matched rule or Table.default_description.",
+          "example": "Some description"
+        },
+        "email": {
+          "type": "string",
+          "description": "User email",
+          "example": "test@site.com"
+        },
+        "created_at": {
+          "type": "string",
+          "description": "Created Datetime",
+          "example": "2016-02-16 14:15:30"
+        },
+        "updated_at": {
+          "type": "string",
+          "description": "Updated Datetime",
+          "example": "2016-02-17 11:25:31"
+        },
+        "access_tokens": {
+          "type": "array",
+          "description": "Array of access tokens.",
+          "items": {
+            "$ref": "#/definitions/AccessToken"
+          }
+        },
+        "refresh_tokens": {
+          "type": "array",
+          "description": "Array of refresh tokens.",
+          "items": {
+            "$ref": "#/definitions/RefreshToken"
+          }
+        }
+      }
+    },
+    "AccessToken": {
+      "type": "object",
+      "properties": {
+        "access_token": {
+          "type": "string",
+          "description": "Unique access token for current user",
+          "example": "2fc5a4e7a91771ca312c79e0ad2cc4c49d3b065d"
+        },
+        "expires_in": {
+          "type": "integer",
+          "description": "Token lifetime",
+          "example": 360
+        },
+        "token_type": {
+          "type": "string",
+          "description": "Type of access token",
+          "example": "Bearer"
+        },
+        "refresh_token": {
+          "type": "string",
+          "description": "Unique refresh token linked to current access token for current user",
+          "example": "2fc5a4e7a91771ca312c79e0ad2cc4c49d3b065d"
+        }
+      }
+    },
+    "RefreshToken": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Table. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "refresh_token": {
+          "type": "string",
+          "description": "Unique refresh token linked to some access token for current user",
+          "example": "8bcc30bf6ce74ddaf0ec5eff5a51141c7ba65ef9"
+        },
+        "client_id": {
+          "type": "string",
+          "description": "Client id for refresh token",
+          "example": "test"
+        }
+      }
+    },
+    "Project": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific project. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title for project",
+          "example": "My first test project"
+        },
+        "users": {
+          "type": "array",
+          "description": "Array of project users.",
+          "items": {
+            "$ref": "#/definitions/ProjectUser"
+          }
+        },
+        "consumers": {
+          "type": "array",
+          "description": "Array of project consumers.",
+          "items": {
+            "$ref": "#/definitions/Consumer"
+          }
+        }
+      }
+    },
+    "ProjectUser": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific project user. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "user_id": {
+          "type": "string",
+          "description": "Unique identifier of a user",
+          "example": "56c31536a60ad644060041af"
+        },
+        "role": {
+          "type": "string",
+          "description": "Role of user",
+          "example": "admin"
+        },
+        "scope": {
+          "type": "array",
+          "description": "Array of user scopes.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "username": {
+          "type": "string",
+          "description": "User nickname",
+          "example": "user123"
+        },
+        "email": {
+          "type": "string",
+          "description": "User email",
+          "example": "test@mail.com"
+        }
+      }
+    },
+    "UserInList": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific project user. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "username": {
+          "type": "string",
+          "description": "User nickname",
+          "example": "user123"
+        }
+      }
+    },
+    "Paging": {
+      "type": "object",
+      "properties": {
+        "size": {
+          "type": "integer",
+          "description": "",
+          "example": 15
+        },
+        "total": {
+          "type": "integer",
+          "description": "",
+          "example": 40
+        },
+        "current_page": {
+          "type": "integer",
+          "description": "",
+          "example": 1
+        },
+        "last_page": {
+          "type": "integer",
+          "description": "",
+          "example": 3
+        }
+      }
+    },
+    "Consumer": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific project user. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "client_id": {
+          "type": "string",
+          "description": "Client id",
+          "example": "fe5fe8d15bb7a6a0daef36d2843c547c6d594b0c"
+        },
+        "client_secret": {
+          "type": "string",
+          "description": "Client secret",
+          "example": "a7c70da3246a436bde66101d65741f9adf570726"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description of client",
+          "example": "Description of project"
+        },
+        "scope": {
+          "type": "array",
+          "description": "Array of client scopes.",
+          "items": {
+            "type": "string"
+          }
         }
       }
     }
