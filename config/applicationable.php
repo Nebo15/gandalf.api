@@ -51,7 +51,7 @@ return [
             '~^\/api\/v1\/admin\/groups\/(.+)\/copy$~' => ['read', 'create'],
             '~^\/api\/v1\/admin\/tables$~' => ['read', 'create'],
             '~^\/api\/v1\/admin\/tables\/(.+)\/copy$~' => ['read', 'create'],
-            '~^^\/api\/v1\/admin\/changelog\/(.+)\/(.+)\/rollback\/(.+)$~' => ['read', 'update'],
+            '~^\/api\/v1\/admin\/changelog\/(.+)\/(.+)\/rollback\/(.+)$~' => ['read', 'update'],
             '~^\/api\/v1\/tables\/(.+)\/decisions$~' => ['check'],
             '~^\/api\/v1\/groups\/(.+)\/decisions$~' => ['check'],
             '~^\/api\/v1\/projects\/users$~' => ['read', 'create', 'add_user'],
