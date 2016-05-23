@@ -31,7 +31,7 @@ environments:
     test:
         dsn: mongodb://localhost
 
-        default_database: gandalf
+        default_database: gandalf_test
 
         log_database: gandalf_test
         log_collection: migrations
