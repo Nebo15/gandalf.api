@@ -116,7 +116,7 @@ class UsersCest
         $foundUsers = json_encode($I->getResponseFields()->data);
         $I->assertContains($usersList[0]->username, $foundUsers);
         $I->assertContains($usersList[0]->_id, $foundUsers);
-        list($email) = explode('@', $usersList[1]->email);
+        list($email) = explode('@', $usersList[1]->temporary_email);
         $I->sendGET('api/v1/users?name=' . $email . '@');
         $foundUsers = json_encode($I->getResponseFields()->data);
         $I->assertContains($usersList[1]->username, $foundUsers);

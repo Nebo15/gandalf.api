@@ -50,6 +50,15 @@ class UsersController extends AbstractController
         );
     }
 
+    public function verifyEmail()
+    {
+        return $this->response->json(
+            $this->getRepository()->getModel()->findByVerifyEmailToken($this->request->input('token'))
+                ->verifyEmail()->save()
+                ->toArray()
+        );
+    }
+
     public function updateUser()
     {
         return $this->update($this->request->user()->getId());
