@@ -43,7 +43,7 @@ class UserObserver
     {
         if ($user->isDirty('email')) {
             $user->temporary_email = $user->email;
-            $user->active = 0;
+            $user->active = false;
             $user->createVerifyEmailToken();
         }
         if ($user->isDirty('password')) {

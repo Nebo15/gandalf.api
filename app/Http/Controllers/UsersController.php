@@ -69,6 +69,7 @@ class UsersController extends AbstractController
         if (env('APP_ENV') == 'local') {
             $sandboxData['token_email'] = $model->getVerifyEmailToken();
         }
+
         return $this->response->json(
             $model->toArray(),
             Response::HTTP_CREATED,
@@ -81,9 +82,21 @@ class UsersController extends AbstractController
     public function updateUser()
     {
         $this->validateRoute();
+        $model = $this->getRepository()->createOrUpdate(
+            $this->request->request->all(),
+            $this->request->user()->getId()
+        );
+        $sandboxData = [];
+        if (env('APP_ENV') == 'local') {
+            $sandboxData['token_email'] = $model->getVerifyEmailToken();
+        }
 
         return $this->response->json(
-            $this->getRepository()->createOrUpdate($this->request->request->all(), $this->request->user()->getId())->toArray()
+            $model->toArray(),
+            Response::HTTP_OK,
+            [],
+            [],
+            $sandboxData
         );
     }
 
