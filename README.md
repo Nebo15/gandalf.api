@@ -20,7 +20,14 @@ You can use it for anti-fraud, risk management, as part any other decision makin
 - Customizable - have the freedom to design a decision rules you need and to manage data structure on the fly in a easy to understand way.
 - Split testing - you can group your decision table to run a A/B tests. Later, you can leave only one, that shows best results.
 - Analytics and Decision History - you can review all previous decisions made by your tables and to analyze what rules is triggered more often.
+- Revisions History. Rollback any changes that was made by you or your collaborators.
+- Tooling. Debug your decision tables directly from Gandalf GUI.
+- SASS-based Role Model. You can create projects and share access among users to them.
 - Production-tested - several large NDA-closed PSP's and online lending platforms already use Gandalf.
+
+### Support
+
+This project is continiously supported on behalf of our customers and as part of our own [SASS-service](https://gandalf.nebo15.com/). We recommend to use it, but feel free to create your own installation of Gandalf.
 
 ## Decision Table
 
