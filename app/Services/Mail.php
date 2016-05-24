@@ -16,6 +16,9 @@ class Mail
 
     public function sendEmailConfirmation($email, $code, $name)
     {
+        if (false == config('services.email.enabled')) {
+            return null;
+        }
 
         $this->postmark->sendEmailWithTemplate(
             config('services.postmark.sender'),

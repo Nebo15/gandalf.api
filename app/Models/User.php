@@ -34,7 +34,7 @@ class User extends Base implements
         'last_name',
     ];
 
-    protected $visible = ['_id', 'username', 'temporary_email', 'email', 'first_name', 'last_name', 'active', 'tokens'];
+    protected $visible = ['_id', 'username', 'temporary_email', 'email', 'first_name', 'last_name', 'active'];
 
     protected $fillable = ['username', 'temporary_email', 'email', 'active', 'password', 'first_name', 'last_name'];
 

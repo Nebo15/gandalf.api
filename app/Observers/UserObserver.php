@@ -6,6 +6,7 @@
 namespace App\Observers;
 
 use App\Models\User;
+use App\Services\Mail;
 
 class UserObserver
 {
@@ -20,6 +21,9 @@ class UserObserver
 
     public function created(User $user)
     {
+        /**
+         * @var Mail $mail
+         */
         $mail = app('\App\Services\Mail');
         $mail->sendEmailConfirmation($user->temporary_email, $user->getVerifyEmailToken()['token'], $user->username);
     }

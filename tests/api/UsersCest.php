@@ -103,7 +103,6 @@ class UsersCest
 
     public function findUsers(ApiTester $I, $scenario)
     {
-        $scenario->skip();
         $usersList = [
             $I->createUser(true),
             $I->createUser(true),

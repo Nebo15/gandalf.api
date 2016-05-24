@@ -10,4 +10,7 @@ return [
     'link' => [
         'confirmation_email' => env('LINK_CONFIRMATION_EMAIL', 'http://gandalf.dev/email/{code}'),
     ],
+    'email' => [
+        'enabled' => env('EMAIL_ENABLED', false)
+    ]
 ];
