@@ -4,8 +4,9 @@ class GroupsCest
 {
     private $api_prefix = 'api/v1/admin/groups';
 
-    public function _before(ApiTester $I)
+    public function _before(ApiTester $I, $scenario)
     {
+        $scenario->skip('Will be removed');
         $I->haveHttpHeader('Content-Type', 'application/json');
     }
 

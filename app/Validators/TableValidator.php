@@ -47,7 +47,7 @@ class TableValidator
     public function ruleThanType($attribute, $value, $parameters, Validator $validator)
     {
         $type = 'alpha_dash';
-        $rule_matching = array_get($validator->getData(), 'table.matching_type', 'first');
+        $rule_matching = array_get($validator->getData(), 'matching_type', 'first');
         if ($rule_matching == 'all') {
             $type = 'numeric';
         }
@@ -61,7 +61,7 @@ class TableValidator
 
     public function conditionsCount($attribute, $value, $parameters, Validator $validator)
     {
-        $fields = array_get($validator->getData(), 'table.fields');
+        $fields = array_get($validator->getData(), 'fields');
 
         $unique_fields = [];
         $i = 0;
