@@ -144,7 +144,7 @@ class UsersCest
         $I->sendPOST('api/v1/users/password/reset', ['email' => $user->email]);
         $resp = json_decode($I->grabResponse());
         $new_password = $I->getFaker()->password() . '1a';
-        $I->sendPUT('api/v1/users/password',
+        $I->sendPUT('api/v1/users/password/reset',
             ['token' => $resp->sandbox->reset_password_token->token, 'password' => $new_password]);
         $I->seeResponseCodeIs(200);
 
