@@ -595,7 +595,7 @@ class ApiTester extends \Codeception\Actor
     public function createConsumer()
     {
         $this->sendPOST('api/v1/projects/consumers',
-            ['description' => $this->getFaker()->text('20'), 'scope' => ['check']]);
+            ['description' => $this->getFaker()->text('20'), 'scope' => ['read', 'check']]);
 
         return json_decode($this->grabResponse())->data->consumers[0];
     }
