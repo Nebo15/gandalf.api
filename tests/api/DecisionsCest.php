@@ -54,7 +54,7 @@ class DecisionsCest
             'employment' => false,
             'property' => false,
         ]);
-        $I->assertEquals($table_data->default_decision, $decision_data->final_decision);
+        $I->assertEquals($table_data->variants[0]->default_decision, $decision_data->final_decision);
 
         $I->sendGET('api/v1/admin/decisions');
         $I->assertTableDecisionsForAdmin('first', '$.data[*]');

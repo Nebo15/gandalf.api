@@ -41,6 +41,7 @@ class Scoring
             throw new ValidationException($validator);
         }
         $fields = $table->fields();
+        $variant = $table->getVariantForCheck();
         $group = null;
         if ($groupId) {
             $groupDoc = $this->groupsRepository->read($groupId);
@@ -60,9 +61,9 @@ class Scoring
                 'matching_type' => $table->matching_type,
             ],
             'group' => $group,
-            'title' => $table->default_title,
-            'description' => $table->default_description,
-            'default_decision' => $table->default_decision,
+            'title' => $variant->default_title,
+            'description' => $variant->default_description,
+            'default_decision' => $variant->default_decision,
             'fields' => $fields->toArray(),
             'rules' => [],
             'request' => $values,
@@ -72,7 +73,7 @@ class Scoring
         $fieldsCollection = $fields->get();
 
         /** @var \App\Models\Rule $rule */
-        foreach ($table->rules()->get() as $rule) {
+        foreach ($variant->rules()->get() as $rule) {
             $scoring_rule = [
                 '_id' => new \MongoId($rule->_id),
                 'than' => $rule->than,
@@ -119,7 +120,7 @@ class Scoring
             $scoring_data['rules'][] = $scoring_rule;
         }
 
-        $scoring_data['final_decision'] = $final_decision ?: $table->default_decision;
+        $scoring_data['final_decision'] = $final_decision ?: $variant->default_decision;
         if ($webhook) {
             # create webhook service
         }
