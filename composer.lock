@@ -1761,16 +1761,16 @@
         },
         {
             "name": "nebo15/lumen.applicationable",
-            "version": "0.0.13",
+            "version": "0.0.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/lumen-applicationable.git",
-                "reference": "58f409cdcdecab849d66b2f173c715ffab53d644"
+                "reference": "5d4d91cd9a8d45695a47dc835398aa545753eb7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/58f409cdcdecab849d66b2f173c715ffab53d644",
-                "reference": "58f409cdcdecab849d66b2f173c715ffab53d644",
+                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/5d4d91cd9a8d45695a47dc835398aa545753eb7d",
+                "reference": "5d4d91cd9a8d45695a47dc835398aa545753eb7d",
                 "shasum": ""
             },
             "require-dev": {
@@ -1799,20 +1799,20 @@
                 "lumen",
                 "mongodb"
             ],
-            "time": "2016-05-17 12:05:50"
+            "time": "2016-05-25 11:26:23"
         },
         {
             "name": "nebo15/lumen.oauth2-mongodb",
-            "version": "0.0.11",
+            "version": "0.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/lumen-oauth2-mongo.git",
-                "reference": "17094b48ec1171654f9da2354133fcd82af8d87a"
+                "reference": "770311b1f6dc8cfe3b0422781af83c13fa5d6697"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-oauth2-mongo/zipball/17094b48ec1171654f9da2354133fcd82af8d87a",
-                "reference": "17094b48ec1171654f9da2354133fcd82af8d87a",
+                "url": "https://api.github.com/repos/Nebo15/lumen-oauth2-mongo/zipball/770311b1f6dc8cfe3b0422781af83c13fa5d6697",
+                "reference": "770311b1f6dc8cfe3b0422781af83c13fa5d6697",
                 "shasum": ""
             },
             "require": {
@@ -1844,7 +1844,7 @@
                 "mongo",
                 "oauth2"
             ],
-            "time": "2016-05-12 14:24:54"
+            "time": "2016-05-25 12:35:49"
         },
         {
             "name": "nebo15/lumen.rest",

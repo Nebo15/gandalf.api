@@ -80,27 +80,6 @@ class UsersCest
         }
     }
 
-    public function createProject(ApiTester $I)
-    {
-        $I->createAndLoginUser();
-        $faker = $I->getFaker();
-        $project = [
-            'title' => $faker->streetName,
-            'description' => $faker->text('150')
-        ];
-        $I->sendPOST('api/v1/projects', $project);
-        $project = json_decode($I->grabResponse());
-        $I->assertProject('$.data', 201);
-        $project_id = $project->data->_id;
-
-        $I->setHeader('X-Application', $project_id);
-        $I->sendPOST('api/v1/projects/consumers', ['description' => $faker->text('20'), 'scope' => ['check']]);
-        $I->assertProject('$.data', 201);
-
-        $I->sendPOST('api/v1/projects/consumers', ['description' => $faker->text('20'), 'scope' => ['check', 'undefined_scope']]);
-        $I->seeResponseCodeIs(422);
-    }
-
     public function findUsers(ApiTester $I, $scenario)
     {
         $usersList = [
@@ -111,7 +90,7 @@ class UsersCest
         ];
         $I->createAndLoginUser();
         $I->sendGET('api/v1/users');
-        $I->sendGET('api/v1/users?name=' . substr($usersList[0]->username,0, 3));
+        $I->sendGET('api/v1/users?name=' . substr($usersList[0]->username, 0, 3));
         $foundUsers = json_encode($I->getResponseFields()->data);
         $I->assertContains($usersList[0]->username, $foundUsers);
         $I->assertContains($usersList[0]->_id, $foundUsers);
@@ -122,19 +101,36 @@ class UsersCest
         $I->assertContains($usersList[1]->_id, $foundUsers);
     }
 
-    public function updateProject(ApiTester $I)
+    public function checkAuthorization(ApiTester $I)
     {
-        $I->createAndLoginUser();
-        $I->createProjectAndSetHeader();
-        $I->sendPUT('api/v1/projects', ['description' => 'Edited']);
-        $I->assertProject();
-    }
+        $user = $I->createAndLoginUser();
+        $I->createProject();
+        $I->sendGET('api/v1/projects');
+        $I->seeResponseCodeIs(200);
+        $projects_data = $I->grabResponse();
+        $I->logout();
+        $I->sendGET('api/v1/projects');
+        $I->seeResponseCodeIs(401);
 
-    public function deleteProject(ApiTester $I)
-    {
-        $I->createAndLoginUser();
-        $I->createProjectAndSetHeader();
-        $I->createGroup(2);
-        $I->sendDELETE('api/v1/projects');
+        $I->loginClient($I->getCurrentClient());
+        $I->sendPOST('api/v1/oauth/',
+            [
+                'grant_type' => 'password',
+                'username' => $user->email,
+                'password' => $user->password,
+            ]
+        );
+
+        $token = json_decode($I->grabResponse());
+
+        $I->logout();
+        $I->setHeader('Authorization', 'Bearer ' . $token->access_token);
+
+        $I->sendGET('api/v1/projects');
+        $I->seeResponseCodeIs(200);
+        $projects_data2 = $I->grabResponse();
+
+        $I->assertEquals($projects_data, $projects_data2);
+
     }
 }
