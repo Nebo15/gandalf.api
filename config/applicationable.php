@@ -17,7 +17,7 @@ return [
             'delete',
             'check',
             'create_consumers',
-            'delete_consumers',
+            'update_consumers',
             'update_users',
             'add_user',
             'edit_project',

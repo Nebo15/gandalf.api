@@ -100,4 +100,37 @@ class UsersCest
         $I->assertContains($usersList[1]->username, $foundUsers);
         $I->assertContains($usersList[1]->_id, $foundUsers);
     }
+
+    public function checkAuthorization(ApiTester $I)
+    {
+        $user = $I->createAndLoginUser();
+        $I->createProject();
+        $I->sendGET('api/v1/projects');
+        $I->seeResponseCodeIs(200);
+        $projects_data = $I->grabResponse();
+        $I->logout();
+        $I->sendGET('api/v1/projects');
+        $I->seeResponseCodeIs(401);
+
+        $I->loginClient($I->getCurrentClient());
+        $I->sendPOST('api/v1/oauth/',
+            [
+                'grant_type' => 'password',
+                'username' => $user->email,
+                'password' => $user->password,
+            ]
+        );
+
+        $token = json_decode($I->grabResponse());
+
+        $I->logout();
+        $I->setHeader('Authorization', 'Bearer ' . $token->access_token);
+
+        $I->sendGET('api/v1/projects');
+        $I->seeResponseCodeIs(200);
+        $projects_data2 = $I->grabResponse();
+
+        $I->assertEquals($projects_data, $projects_data2);
+
+    }
 }

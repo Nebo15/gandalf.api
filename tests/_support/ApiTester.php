@@ -666,6 +666,7 @@ class ApiTester extends \Codeception\Actor
             );
 
             $user_info->token = json_decode($this->grabResponse());
+            $user_info->password = $user_data['password'];
             $this->user = $user_info;
         }
 
@@ -725,5 +726,10 @@ class ApiTester extends \Codeception\Actor
 
             return $item;
         }, $array);
+    }
+
+    public function getCurrentClient()
+    {
+        return $this->client;
     }
 }

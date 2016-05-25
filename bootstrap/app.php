@@ -70,11 +70,6 @@ $app->middleware([
     App\Http\Middleware\JsonMiddleware::class
 ]);
 
-$app->routeMiddleware([
-    'auth.consumer' => App\Http\Middleware\AuthTokenConsumer::class,
-    'auth.admin' => App\Http\Middleware\AuthTokenAdmin::class,
-]);
-
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers
