@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 
 use Nebo15\REST\AbstractController;
 use Nebo15\REST\Interfaces\ListableInterface;
+use Nebo15\REST\Response;
 
 class UsersController extends AbstractController
 {
@@ -41,8 +42,7 @@ class UsersController extends AbstractController
         }
 
         return $this->response->jsonPaginator(
-            $model
-                ->paginate(intval($this->request->input('size'))),
+            $model->paginate(intval($this->request->input('size'))),
             [],
             function (ListableInterface $model) {
                 return $model->toListArray();
@@ -50,9 +50,54 @@ class UsersController extends AbstractController
         );
     }
 
+    public function verifyEmail()
+    {
+        return $this->response->json(
+            $this->getRepository()->getModel()->findByVerifyEmailToken($this->request->input('token'))
+                ->verifyEmail()->save()
+                ->toArray()
+        );
+    }
+
+
+    public function create()
+    {
+        $this->validateRoute();
+
+        $model = $this->getRepository()->createOrUpdate($this->request->all());
+        $sandboxData = [];
+        if (env('APP_ENV') == 'local') {
+            $sandboxData['token_email'] = $model->getVerifyEmailToken();
+        }
+
+        return $this->response->json(
+            $model->toArray(),
+            Response::HTTP_CREATED,
+            [],
+            [],
+            $sandboxData
+        );
+    }
+
     public function updateUser()
     {
-        return $this->update($this->request->user()->getId());
+        $this->validateRoute();
+        $model = $this->getRepository()->createOrUpdate(
+            $this->request->request->all(),
+            $this->request->user()->getId()
+        );
+        $sandboxData = [];
+        if (env('APP_ENV') == 'local') {
+            $sandboxData['token_email'] = $model->getVerifyEmailToken();
+        }
+
+        return $this->response->json(
+            $model->toArray(),
+            Response::HTTP_OK,
+            [],
+            [],
+            $sandboxData
+        );
     }
 
     public function getUserInfo()

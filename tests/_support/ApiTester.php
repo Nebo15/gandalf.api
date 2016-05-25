@@ -612,7 +612,7 @@ class ApiTester extends \Codeception\Actor
     public function createConsumer()
     {
         $this->sendPOST('api/v1/projects/consumers',
-            ['description' => $this->getFaker()->text('20'), 'scope' => ['check']]);
+            ['description' => $this->getFaker()->text('20'), 'scope' => ['read', 'check']]);
 
         return json_decode($this->grabResponse())->data->consumers[0];
     }
@@ -667,8 +667,12 @@ class ApiTester extends \Codeception\Actor
 
             $this->sendPOST('api/v1/users/', $user_data);
             $this->seeResponseCodeIs(201);
-            $user_info = json_decode($this->grabResponse())->data;
+            $response = json_decode($this->grabResponse());
+            $user_info = $response->data;
 
+
+            $this->sendPOST('api/v1/users/verify/email', ['token' => $response->sandbox->token_email->token]);
+            $this->seeResponseCodeIs(200);
 
             $this->sendPOST('api/v1/oauth/',
                 [
@@ -679,6 +683,7 @@ class ApiTester extends \Codeception\Actor
             );
 
             $user_info->token = json_decode($this->grabResponse());
+            $user_info->password = $user_data['password'];
             $this->user = $user_info;
         }
 
@@ -738,5 +743,10 @@ class ApiTester extends \Codeception\Actor
 
             return $item;
         }, $array);
+    }
+
+    public function getCurrentClient()
+    {
+        return $this->client;
     }
 }

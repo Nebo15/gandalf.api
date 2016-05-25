@@ -33,6 +33,7 @@ $app->withEloquent();
 $app->configure('database');
 $app->configure('tokens');
 $app->configure('applicationable');
+$app->configure('services');
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
@@ -67,11 +68,6 @@ $app->singleton(
 
 $app->middleware([
     App\Http\Middleware\JsonMiddleware::class
-]);
-
-$app->routeMiddleware([
-    'auth.consumer' => App\Http\Middleware\AuthTokenConsumer::class,
-    'auth.admin' => App\Http\Middleware\AuthTokenAdmin::class,
 ]);
 
 /*
