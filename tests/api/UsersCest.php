@@ -120,6 +120,7 @@ class UsersCest
                 'password' => $user->password,
             ]
         );
+        $I->seeResponseCodeIs(200);
 
         $token = json_decode($I->grabResponse());
 
@@ -131,6 +132,39 @@ class UsersCest
         $projects_data2 = $I->grabResponse();
 
         $I->assertEquals($projects_data, $projects_data2);
+    }
+
+    public function changePassword(ApiTester $I)
+    {
+        $user = $I->createAndLoginUser();
+        $old_password = $user->password;
+        $I->createProject();
+        $I->logout();
+        $I->loginClient($I->getCurrentClient());
+        $I->sendPOST('api/v1/users/password/reset', ['email' => $user->email]);
+        $resp = json_decode($I->grabResponse());
+        $new_password = $I->getFaker()->password() . '1a';
+        $I->sendPUT('api/v1/users/password',
+            ['token' => $resp->sandbox->reset_password_token->token, 'password' => $new_password]);
+        $I->seeResponseCodeIs(200);
+
+        $I->sendPOST('api/v1/oauth/',
+            [
+                'grant_type' => 'password',
+                'username' => $user->email,
+                'password' => $old_password,
+            ]
+        );
+        $I->seeResponseCodeIs(401);
+
+        $I->sendPOST('api/v1/oauth/',
+            [
+                'grant_type' => 'password',
+                'username' => $user->email,
+                'password' => $new_password,
+            ]
+        );
+        $I->seeResponseCodeIs(200);
 
     }
 }

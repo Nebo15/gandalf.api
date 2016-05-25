@@ -64,9 +64,24 @@ class User extends Base implements
         return $this;
     }
 
+    public function createResetPasswordToken()
+    {
+        $this->attributes['tokens']['reset_password'] = [
+            'token' => Hasher::getToken(),
+            'expired' => time() + 3600,
+        ];
+
+        return $this;
+    }
+
     public function getVerifyEmailToken()
     {
         return $this->getInternalToken('verify_email');
+    }
+
+    public function getResetPasswordToken()
+    {
+        return $this->getInternalToken('reset_password');
     }
 
     public function removeVerifyEmailToken()
@@ -86,9 +101,20 @@ class User extends Base implements
         return $this;
     }
 
+    public function changePassword($new_password)
+    {
+        $this->setAttribute('password', $new_password);
+        return $this;
+    }
+
     public function findByVerifyEmailToken($token)
     {
         return $this->findByToken($token, 'verify_email');
+    }
+
+    public function findByResetPasswordToken($token)
+    {
+        return $this->findByToken($token, 'reset_password');
     }
 
     public function findByToken($token, $type, $field = null, $value = null)

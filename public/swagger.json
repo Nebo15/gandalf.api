@@ -288,6 +288,136 @@
         }
       }
     },
+    "/users/password/reset" : {
+      "post" : {
+        "summary": "Reset password",
+        "description": "Get reset password token",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "body",
+            "description": "User object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "email"
+              ],
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "description": "Email for reset get reset password token",
+                  "example": "email@example.com",
+                  "required": true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Decision Consumer object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "summary": "Change password action",
+        "description": "Change user password by token",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "body",
+            "description": "User object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "token",
+                "password"
+              ],
+              "properties": {
+                "token": {
+                  "type": "string",
+                  "description": "Token for verification email",
+                  "example": "$2y$10$.lp0OGb.nJStTuwdi40wsOM7BQcukideddsiM1hFOXH5/J9sI628C",
+                  "required": true
+                },
+                "password": {
+                  "type": "string",
+                  "description": "New user password",
+                  "example": "password123",
+                  "required": true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Decision Consumer object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/User",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/users/verify/email" : {
       "post" : {
         "summary": "Verify user email",
@@ -376,7 +506,7 @@
           },
           {
             "name": "username",
-            "description": "Username, required if grant_type == password",
+            "description": "Username or user email, required if grant_type == password",
             "required": false,
             "type": "string"
           },
