@@ -650,8 +650,12 @@ class ApiTester extends \Codeception\Actor
 
             $this->sendPOST('api/v1/users/', $user_data);
             $this->seeResponseCodeIs(201);
-            $user_info = json_decode($this->grabResponse())->data;
+            $response = json_decode($this->grabResponse());
+            $user_info = $response->data;
 
+
+            $this->sendPOST('api/v1/users/verify/email', ['token' => $response->sandbox->token_email->token]);
+            $this->seeResponseCodeIs(200);
 
             $this->sendPOST('api/v1/oauth/',
                 [

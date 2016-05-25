@@ -33,6 +33,7 @@ $app->withEloquent();
 $app->configure('database');
 $app->configure('tokens');
 $app->configure('applicationable');
+$app->configure('services');
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings

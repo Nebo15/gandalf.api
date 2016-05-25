@@ -6,23 +6,26 @@
 namespace App\Observers;
 
 use App\Models\User;
+use App\Services\Mail;
 
 class UserObserver
 {
     public function creating(User $user)
     {
-        $user->temporary_email = $user->email;
-        $user->email = null;
-
-        if (!$user->nickname) {
+        if (!$user->username) {
             if ($user->temporary_email) {
-                list($user->nickname) = explode('@', $user->temporary_email);
+                list($user->username) = explode('@', $user->temporary_email);
             }
         }
     }
 
     public function created(User $user)
     {
+        /**
+         * @var Mail $mail
+         */
+        $mail = app('\App\Services\Mail');
+        $mail->sendEmailConfirmation($user->temporary_email, $user->getVerifyEmailToken()['token'], $user->username);
     }
 
     public function updating(User $user)
@@ -38,6 +41,11 @@ class UserObserver
 
     public function saving(User $user)
     {
+        if ($user->isDirty('email')) {
+            $user->temporary_email = $user->email;
+            $user->active = false;
+            $user->createVerifyEmailToken();
+        }
         if ($user->isDirty('password')) {
             $user->password = $user->getPasswordHasher()->make($user->password);
         }
