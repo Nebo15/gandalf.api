@@ -92,7 +92,6 @@ $app->register(Nebo15\Changelog\ServiceProvider::class);
 $app->register(App\Providers\ValidationServiceProvider::class);
 $app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 $app->register(App\Providers\BugsnagServiceProvider::class);
-$app->register(Postmark\Adapters\LaravelMailProvider::class);
 
 # Waiting for SaaS
 $app->register(Nebo15\LumenOauth2\Providers\ServiceProvider::class);
