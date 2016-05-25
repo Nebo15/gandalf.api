@@ -15,11 +15,8 @@ use Nebo15\REST\Interfaces\ListableInterface;
  * @package App\Models
  * @property string $title
  * @property string $description
- * @property string $default_title
- * @property string $default_decision
- * @property string $default_description
  * @property string $matching_type
- * @property Rule[] $rules
+ * @property Variant[] $variants
  * @property Field[] $fields
  * @method static Decision findById($id)
  * @method static Decision create(array $attributes = [])
@@ -35,8 +32,8 @@ class Table extends Base implements ListableInterface, Applicationable
     protected $attributes = [
         'title' => '',
         'description' => '',
-        'default_title' => '',
-        'default_description' => '',
+        'matching_type' => 'first',
+        'variants_probability' => '',
     ];
 
     protected $visible = [
@@ -44,20 +41,16 @@ class Table extends Base implements ListableInterface, Applicationable
         'title',
         'description',
         'matching_type',
-        'default_decision',
-        'default_title',
-        'default_description',
-        'rules',
+        'variants_probability',
         'fields',
+        'variants',
     ];
 
     protected $fillable = [
         'title',
         'description',
-        'default_title',
-        'default_description',
-        'default_decision',
         'matching_type',
+        'variants_probability',
     ];
 
     protected $perPage = 20;
@@ -74,13 +67,8 @@ class Table extends Base implements ListableInterface, Applicationable
     {
         return [
             'fields' => $this->fields,
-            'rules' => $this->rules,
+            'variants' => $this->variants,
         ];
-    }
-
-    public function rules()
-    {
-        return $this->embedsMany('App\Models\Rule');
     }
 
     public function fields()
@@ -88,18 +76,9 @@ class Table extends Base implements ListableInterface, Applicationable
         return $this->embedsMany('App\Models\Field');
     }
 
-    public function setRules($rules)
+    public function variants()
     {
-        $this->rules()->delete();
-        foreach ($rules as $rule) {
-            $ruleModel = new Rule($rule);
-            if (isset($rule['conditions'])) {
-                $ruleModel->setConditions($rule['conditions']);
-            }
-            $this->rules()->associate($ruleModel);
-        }
-
-        return $this;
+        return $this->embedsMany('App\Models\Variant');
     }
 
     public function setFields($fields)
@@ -114,6 +93,30 @@ class Table extends Base implements ListableInterface, Applicationable
         }
 
         return $this;
+    }
+
+    public function setVariants($variants)
+    {
+        $this->variants()->delete();
+        foreach ($variants as $variant) {
+            $this->variants()->associate((new Variant($variant))->setRules($variant['rules']));
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Variant
+     */
+    public function getVariantForCheck()
+    {
+        # toDo: get variants with probabilities
+        $variant = $this->variants()->get()->first();
+        if (!$variant) {
+            #ToDo: throw exception
+        }
+
+        return $variant;
     }
 
     /**

@@ -59,8 +59,8 @@ class TablesRepository extends AbstractRepository
         if (isset($values['fields'])) {
             $model->setFields($values['fields']);
         }
-        if (isset($values['rules'])) {
-            $model->setRules($values['rules']);
+        if (isset($values['variants'])) {
+            $model->setVariants($values['variants']);
         }
         $model->save();
 
