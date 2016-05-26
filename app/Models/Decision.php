@@ -37,7 +37,6 @@ class Decision extends Base implements Applicationable
         'description',
         'meta',
         'table',
-        'group',
         'fields',
         'request',
         'rules',
@@ -52,7 +51,6 @@ class Decision extends Base implements Applicationable
         'description',
         'meta',
         'table',
-        'group',
         'fields',
         'request',
         'rules',
@@ -66,7 +64,6 @@ class Decision extends Base implements Applicationable
         'description' => '',
         'meta' => [],
         'table' => [],
-        'group' => null,
         'fields' => [],
         'request' => [],
         'rules' => [],
@@ -113,7 +110,6 @@ class Decision extends Base implements Applicationable
         # Cause property table have MongoID object
         $data = parent::toArray();
         $data['table'] = $this->getTableArray();
-        $data['group'] = $this->getGroupAttribute($data['group']);
 
         return $data;
     }
@@ -124,23 +120,5 @@ class Decision extends Base implements Applicationable
         $data['_id'] = strval($data['_id']);
 
         return $data;
-    }
-
-    public function setGroupAttribute($value)
-    {
-        if (isset($value['_id']) and !($value['_id'] instanceof \MongoId)) {
-            $value['_id'] = new \MongoId($value['_id']);
-        }
-
-        $this->attributes['group'] = $value;
-    }
-
-    public function getGroupAttribute($value)
-    {
-        if ($value) {
-            $value['_id'] = strval($value['_id']);
-        }
-
-        return $value;
     }
 }

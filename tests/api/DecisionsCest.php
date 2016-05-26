@@ -91,7 +91,6 @@ class DecisionsCest
             $I->assertResponseDataFields(['final_decision' => $item['points']]);
         }
     }
-
     public function checkDecisionAccess(ApiTester $I)
     {
         $user = $I->createAndLoginUser();
@@ -116,26 +115,83 @@ class DecisionsCest
         $I->sendGET('api/v1/admin/decisions');
         $I->assertContains($data->_id, $I->grabResponse());
     }
-
-    public function createGroup(ApiTester $I)
+    public function checkManyVariants(ApiTester $I)
     {
         $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
-        $group = $I->createGroup();
+        $tableData = $I->getTableShortData();
+        $variantId1 = $I->getMongoId();
+        $variantId2 = $I->getMongoId();
+        $tableData['variants'][0]['_id'] = $variantId1;
+        $tableData['variants'][] = [
+            '_id' => $variantId2,
+            'default_decision' => 'Decline',
+            'rules' => [
+                [
+                    'than' => 'Approve',
+                    'title' => 'Valid rule title',
+                    'description' => 'Valid rule description',
+                    'conditions' => [
+                        [
+                            'field_key' => 'numeric',
+                            'condition' => '$eq',
+                            'value' => true
+                        ],
+                        [
+                            'field_key' => 'string',
+                            'condition' => '$eq',
+                            'value' => 'Variant'
+                        ],
+                        [
+                            'field_key' => 'bool',
+                            'condition' => '$eq',
+                            'value' => true
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        $table = $I->createTable($tableData);
 
-        $decision = $I->checkDecision($group->_id, [], 'first', 'groups');
+        $checkData = [
+            [
+                'numeric' => 500,
+                'string' => 'Yes',
+                'bool' => false,
+                'variant_id' => $variantId1,
+            ],
+            [
+                'numeric' => 500,
+                'string' => 'Variant',
+                'bool' => true,
+                'variant_id' => $variantId2,
+            ],
+        ];
+        foreach ($checkData as $item) {
+            $decision = $I->checkDecision($table->_id, $item);
+            $I->assertTableDecisionsForConsumer();
+
+            $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
+            $I->assertTableDecisionsForAdmin();
+            $I->assertResponseDataFields([
+                'final_decision' => 'Approve',
+                'table' => [
+                    '_id' => $table->_id,
+                    'variant' => [
+                        '_id' => $item['variant_id']
+                    ]
+                ]
+            ]);
+        }
+        $decision = $I->checkDecision($table->_id, ['numeric' => 500,
+            'string' => 'Yes',
+            'bool' => false]);
         $I->assertTableDecisionsForConsumer();
-
         $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
         $I->assertTableDecisionsForAdmin();
-        $I->assertResponseDataFields([
-            'group' => [
-                '_id' => $group->_id,
-                'title' => 'Group title',
-                'description' => 'Group description',
-            ],
-        ]);
+        $I->assertTrue(in_array($I->getResponseFields()->data->table->variant->_id, [$variantId1, $variantId2]));
     }
+
 
     public function createInvalid(ApiTester $I)
     {
