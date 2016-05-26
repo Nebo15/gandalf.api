@@ -26,7 +26,6 @@ class ObserverServiceProvider extends ServiceProvider
     public function boot()
     {
         Table::observe(new TableObserver);
-        Group::observe(new GroupObserver);
         User::observe(new UserObserver);
     }
 

@@ -15,10 +15,8 @@ $app->get('/', function () use ($app) {
     return response('ok');
 });
 
-
 /** @var Nebo15\REST\Router $api */
 $api = $app->make('Nebo15\REST\Router');
-$api->api('groups', 'GroupsController', ['oauth', 'applicationable', 'applicationable.acl']);
 $api->api('tables', 'TablesController', ['oauth', 'applicationable', 'applicationable.acl']);
 
 
@@ -88,6 +86,5 @@ $app->group(
         /** @var Laravel\Lumen\Application $app */
         $app->get('/decisions/{id}', ['uses' => 'ConsumerController@decision']);
         $app->post('/tables/{id}/decisions', ['uses' => 'ConsumerController@tableCheck']);
-        $app->post('/groups/{id}/decisions', ['uses' => 'ConsumerController@groupCheck']);
     }
 );

@@ -40,7 +40,7 @@ class TablesController extends AbstractController
             'fields' => 'required|array',
             'fields.*._id' => 'sometimes|mongoId',
             'fields.*.title' => 'required|string',
-            'fields.*.key' => 'required|string|not_in:webhook',
+            'fields.*.key' => 'required|string|not_in:webhook,variant_id',
             'fields.*.type' => 'required|in:numeric,boolean,string',
             'fields.*.source' => 'required|in:request',
             'fields.*.preset' => 'present|array',
