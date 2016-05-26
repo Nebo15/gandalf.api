@@ -94,7 +94,7 @@ class DecisionsCest
     public function checkDecisionAccess(ApiTester $I)
     {
         $user = $I->createAndLoginUser();
-        $project = $I->createProjectAndSetHeader();
+        $I->createProjectAndSetHeader();
         $table = $I->createTable($I->getShortTableDataMatchingTypeAll());
         $decisions = ['points' => 15, 'request' => ['string' => 'Invalid', 'numeric' => 1, 'bool' => false]];
         $data = $I->checkDecision($table->_id, $decisions['request'], 'all');
