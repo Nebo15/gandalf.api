@@ -661,7 +661,7 @@ class ApiTester extends \Codeception\Actor
                 'first_name' => $faker->firstName,
                 'last_name' => $faker->lastName,
                 'email' => $faker->email,
-                'password' => $faker->password(),
+                'password' => $faker->password() . '1a',
                 'username' => $faker->firstName,
             ];
 

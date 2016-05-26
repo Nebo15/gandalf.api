@@ -13,7 +13,7 @@ class UsersCest
         $faker = $I->getFaker();
         $I->sendPOST(
             'api/v1/users/',
-            ['email' => $faker->email, 'password' => $faker->password(), 'username' => $faker->firstName]
+            ['email' => $faker->email, 'password' => $faker->password() . '1a', 'username' => $faker->firstName]
         );
         $I->seeResponseCodeIs(201);
     }
@@ -61,7 +61,7 @@ class UsersCest
         /** Normal user for Test Duplicate Username */
         $I->sendPOST(
             'api/v1/users/',
-            ['email' => $faker->email, 'password' => $faker->password(), 'username' => 'duplicate']
+            ['email' => $faker->email, 'password' => $faker->password() . '1a', 'username' => 'duplicate']
         );
         $I->seeResponseCodeIs(201);
         foreach ($badData as $key => $data) {
@@ -120,10 +120,12 @@ class UsersCest
                 'password' => $user->password,
             ]
         );
+        $I->seeResponseCodeIs(200);
 
         $token = json_decode($I->grabResponse());
 
         $I->logout();
+
         $I->setHeader('Authorization', 'Bearer ' . $token->access_token);
 
         $I->sendGET('api/v1/projects');
@@ -131,6 +133,40 @@ class UsersCest
         $projects_data2 = $I->grabResponse();
 
         $I->assertEquals($projects_data, $projects_data2);
+    }
+
+    public function changePassword(ApiTester $I)
+    {
+        $user = $I->createAndLoginUser();
+        $old_password = $user->password;
+        $I->createProject();
+        $I->logout();
+        $I->loginClient($I->getCurrentClient());
+        $I->sendPOST('api/v1/users/password/reset', ['email' => $user->email]);
+        $resp = json_decode($I->grabResponse());
+
+        $new_password = $I->getFaker()->password() . '1a';
+        $I->sendPUT('api/v1/users/password/reset',
+            ['token' => $resp->sandbox->reset_password_token->token, 'password' => $new_password]);
+        $I->seeResponseCodeIs(200);
+
+        $I->sendPOST('api/v1/oauth/',
+            [
+                'grant_type' => 'password',
+                'username' => $user->email,
+                'password' => $old_password,
+            ]
+        );
+        $I->seeResponseCodeIs(401);
+
+        $I->sendPOST('api/v1/oauth/',
+            [
+                'grant_type' => 'password',
+                'username' => $user->email,
+                'password' => $new_password,
+            ]
+        );
+        $I->seeResponseCodeIs(200);
 
     }
 }
