@@ -19,7 +19,7 @@ class UsersController extends AbstractController
             'first_name' => 'sometimes|required|string|min:2|max:32',
             'last_name' => 'sometimes|required|string|min:2|max:32',
             'email' => 'required|unique:users,email|email',
-            'password' => 'required',
+            'password' => 'required|password',
         ],
         'update' => [
             'username' => 'sometimes|required|unique:users,username|min:2|max:32',
@@ -27,6 +27,13 @@ class UsersController extends AbstractController
             'first_name' => 'sometimes|required|string|min:2|max:32',
             'last_name' => 'sometimes|required|string|min:2|max:32',
             'password' => 'sometimes|required',
+        ],
+        'createResetPasswordToken' => [
+            'email' => 'required|email',
+        ],
+        'changePassword' => [
+            'token' => 'required',
+            'password' => 'required|password',
         ],
     ];
 
@@ -93,6 +100,49 @@ class UsersController extends AbstractController
 
         return $this->response->json(
             $model->toArray(),
+            Response::HTTP_OK,
+            [],
+            [],
+            $sandboxData
+        );
+    }
+
+    public function changePassword()
+    {
+        $this->validateRoute();
+
+        return $this->response->json(
+            $this->getRepository()->getModel()->findByResetPasswordToken(
+                $this->request->input('token')
+            )->changePassword(
+                $this->request->input('password')
+            )->save()->toArray()
+        );
+    }
+
+    public function createResetPasswordToken()
+    {
+        $this->validateRoute();
+        $email = $this->request->input('email');
+        $user = null;
+        $user = $this->getRepository()->getModel()->query()->where(['email' => $email])->firstOrFail();
+
+        $return = [];
+        $sandboxData = [];
+        $user->createResetPasswordToken();
+        /**
+         * @var Mail $mail
+         */
+        $mail = app('\App\Services\Mail');
+        $mail->sendRecoveryPassword($email, $user->getResetPasswordToken()['token'], $user);
+        $user->save();
+
+        if (env('APP_ENV') == 'local') {
+            $sandboxData['reset_password_token'] = $user->getResetPasswordToken();
+        }
+
+        return $this->response->json(
+            $return,
             Response::HTTP_OK,
             [],
             [],

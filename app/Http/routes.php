@@ -28,33 +28,36 @@ $changelog->api('api/v1/admin', ['oauth', 'applicationable', 'applicationable.ac
 $app->make('oauth.routes')->makeRestRoutes();
 $app->make('Applicationable.routes')->makeRoutes();
 
-$app->post('api/v1/users/verify/email', [
-    'uses' => 'App\Http\Controllers\UsersController@verifyEmail',
-    'middleware' => 'oauth.basic.client',
-]);
+$app->group(
+    [
+        'prefix' => 'api/v1',
+        'namespace' => 'App\Http\Controllers',
+        'middleware' => ['oauth.basic.client'],
+    ],
+    function ($app) {
+        /** @var Laravel\Lumen\Application $app */
+        $app->post('/users', ['uses' => 'UsersController@create']);
+        $app->post('/users/verify/email', ['uses' => 'UsersController@verifyEmail']);
+        $app->post('/users/password/reset', ['uses' => 'UsersController@createResetPasswordToken']);
+        $app->put('/users/password/reset', ['uses' => 'UsersController@changePassword']);
+    }
+);
 
-$app->post('api/v1/users', [
-    'uses' => 'App\Http\Controllers\UsersController@create',
-    'middleware' => 'oauth.basic.client',
-]);
+$app->group(
+    [
+        'prefix' => 'api/v1',
+        'namespace' => 'App\Http\Controllers',
+        'middleware' => ['oauth'],
+    ],
+    function ($app) {
+        /** @var Laravel\Lumen\Application $app */
+        $app->get('/users/current', ['uses' => 'UsersController@getUserInfo']);
+        $app->put('/users/current', ['uses' => 'UsersController@updateUser']);
+        #Get list of users
+        $app->get('/users', ['uses' => 'UsersController@readListWithFilters']);
 
-$app->get('api/v1/users/current', [
-    'uses' => 'App\Http\Controllers\UsersController@getUserInfo',
-    'middleware' => ['oauth'],
-]);
-
-$app->put('api/v1/users/current', [
-    'uses' => 'App\Http\Controllers\UsersController@updateUser',
-    'middleware' => 'oauth',
-]);
-
-/**
- * Get list of users
- */
-$app->get('api/v1/users', [
-    'uses' => 'App\Http\Controllers\UsersController@readListWithFilters',
-    'middleware' => 'oauth',
-]);
+    }
+);
 
 $app->delete('api/v1/projects', [
     'uses' => 'App\Http\Controllers\ProjectsController@deleteProject',

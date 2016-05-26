@@ -32,4 +32,23 @@ class Mail
             ]
         );
     }
+
+    public function sendRecoveryPassword($email, $code, $user)
+    {
+        if (false == config('services.email.enabled')) {
+            return null;
+        }
+
+        $this->postmark->sendEmailWithTemplate(
+            config('services.postmark.sender'),
+            $email,
+            config('services.postmark.templates.reset_password'),
+            [
+                'product_name' => 'Gandalf',
+                'name' => $user->username,
+                'action_url' => str_replace('{code}', $code, env('services.link.reset_password')),
+                'username' => $user->username,
+            ]
+        );
+    }
 }
