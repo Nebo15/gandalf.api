@@ -125,6 +125,7 @@ class UsersCest
         $token = json_decode($I->grabResponse());
 
         $I->logout();
+
         $I->setHeader('Authorization', 'Bearer ' . $token->access_token);
 
         $I->sendGET('api/v1/projects');
