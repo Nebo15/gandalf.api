@@ -22,8 +22,7 @@ namespace App\Models;
  * @property Field[] $fields
  * @method static Decision findById($id)
  * @method Decision save(array $options = [])
- * @method static \Illuminate\Pagination\LengthAwarePaginator paginate($perPage = 15, $columns = ['*'], $pageName =
- *     'page', $page = null)
+ * @method static \Illuminate\Pagination\LengthAwarePaginator paginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null)
  */
 class Decision extends Base
 {
@@ -33,7 +32,6 @@ class Decision extends Base
         'description',
         'meta',
         'table',
-        'group',
         'fields',
         'request',
         'rules',
@@ -48,7 +46,6 @@ class Decision extends Base
         'description',
         'meta',
         'table',
-        'group',
         'fields',
         'request',
         'rules',
@@ -59,8 +56,7 @@ class Decision extends Base
     protected $attributes = [
         'title' => '',
         'description' => '',
-        'meta' => [],
-        'group' => null,
+        'meta' => []
     ];
 
     protected $perPage = 20;
@@ -101,7 +97,6 @@ class Decision extends Base
         # Cause property table have MongoID object
         $data = parent::toArray();
         $data['table'] = $this->getTableArray();
-        $data['group'] = $this->getGroupAttribute($data['group']);
 
         return $data;
     }
@@ -112,23 +107,5 @@ class Decision extends Base
         $data['_id'] = strval($data['_id']);
 
         return $data;
-    }
-
-    public function setGroupAttribute($value)
-    {
-        if (isset($value['_id']) and !($value['_id'] instanceof \MongoId)) {
-            $value['_id'] = new \MongoId($value['_id']);
-        }
-
-        $this->attributes['group'] = $value;
-    }
-
-    public function getGroupAttribute($value)
-    {
-        if ($value) {
-            $value['_id'] = strval($value['_id']);
-        }
-
-        return $value;
     }
 }

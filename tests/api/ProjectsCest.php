@@ -65,7 +65,7 @@ class ProjectsCest
     {
         $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
-        $I->createGroup(2);
+        $I->createTable();
         $I->sendDELETE('api/v1/projects');
     }
 }

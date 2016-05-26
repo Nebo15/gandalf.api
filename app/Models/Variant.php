@@ -38,6 +38,7 @@ class Variant extends Base
     ];
 
     protected $fillable = [
+        '_id',
         'title',
         'description',
         'default_title',

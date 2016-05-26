@@ -33,66 +33,9 @@ class ApiTester extends \Codeception\Actor
         $this->scenario->stopIfBlocked();
     }
 
-    public function createGroup($tablesAmount = 2, $probability = 'random', array $data = null)
-    {
-        if (!$data) {
-            $data['tables'] = [];
-            for ($i = 0; $i < $tablesAmount; $i++) {
-                $data['tables'][$i] = [
-                    '_id' => $this->createTable(null, false)->_id,
-                ];
-            }
-        }
-        if (!isset($data['title'])) {
-            $data['title'] = 'Group title';
-        }
-        if (!isset($data['description'])) {
-            $data['description'] = 'Group description';
-        }
-        $data['probability'] = $probability;
-        $this->sendPOST('api/v1/admin/groups', $data);
-        $this->assertGroup('$.data', 201);
-
-        return $this->getResponseFields()->data;
-    }
-
     public function getFaker($locale = 'en_US')
     {
         return Faker\Factory::create($locale);
-    }
-
-    public function assertGroup($jsonPath = '$.data', $code = 200)
-    {
-        $this->seeResponseCodeIs($code);
-        $this->seeResponseMatchesJsonType([
-            '_id' => 'string',
-            'title' => 'string',
-            'description' => 'string',
-            'tables' => 'array',
-            'probability' => 'string:regex(@^(random)$@)',
-        ], $jsonPath);
-
-        $this->seeResponseMatchesJsonType([
-            '_id' => 'string',
-            'title' => 'string',
-            'description' => 'string',
-        ], "$jsonPath.tables[*]");
-    }
-
-    public function assertListGroup($jsonPath = '$.data[*]')
-    {
-        $this->seeResponseCodeIs(200);
-        $this->seeResponseMatchesJsonType([
-            '_id' => 'string',
-            'title' => 'string',
-            'description' => 'string',
-            'tables' => 'array',
-            'probability' => 'string:regex(@^(random)$@)',
-        ], $jsonPath);
-
-        $this->seeResponseMatchesJsonType([
-            '_id' => 'string',
-        ], "$jsonPath.tables[*]");
     }
 
     public function createTable(array $data = null, $assert = true)
@@ -194,7 +137,6 @@ class ApiTester extends \Codeception\Actor
         $rules = [
             '_id' => 'string',
             'table' => 'array',
-            'group' => 'array|null',
             'meta' => 'array',
             'default_decision' => $type,
             'final_decision' => $type,
@@ -236,7 +178,15 @@ class ApiTester extends \Codeception\Actor
             '_id' => 'string',
             'title' => 'string',
             'description' => 'string',
+            'variant' => 'array',
+            'matching_type' => 'string',
         ], "$jsonPath.table");
+
+        $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
+            'title' => 'string',
+            'description' => 'string',
+        ], "$jsonPath.table.variant");
     }
 
     public function assertTableDecisionsForConsumer($matching_rules_type = 'first', $jsonPath = '$.data')
@@ -266,7 +216,15 @@ class ApiTester extends \Codeception\Actor
             '_id' => 'string',
             'title' => 'string',
             'description' => 'string',
+            'matching_type' => 'string',
+            'variant' => 'array',
         ], "$jsonPath.table");
+
+        $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
+            'title' => 'string',
+            'description' => 'string',
+        ], "$jsonPath.table.variant");
 
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.fields");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.group");
@@ -276,7 +234,7 @@ class ApiTester extends \Codeception\Actor
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions");
     }
 
-    public function checkDecision($table_id, array $data = [], $matching_rules_type = 'first', $route = 'tables')
+    public function checkDecision($table_id, array $data = [], $matching_rules_type = 'first')
     {
         $data = $data ?: [
             'borrowers_phone_verification' => 'Positive',
@@ -288,7 +246,7 @@ class ApiTester extends \Codeception\Actor
         if (!array_key_exists('matching_rules_type', $data)) {
             $data['matching_rules_type'] = $matching_rules_type;
         }
-        $this->sendPOST("api/v1/$route/$table_id/decisions", $data);
+        $this->sendPOST("api/v1/tables/$table_id/decisions", $data);
         $this->assertTableDecisionsForConsumer($matching_rules_type);
 
         return $this->getResponseFields()->data;

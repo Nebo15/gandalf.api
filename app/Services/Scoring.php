@@ -11,10 +11,8 @@ use App\Models\Table;
 use App\Models\Field;
 use App\Models\Decision;
 use App\Models\Condition;
-use App\Repositories\GroupsRepository;
 use App\Repositories\TablesRepository;
 use Illuminate\Contracts\Validation\ValidationException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Scoring
 {
@@ -24,16 +22,13 @@ class Scoring
 
     private $tablesRepository;
 
-    private $groupsRepository;
-
-    public function __construct(TablesRepository $tablesRepository, GroupsRepository $groupsRepository)
+    public function __construct(TablesRepository $tablesRepository)
     {
         $this->tablesRepository = $tablesRepository;
-        $this->groupsRepository = $groupsRepository;
         $this->conditionsTypes = new ConditionsTypes;
     }
 
-    public function check($id, $values, $groupId = null)
+    public function check($id, $values)
     {
         $table = $this->tablesRepository->read($id);
         $validator = \Validator::make($values, $this->createValidationRules($table));
@@ -41,16 +36,7 @@ class Scoring
             throw new ValidationException($validator);
         }
         $fields = $table->fields();
-        $variant = $table->getVariantForCheck();
-        $group = null;
-        if ($groupId) {
-            $groupDoc = $this->groupsRepository->read($groupId);
-            $group = [
-                '_id' => $groupId,
-                'title' => $groupDoc->title,
-                'description' => $groupDoc->description,
-            ];
-        }
+        $variant = $table->getVariantForCheck(isset($values['variant_id']) ? $values['variant_id'] : null);
 
         $webhook = isset($values['webhook']) ? $values['webhook'] : null;
         $scoring_data = [
@@ -59,8 +45,12 @@ class Scoring
                 'title' => $table->title,
                 'description' => $table->description,
                 'matching_type' => $table->matching_type,
+                'variant' => [
+                    '_id' => $variant->getId(),
+                    'title' => $variant->title,
+                    'description' => $variant->description,
+                ]
             ],
-            'group' => $group,
             'title' => $variant->default_title,
             'description' => $variant->default_description,
             'default_decision' => $variant->default_decision,
@@ -82,7 +72,6 @@ class Scoring
                 'conditions' => []
             ];
             $conditions_matched = true;
-            $fieldIndex = 0;
             foreach ($rule->conditions as $condition) {
                 $fieldKey = $condition->field_key;
                 /** @var Field $field */
@@ -91,7 +80,7 @@ class Scoring
                 })->first();
 
                 if (!$field) {
-                    # skip, because file may not be exists
+                    # skip, because field may not be exists
                     continue;
                 }
                 $this->checkCondition($condition, $this->prepareFieldPreset($field, $values[$condition->field_key]));
@@ -101,8 +90,6 @@ class Scoring
                 }
                 $condition = $condition->getAttributes();
                 $scoring_rule['conditions'][] = $condition;
-
-                $fieldIndex++;
             }
             if ($table->matching_type == 'all') {
                 if ($conditions_matched) {

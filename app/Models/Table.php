@@ -5,6 +5,7 @@
 
 namespace App\Models;
 
+use App\Exceptions\VariantNotFound;
 use Nebo15\LumenApplicationable\Contracts\Applicationable;
 use Nebo15\LumenApplicationable\Traits\ApplicationableTrait;
 use Nebo15\REST\Traits\ListableTrait;
@@ -106,14 +107,23 @@ class Table extends Base implements ListableInterface, Applicationable
     }
 
     /**
+     * @param null $variantId
      * @return Variant
+     * @throws VariantNotFound
      */
-    public function getVariantForCheck()
+    public function getVariantForCheck($variantId = null)
     {
-        # toDo: get variants with probabilities
-        $variant = $this->variants()->get()->first();
+        $collection = $this->variants()->get();
+        if ($variantId) {
+            $variant = $collection->find($variantId);
+        } elseif ($collection->count() > 0) {
+            $variant = $collection->random();
+        } else {
+            $variant = $collection->first();
+        }
+
         if (!$variant) {
-            #ToDo: throw exception
+            throw new VariantNotFound;
         }
 
         return $variant;
