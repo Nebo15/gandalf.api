@@ -72,7 +72,7 @@ class TablesRepository extends AbstractRepository
         $table = $this->read($table_id);
         $decisions = (new \MongoClient())->selectDB(env('DB_DATABASE'))
             ->selectCollection((new Decision)->getTable())
-            ->find([], ['rules']);
+            ->find(['table._id' => $table_id, 'applications' => ApplicationableHelper::getApplicationId()], ['rules']);
         $map = [];
 
         if (($decisionsAmount = $decisions->count()) > 0) {

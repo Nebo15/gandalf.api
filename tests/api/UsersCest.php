@@ -13,7 +13,7 @@ class UsersCest
         $faker = $I->getFaker();
         $I->sendPOST(
             'api/v1/users/',
-            ['email' => $faker->email, 'password' => $faker->password(), 'username' => $faker->firstName]
+            ['email' => $faker->email, 'password' => $faker->password() . '1a', 'username' => $faker->firstName]
         );
         $I->seeResponseCodeIs(201);
     }
@@ -56,18 +56,20 @@ class UsersCest
             'password' => [
                 '',
                 null,
+                '1fa',
+                'withoutdigit',
             ],
         ];
         /** Normal user for Test Duplicate Username */
         $I->sendPOST(
             'api/v1/users/',
-            ['email' => $faker->email, 'password' => $faker->password(), 'username' => 'duplicate']
+            ['email' => $faker->email, 'password' => $faker->password() . '1a', 'username' => 'duplicate']
         );
         $I->seeResponseCodeIs(201);
         foreach ($badData as $key => $data) {
             $normalUserData = [
                 'email' => $faker->email,
-                'password' => $faker->password(),
+                'password' => $faker->password() . '1a',
                 'username' => $faker->firstName,
             ];
             foreach ($data as $item) {

@@ -5,6 +5,6 @@ class PasswordValidator
 {
     public function validate($attribute, $value)
     {
-        return preg_match('/^\S*(?=\S{6,})(?=\S*[a-zA-Z])(?=\S*[\d])\S*$/', $value);
+        return preg_match('/^\S*(?=\S{6,32})(?=\S*[a-zA-Z])(?=\S*[\d])\S*$/', $value);
     }
 }

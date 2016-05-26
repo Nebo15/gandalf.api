@@ -77,8 +77,7 @@ class DecisionsCest
     {
         $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
-        $tableData = $I->getShortTableDataMatchingTypeAll();
-        $table = $I->createTable($tableData);
+        $table = $I->createTable($I->getShortTableDataMatchingTypeAll());
         $decisionsData = [
             # default decision
             ['points' => 15, 'request' => ['string' => 'Invalid', 'numeric' => 1, 'bool' => false]],
@@ -91,6 +90,31 @@ class DecisionsCest
             $I->checkDecision($table->_id, $item['request'], 'all');
             $I->assertResponseDataFields(['final_decision' => $item['points']]);
         }
+    }
+
+    public function checkDecisionAccess(ApiTester $I)
+    {
+        $user = $I->createAndLoginUser();
+        $project = $I->createProjectAndSetHeader();
+        $table = $I->createTable($I->getShortTableDataMatchingTypeAll());
+        $decisions = ['points' => 15, 'request' => ['string' => 'Invalid', 'numeric' => 1, 'bool' => false]];
+        $data = $I->checkDecision($table->_id, $decisions['request'], 'all');
+        $I->sendGET('api/v1/admin/decisions');
+        $I->assertContains($data->_id, $I->grabResponse());
+
+        $second_user = $I->createUser(true);
+        $I->loginUser($second_user);
+        $I->createProject(true);
+        $I->sendGET('api/v1/admin/decisions');
+        $I->assertNotContains($data->_id, $I->grabResponse());
+
+        $I->loginUser($user);
+        $I->sendPOST('api/v1/projects/users',
+            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['create', 'read', 'update']]);
+
+        $I->loginUser($second_user);
+        $I->sendGET('api/v1/admin/decisions');
+        $I->assertContains($data->_id, $I->grabResponse());
     }
 
     public function createGroup(ApiTester $I)
@@ -108,8 +132,8 @@ class DecisionsCest
             'group' => [
                 '_id' => $group->_id,
                 'title' => 'Group title',
-                'description' => 'Group description'
-            ]
+                'description' => 'Group description',
+            ],
         ]);
     }
 
@@ -152,7 +176,7 @@ class DecisionsCest
 
         $data = [
             'ok' => '0981723qweasdzxcTYUGHJBNBNM!@#$%^&*()_+{}|":>?<~`',
-            'json' => '{"type":{"num":123}}'
+            'json' => '{"type":{"num":123}}',
         ];
         $I->sendPUT("api/v1/admin/decisions/{$decision->_id}/meta", ['meta' => $data]);
         $I->assertTableDecisionsForAdmin();

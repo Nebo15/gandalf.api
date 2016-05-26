@@ -60,6 +60,7 @@ class Scoring
                 'description' => $table->description,
                 'matching_type' => $table->matching_type,
             ],
+            'applications' => $table->getApplications(),
             'group' => $group,
             'title' => $variant->default_title,
             'description' => $variant->default_description,
@@ -67,7 +68,7 @@ class Scoring
             'fields' => $fields->toArray(),
             'rules' => [],
             'request' => $values,
-            'webhook' => $webhook
+            'webhook' => $webhook,
         ];
         $final_decision = null;
         $fieldsCollection = $fields->get();
@@ -79,7 +80,7 @@ class Scoring
                 'than' => $rule->than,
                 'title' => $rule->title,
                 'description' => $rule->description,
-                'conditions' => []
+                'conditions' => [],
             ];
             $conditions_matched = true;
             $fieldIndex = 0;
@@ -125,7 +126,7 @@ class Scoring
             # create webhook service
         }
 
-        return Decision::create($scoring_data)->toConsumerArray();
+        return (new Decision())->fill($scoring_data)->save()->toConsumerArray();
     }
 
     private function checkCondition(Condition $condition, $value)

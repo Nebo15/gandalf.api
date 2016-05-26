@@ -7,6 +7,9 @@
 
 namespace App\Models;
 
+use Nebo15\LumenApplicationable\Contracts\Applicationable;
+use Nebo15\LumenApplicationable\Traits\ApplicationableTrait;
+
 /**
  * Class Decision
  * @package App\Models
@@ -22,11 +25,12 @@ namespace App\Models;
  * @property Field[] $fields
  * @method static Decision findById($id)
  * @method Decision save(array $options = [])
- * @method static \Illuminate\Pagination\LengthAwarePaginator paginate($perPage = 15, $columns = ['*'], $pageName =
- *     'page', $page = null)
+ * @method static \Illuminate\Pagination\LengthAwarePaginator paginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null)
  */
-class Decision extends Base
+class Decision extends Base implements Applicationable
 {
+    use ApplicationableTrait;
+
     protected $visible = [
         '_id',
         'title',
@@ -54,13 +58,20 @@ class Decision extends Base
         'rules',
         'default_decision',
         'final_decision',
+        'applications',
     ];
 
     protected $attributes = [
         'title' => '',
         'description' => '',
         'meta' => [],
+        'table' => [],
         'group' => null,
+        'fields' => [],
+        'request' => [],
+        'rules' => [],
+        'default_decision' => '',
+        'final_decision' => '',
     ];
 
     protected $perPage = 20;
@@ -80,6 +91,7 @@ class Decision extends Base
         return [
             '_id' => $this->getId(),
             'table' => $this->getTableArray(),
+            'applications' => $this->getApplications(),
             'title' => $this->title,
             'description' => $this->description,
             'final_decision' => $this->final_decision,
