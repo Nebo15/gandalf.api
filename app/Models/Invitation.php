@@ -7,10 +7,10 @@ class Invitations extends Base
     protected $attributes = [
         'email' => '',
         'project' => [],
-        self::CREATED_AT,
-        self::UPDATED_AT,
+        'role' => '',
+        'scope' => [],
     ];
 
-    protected $fillable = ['email', 'project'];
+    protected $fillable = ['email', 'project', 'role', 'scope'];
 
 }
