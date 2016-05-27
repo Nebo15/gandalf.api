@@ -56,6 +56,8 @@ class UsersCest
             'password' => [
                 '',
                 null,
+                '1fa',
+                'withoutdigit',
             ],
         ];
         /** Normal user for Test Duplicate Username */
@@ -67,7 +69,7 @@ class UsersCest
         foreach ($badData as $key => $data) {
             $normalUserData = [
                 'email' => $faker->email,
-                'password' => $faker->password(),
+                'password' => $faker->password() . '1a',
                 'username' => $faker->firstName,
             ];
             foreach ($data as $item) {

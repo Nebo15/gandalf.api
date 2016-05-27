@@ -2,3 +2,4 @@
 .env
 .idea
 tests/_output/*
+dump.tar.gz

@@ -59,13 +59,17 @@ class ProjectsCest
         $I->createProjectAndSetHeader();
         $I->sendPUT('api/v1/projects', ['description' => 'Edited']);
         $I->assertProject();
+        $I->seeResponseContains('"description":"Edited"');
     }
 
     public function deleteProject(ApiTester $I)
     {
         $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
-        $I->createTable();
+        $table = $I->createTable();
         $I->sendDELETE('api/v1/projects');
+        $I->seeResponseCodeIs(200);
+        $I->sendGET('api/v1/admin/tables' . $table->_id);
+        $I->seeResponseCodeIs(404);
     }
 }
