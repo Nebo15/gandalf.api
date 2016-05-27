@@ -28,30 +28,30 @@ class DecisionApplicationable extends \Sokil\Mongo\Migrator\AbstractMigration
             $tables[(string)$table->getid()] = $table->applications;
         }
 
-        $decisions_collection = (new \MongoClient())->selectDB($this->getDatabase()->getName())
-            ->selectCollection('decisions');
-        $decisions = $decisions_collection->find([], ['table', 'table_id']);
-        $batchUpdate = (new \MongoUpdateBatch($decisions_collection));
+        $collection = (new \MongoClient())->selectDB($this->getDatabase()->getName())->selectCollection('decisions');
+        $decisions = $collection->find([], ['table', 'table_id']);
+        $batchUpdate = (new \MongoUpdateBatch($collection));
         foreach ($decisions as $decision) {
             $applications = [];
             if (array_key_exists('table_id', $decision)) {
-                $applications = (array_key_exists((string)$decision['table_id'], $tables)) ? $tables[(string)$decision['table_id']] : [];
+                $applications = (array_key_exists((string)$decision['table_id'], $tables))
+                    ? $tables[(string)$decision['table_id']]
+                    : [];
             } elseif (array_key_exists('table', $decision)) {
-                $applications = array_key_exists((string)$decision['table']['_id'], $tables) ? $tables[(string)$decision['table']['_id']] : [];
+                $applications = array_key_exists((string)$decision['table']['_id'], $tables)
+                    ? $tables[(string)$decision['table']['_id']]
+                    : [];
             }
-            $batchUpdate->add(
-                [
-                    'q' => ['_id' => $decision['_id']],
-                    'u' => ['$set' => ['applications' => $applications]]
-                ]
-            );
+            $batchUpdate->add([
+                'q' => ['_id' => $decision['_id']],
+                'u' => ['$set' => ['applications' => $applications]]
+            ]);
         }
-
         $batchUpdate->execute();
     }
-    
+
     public function down()
     {
-        
+
     }
 }

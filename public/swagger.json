@@ -1297,7 +1297,7 @@
                 "default_decision",
                 "default_title",
                 "default_description",
-                "rules",
+                "variants",
                 "fields"
               ],
               "properties": {
@@ -1342,11 +1342,11 @@
                     "$ref": "#/definitions/Field"
                   }
                 },
-                "rules": {
+                "variants": {
                   "type": "array",
                   "description": "Array of Rule objects.",
                   "items": {
-                    "$ref": "#/definitions/Rule"
+                    "$ref": "#/definitions/Variant"
                   }
                 }
               }
@@ -1557,308 +1557,6 @@
                 "meta": {
                   "$ref": "#/definitions/Meta",
                   "description": "Meta data"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/admin/group": {
-      "get": {
-        "security": [
-          {
-            "basicAuth": []
-          }
-        ],
-        "summary": "Groups List",
-        "description": "Get list of Groups",
-        "tags": [
-          "Admin",
-          "Groups"
-        ],
-        "parameters": [
-          {
-            "name": "size",
-            "in": "request",
-            "description": "Amount of Groups on page",
-            "required": false
-          },
-          {
-            "name": "page",
-            "in": "request",
-            "description": "Page for pagination",
-            "required": false
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "An array of Groups",
-            "schema": {
-              "type": "object",
-              "required": [
-                "meta",
-                "data"
-              ],
-              "properties": {
-                "meta": {
-                  "$ref": "#/definitions/Meta",
-                  "description": "Meta data"
-                },
-                "data": {
-                  "type": "array",
-                  "description": "Response data object",
-                  "items": {
-                    "$ref": "#/definitions/GroupList"
-                  }
-                },
-                "paging": {
-                  "$ref": "#/definitions/Paging",
-                  "description": "Paging object"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "security": [
-          {
-            "basicAuth": []
-          }
-        ],
-        "summary": "Group Create",
-        "description": "###Create a new Group.\n All tables must contain the same Field keys and matchyng_type must be defined as 'first'. When Field keys of Table which belongs to some Group will be updated, other Field keys of Tables in Group will be also updated to make them the same for the entire group. If a new Field key is added to the table, for each Table in the Group will be added a new condition `$is_set` for all Rules",
-        "tags": [
-          "Admin",
-          "Groups"
-        ],
-        "parameters": [
-          {
-            "name": "table",
-            "in": "body",
-            "description": "Group object",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "required": [
-                "tables",
-                "title",
-                "description",
-                "probability"
-              ],
-              "properties": {
-                "tables": {
-                  "type": "array",
-                  "description": "Array of Short Table objects.",
-                  "items": {
-                    "type": "object",
-                    "description": "Short Table object",
-                    "properties": {
-                      "_id": {
-                        "type": "string",
-                        "description": "Table ID. MongoID",
-                        "example": "56c31536a60ad644060041af"
-                      }
-                    }
-                  }
-                },
-                "title": {
-                  "type": "string",
-                  "description": "Group.title value",
-                  "example": "Some title"
-                },
-                "description": {
-                  "type": "string",
-                  "description": "Group.description value",
-                  "example": "Some description"
-                },
-                "probability": {
-                  "type": "string",
-                  "description": "Group.probability value",
-                  "example": "random"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Created Group",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Group"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/admin/groups/{id}": {
-      "get": {
-        "summary": "Group Read",
-        "description": "Get Group by id",
-        "tags": [
-          "Admin",
-          "Groups"
-        ],
-        "responses": {
-          "200": {
-            "description": "Group object",
-            "schema": {
-              "type": "object",
-              "required": [
-                "meta",
-                "data"
-              ],
-              "properties": {
-                "meta": {
-                  "$ref": "#/definitions/Meta",
-                  "description": "Meta data"
-                },
-                "data": {
-                  "$ref": "#/definitions/Group",
-                  "description": "Response data object"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation error",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "meta": {
-                  "$ref": "#/definitions/Meta",
-                  "description": "Meta data"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "summary": "Group Update",
-        "description": "Update Group by id",
-        "tags": [
-          "Admin",
-          "Groups"
-        ],
-        "parameters": [
-          {
-            "name": "table",
-            "in": "body",
-            "description": "Group object",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "tables": {
-                  "type": "array",
-                  "description": "Array of Short Table objects.",
-                  "items": {
-                    "type": "object",
-                    "description": "Short Table object",
-                    "properties": {
-                      "_id": {
-                        "type": "string",
-                        "description": "Table ID. MongoID",
-                        "example": "56c31536a60ad644060041af"
-                      }
-                    }
-                  }
-                },
-                "title": {
-                  "type": "string",
-                  "description": "Group.title value",
-                  "example": "Some title"
-                },
-                "description": {
-                  "type": "string",
-                  "description": "Group.description value",
-                  "example": "Some description"
-                },
-                "probability": {
-                  "type": "string",
-                  "description": "Group.probability value",
-                  "example": "Some probability"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Group object",
-            "schema": {
-              "type": "object",
-              "required": [
-                "meta",
-                "data"
-              ],
-              "properties": {
-                "meta": {
-                  "$ref": "#/definitions/Meta",
-                  "description": "Meta data"
-                },
-                "data": {
-                  "$ref": "#/definitions/Group",
-                  "description": "Response data object"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Group Delete",
-        "description": "Delete Group by id",
-        "tags": [
-          "Admin",
-          "Groups"
-        ],
-        "responses": {
-          "200": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "meta"
-              ],
-              "properties": {
-                "meta": {
-                  "$ref": "#/definitions/Meta",
-                  "description": "Meta data"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/admin/groups/{id}/copy": {
-      "post": {
-        "summary": "Group Copy",
-        "description": "Create new Group from existing Group by id",
-        "tags": [
-          "Admin",
-          "Groups"
-        ],
-        "responses": {
-          "200": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "meta"
-              ],
-              "properties": {
-                "meta": {
-                  "$ref": "#/definitions/Meta",
-                  "description": "Meta data"
-                },
-                "data": {
-                  "$ref": "#/definitions/Group",
-                  "description": "Response data object"
                 }
               }
             }
@@ -2138,37 +1836,6 @@
           }
         }
       }
-    },
-    "/groups/{id}/decisions": {
-      "post": {
-        "summary": "Decision Group Make",
-        "description": "Making Decision from Table",
-        "tags": [
-          "Consumer"
-        ],
-        "responses": {
-          "200": {
-            "description": "Decision Consumer object",
-            "schema": {
-              "type": "object",
-              "required": [
-                "meta",
-                "data"
-              ],
-              "properties": {
-                "meta": {
-                  "$ref": "#/definitions/Meta",
-                  "description": "Meta data"
-                },
-                "data": {
-                  "$ref": "#/definitions/ConsumerDecision",
-                  "description": "Response data object"
-                }
-              }
-            }
-          }
-        }
-      }
     }
   },
   "parameters": {
@@ -2214,11 +1881,13 @@
           "$ref": "#/definitions/Field"
         }
       },
-      "rules": {
-        "type": "array",
-        "description": "Array of Rule objects.",
-        "items": {
-          "$ref": "#/definitions/Rule"
+      "variants": {
+        "rules": {
+          "type": "array",
+          "description": "Array of Rule objects.",
+          "items": {
+            "$ref": "#/definitions/Rule"
+          }
         }
       }
     }
@@ -2234,102 +1903,6 @@
           "type": "integer",
           "description": "HTTP response code",
           "example": 200
-        }
-      }
-    },
-    "GroupList": {
-      "type": "object",
-      "description": "",
-      "required": [
-        "_id",
-        "title",
-        "probability",
-        "tables"
-      ],
-      "properties": {
-        "_id": {
-          "type": "string",
-          "description": "Unique identifier representing a specific Group. MongoID",
-          "example": "56c31536a60ad644060041af"
-        },
-        "tables": {
-          "type": "array",
-          "description": "Array of tables",
-          "items": {
-            "type": "object",
-            "description": "Short Table object",
-            "properties": {
-              "_id": {
-                "type": "string",
-                "description": "Table ID. MongoID",
-                "example": "56c31536a60ad644060041af"
-              }
-            }
-          }
-        },
-        "title": {
-          "type": "string",
-          "description": "Title of Group",
-          "example": "Some title"
-        },
-        "probability": {
-          "type": "string",
-          "description": "Probability type",
-          "example": "random",
-          "enum": [
-            "random"
-          ]
-        }
-      }
-    },
-    "Group": {
-      "type": "object",
-      "description": "",
-      "required": [
-        "_id",
-        "tables",
-        "title",
-        "description",
-        "probability"
-      ],
-      "properties": {
-        "_id": {
-          "type": "string",
-          "description": "Unique identifier representing a specific Group. MongoID",
-          "example": "56c31536a60ad644060041af"
-        },
-        "tables": {
-          "type": "array",
-          "description": "Array of tables",
-          "items": {
-            "type": "object",
-            "description": "Short Table object",
-            "properties": {
-              "_id": {
-                "type": "string",
-                "description": "Table ID. MongoID",
-                "example": "56c31536a60ad644060041af"
-              }
-            }
-          }
-        },
-        "title": {
-          "type": "string",
-          "description": "Title of Group",
-          "example": "Some title"
-        },
-        "description": {
-          "type": "string",
-          "description": "Description of Group",
-          "example": "Some description"
-        },
-        "probability": {
-          "type": "string",
-          "description": "Probability type",
-          "example": "random",
-          "enum": [
-            "random"
-          ]
         }
       }
     },
@@ -2386,7 +1959,7 @@
         "default_decision",
         "default_title",
         "default_description",
-        "rules",
+        "variants",
         "fields"
       ],
       "properties": {
@@ -2414,21 +1987,6 @@
             "all"
           ]
         },
-        "default_decision": {
-          "type": "string",
-          "description": "If there are no rows with all validations passed, this decision will be set for Decision.",
-          "example": "Decline"
-        },
-        "default_title": {
-          "type": "string",
-          "description": "If there are no rows with all validations passed, this title will be set for Decision.",
-          "example": "Default title"
-        },
-        "default_description": {
-          "type": "string",
-          "description": "If there are no rows with all validations passed, this description will be set for Decision.",
-          "example": "Default description"
-        },
         "fields": {
           "type": "array",
           "description": "Array of Field objects.",
@@ -2436,11 +1994,11 @@
             "$ref": "#/definitions/Field"
           }
         },
-        "rules": {
+        "variants": {
           "type": "array",
-          "description": "Array of Rule objects.",
+          "description": "Array of Variant objects.",
           "items": {
-            "$ref": "#/definitions/Rule"
+            "$ref": "#/definitions/Variant"
           }
         }
       }
@@ -2456,7 +2014,7 @@
         "default_decision",
         "default_title",
         "default_description",
-        "rules",
+        "variants",
         "fields"
       ],
       "properties": {
@@ -2506,11 +2064,11 @@
             "$ref": "#/definitions/Field"
           }
         },
-        "rules": {
+        "variants": {
           "type": "array",
           "description": "Array of Rule objects with analytics data.",
           "items": {
-            "$ref": "#/definitions/RuleAnalytics"
+            "$ref": "#/definitions/VariantAnalytics"
           }
         }
       }
@@ -2699,6 +2257,55 @@
         }
       }
     },
+    "Variant": {
+      "type": "object",
+      "discriminator": "than",
+      "required": [
+        "than",
+        "title",
+        "description",
+        "conditions"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Variant. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "title": {
+          "type": "string",
+          "description": "Rule title.",
+          "example": "Rule title."
+        },
+        "description": {
+          "type": "string",
+          "description": "Rule description.",
+          "example": "Rule description."
+        },
+        "default_decision": {
+          "type": "string",
+          "description": "If there are no rows with all validations passed, this decision will be set for Decision.",
+          "example": "Decline"
+        },
+        "default_title": {
+          "type": "string",
+          "description": "If there are no rows with all validations passed, this title will be set for Decision.",
+          "example": "Default title"
+        },
+        "default_description": {
+          "type": "string",
+          "description": "If there are no rows with all validations passed, this description will be set for Decision.",
+          "example": "Default description"
+        },
+        "rules": {
+          "type": "array",
+          "description": "Array of Rule objects",
+          "items": {
+            "$ref": "#/definitions/Rule"
+          }
+        }
+      }
+    },
     "Rule": {
       "type": "object",
       "discriminator": "than",
@@ -2766,6 +2373,55 @@
           "type": "string|numeric|boolean",
           "description": "Value type can be different depends on condition",
           "example": 1000
+        }
+      }
+    },
+    "VariantAnalytics": {
+      "type": "object",
+      "discriminator": "than",
+      "required": [
+        "than",
+        "title",
+        "description",
+        "conditions"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Variant. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "title": {
+          "type": "string",
+          "description": "Rule title.",
+          "example": "Rule title."
+        },
+        "description": {
+          "type": "string",
+          "description": "Rule description.",
+          "example": "Rule description."
+        },
+        "default_decision": {
+          "type": "string",
+          "description": "If there are no rows with all validations passed, this decision will be set for Decision.",
+          "example": "Decline"
+        },
+        "default_title": {
+          "type": "string",
+          "description": "If there are no rows with all validations passed, this title will be set for Decision.",
+          "example": "Default title"
+        },
+        "default_description": {
+          "type": "string",
+          "description": "If there are no rows with all validations passed, this description will be set for Decision.",
+          "example": "Default description"
+        },
+        "rules": {
+          "type": "array",
+          "description": "Array of Rule objects",
+          "items": {
+            "$ref": "#/definitions/RuleAnalytics"
+          }
         }
       }
     },
