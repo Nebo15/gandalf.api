@@ -68,7 +68,9 @@ class AddTableVariants extends \Sokil\Mongo\Migrator\AbstractMigration
         }
         $batchUpdate->execute();
         if ($decisionsToRemove) {
-
+            $this->getCollection('decisions')->batchDelete(
+                ['_id' => ['$in' => $decisionsToRemove]]
+            );
         }
     }
 
