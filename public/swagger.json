@@ -483,6 +483,78 @@
         }
       }
     },
+    "/invite": {
+      "post": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Invite user to the project",
+        "description": "Invitaion user to project",
+        "tags": [
+          "Project",
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "description": "Email for invitation",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "role",
+            "description": "Role of user",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "description": "Scopes of consumer",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/Project",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/oauth/": {
       "post": {
         "summary": "Get user access token",
