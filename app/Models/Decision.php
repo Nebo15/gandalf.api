@@ -118,6 +118,7 @@ class Decision extends Base implements Applicationable
     {
         $data = $this->getAttribute('table');
         $data['_id'] = strval($data['_id']);
+        $data['variant']['_id'] = strval($data['variant']['_id']);
 
         return $data;
     }
