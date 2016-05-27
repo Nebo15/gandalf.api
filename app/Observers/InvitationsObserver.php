@@ -5,69 +5,52 @@
 
 namespace App\Observers;
 
-use App\Models\User;
-use App\Services\Mail;
+use App\Models\Invitation;
 
-class UserObserver
+class InvitationsObserver
 {
-    public function creating(User $user)
+    public function creating(Invitation $invitation)
     {
-        if (!$user->username) {
-            if ($user->temporary_email) {
-                list($user->username) = explode('@', $user->temporary_email);
-            }
-        }
     }
 
-    public function created(User $user)
+    public function created(Invitation $invitation)
     {
         /**
          * @var Mail $mail
          */
         $mail = app('\App\Services\Mail');
-        $mail->sendEmailConfirmation($user->temporary_email, $user->getVerifyEmailToken()['token'], $user->username);
+        $mail->sendEmailInvitation($invitation);
     }
 
-    public function updating(User $user)
-    {
-        /**
-         * TODO: email is dirty set email to temporary
-         */
-    }
-
-    public function updated(User $user)
+    public function updating(Invitation $invitation)
     {
     }
 
-    public function saving(User $user)
-    {
-        if ($user->isDirty('email')) {
-            $user->temporary_email = $user->email;
-            $user->active = false;
-            $user->createVerifyEmailToken();
-        }
-        if ($user->isDirty('password')) {
-            $user->password = $user->getPasswordHasher()->make($user->password);
-        }
-    }
-
-    public function saved(User $user)
+    public function updated(Invitation $invitation)
     {
     }
 
-    public function deleting(User $user)
+    public function saving(Invitation $invitation)
     {
     }
 
-    public function deleted(User $user)
+    public function saved(Invitation $invitation)
     {
     }
 
-    public function restoring(User $user)
+    public function deleting(Invitation $invitation)
     {
     }
 
-    public function restored(User $user)
+    public function deleted(Invitation $invitation)
+    {
+    }
+
+    public function restoring(Invitation $invitation)
+    {
+    }
+
+    public function restored(Invitation $invitation)
     {
     }
 }

@@ -1,7 +1,7 @@
 <?php
 namespace App\Models;
 
-class Invitations extends Base
+class Invitation extends Base
 {
 
     protected $attributes = [
@@ -12,5 +12,4 @@ class Invitations extends Base
     ];
 
     protected $fillable = ['email', 'project', 'role', 'scope'];
-
 }

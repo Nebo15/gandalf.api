@@ -169,6 +169,31 @@ class UsersCest
             ]
         );
         $I->seeResponseCodeIs(200);
-
     }
+
+    public function testInvitation(ApiTester $I)
+    {
+        $faker = $I->getFaker();
+        $I->createAndLoginUser();
+        $first_project = $I->createProjectAndSetHeader();
+        $second_user_email = $faker->email;
+        $I->sendPOST('api/v1/invite', ['email' => $second_user_email, 'role' => 'manager', 'scope' => ['read', 'create']]);
+        $I->seeResponseCodeIs(200);
+        $second_project = $I->createProject(true);
+        $I->setHeader('X-Application', $second_project->_id);
+        $I->sendPOST('api/v1/invite', ['email' => $second_user_email, 'role' => 'manager', 'scope' => ['read', 'create']]);
+        $I->seeResponseCodeIs(200);
+
+        $I->logout();
+        $I->loginClient($I->getCurrentClient());
+
+        $I->loginUser($I->createUser(true, $second_user_email));
+
+        $I->sendGET('api/v1/projects');
+
+        $I->seeResponseCodeIs(200);
+        $I->assertContains($first_project->_id, $I->grabResponse());
+        $I->assertContains($second_project->_id, $I->grabResponse());
+    }
+
 }
