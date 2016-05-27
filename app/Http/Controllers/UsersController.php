@@ -35,6 +35,9 @@ class UsersController extends AbstractController
             'token' => 'required',
             'password' => 'required|password',
         ],
+        'invite' => [
+            'email' => 'required|email',
+        ],
     ];
 
     public function readListWithFilters()
@@ -153,5 +156,10 @@ class UsersController extends AbstractController
     public function getUserInfo()
     {
         return $this->response->json($this->request->user()->toArray());
+    }
+
+    public function invite()
+    {
+        $this->validateRoute();
     }
 }
