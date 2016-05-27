@@ -51,4 +51,22 @@ class Mail
             ]
         );
     }
+
+    public function sendEmailInvitation($invitation)
+    {
+        if (false == config('services.email.enabled')) {
+            return null;
+        }
+
+        $this->postmark->sendEmailWithTemplate(
+            config('services.postmark.sender'),
+            $invitation->email,
+            config('services.postmark.templates.invite'),
+            [
+                'product_name' => 'Gandalf',
+                'name' => $invitation->email,
+                'action_url' => env('services.link.invite'),
+            ]
+        );
+    }
 }

@@ -609,7 +609,7 @@ class ApiTester extends \Codeception\Actor
         return $this->project;
     }
 
-    public function createUser($new = false)
+    public function createUser($new = false, $email = '')
     {
         $this->createAndLoginClient();
         if (!$this->user || $new) {
@@ -618,7 +618,7 @@ class ApiTester extends \Codeception\Actor
             $user_data = [
                 'first_name' => $faker->firstName,
                 'last_name' => $faker->lastName,
-                'email' => $faker->email,
+                'email' => ($email) ? $email : $faker->email,
                 'password' => $faker->password() . '1a',
                 'username' => $faker->firstName,
             ];

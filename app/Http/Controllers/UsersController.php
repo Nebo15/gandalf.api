@@ -5,6 +5,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Invitation;
+use Nebo15\LumenApplicationable\Models\Application;
 use Nebo15\REST\AbstractController;
 use Nebo15\REST\Interfaces\ListableInterface;
 use Nebo15\REST\Response;
@@ -34,6 +36,11 @@ class UsersController extends AbstractController
         'changePassword' => [
             'token' => 'required',
             'password' => 'required|password',
+        ],
+        'invite' => [
+            'email' => 'required|email',
+            'role' => 'required|string',
+            'scope' => 'required|array',
         ],
     ];
 
@@ -71,14 +78,29 @@ class UsersController extends AbstractController
     {
         $this->validateRoute();
 
-        $model = $this->getRepository()->createOrUpdate($this->request->all());
+        $user = $this->getRepository()->createOrUpdate($this->request->all());
         $sandboxData = [];
+
         if (env('APP_ENV') == 'local') {
-            $sandboxData['token_email'] = $model->getVerifyEmailToken();
+            $sandboxData['token_email'] = $user->getVerifyEmailToken();
+        }
+
+        $invitation = Invitation::where('email', $user->email)->get();
+        foreach ($invitation as $item) {
+            if (array_key_exists('_id', $item->project)) {
+                $application = Application::find($item->project['_id']);
+                if (!$application->getUser($user->email)) {
+                    $application->setUser([
+                        'user_id' => (string)$user->_id,
+                        'role' => $item->role,
+                        'scope' => $item->scope
+                    ])->save();
+                }
+            }
         }
 
         return $this->response->json(
-            $model->toArray(),
+            $user->toArray(),
             Response::HTTP_CREATED,
             [],
             [],
@@ -153,5 +175,20 @@ class UsersController extends AbstractController
     public function getUserInfo()
     {
         return $this->response->json($this->request->user()->toArray());
+    }
+
+    public function invite()
+    {
+        $current_user = $this->request->user()->getApplicationUser();
+        $this->validationRules['invite']['scope'] = 'required|array|in:' . join(',', $current_user->scope);
+        $this->validateRoute();
+        $project = app()->offsetGet('applicationable.application')->toArray();
+        $fill = $this->request->all();
+        $fill['project'] = [
+            '_id' => $project['_id'],
+            'title' => $project['title'],
+        ];
+
+        return $this->response->json((new Invitation())->fill($fill)->save()->toArray());
     }
 }

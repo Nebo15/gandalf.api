@@ -483,6 +483,78 @@
         }
       }
     },
+    "/invite": {
+      "post": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
+        "summary": "Invite user to the project",
+        "description": "Invitaion user to project",
+        "tags": [
+          "Project",
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "description": "Email for invitation",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "role",
+            "description": "Role of user",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "description": "Scopes of consumer",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project Object",
+            "schema": {
+              "type": "object",
+              "required": [
+                "meta",
+                "data"
+              ],
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                },
+                "data": {
+                  "$ref": "#/definitions/InvitationUser",
+                  "description": "Response data object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "$ref": "#/definitions/Meta",
+                  "description": "Meta data"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/oauth/": {
       "post": {
         "summary": "Get user access token",
@@ -2811,6 +2883,59 @@
           "items": {
             "$ref": "#/definitions/RefreshToken"
           }
+        }
+      }
+    },
+    "InvitationUser": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Invitation User. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "role": {
+          "type": "string",
+          "description": "Role of user into project",
+          "example": "mananger"
+        },
+        "project": {
+          "type": "object",
+          "description": "Array of access tokens.",
+          "properties": {
+            "_id" : {
+              "type": "string",
+              "description": "Unique identifier representing a specific Project. MongoID",
+              "example": "56c31536a60ad644060041af"
+            },
+            "title": {
+              "type": "string",
+              "description": "Project title",
+              "example": "First project"
+            }
+          }
+        },
+        "scope": {
+          "type": "array",
+          "description": "Array of user scopes.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "email": {
+          "type": "string",
+          "description": "User email",
+          "example": "test@site.com"
+        },
+        "created_at": {
+          "type": "string",
+          "description": "Created Datetime",
+          "example": "2016-02-16 14:15:30"
+        },
+        "updated_at": {
+          "type": "string",
+          "description": "Updated Datetime",
+          "example": "2016-02-17 11:25:31"
         }
       }
     },
