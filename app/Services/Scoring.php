@@ -46,7 +46,7 @@ class Scoring
                 'description' => $table->description,
                 'matching_type' => $table->matching_type,
                 'variant' => [
-                    '_id' => $variant->getId(),
+                    '_id' => new \MongoId($variant->getId()),
                     'title' => $variant->title,
                     'description' => $variant->description,
                 ]
