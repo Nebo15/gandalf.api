@@ -534,7 +534,7 @@
                   "description": "Meta data"
                 },
                 "data": {
-                  "$ref": "#/definitions/Project",
+                  "$ref": "#/definitions/InvitationUser",
                   "description": "Response data object"
                 }
               }
@@ -2883,6 +2883,59 @@
           "items": {
             "$ref": "#/definitions/RefreshToken"
           }
+        }
+      }
+    },
+    "InvitationUser": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Unique identifier representing a specific Invitation User. MongoID",
+          "example": "56c31536a60ad644060041af"
+        },
+        "role": {
+          "type": "string",
+          "description": "Role of user into project",
+          "example": "mananger"
+        },
+        "project": {
+          "type": "object",
+          "description": "Array of access tokens.",
+          "properties": {
+            "_id" : {
+              "type": "string",
+              "description": "Unique identifier representing a specific Project. MongoID",
+              "example": "56c31536a60ad644060041af"
+            },
+            "title": {
+              "type": "string",
+              "description": "Project title",
+              "example": "First project"
+            }
+          }
+        },
+        "scope": {
+          "type": "array",
+          "description": "Array of user scopes.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "email": {
+          "type": "string",
+          "description": "User email",
+          "example": "test@site.com"
+        },
+        "created_at": {
+          "type": "string",
+          "description": "Created Datetime",
+          "example": "2016-02-16 14:15:30"
+        },
+        "updated_at": {
+          "type": "string",
+          "description": "Updated Datetime",
+          "example": "2016-02-17 11:25:31"
         }
       }
     },
