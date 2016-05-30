@@ -1,6 +1,7 @@
 class php56(
   $user = 'www-data',
-  $group = 'www-data'
+  $group = 'www-data',
+  $error_repotring = 'E_ALL & ~E_DEPRECATED & ~E_STRICT'
 ) {
   $enhancers = [
     'php5-fpm',
@@ -21,23 +22,23 @@ class php56(
   package { $enhancers: ensure  => 'installed',install_options => ['-y', '--force-yes'],require  => Exec['apt-get update php56'], }
 
   file { "/etc/php5/fpm/pool.d/www.conf":
-    path => "/etc/php5/fpm/pool.d/www.conf",
+    path    => "/etc/php5/fpm/pool.d/www.conf",
     content => template('php56/php-fpm-www.conf.erb'),
     require => Package[$enhancers],
-    notify => Service['php5-fpm']
+    notify  => Service['php5-fpm']
   }
   file { "/etc/php5/fpm/php.ini":
-    path => "/etc/php5/fpm/php.ini",
+    path    => "/etc/php5/fpm/php.ini",
     content => template('php56/php-fpm.ini.erb'),
     require => Package[$enhancers],
-    notify => Service['php5-fpm']
+    notify  => Service['php5-fpm']
   }
 
   file { "/etc/php5/fpm/php-fpm.conf":
-    path => "/etc/php5/fpm/php-fpm.conf",
+    path    => "/etc/php5/fpm/php-fpm.conf",
     content => template('php56/php-fpm.conf.erb'),
     require => Package[$enhancers],
-    notify => Service['php5-fpm']
+    notify  => Service['php5-fpm']
   }
 
   service { 'php5-fpm':

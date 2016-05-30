@@ -67,6 +67,7 @@ node default {
   -> class {'php56':
     user => $daemon_user,
     group => $daemon_user,
+    error_repotring => $error_reporting
   }
   package { "openssh-server": ensure => "installed" }
 
