@@ -50,7 +50,7 @@ if [ ! -e /usr/bin/puppet ]; then
     sudo service puppet start
 else
     #echo 1;
-    sudo apt-get update
+    #sudo apt-get update
 fi;
 
 if [ ! -e /www ]; then
