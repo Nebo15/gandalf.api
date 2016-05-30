@@ -19,7 +19,7 @@ OPTIONS:
 EOF
 }
 
-while getopts "u:h:" OPTION
+while getopts "u:h:n:k:" OPTION
 do
      case ${OPTION} in
          u)
