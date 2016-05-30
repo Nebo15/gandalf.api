@@ -69,4 +69,4 @@ sudo puppet module install --force jfryman-nginx --target-dir ${modules_dir}
 sudo puppet module install --force saz-timezone --target-dir ${modules_dir}
 sudo puppet module install --force saz-locales --target-dir ${modules_dir}
 
-sudo FACTER_project_dir="${project_dir}" FACTER_daemon_user="${daemon_user}" puppet apply --modulepath ${modules_dir} ${modules_dir}/../general/manifests/init.pp
+sudo FACTER_project_dir="${project_dir}" FACTER_daemon_user="${daemon_user}" FACTER_error_reporting="0" puppet apply --modulepath ${modules_dir} ${modules_dir}/../general/manifests/init.pp
