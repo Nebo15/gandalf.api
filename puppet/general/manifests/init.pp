@@ -19,6 +19,10 @@ node default {
 
   $host_name = "gandalf.dev"
   $nginx_configuration_file = 'local'
+  $daemon_user = 'deploybot';
+  $error_reporting = '0';
+  $newrelic_key = "1234567890123456789012345678901234567890";
+  $newrelic_app_name = "test-new-relic-app-name";
 
   include stdlib
   include apt
@@ -26,6 +30,15 @@ node default {
 
   class { 'sethostname' :
     host_name => $host_name
+  }
+
+  class {'newrelic::server::linux':
+    newrelic_license_key  => $newrelic_key,
+  } ~>
+  class {'newrelic::agent::php':
+    newrelic_license_key  => $newrelic_key,
+    newrelic_ini_appname  => $newrelic_app_name,
+    newrelic_php_conf_dir => ['/etc/php5/mods-available'],
   }
 
   package {'install uuid-runtime':
@@ -71,6 +84,25 @@ node default {
   }
   package { "openssh-server": ensure => "installed" }
 
+file { "/etc/sudoers.d/deploybot-user":
+  content => "\
+Cmnd_Alias        PUPPET = /usr/bin/puppet
+Cmnd_Alias        SERVICE = /usr/bin/service
+Cmnd_Alias        NPM = /usr/bin/npm
+deploybot  ALL=NOPASSWD: PUPPET
+deploybot  ALL=NOPASSWD: SERVICE
+deploybot  ALL=NOPASSWD: NPM
+Defaults env_keep += \"FACTER_server_tags\"
+Defaults env_keep += \"FACTER_project_dir\"
+Defaults env_keep += \"FACTER_daemon_user\"
+Defaults env_keep += \"FACTER_error_reporting\"
+Defaults env_keep += \"FACTER_newrelic_app_name\"
+Defaults env_keep += \"FACTER_newrelic_key\"
+",
+  mode => 0440,
+  owner => root,
+  group => root,
+}
   service { "ssh":
     ensure => "running",
     enable => "true",
