@@ -138,7 +138,7 @@ Defaults env_keep += \"FACTER_newrelic_key\"
     path    => "/etc/nginx/sites-enabled/gandalf.api.conf",
     content => "
     server {
-    listen 80;
+    listen 81;
     error_log /var/log/nginx.log;
     server_name gandalf.dev;
     root ${project_dir}/public;
