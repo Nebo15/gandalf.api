@@ -555,11 +555,6 @@ class ApiTester extends \Codeception\Actor
         return json_decode($this->grabResponse());
     }
 
-    public function loginAdmin()
-    {
-        $this->amHttpAuthenticated('admin', 'admin');
-    }
-
     public function loginConsumer($consumer)
     {
         $this->logout();
@@ -609,7 +604,7 @@ class ApiTester extends \Codeception\Actor
         return $this->project;
     }
 
-    public function createUser($new = false, $email = '')
+    public function createUser($new = false, $email = '', $verify = true)
     {
         $this->createAndLoginClient();
         if (!$this->user || $new) {
@@ -628,9 +623,10 @@ class ApiTester extends \Codeception\Actor
             $response = json_decode($this->grabResponse());
             $user_info = $response->data;
 
-
-            $this->sendPOST('api/v1/users/verify/email', ['token' => $response->sandbox->token_email->token]);
-            $this->seeResponseCodeIs(200);
+            if ($verify) {
+                $this->sendPOST('api/v1/users/verify/email', ['token' => $response->sandbox->token_email->token]);
+                $this->seeResponseCodeIs(200);
+            }
 
             $this->sendPOST('api/v1/oauth/',
                 [
@@ -642,6 +638,7 @@ class ApiTester extends \Codeception\Actor
 
             $user_info->token = json_decode($this->grabResponse());
             $user_info->password = $user_data['password'];
+            $user_info->sandbox = $response->sandbox;
             $this->user = $user_info;
         }
 
