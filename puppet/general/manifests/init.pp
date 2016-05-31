@@ -19,7 +19,7 @@ node default {
 
   $host_name = "gandalf.dev"
   $nginx_configuration_file = 'local'
-  $daemon_user = 'deploybot'
+# $daemon_user = 'deploybot'
   $error_reporting = '0'
   $newrelic_key = "1234567890123456789012345678901234567890"
   $newrelic_app_name = "test-new-relic-app-name"
