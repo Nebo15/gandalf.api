@@ -134,9 +134,11 @@ Defaults env_keep += \"FACTER_newrelic_key\"
     gzip                => 'off'
   }
 
-  $port = 81
+
   if $daemon_user == 'travis' {
     $port = 80
+  } else {
+    $port = 81
   }
 
   file { "gandalf_config":
