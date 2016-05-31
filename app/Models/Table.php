@@ -33,7 +33,7 @@ class Table extends Base implements ListableInterface, Applicationable
     protected $attributes = [
         'title' => '',
         'description' => '',
-        'matching_type' => 'first',
+        'matching_type' => 'decision',
         'variants_probability' => '',
     ];
 

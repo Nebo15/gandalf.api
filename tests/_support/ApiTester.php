@@ -130,9 +130,9 @@ class ApiTester extends \Codeception\Actor
         ], "$jsonPath.rules[*].conditions[*]");
     }
 
-    public function assertTableDecisionsForAdmin($matching_rules_type = 'first', $jsonPath = '$.data')
+    public function assertTableDecisionsForAdmin($matching_rules_type = 'decision', $jsonPath = '$.data')
     {
-        $type = $matching_rules_type == 'all' ? 'integer|float' : 'string';
+        $type = $matching_rules_type == 'scoring' ? 'integer|float' : 'string';
         $this->seeResponseCodeIs(200);
         $rules = [
             '_id' => 'string',
@@ -146,7 +146,7 @@ class ApiTester extends \Codeception\Actor
             'fields' => 'array',
             'request' => 'array',
         ];
-        if ($matching_rules_type == 'first') {
+        if ($matching_rules_type == 'decision') {
             $rules['title'] = 'string';
             $rules['description'] = 'string';
         }
@@ -189,9 +189,9 @@ class ApiTester extends \Codeception\Actor
         ], "$jsonPath.table.variant");
     }
 
-    public function assertTableDecisionsForConsumer($matching_rules_type = 'first', $jsonPath = '$.data')
+    public function assertTableDecisionsForConsumer($matching_rules_type = 'decision', $jsonPath = '$.data')
     {
-        $type = $matching_rules_type == 'all' ? 'integer|float' : 'string';
+        $type = $matching_rules_type == 'scoring' ? 'integer|float' : 'string';
         $this->seeResponseCodeIs(200);
         $rules = [
             '_id' => 'string',
@@ -200,7 +200,7 @@ class ApiTester extends \Codeception\Actor
             'request' => 'array',
             'rules' => 'array',
         ];
-        if ($matching_rules_type == 'first') {
+        if ($matching_rules_type == 'decision') {
             $rules['title'] = 'string';
             $rules['description'] = 'string';
         }
@@ -234,7 +234,7 @@ class ApiTester extends \Codeception\Actor
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions");
     }
 
-    public function checkDecision($table_id, array $data = [], $matching_rules_type = 'first')
+    public function checkDecision($table_id, array $data = [], $matching_rules_type = 'decision')
     {
         $data = $data ?: [
             'borrowers_phone_verification' => 'Positive',
@@ -262,7 +262,7 @@ class ApiTester extends \Codeception\Actor
         return [
             'title' => 'Test title',
             'description' => 'Test description',
-            'matching_type' => 'first',
+            'matching_type' => 'decision',
             'variants_probability' => 'first',
             'fields' => [
                 [
@@ -361,7 +361,7 @@ class ApiTester extends \Codeception\Actor
     public function getShortTableDataMatchingTypeAll()
     {
         $tableData = $this->getTableShortData();
-        $tableData['matching_type'] = 'all';
+        $tableData['matching_type'] = 'scoring';
         $tableData['variants'][0]['default_decision'] = 15;
         $tableData['variants'][0]['rules'] = [
             [
@@ -463,7 +463,7 @@ class ApiTester extends \Codeception\Actor
         $data = [
             'title' => 'Test title',
             'description' => 'Test description',
-            'matching_type' => 'first',
+            'matching_type' => 'decision',
             'variants_probability' => '',
             'fields' => [],
             'variants' => [

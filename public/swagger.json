@@ -1386,10 +1386,10 @@
                 "matching_type": {
                   "type": "string",
                   "description": "Matching type for Table.",
-                  "example": "first",
+                  "example": "decision",
                   "enum": [
-                    "first",
-                    "all"
+                    "decision",
+                    "scoring"
                   ]
                 },
                 "default_decision": {
@@ -1925,10 +1925,10 @@
       "matching_type": {
         "type": "string",
         "description": "Matching type for Table.",
-        "example": "first",
+        "example": "decision",
         "enum": [
-          "first",
-          "all"
+          "decision",
+          "scoring"
         ]
       },
       "default_decision": {
@@ -2007,10 +2007,10 @@
         "matching_type": {
           "type": "string",
           "description": "Matching type for Table.",
-          "example": "first",
+          "example": "decision",
           "enum": [
-            "first",
-            "all"
+            "decision",
+            "scoring"
           ]
         },
         "default_decision": {
@@ -2053,10 +2053,10 @@
         "matching_type": {
           "type": "string",
           "description": "Matching type for Table.",
-          "example": "first",
+          "example": "decision",
           "enum": [
-            "first",
-            "all"
+            "decision",
+            "scoring"
           ]
         },
         "fields": {
@@ -2108,10 +2108,10 @@
         "matching_type": {
           "type": "string",
           "description": "Matching type for Table.",
-          "example": "first",
+          "example": "decision",
           "enum": [
-            "first",
-            "all"
+            "decision",
+            "scoring"
           ]
         },
         "default_decision": {
@@ -2626,7 +2626,7 @@
             "matching_type": {
               "type": "string",
               "description": "Matched_type rule. The same as in Table.matching_type.",
-              "example": "first"
+              "example": "decision"
             }
           }
         },
@@ -2809,7 +2809,7 @@
             "matching_type": {
               "type": "string",
               "description": "Matched_type rule. The same as in Table.matching_type.",
-              "example": "first"
+              "example": "decision"
             }
           }
         },
