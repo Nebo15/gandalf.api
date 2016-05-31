@@ -134,11 +134,16 @@ Defaults env_keep += \"FACTER_newrelic_key\"
     gzip                => 'off'
   }
 
+  $port = 81
+  if $daemon_user == 'travis' {
+    $port = 80
+  }
+
   file { "gandalf_config":
     path    => "/etc/nginx/sites-enabled/gandalf.api.conf",
     content => "
     server {
-    listen 81;
+    listen ${port};
     error_log /var/log/nginx.log;
     server_name gandalf.dev;
     root ${project_dir}/public;
