@@ -32,9 +32,7 @@ class ConsumerController extends Controller
 
     public function tableCheck(Request $request, Scoring $scoring, $id)
     {
-        if (!User::findById(
-            app()->offsetGet('applicationable.application')->users()->where('role', 'admin')->first()->user_id
-        )->isActive()
+        if (!User::findById(app('Application')->users()->where('role', 'admin')->first()->user_id)->isActive()
         ) {
             throw new AdminIsNotActivatedException;
         }
