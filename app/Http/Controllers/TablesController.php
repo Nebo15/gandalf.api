@@ -27,7 +27,7 @@ class TablesController extends AbstractController
         'readList' => [
             'title' => 'sometimes|min:1',
             'description' => 'sometimes|min:1',
-            'matching_type' => 'sometimes|in:first,all',
+            'matching_type' => 'sometimes|in:decision,scoring',
         ]
     ];
 
@@ -36,7 +36,7 @@ class TablesController extends AbstractController
         $rules = [
             'title' => 'sometimes|string',
             'description' => 'sometimes|string',
-            'matching_type' => 'required|in:first,all',
+            'matching_type' => 'required|in:decision,scoring',
             'fields' => 'required|array',
             'fields.*._id' => 'sometimes|mongoId',
             'fields.*.title' => 'required|string',

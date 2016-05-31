@@ -92,7 +92,7 @@ class Scoring
                 $condition = $condition->getAttributes();
                 $scoring_rule['conditions'][] = $condition;
             }
-            if ($table->matching_type == 'all') {
+            if ($table->matching_type == 'scoring') {
                 if ($conditions_matched) {
                     $final_decision += floatval($rule->than);
                 }
