@@ -1761,16 +1761,16 @@
         },
         {
             "name": "nebo15/lumen.applicationable",
-            "version": "0.0.15",
+            "version": "0.0.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/lumen-applicationable.git",
-                "reference": "96908f16ad109656403194fb2c9dcc09daf3b8ba"
+                "reference": "959e6245b461146d56791c95075590ea47e5479c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/96908f16ad109656403194fb2c9dcc09daf3b8ba",
-                "reference": "96908f16ad109656403194fb2c9dcc09daf3b8ba",
+                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/959e6245b461146d56791c95075590ea47e5479c",
+                "reference": "959e6245b461146d56791c95075590ea47e5479c",
                 "shasum": ""
             },
             "require-dev": {
@@ -1799,7 +1799,7 @@
                 "lumen",
                 "mongodb"
             ],
-            "time": "2016-05-31 14:11:20"
+            "time": "2016-06-01 09:44:56"
         },
         {
             "name": "nebo15/lumen.oauth2-mongodb",

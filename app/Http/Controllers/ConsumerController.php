@@ -12,6 +12,7 @@ use App\Models\Decision;
 use App\Models\User;
 use App\Services\Scoring;
 use Nebo15\LumenApplicationable\ApplicationableHelper;
+use Nebo15\LumenApplicationable\Models\Application;
 use Nebo15\REST\Response;
 use Illuminate\Http\Request;
 use App\Repositories\DecisionsRepository;
@@ -30,9 +31,9 @@ class ConsumerController extends Controller
         $this->decisionsRepository = $decisionsRepository;
     }
 
-    public function tableCheck(Request $request, Scoring $scoring, $id)
+    public function tableCheck(Request $request, Scoring $scoring, Application $application, $id)
     {
-        if (!User::findById(app('Application')->users()->where('role', 'admin')->first()->user_id)->isActive()
+        if (!User::findById($application->users()->where('role', 'admin')->first()->user_id)->isActive()
         ) {
             throw new AdminIsNotActivatedException;
         }
