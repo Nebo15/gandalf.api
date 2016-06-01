@@ -177,12 +177,12 @@ class UsersController extends AbstractController
         return $this->response->json($this->request->user()->toArray());
     }
 
-    public function invite()
+    public function invite(Application $application)
     {
         $current_user = $this->request->user()->getApplicationUser();
         $this->validationRules['invite']['scope'] = 'required|array|in:' . join(',', $current_user->scope);
         $this->validateRoute();
-        $project = app()->offsetGet('applicationable.application')->toArray();
+        $project = $application->toArray();
         $fill = $this->request->all();
         $fill['project'] = [
             '_id' => $project['_id'],
