@@ -133,6 +133,11 @@ class User extends Base implements
         return $user;
     }
 
+    public function isActive()
+    {
+        return $this->active;
+    }
+
     private function getInternalToken($type)
     {
         return (array_key_exists($type, $this->attributes['tokens'])) ?

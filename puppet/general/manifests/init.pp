@@ -19,7 +19,7 @@ node default {
 
   $host_name = "gandalf.dev"
   $nginx_configuration_file = 'local'
-  $daemon_user = 'deploybot'
+# $daemon_user = 'deploybot'
   $error_reporting = '0'
   $newrelic_key = "1234567890123456789012345678901234567890"
   $newrelic_app_name = "test-new-relic-app-name"
@@ -134,11 +134,18 @@ Defaults env_keep += \"FACTER_newrelic_key\"
     gzip                => 'off'
   }
 
+
+  if $daemon_user == 'travis' {
+    $port = 80
+  } else {
+    $port = 81
+  }
+
   file { "gandalf_config":
     path    => "/etc/nginx/sites-enabled/gandalf.api.conf",
     content => "
     server {
-    listen 81;
+    listen ${port};
     error_log /var/log/nginx.log;
     server_name gandalf.dev;
     root ${project_dir}/public;

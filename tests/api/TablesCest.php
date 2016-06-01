@@ -308,7 +308,7 @@ class TablesCest
             'default_description' => 'Description 220',
             'title' => 'Test title',
             'description' => 'Test description',
-            'matching_type' => 'first',
+            'matching_type' => 'decision',
             'fields' => [
                 [
                     "key" => 'numeric',
@@ -378,7 +378,7 @@ class TablesCest
         $table = $I->createTable([
             'title' => 'Test title',
             'description' => 'Test description',
-            'matching_type' => 'first',
+            'matching_type' => 'decision',
             'fields' => [
                 [
                     "key" => ' IS SET ',
@@ -470,7 +470,7 @@ class TablesCest
         $table = $I->createTable([
             'title' => 'Test title',
             'description' => 'Test description',
-            'matching_type' => 'first',
+            'matching_type' => 'decision',
             'fields' => [
                 [
                     "key" => 'test',
@@ -571,7 +571,7 @@ class TablesCest
         $table_data = [
             'title' => 'Test',
             'description' => 'Test',
-            'matching_type' => 'first',
+            'matching_type' => 'decision',
             'fields' => [
                 [
                     "key" => 'boolean',
@@ -657,7 +657,7 @@ class TablesCest
         $table = $I->createTable([
             'title' => 'Test',
             'description' => 'Test',
-            'matching_type' => 'first',
+            'matching_type' => 'decision',
             'fields' => [
                 [
                     "key" => 'boolean',
@@ -708,7 +708,7 @@ class TablesCest
         $tableData = [
             'title' => 'Test title',
             'description' => 'Test description',
-            'matching_type' => 'first',
+            'matching_type' => 'decision',
             'fields' => [
                 [
                     "key" => 'between',
@@ -1064,7 +1064,7 @@ class TablesCest
         $table = $I->createTable($tableData);
 
         $tableDataAll = $I->getShortTableDataMatchingTypeAll();
-        $tableDataAll['description'] = 'Matching type all';
+        $tableDataAll['description'] = 'Matching type scoring';
         $tableAll = $I->createTable($tableDataAll);
 
         $I->sendGET('api/v1/admin/tables?title=Title');
@@ -1079,10 +1079,10 @@ class TablesCest
         $I->sendGET('api/v1/admin/tables?matching_type=invalid');
         $I->seeResponseCodeIs(422);
 
-        $I->sendGET('api/v1/admin/tables?matching_type=all');
+        $I->sendGET('api/v1/admin/tables?matching_type=scoring');
         $I->assertEquals($tableAll->_id, $I->getResponseFields()->data[0]->_id);
 
-        $I->sendGET('api/v1/admin/tables?matching_type=first');
+        $I->sendGET('api/v1/admin/tables?matching_type=decision');
         $I->assertEquals($table->_id, $I->getResponseFields()->data[0]->_id);
     }
 }
