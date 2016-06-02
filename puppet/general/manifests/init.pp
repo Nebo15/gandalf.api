@@ -148,6 +148,13 @@ Defaults env_keep += \"FACTER_newrelic_key\"
     listen ${port};
     error_log /var/log/nginx.log;
     server_name gandalf.dev;
+    add_header 'Access-Control-Allow-Origin' *;
+    add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE';
+    add_header 'Access-Control-Allow-Headers' 'Authorization,Content-Type,Accept,Origin,User-Agent,DNT,Cache-Control,Keep-Alive,If-Modified-Since,X-Project-ID,X-Date,X-Accept-Charset,X-Application-ID,X-Device-Information,X-Application-Secret-Hash,X-Device-Push-Token,X-Application';
+    add_header 'X-Frame-Options' 'DENY';
+    if (\$request_method = OPTIONS ) {
+    return 200;
+    }
     root ${project_dir}/public;
     include ${project_dir}/config/nginx/nginx.conf;
 }

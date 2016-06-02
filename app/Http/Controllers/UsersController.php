@@ -51,8 +51,10 @@ class UsersController extends AbstractController
             ->query();
         if (strpos($this->request->input('name', ''), '@') === false) {
             $model->where(['username' => new \MongoRegex('/^' . ($this->request->input('name', '.')) . '.*/\i')]);
+            $model->where(['username' => ['$ne' => $this->request->user()->username]]);
         } else {
             $model->where(['email' => new \MongoRegex('/^' . ($this->request->input('name', '.')) . '.*/\i')]);
+            $model->where(['email' => ['$ne' => $this->request->user()->email]]);
         }
 
         return $this->response->jsonPaginator(
