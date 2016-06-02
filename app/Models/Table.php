@@ -28,7 +28,7 @@ class Table extends Base implements ListableInterface, Applicationable
 {
     use ListableTrait, ApplicationableTrait;
 
-    protected $listable = ['_id', 'title', 'description', 'matching_type', 'default_decision'];
+    protected $listable = ['_id', 'title', 'description', 'matching_type'];
 
     protected $attributes = [
         'title' => '',
