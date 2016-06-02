@@ -90,17 +90,30 @@ class UsersCest
             $I->createUser(true),
             $I->createUser(true),
         ];
-        $I->createAndLoginUser();
+        $user = $I->createAndLoginUser();
         $I->sendGET('api/v1/users');
         $I->sendGET('api/v1/users?name=' . substr($usersList[0]->username, 0, 3));
         $foundUsers = json_encode($I->getResponseFields()->data);
         $I->assertContains($usersList[0]->username, $foundUsers);
         $I->assertContains($usersList[0]->_id, $foundUsers);
         list($email) = explode('@', $usersList[1]->temporary_email);
+
         $I->sendGET('api/v1/users?name=' . $email . '@');
         $foundUsers = json_encode($I->getResponseFields()->data);
         $I->assertContains($usersList[1]->username, $foundUsers);
         $I->assertContains($usersList[1]->_id, $foundUsers);
+
+        $I->sendGET('api/v1/users?name=' . substr($user->username, 0, 3));
+        $foundUsers = json_encode($I->getResponseFields()->data);
+        $I->assertNotContains($user->username, $foundUsers);
+        $I->assertNotContains($user->_id, $foundUsers);
+
+        $I->loginUser($usersList[0]);
+
+        $I->sendGET('api/v1/users?name=' . substr($user->username, 0, 3));
+        $foundUsers = json_encode($I->getResponseFields()->data);
+        $I->assertContains($user->username, $foundUsers);
+        $I->assertContains($user->_id, $foundUsers);
     }
 
     public function checkAuthorization(ApiTester $I)
@@ -177,11 +190,13 @@ class UsersCest
         $I->createAndLoginUser();
         $first_project = $I->createProjectAndSetHeader();
         $second_user_email = $faker->email;
-        $I->sendPOST('api/v1/invite', ['email' => $second_user_email, 'role' => 'manager', 'scope' => ['read', 'create']]);
+        $I->sendPOST('api/v1/invite',
+            ['email' => $second_user_email, 'role' => 'manager', 'scope' => ['read', 'create']]);
         $I->seeResponseCodeIs(200);
         $second_project = $I->createProject(true);
         $I->setHeader('X-Application', $second_project->_id);
-        $I->sendPOST('api/v1/invite', ['email' => $second_user_email, 'role' => 'manager', 'scope' => ['read', 'create']]);
+        $I->sendPOST('api/v1/invite',
+            ['email' => $second_user_email, 'role' => 'manager', 'scope' => ['read', 'create']]);
         $I->seeResponseCodeIs(200);
 
         $I->logout();
@@ -213,13 +228,14 @@ class UsersCest
             'internal_credit_history' => 'Positive',
             'employment' => true,
             'property' => true,
-            'matching_rules_type' => 'decision'
+            'matching_rules_type' => 'decision',
         ];
         $I->sendPOST("api/v1/tables/$table_id/decisions", $data);
         $I->canSeeResponseCodeIs(403);
         $I->seeResponseContains("Project owner is not activated, try again later");
 
-        $I->sendPOST('api/v1/projects/users', ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['read', 'check']]);
+        $I->sendPOST('api/v1/projects/users',
+            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['read', 'check']]);
 
         $I->loginUser($second_user);
         $I->sendPOST("api/v1/tables/$table_id/decisions", $data);
@@ -245,6 +261,50 @@ class UsersCest
 
         $I->loginUser($second_user);
         $I->checkDecision($table_id);
+    }
+
+    public function deleteAdminFromProject(ApiTester $I)
+    {
+        $user = $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
+        $I->loginClient($I->getCurrentClient());
+        $second_user = $I->createUser(true);
+        $third_user = $I->createUser(true);
+        $I->loginUser($user);
+
+        $I->sendPOST('api/v1/projects/users',
+            ['user_id' => $second_user->_id, 'role' => 'admin', 'scope' => ['read', 'update', 'delete_users']]);
+        $I->seeResponseCodeIs(422);
+
+        $I->sendPOST('api/v1/projects/users',
+            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['read', 'update', 'delete_users']]);
+        $I->seeResponseCodeIs(201);
+
+        $I->sendPOST('api/v1/projects/users',
+            ['user_id' => $third_user->_id, 'role' => 'manager', 'scope' => ['read', 'update', 'delete_users']]);
+        $I->seeResponseCodeIs(201);
+
+        $I->loginUser($second_user);
+
+        $I->sendDELETE('api/v1/projects/users', ['user_id' => $second_user->_id]);
+        $I->seeResponseCodeIs(422);
+
+        $I->sendDELETE('api/v1/projects/users', ['user_id' => $user->_id]);
+        $I->seeResponseCodeIs(403);
+
+        $I->sendDELETE('api/v1/projects/users', ['user_id' => $third_user->_id]);
+        $I->seeResponseCodeIs(200);
+
+        $I->loginUser($user);
+        $I->sendDELETE('api/v1/projects/users', ['user_id' => $user->_id]);
+        $I->seeResponseCodeIs(422);
+
+        $I->sendPOST('api/v1/projects/users/admin', ['user_id' => $second_user->_id]);
+        $I->seeResponseCodeIs(200);
+
+        $I->loginUser($second_user);
+        $I->sendDELETE('api/v1/projects/users', ['user_id' => $user->_id]);
+        $I->seeResponseCodeIs(200);
     }
 
 }

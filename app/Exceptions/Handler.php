@@ -8,6 +8,8 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Nebo15\LumenApplicationable\Exceptions\AccessDeniedException;
 use Nebo15\LumenApplicationable\Exceptions\MiddlewareException;
+use Nebo15\LumenApplicationable\Exceptions\TryingToAddDuplicateUserException;
+use Nebo15\LumenApplicationable\Exceptions\XApplicationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 
@@ -75,9 +77,15 @@ class Handler extends ExceptionHandler
         } elseif ($e instanceof HttpException) {
             $http_code = $e->getStatusCode();
             $error_code = $e->getMessage() ?: 'http';
-        } elseif ($e instanceof AccessDeniedException or $e instanceof MiddlewareException) {
+        } elseif ($e instanceof AccessDeniedException) {
             $http_code = 403;
             $error_code = 'access_denied';
+            $data = json_decode($e->getMessage());
+            $meta['error_message'] = $data->message;
+            $meta['scopes'] = $data->scopes;
+        } elseif ($e instanceof XApplicationException or $e instanceof TryingToAddDuplicateUserException) {
+            $http_code = 400;
+            $error_code = 'bad_request';
             $meta['error_message'] = $e->getMessage();
         }
 
