@@ -536,7 +536,19 @@ class ApiTester extends \Codeception\Actor
             'scope' => 'array',
         ], "$jsonPath.users[*]");
 
-        $this->canSeeResponseJsonMatchesJsonPath("$jsonPath.consumers");
+        $this->cantSeeResponseContains("$jsonPath.consumers");
+    }
+
+    public function assertConsumers($jsonPath = '$.data[*]', $code = 200)
+    {
+        $this->seeResponseCodeIs($code);
+        $this->seeResponseMatchesJsonType([
+            'client_id' => 'string',
+            'client_secret' => 'string',
+            'description' => 'string',
+            'scope' => 'array',
+            '_id' => 'string',
+        ], $jsonPath);
     }
 
     public function assertResponseDataFields(array $fields, $code = 200)
@@ -567,7 +579,8 @@ class ApiTester extends \Codeception\Actor
         $this->sendPOST('api/v1/projects/consumers',
             ['description' => $this->getFaker()->text('20'), 'scope' => ['read', 'check']]);
 
-        return json_decode($this->grabResponse())->data->consumers[0];
+        $this->sendGET('api/v1/projects/consumers');
+        return json_decode($this->grabResponse())->data[0];
     }
 
     public function getMongo()
