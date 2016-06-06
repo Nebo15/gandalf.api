@@ -189,8 +189,11 @@ class ApiTester extends \Codeception\Actor
         ], "$jsonPath.table.variant");
     }
 
-    public function assertTableDecisionsForConsumer($matching_rules_type = 'decision', $jsonPath = '$.data')
-    {
+    public function assertTableDecisionsForConsumer(
+        $matching_rules_type = 'decision',
+        $showMeta = true,
+        $jsonPath = '$.data'
+    ) {
         $type = $matching_rules_type == 'scoring' ? 'integer|float' : 'string';
         $this->seeResponseCodeIs(200);
         $rules = [
@@ -198,19 +201,27 @@ class ApiTester extends \Codeception\Actor
             'table' => 'array',
             'final_decision' => $type,
             'request' => 'array',
-            'rules' => 'array',
         ];
+        if ($showMeta) {
+            $rules['rules'] = 'array';
+        }
         if ($matching_rules_type == 'decision') {
             $rules['title'] = 'string';
             $rules['description'] = 'string';
         }
         $this->seeResponseMatchesJsonType($rules, $jsonPath);
 
-        $this->seeResponseMatchesJsonType([
-            'decision' => "$type|null",
-            'title' => 'string',
-            'description' => 'string',
-        ], "$jsonPath.rules[*]");
+        if ($showMeta) {
+            $this->seeResponseMatchesJsonType([
+                'decision' => "$type|null",
+                'title' => 'string',
+                'description' => 'string',
+            ], "$jsonPath.rules[*]");
+            $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].than");
+            $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions");
+        } else {
+            $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules");
+        }
 
         $this->seeResponseMatchesJsonType([
             '_id' => 'string',
@@ -230,11 +241,9 @@ class ApiTester extends \Codeception\Actor
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.group");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.meta");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.default_decision");
-        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].than");
-        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions");
     }
 
-    public function checkDecision($table_id, array $data = [], $matching_rules_type = 'decision')
+    public function checkDecision($table_id, array $data = [], $matching_rules_type = 'decision', $showMeta = true)
     {
         $data = $data ?: [
             'borrowers_phone_verification' => 'Positive',
@@ -247,7 +256,7 @@ class ApiTester extends \Codeception\Actor
             $data['matching_rules_type'] = $matching_rules_type;
         }
         $this->sendPOST("api/v1/tables/$table_id/decisions", $data);
-        $this->assertTableDecisionsForConsumer($matching_rules_type);
+        $this->assertTableDecisionsForConsumer($matching_rules_type, $showMeta);
 
         return $this->getResponseFields()->data;
     }
@@ -354,7 +363,6 @@ class ApiTester extends \Codeception\Actor
                     ]
                 ]
             ]
-            
         ];
     }
 
@@ -592,22 +600,23 @@ class ApiTester extends \Codeception\Actor
         return $this->mongo;
     }
 
-    public function createProjectAndSetHeader()
+    public function createProjectAndSetHeader(array $data = [])
     {
-        $project = $this->createProject();
+        $project = $this->createProject(false, $data);
         $this->setHeader('X-Application', $project->_id);
 
         return $project;
     }
 
-    public function createProject($new = false)
+    public function createProject($new = false, array $data = [])
     {
         if (!$this->project || $new) {
             $faker = $this->getFaker();
-            $project = [
+            $project = array_merge([
+                'settings' => ['show_meta' => true],
                 'title' => $faker->streetName,
                 'description' => $faker->text('150'),
-            ];
+            ], $data);
             $this->sendPOST('api/v1/projects', $project);
             $project = json_decode($this->grabResponse());
             $this->assertProject('$.data', 201);
