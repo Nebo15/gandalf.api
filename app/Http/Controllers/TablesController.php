@@ -84,8 +84,12 @@ class TablesController extends AbstractController
         );
     }
 
-    public function analytics($id)
+    public function analytics($id, $variant_id)
     {
-        return $this->response->json($this->getRepository()->analyzeTableDecisions($id)->toArray());
+        $this->validateRoute();
+
+        return $this->response->json(
+            $this->getRepository()->analyzeTableDecisions($id, $variant_id)->toArray()
+        );
     }
 }

@@ -120,14 +120,14 @@ class ApiTester extends \Codeception\Actor
     {
         $this->assertTable($jsonPath, $code);
         $this->seeResponseMatchesJsonType([
-            'probability' => 'integer|float',
+            'probability' => 'integer|float|null',
             'requests' => 'integer'
-        ], "$jsonPath.rules[*]");
+        ], "$jsonPath.variants[*].rules[*]");
 
         $this->seeResponseMatchesJsonType([
-            'probability' => 'integer|float',
+            'probability' => 'integer|float|null',
             'requests' => 'integer'
-        ], "$jsonPath.rules[*].conditions[*]");
+        ], "$jsonPath.variants[*].rules[*].conditions[*]");
     }
 
     public function assertTableDecisionsForAdmin($matching_rules_type = 'decision', $jsonPath = '$.data')
