@@ -38,7 +38,6 @@ class Scoring
         $fields = $table->fields();
         $variant = $table->getVariantForCheck(isset($values['variant_id']) ? $values['variant_id'] : null);
 
-        $webhook = isset($values['webhook']) ? $values['webhook'] : null;
         $scoring_data = [
             'table' => [
                 '_id' => new \MongoId($table->getId()),
@@ -58,7 +57,6 @@ class Scoring
             'fields' => $fields->toArray(),
             'rules' => [],
             'request' => $values,
-            'webhook' => $webhook,
         ];
         $final_decision = null;
         $fieldsCollection = $fields->get();
@@ -108,11 +106,6 @@ class Scoring
             $scoring_data['rules'][] = $scoring_rule;
         }
 
-        $scoring_data['final_decision'] = $final_decision ?: $variant->default_decision;
-        if ($webhook) {
-            # create webhook service
-        }
-
         return (new Decision())->fill($scoring_data)->save()->toConsumerArray();
     }
 
@@ -139,7 +132,7 @@ class Scoring
 
     private function createValidationRules(Table $table)
     {
-        $rules = ['webhook' => 'sometimes|required|url'];
+        $rules = ['variant_id' => 'sometimes|required|MongoId'];
         if ($fields = $table->fields) {
             foreach ($fields as $item) {
                 $rules[$item->key] = 'present|' . $this->getValidationRuleByType($item->type);
