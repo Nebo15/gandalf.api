@@ -535,6 +535,8 @@ class ApiTester extends \Codeception\Actor
             'role' => 'string',
             'scope' => 'array',
         ], "$jsonPath.users[*]");
+
+        $this->cantSeeResponseJsonMatchesJsonPath("$jsonPath.consumers");
     }
 
     public function assertConsumers($jsonPath = '$.data[*]', $code = 200)
