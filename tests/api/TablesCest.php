@@ -1098,6 +1098,8 @@ class TablesCest
             [['rule' => 0, 'conditions' => [0, 0, 0, 0]]],
             ['last' => 0, 'bool' => 0, 'string' => 0, 'numeric' => 0,], 0
         );
+        $I->sendGET("api/v1/admin/tables/{$table->_id}/invalidId/analytics");
+        $I->seeResponseCodeIs(404);
     }
 
     public function filters(ApiTester $I)
