@@ -91,6 +91,7 @@ class DecisionsCest
             $I->assertResponseDataFields(['final_decision' => $item['points']]);
         }
     }
+
     public function checkDecisionAccess(ApiTester $I)
     {
         $user = $I->createAndLoginUser();
@@ -115,6 +116,7 @@ class DecisionsCest
         $I->sendGET('api/v1/admin/decisions');
         $I->assertContains($data->_id, $I->grabResponse());
     }
+
     public function checkManyVariants(ApiTester $I)
     {
         $I->createAndLoginUser();
@@ -183,9 +185,11 @@ class DecisionsCest
                 ]
             ]);
         }
-        $decision = $I->checkDecision($table->_id, ['numeric' => 500,
+        $decision = $I->checkDecision($table->_id, [
+            'numeric' => 500,
             'string' => 'Yes',
-            'bool' => false]);
+            'bool' => false
+        ]);
         $I->assertTableDecisionsForConsumer();
         $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
         $I->assertTableDecisionsForAdmin();
@@ -282,5 +286,14 @@ class DecisionsCest
         $I->sendPUT("api/v1/admin/decisions/{$decision->_id}/meta", []);
         $I->seeResponseCodeIs(422);
         $I->canSeeResponseJsonMatchesJsonPath('$.data.meta');
+    }
+
+    public function hideMeta(ApiTester $I)
+    {
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader(['settings' => ['show_meta' => false]]);
+        $I->createTable();
+
+        $I->checkDecision($I->getResponseFields()->data->_id, [], 'decision', false);
     }
 }

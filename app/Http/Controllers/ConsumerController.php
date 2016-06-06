@@ -37,7 +37,9 @@ class ConsumerController extends Controller
             throw new AdminIsNotActivatedException;
         }
 
-        return $this->response->json($scoring->check($id, $request->all()));
+        return $this->response->json(
+            $scoring->check($id, $request->all(), $application->getSettingsElem('show_meta', false))
+        );
     }
 
     public function decisions(Request $request)
