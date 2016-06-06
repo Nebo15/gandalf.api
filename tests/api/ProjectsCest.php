@@ -111,4 +111,32 @@ class ProjectsCest
         $I->seeResponseCodeIs(400);
         $I->seeResponseContains('duplicate user');
     }
+
+    public function getConsumers(ApiTester $I)
+    {
+        $user = $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
+        $I->loginClient($I->getCurrentClient());
+        $second_user = $I->createUser(true);
+        $I->loginUser($user);
+        $I->sendGET('api/v1/projects');
+        $I->seeResponseCodeIs(200);
+        $I->cantSeeResponseContains("\"consumers\":");
+        $I->createConsumer();
+        $I->createConsumer();
+        $I->createConsumer();
+        $I->sendGET('api/v1/projects/consumers');
+        $I->assertConsumers();
+        $I->sendPOST('api/v1/projects/users',
+            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['read', 'update']]);
+        $I->loginUser($second_user);
+        $I->sendGET('api/v1/projects/consumers');
+        $I->seeResponseCodeIs(403);
+        $I->loginUser($user);
+        $I->sendPUT('api/v1/projects/users/',
+            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['read', 'update', 'get_consumers']]);
+        $I->loginUser($second_user);
+        $I->sendGET('api/v1/projects/consumers');
+        $I->assertConsumers();
+    }
 }
