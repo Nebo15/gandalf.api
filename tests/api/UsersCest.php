@@ -184,6 +184,22 @@ class UsersCest
         $I->seeResponseCodeIs(200);
     }
 
+    public function testPassword(ApiTester $I)
+    {
+        $faker = $I->getFaker();
+        $I->createAndLoginClient();
+        $invalidPass = [
+            '123', '1Aa34', 'JustAlpha', '#1(*&^(*&^', 'LongerThan32SymbolsMuchLongerAnd!'
+        ];
+        foreach ($invalidPass as $pass) {
+            $I->sendPOST(
+                'api/v1/users/',
+                ['email' => $faker->email, 'password' => $pass, 'username' => $faker->firstName]
+            );
+            $I->seeResponseCodeIs(422, "Password $pass should be detected as Invalid");
+        }
+    }
+
     public function testInvitation(ApiTester $I)
     {
         $faker = $I->getFaker();
