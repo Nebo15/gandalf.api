@@ -105,6 +105,7 @@ class Scoring
             $scoring_rule['decision'] = $conditions_matched ? $rule->than : null;
             $scoring_data['rules'][] = $scoring_rule;
         }
+        $scoring_data['final_decision'] = $final_decision ?: $variant->default_decision;
 
         return (new Decision())->fill($scoring_data)->save()->toConsumerArray();
     }
