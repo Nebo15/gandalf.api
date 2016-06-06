@@ -1107,8 +1107,7 @@ class TablesCest
         $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
 
-        $tableData = $I->getTableShortData();
-        $table = $I->createTable($tableData);
+        $table = $I->createTable($I->getTableShortData());
 
         $tableDataAll = $I->getShortTableDataMatchingTypeAll();
         $tableDataAll['description'] = 'Matching type scoring';
@@ -1131,5 +1130,10 @@ class TablesCest
 
         $I->sendGET('api/v1/admin/tables?matching_type=decision');
         $I->assertEquals($table->_id, $I->getResponseFields()->data[0]->_id);
+
+        $secondProject = $I->createProject(true);
+        $I->setHeader('X-Application', $secondProject->_id);
+        $I->sendGET('api/v1/admin/tables');
+        $I->assertEquals(0, count($I->getResponseFields()->data));
     }
 }
