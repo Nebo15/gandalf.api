@@ -40,10 +40,7 @@ class TablesRepository extends AbstractRepository
         if (!empty($filters['matching_type'])) {
             $where['matching_type'] = $filters['matching_type'];
         }
-
-        if (!$where) {
-            return $this->readList($size);
-        }
+        $where['applications'] = ApplicationableHelper::getApplicationId();
 
         return $this->getModel()->query()->where($where)->paginate($size);
     }
