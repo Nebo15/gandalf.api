@@ -1005,7 +1005,7 @@ class TablesCest
             $data['variant_id'] = $variantId1;
             $I->checkDecision($table->_id, $data, 'decision');
         }
-        $I->sendGET("api/v1/admin/tables/{$table->_id}/analytics?variant_id=$variantId1");
+        $I->sendGET("api/v1/admin/tables/{$table->_id}/$variantId1/analytics");
         $I->assertTableWithAnalytics();
 
         $checkProbabilities([
@@ -1064,7 +1064,7 @@ class TablesCest
             $I->checkDecision($table->_id, $data);
         }
 
-        $I->sendGET("api/v1/admin/tables/{$table->_id}/analytics?variant_id=$variantId1");
+        $I->sendGET("api/v1/admin/tables/{$table->_id}/$variantId1/analytics");
         $I->assertTableWithAnalytics();
         $checkProbabilities([
             [
@@ -1092,7 +1092,7 @@ class TablesCest
             'numeric' => 14,
         ], 14);
 
-        $I->sendGET("api/v1/admin/tables/{$table->_id}/analytics?variant_id=$variantId2");
+        $I->sendGET("api/v1/admin/tables/{$table->_id}/$variantId2/analytics");
         $I->assertTableWithAnalytics();
         $checkProbabilities(
             [['rule' => 0, 'conditions' => [0, 0, 0, 0]]],

@@ -79,7 +79,7 @@ $app->group(
         $app->get('/decisions', ['uses' => 'DecisionsController@readList']);
         $app->get('/decisions/{id}', ['uses' => 'DecisionsController@read']);
         $app->put('/decisions/{id}/meta', ['uses' => 'DecisionsController@updateMeta']);
-        $app->get('/tables/{id}/analytics', ['uses' => 'TablesController@analytics']);
+        $app->get('/tables/{id}/{variant_id}/analytics', ['uses' => 'TablesController@analytics']);
     }
 );
 

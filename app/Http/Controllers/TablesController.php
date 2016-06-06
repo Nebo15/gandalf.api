@@ -28,10 +28,7 @@ class TablesController extends AbstractController
             'title' => 'sometimes|min:1',
             'description' => 'sometimes|min:1',
             'matching_type' => 'sometimes|in:decision,scoring',
-        ],
-        'analytics' => [
-            'variant_id' => 'required|mongoId'
-        ],
+        ]
     ];
 
     public function __construct(Request $request, Response $response, ConditionsTypes $conditionsTypes)
@@ -87,12 +84,12 @@ class TablesController extends AbstractController
         );
     }
 
-    public function analytics($id)
+    public function analytics($id, $variant_id)
     {
         $this->validateRoute();
 
         return $this->response->json(
-            $this->getRepository()->analyzeTableDecisions($id, $this->request->get('variant_id'))->toArray()
+            $this->getRepository()->analyzeTableDecisions($id, $variant_id)->toArray()
         );
     }
 }
