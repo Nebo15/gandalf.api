@@ -627,7 +627,7 @@ class ApiTester extends \Codeception\Actor
                 'first_name' => $faker->firstName,
                 'last_name' => $faker->lastName,
                 'email' => ($email) ? $email : $faker->email,
-                'password' => $faker->password() . '1a',
+                'password' => $this->getPassword(),
                 'username' => $faker->firstName,
             ];
 
@@ -656,6 +656,11 @@ class ApiTester extends \Codeception\Actor
         }
 
         return $this->user;
+    }
+
+    public function getPassword()
+    {
+        return $this->getFaker()->password() . '1aA';
     }
 
     public function createAndLoginUser()
