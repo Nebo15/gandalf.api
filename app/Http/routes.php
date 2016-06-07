@@ -70,12 +70,25 @@ $app->delete('api/v1/projects', [
 
 $app->group(
     [
+        'prefix' => 'api/v1/projects',
+        'namespace' => 'App\Http\Controllers',
+    //        'middleware' => ['oauth', 'applicationable', 'applicationable.acl'],
+    ],
+    function ($app) {
+        $app->get('/export', ['uses' => 'ProjectsController@export']);
+        $app->post('/import', ['uses' => 'ProjectsController@import']);
+    }
+);
+
+$app->group(
+    [
         'prefix' => 'api/v1/admin',
         'namespace' => 'App\Http\Controllers',
         'middleware' => ['oauth', 'applicationable', 'applicationable.acl'],
     ],
-    function ($app) use ($api) {
+    function ($app) {
         /** @var Laravel\Lumen\Application $app */
+
         $app->get('/decisions', ['uses' => 'DecisionsController@readList']);
         $app->get('/decisions/{id}', ['uses' => 'DecisionsController@read']);
         $app->put('/decisions/{id}/meta', ['uses' => 'DecisionsController@updateMeta']);
