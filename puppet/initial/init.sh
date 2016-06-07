@@ -2,44 +2,18 @@
 modules_dir=$(dirname $0)/../modules
 cd ${modules_dir}/../..
 project_dir=$(pwd)
-daemon_user='deploybot'
-newrelic_key="1234567890123456789012345678901234567890"
-newrelic_app_name="test-new-relic-app-name"
 
-show_help()
-{
-cat << EOF
-This script download files from remote server and download tar.gz to local machine or remote host.
-Usage: $0 options
-OPTIONS:
-    -u  daemon user
-    -k  newrelic licence key
-    -n  newrelic app name
-    -h  show this message
-EOF
-}
-
-while getopts "u:h:n:k:" OPTION
-do
-     case ${OPTION} in
-         u)
-             daemon_user=$OPTARG
-             ;;
-         k)
-              newrelic_key=$OPTARG
-             ;;
-         n)
-              newrelic_app_name=$OPTARG
-             ;;
-         h)
-             show_help
-             ;;
-         ?)
-             show_help
-             exit
-             ;;
-     esac
-done
+LOCALE_LANGUAGE="en_US"
+LOCALE_CODESET="en_US.UTF-8"
+sudo locale-gen ${LOCALE_LANGUAGE} ${LOCALE_CODESET}
+sudo echo "export LANGUAGE=${LOCALE_CODESET}
+export LANG=${LOCALE_CODESET}
+export LC_ALL=${LOCALE_CODESET} " | sudo tee --append /etc/bash.bashrc
+echo ${TIMEZONE} | sudo tee /etc/timezone
+export LANGUAGE=${LOCALE_CODESET}
+export LANG=${LOCALE_CODESET}
+export LC_ALL=${LOCALE_CODESET}
+sudo dpkg-reconfigure locales
 
 if [ ! -e /usr/bin/puppet ]; then
     source /etc/lsb-release
@@ -58,9 +32,6 @@ if [ ! -e /usr/bin/puppet ]; then
     DAEMON_OPTS=""
     ' | sudo tee --append /etc/default/puppet
     sudo service puppet start
-else
-    echo 1;
-    #sudo apt-get update
 fi;
 
 if [ ! -e /www ]; then
@@ -71,13 +42,26 @@ if [ ! -e /www ]; then
     sudo chown -Rf www-data:www-data /var/www/
 fi;
 
-sudo puppet module install --force puppetlabs/stdlib --target-dir ${modules_dir}
-sudo puppet module install --force puppetlabs/apt --target-dir ${modules_dir}
-sudo puppet module install --force maestrodev/wget --target-dir ${modules_dir}
-sudo puppet module install --force willdurand/composer --target-dir ${modules_dir}
-sudo puppet module install --force jfryman-nginx --target-dir ${modules_dir}
-sudo puppet module install --force saz-timezone --target-dir ${modules_dir}
-sudo puppet module install --force saz-locales --target-dir ${modules_dir}
-sudo puppet module install --force fsalum-newrelic --target-dir ${modules_dir}
+if [ ! -e ${modules_dir}/stdlib ]; then
+    sudo puppet module install --force puppetlabs/stdlib --target-dir ${modules_dir}
+fi;
+if [ ! -e ${modules_dir}/apt ]; then
+    sudo puppet module install --force puppetlabs/apt --target-dir ${modules_dir}
+fi;
+if [ ! -e ${modules_dir}/wget ]; then
+    sudo puppet module install --force maestrodev/wget --target-dir ${modules_dir}
+fi;
+if [ ! -e ${modules_dir}/composer ]; then
+    sudo puppet module install --force willdurand/composer --target-dir ${modules_dir}
+fi;
+if [ ! -e ${modules_dir}/timezone ]; then
+    sudo puppet module install --force saz-timezone --target-dir ${modules_dir}
+fi;
+if [ ! -e ${modules_dir}/locales ]; then
+    sudo puppet module install --force saz-locales --target-dir ${modules_dir}
+fi;
+if [ ! -e ${modules_dir}/accounts ]; then
+    sudo puppet module install --force puppetlabs-accounts --target-dir ${modules_dir}
+fi;
 
-sudo FACTER_project_dir="${project_dir}" FACTER_newrelic_app_name="${newrelic_app_name}"  FACTER_newrelic_key="${newrelic_key}" FACTER_daemon_user="${daemon_user}" FACTER_error_reporting="0" puppet apply --modulepath ${modules_dir} ${modules_dir}/../general/manifests/init.pp
+sudo puppet apply --modulepath ${modules_dir} ${modules_dir}/../general/manifests/init.pp

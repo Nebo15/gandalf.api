@@ -18,11 +18,6 @@ class sethostname(
 node default {
 
   $host_name = "gandalf.dev"
-  $nginx_configuration_file = 'local'
-# $daemon_user = 'deploybot'
-  $error_reporting = '0'
-  $newrelic_key = "1234567890123456789012345678901234567890"
-  $newrelic_app_name = "test-new-relic-app-name"
 
   include stdlib
   include apt
@@ -30,15 +25,6 @@ node default {
 
   class { 'sethostname' :
     host_name => $host_name
-  }
-
-  class { 'newrelic::server::linux':
-    newrelic_license_key  => $newrelic_key,
-  } ~>
-  class { 'newrelic::agent::php':
-    newrelic_license_key  => $newrelic_key,
-    newrelic_ini_appname  => $newrelic_app_name,
-    newrelic_php_conf_dir => ['/etc/php5/mods-available'],
   }
 
   package { 'install uuid-runtime':
@@ -52,7 +38,7 @@ node default {
     default_locale  => 'en_US.UTF-8',
     locales         => ['en_US.UTF-8 UTF-8'],
   }->
-
+  class { 'nebo15_users': } ->
     /**
      Mongo part start
     */
@@ -73,25 +59,24 @@ node default {
     require         => Exec['apt-get update'],
   }
 
-    /**
-     Mongo part end
-    */
+  /**
+   Mongo part end
+  */
 
-  -> class { 'php56':
-    user            => $daemon_user,
-    group           => $daemon_user,
-    error_repotring => $error_reporting
-  }
   package { "openssh-server": ensure => "installed" }
 
-  file { "/etc/sudoers.d/deploybot-user":
+  file { ["/etc/sudoers.d/deploybot"]:
+    ensure => "directory",
+    owner  => root,
+    group  => root,
+    mode   => 0440
+  }->
+  file { "/etc/sudoers.d/deploybot/first":
     content => "\
-Cmnd_Alias        PUPPET = /usr/bin/puppet
-Cmnd_Alias        SERVICE = /usr/bin/service
-Cmnd_Alias        NPM = /usr/bin/npm
-deploybot  ALL=NOPASSWD: PUPPET
-deploybot  ALL=NOPASSWD: SERVICE
-deploybot  ALL=NOPASSWD: NPM
+Cmnd_Alias        API_PUPPET = /usr/bin/puppet
+Cmnd_Alias        API_SERVICE = /usr/bin/service
+deploybot  ALL=NOPASSWD: API_PUPPET
+deploybot  ALL=NOPASSWD: API_SERVICE
 Defaults env_keep += \"FACTER_server_tags\"
 Defaults env_keep += \"FACTER_project_dir\"
 Defaults env_keep += \"FACTER_daemon_user\"
@@ -102,63 +87,26 @@ Defaults env_keep += \"FACTER_newrelic_key\"
     mode    => 0440,
     owner   => root,
     group   => root,
+  } ->
+  file { "/etc/sudoers.d/deploybot-user":
+    content => "\
+#includedir /etc/sudoers.d/deploybot
+",
+    mode    => 0440,
+    owner   => root,
+    group   => root,
   }
+
   service { "ssh":
     ensure  => "running",
     enable  => "true",
     require => Package["openssh-server"]
   }
 
-  if ($ssh_port) {
-    file_line { 'change_ssh_port':
-      path   => '/etc/ssh/sshd_config',
-      line   => "Port ${ssh_port}",
-      match  => '^Port *',
-      notify => Service["ssh"]
-    }
-  }
-
-  class { 'nginx':
-    daemon_user         => $daemon_user,
-    worker_processes    => 4,
-    pid                 => '/run/nginx.pid',
-    worker_connections  => 1024,
-    multi_accept        => 'on',
-    events_use          => 'epoll',
-    sendfile            => 'on',
-    http_tcp_nopush     => 'on',
-    http_tcp_nodelay    => 'on',
-    keepalive_timeout   => '65',
-    types_hash_max_size => '2048',
-    server_tokens       => 'off',
-    gzip                => 'off'
-  }
-
-
-  if $daemon_user == 'travis' {
-    $port = 80
-  } else {
-    $port = 81
-  }
-
-  file { "gandalf_config":
-    path    => "/etc/nginx/sites-enabled/gandalf.api.conf",
-    content => "
-    server {
-    listen ${port};
-    error_log /var/log/nginx.log;
-    server_name gandalf.dev;
-    add_header 'Access-Control-Allow-Origin' *;
-    add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE';
-    add_header 'Access-Control-Allow-Headers' 'Authorization,Content-Type,Accept,Origin,User-Agent,DNT,Cache-Control,Keep-Alive,If-Modified-Since,X-Project-ID,X-Date,X-Accept-Charset,X-Application-ID,X-Device-Information,X-Application-Secret-Hash,X-Device-Push-Token,X-Application';
-    add_header 'X-Frame-Options' 'DENY';
-    if (\$request_method = OPTIONS ) {
-    return 200;
-    }
-    root ${project_dir}/public;
-    include ${project_dir}/config/nginx/nginx.conf;
-}
-    ",
-    notify  => Service["nginx"]
+  file_line { 'change_ssh_port':
+    path   => '/etc/ssh/sshd_config',
+    line   => "Port 2020",
+    match  => '^Port *',
+    notify => Service["ssh"]
   }
 }
