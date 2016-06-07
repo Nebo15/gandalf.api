@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-modules_dir=$(dirname $0)/../modules
+modules_dir=$(dirname $0)/../../modules
 cd ${modules_dir}/../..
 project_dir=$(pwd)
 
@@ -64,4 +64,4 @@ if [ ! -e ${modules_dir}/accounts ]; then
     sudo puppet module install --force puppetlabs-accounts --target-dir ${modules_dir}
 fi;
 
-sudo puppet apply --modulepath ${modules_dir} ${modules_dir}/../general/manifests/init.pp
+sudo puppet apply --modulepath ${modules_dir} ${modules_dir}/../manifests/init.pp

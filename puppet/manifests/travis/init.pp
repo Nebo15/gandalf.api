@@ -24,7 +24,7 @@ node default {
   include composer
 
   class { 'sethostname' :
-    host_name => $host_name
+    host_name => "gandalf.dev"
   }
 
   package { 'install uuid-runtime':
@@ -38,7 +38,6 @@ node default {
     default_locale  => 'en_US.UTF-8',
     locales         => ['en_US.UTF-8 UTF-8'],
   }->
-  class { 'nebo15_users': } ->
     /**
      Mongo part start
     */
@@ -62,51 +61,4 @@ node default {
   /**
    Mongo part end
   */
-
-  package { "openssh-server": ensure => "installed" }
-
-  file { ["/etc/sudoers.d/deploybot"]:
-    ensure => "directory",
-    owner  => root,
-    group  => root,
-    mode   => 0440
-  }->
-  file { "/etc/sudoers.d/deploybot/first":
-    content => "\
-Cmnd_Alias        API_PUPPET = /usr/bin/puppet
-Cmnd_Alias        API_SERVICE = /usr/bin/service
-deploybot  ALL=NOPASSWD: API_PUPPET
-deploybot  ALL=NOPASSWD: API_SERVICE
-Defaults env_keep += \"FACTER_server_tags\"
-Defaults env_keep += \"FACTER_project_dir\"
-Defaults env_keep += \"FACTER_daemon_user\"
-Defaults env_keep += \"FACTER_error_reporting\"
-Defaults env_keep += \"FACTER_newrelic_app_name\"
-Defaults env_keep += \"FACTER_newrelic_key\"
-",
-    mode    => 0440,
-    owner   => root,
-    group   => root,
-  } ->
-  file { "/etc/sudoers.d/deploybot-user":
-    content => "\
-#includedir /etc/sudoers.d/deploybot
-",
-    mode    => 0440,
-    owner   => root,
-    group   => root,
-  }
-
-  service { "ssh":
-    ensure  => "running",
-    enable  => "true",
-    require => Package["openssh-server"]
-  }
-
-  file_line { 'change_ssh_port':
-    path   => '/etc/ssh/sshd_config',
-    line   => "Port 2020",
-    match  => '^Port *',
-    notify => Service["ssh"]
-  }
 }

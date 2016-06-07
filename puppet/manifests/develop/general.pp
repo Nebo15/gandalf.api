@@ -4,22 +4,12 @@ node default {
 
 
   class { 'php56':
-  user            => $daemon_user,
-  group           => $daemon_user,
-  error_repotring => $error_reporting
+  user            => 'deploybot',
+  group           => 'deploybot'
   } ->
 
-  class { 'newrelic::server::linux':
-    newrelic_license_key  => $newrelic_key,
-  } ~>
-  class { 'newrelic::agent::php':
-    newrelic_license_key  => $newrelic_key,
-    newrelic_ini_appname  => $newrelic_app_name,
-    newrelic_php_conf_dir => ['/etc/php5/mods-available'],
-  }
-
   class { 'nginx':
-    daemon_user         => $daemon_user,
+    daemon_user         => 'deploybot',
     worker_processes    => 4,
     pid                 => '/run/nginx.pid',
     worker_connections  => 1024,
@@ -35,17 +25,11 @@ node default {
   }
 
 
-  if $daemon_user == 'travis' {
-    $port = 80
-  } else {
-    $port = 81
-  }
-
   file { "gandalf_config":
     path    => "/etc/nginx/sites-enabled/gandalf.api.conf",
     content => "
     server {
-    listen ${port};
+    listen 80;
     error_log /var/log/nginx.log;
     server_name gandalf.dev;
     add_header 'Access-Control-Allow-Origin' *;
@@ -55,8 +39,8 @@ node default {
     if (\$request_method = OPTIONS ) {
     return 200;
     }
-    root ${project_dir}/public;
-    include ${project_dir}/config/nginx/nginx.conf;
+    root /www/gandalf.api/current/public;
+    include /www/gandalf.api/current/config/nginx/nginx.conf;
 }
     ",
     notify  => Service["nginx"]
