@@ -1,19 +1,49 @@
 <?php
 /**
  * Author: Paul Bardack paul.bardack@gmail.com http://paulbardack.com
- * Date: 07.06.16
- * Time: 17:11
+ * Date: 08.06.16
+ * Time: 14:16
  */
 
-namespace App\Http\Controllers;
+namespace Drunken;
 
-use App\Services\ConditionsTypes;
-
-abstract class AbstractController extends \Nebo15\REST\AbstractController
+class ProjectImportWorker extends AbstractWorker
 {
-    protected function getTableRules(ConditionsTypes $conditionsTypes)
+    public function doThisJob(array $data)
     {
-        return [
+//        'db_host';
+//        'db_port';
+//        'db_name';
+//        'appId';
+
+
+        $phar = new \PharData($data['dir'] . DIRECTORY_SEPARATOR . $data['file']);
+        $phar->decompress()->extractTo($data['dir']);
+
+        $jsonFileNames = ['tables.json', 'decisions.json', 'changelogs.json', 'applications.json'];
+        if (count(array_intersect($jsonFileNames, scandir($data['dir']))) != count($jsonFileNames)) {
+            # not enough tables
+        }
+
+        $errors = [];
+        $rawJson = [];
+
+        foreach ($jsonFileNames as $table) {
+            $json = json_decode(file_get_contents($table));
+            if(!$json){
+
+                # cannot decode json. Abort
+            }
+
+
+        }
+        die();
+    }
+
+    private function filterData($table, $data)
+    {
+        [
+            '_id' => 'sometimes|string',
             'title' => 'sometimes|string',
             'description' => 'sometimes|string',
             'matching_type' => 'required|in:decision,scoring',

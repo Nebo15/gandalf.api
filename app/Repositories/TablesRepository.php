@@ -67,7 +67,7 @@ class TablesRepository extends AbstractRepository
     public function analyzeTableDecisions($table_id, $variant_id)
     {
         $table = $this->read($table_id);
-        $decisions = (new \MongoClient())->selectDB(env('DB_DATABASE'))
+        $decisions = (new \MongoClient)->selectDB(env('DB_DATABASE'))
             ->selectCollection((new Decision)->getTable())
             ->find(
                 [

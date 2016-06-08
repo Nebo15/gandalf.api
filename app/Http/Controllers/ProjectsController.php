@@ -6,7 +6,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Table;
-use App\Services\ConditionsTypes;
+use App\Services\DbTransfer;
+use Nebo15\REST\AbstractController;
 use Nebo15\LumenApplicationable\Models\Application;
 
 class ProjectsController extends AbstractController
@@ -15,7 +16,8 @@ class ProjectsController extends AbstractController
 
     protected $validationRules = [
         'import' => [
-            'file' => 'required|mimes:tar.gz'
+//            'file' => 'required|mimetypes:application/gzip'
+            'file' => 'required'
         ]
     ];
 
@@ -28,39 +30,20 @@ class ProjectsController extends AbstractController
         return $this->response->json();
     }
 
-    public function export(Application $application)
+    public function export(DbTransfer $dbTransfer, Application $application)
     {
-        $appId = $application->_id;
-        $prefixTmpFile = sys_get_temp_dir() . strval(new \MongoId) . '/';
-        $collections = [
-            'tables' => "'{applications: \"{$appId}\"}'",
-            'decisions' => "'{applications: \"{$appId}\"}'",
-            'changelogs' => "'{\"model.attributes.applications\": \"{$appId}\"}'",
-            'applications' => "'{_id: \"{$appId}\"}'",
-        ];
-        foreach ($collections as $collection => $query) {
-            exec(sprintf(
-                "mongoexport -h %s --port %s -d %s -q %s -c %s --out %s",
-                env('DB_HOST'),
-                env('DB_PORT'),
-                env('DB_DATABASE'),
-                $query,
-                $collection,
-                $prefixTmpFile . $collection . '.json'
-            ));
-        }
-        # create archive
-        $archiveName = $prefixTmpFile . "dump-" . date('Y-m-d_H:i:s') . ".tar.gz";
-        exec(sprintf("cd %s && tar -cvzf %s *.json", $prefixTmpFile, $archiveName));
-
-        return response()->download($archiveName);
+        return response()->download($dbTransfer->export($application->_id));
     }
 
-    public function import(ConditionsTypes $conditionsTypes)
+    public function import(DbTransfer $dbTransfer, Application $application)
     {
         $this->validateRoute();
-        $tableRules = $this->getTableRules($conditionsTypes);
+        $file = $this->request->file('file');
+        $prefixTmpFile = sys_get_temp_dir() . strval(new \MongoId);
+        $fileName =  "dump-" . date('Y-m-d_H:i:s') . ".tar.gz";
+        $file->move($prefixTmpFile, $fileName);
+        $dbTransfer->import($application->_id, $prefixTmpFile, $fileName);
 
-        return $this->response->json();
+        return $this->response->json([], 202);
     }
 }
