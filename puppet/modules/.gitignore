@@ -1,5 +1,7 @@
 *
 !.gitignore
+!nebo15_users/
+!nebo15_users/manifests/*
 !php56/
 !php56/manifests/*
 !php56/templates/*

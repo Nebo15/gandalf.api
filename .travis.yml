@@ -12,7 +12,7 @@ before_script:
   - sudo mkdir /www
   - sudo ln -s $PWD /www/gandalf.api
   - cp ./.env.example ./.env
-  - bash puppet/initial/init.sh -u travis
+  - bash puppet/initial/travis/init.sh
   - echo 127.0.0.1 gandalf.dev | sudo tee -a /etc/hosts
   - php5-fpm -i
   - composer install --prefer-source
