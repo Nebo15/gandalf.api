@@ -69,8 +69,5 @@ sudo puppet apply --modulepath ${modules_dir} ${modules_dir}/../manifests/travis
 if [ ! -e ${modules_dir}/nginx ]; then
     sudo puppet module install --force jfryman-nginx --target-dir ${modules_dir}
 fi;
-if [ ! -e ${modules_dir}/newrelic ]; then
-    sudo puppet module install --force fsalum-newrelic --target-dir ${modules_dir}
-fi;
 
 sudo puppet apply --modulepath ${modules_dir} ${modules_dir}/../manifests/travis/general.pp
