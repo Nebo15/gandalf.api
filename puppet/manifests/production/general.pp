@@ -39,7 +39,7 @@ node default {
     path    => "/etc/nginx/sites-enabled/gandalf.api.conf",
     content => "
     server {
-    listen 80;
+    listen 80 http2;
     error_log /var/log/nginx.log;
     server_name gndf.io;
     add_header 'Access-Control-Allow-Origin' *;
