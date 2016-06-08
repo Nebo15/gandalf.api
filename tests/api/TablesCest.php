@@ -308,7 +308,7 @@ class TablesCest
             'default_description' => 'Description 220',
             'title' => 'Test title',
             'description' => 'Test description',
-            'matching_type' => 'first',
+            'matching_type' => 'decision',
             'fields' => [
                 [
                     "key" => 'numeric',
@@ -378,7 +378,7 @@ class TablesCest
         $table = $I->createTable([
             'title' => 'Test title',
             'description' => 'Test description',
-            'matching_type' => 'first',
+            'matching_type' => 'decision',
             'fields' => [
                 [
                     "key" => ' IS SET ',
@@ -470,7 +470,7 @@ class TablesCest
         $table = $I->createTable([
             'title' => 'Test title',
             'description' => 'Test description',
-            'matching_type' => 'first',
+            'matching_type' => 'decision',
             'fields' => [
                 [
                     "key" => 'test',
@@ -571,7 +571,7 @@ class TablesCest
         $table_data = [
             'title' => 'Test',
             'description' => 'Test',
-            'matching_type' => 'first',
+            'matching_type' => 'decision',
             'fields' => [
                 [
                     "key" => 'boolean',
@@ -657,7 +657,7 @@ class TablesCest
         $table = $I->createTable([
             'title' => 'Test',
             'description' => 'Test',
-            'matching_type' => 'first',
+            'matching_type' => 'decision',
             'fields' => [
                 [
                     "key" => 'boolean',
@@ -708,7 +708,7 @@ class TablesCest
         $tableData = [
             'title' => 'Test title',
             'description' => 'Test description',
-            'matching_type' => 'first',
+            'matching_type' => 'decision',
             'fields' => [
                 [
                     "key" => 'between',
@@ -913,13 +913,11 @@ class TablesCest
         $I->assertTable();
     }
 
-    public function analytics(ApiTester $I, $scenario)
+    public function analytics(ApiTester $I)
     {
-        $scenario->skip('Should be resolved in GDF-310');
-
         $checkProbabilities = function ($probabilities, $requestsConditions, $requestsRule) use ($I) {
             $ruleIndex = 0;
-            foreach ($I->getResponseFields()->data->rules as $rule) {
+            foreach ($I->getResponseFields()->data->variants[0]->rules as $rule) {
                 $conditionIndex = 0;
                 foreach ($rule->conditions as $condition) {
                     $I->assertEquals(
@@ -956,8 +954,41 @@ class TablesCest
         $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
 
+        $variantId1 = new MongoId;
+        $variantId2 = new MongoId;
+
         $tableData = $I->getTableShortData();
+        $tableData['variants'][0]['_id'] = $variantId1;
+        $tableData['variants'][] = [
+            '_id' => $variantId2,
+            'default_decision' => 'Decline',
+            'rules' => [
+                [
+                    'than' => 'Approve',
+                    'title' => 'Valid rule title',
+                    'description' => 'Valid rule description',
+                    'conditions' => [
+                        [
+                            'field_key' => 'numeric',
+                            'condition' => '$eq',
+                            'value' => true
+                        ],
+                        [
+                            'field_key' => 'string',
+                            'condition' => '$eq',
+                            'value' => 'Yes'
+                        ],
+                        [
+                            'field_key' => 'bool',
+                            'condition' => '$eq',
+                            'value' => false
+                        ]
+                    ]
+                ]
+            ]
+        ];
         $table = $I->createTable($tableData);
+
 
         $checkData = [
             ['numeric' => 340, 'string' => 'Bad', 'bool' => true],
@@ -971,9 +1002,10 @@ class TablesCest
             ['numeric' => 420, 'string' => 'Yes', 'bool' => false],
         ];
         foreach ($checkData as $data) {
-            $I->checkDecision($table->_id, $data);
+            $data['variant_id'] = $variantId1;
+            $I->checkDecision($table->_id, $data, 'decision');
         }
-        $I->sendGET("api/v1/admin/tables/{$table->_id}/analytics");
+        $I->sendGET("api/v1/admin/tables/{$table->_id}/$variantId1/analytics");
         $I->assertTableWithAnalytics();
 
         $checkProbabilities([
@@ -1002,17 +1034,22 @@ class TablesCest
             "type" => 'numeric',
             'preset' => null
         ];
-        $tableData['rules'][0]['conditions'][] = [
+        $tableData['variants'][0]['rules'][0]['conditions'][] = [
             'field_key' => 'last',
             'condition' => '$lte',
             'value' => 300
         ];
-        $tableData['rules'][1]['conditions'][] = [
+        $tableData['variants'][0]['rules'][1]['conditions'][] = [
             'field_key' => 'last',
             'condition' => '$lt',
             'value' => 500
         ];
-        $I->sendPUT('api/v1/admin/tables/' . $table->_id, ['table' => $tableData]);
+        $tableData['variants'][1]['rules'][0]['conditions'][] = [
+            'field_key' => 'last',
+            'condition' => '$lt',
+            'value' => 500
+        ];
+        $I->sendPUT('api/v1/admin/tables/' . $table->_id, $tableData);
         $I->seeResponseCodeIs(200);
 
         $checkData = [
@@ -1023,10 +1060,11 @@ class TablesCest
             ['numeric' => 420, 'string' => 'Bad', 'last' => 650, 'bool' => true],
         ];
         foreach ($checkData as $data) {
+            $data['variant_id'] = $variantId1;
             $I->checkDecision($table->_id, $data);
         }
 
-        $I->sendGET("api/v1/admin/tables/{$table->_id}/analytics");
+        $I->sendGET("api/v1/admin/tables/{$table->_id}/$variantId1/analytics");
         $I->assertTableWithAnalytics();
         $checkProbabilities([
             [
@@ -1053,6 +1091,15 @@ class TablesCest
             'string' => 14,
             'numeric' => 14,
         ], 14);
+
+        $I->sendGET("api/v1/admin/tables/{$table->_id}/$variantId2/analytics");
+        $I->assertTableWithAnalytics();
+        $checkProbabilities(
+            [['rule' => 0, 'conditions' => [0, 0, 0, 0]]],
+            ['last' => 0, 'bool' => 0, 'string' => 0, 'numeric' => 0,], 0
+        );
+        $I->sendGET("api/v1/admin/tables/{$table->_id}/invalidId/analytics");
+        $I->seeResponseCodeIs(404);
     }
 
     public function filters(ApiTester $I)
@@ -1060,11 +1107,10 @@ class TablesCest
         $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
 
-        $tableData = $I->getTableShortData();
-        $table = $I->createTable($tableData);
+        $table = $I->createTable($I->getTableShortData());
 
         $tableDataAll = $I->getShortTableDataMatchingTypeAll();
-        $tableDataAll['description'] = 'Matching type all';
+        $tableDataAll['description'] = 'Matching type scoring';
         $tableAll = $I->createTable($tableDataAll);
 
         $I->sendGET('api/v1/admin/tables?title=Title');
@@ -1079,10 +1125,15 @@ class TablesCest
         $I->sendGET('api/v1/admin/tables?matching_type=invalid');
         $I->seeResponseCodeIs(422);
 
-        $I->sendGET('api/v1/admin/tables?matching_type=all');
+        $I->sendGET('api/v1/admin/tables?matching_type=scoring');
         $I->assertEquals($tableAll->_id, $I->getResponseFields()->data[0]->_id);
 
-        $I->sendGET('api/v1/admin/tables?matching_type=first');
+        $I->sendGET('api/v1/admin/tables?matching_type=decision');
         $I->assertEquals($table->_id, $I->getResponseFields()->data[0]->_id);
+
+        $secondProject = $I->createProject(true);
+        $I->setHeader('X-Application', $secondProject->_id);
+        $I->sendGET('api/v1/admin/tables');
+        $I->assertEquals(0, count($I->getResponseFields()->data));
     }
 }

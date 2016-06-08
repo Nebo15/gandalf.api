@@ -40,10 +40,7 @@ class TablesRepository extends AbstractRepository
         if (!empty($filters['matching_type'])) {
             $where['matching_type'] = $filters['matching_type'];
         }
-
-        if (!$where) {
-            return $this->readList($size);
-        }
+        $where['applications'] = ApplicationableHelper::getApplicationId();
 
         return $this->getModel()->query()->where($where)->paginate($size);
     }
@@ -67,12 +64,19 @@ class TablesRepository extends AbstractRepository
         return $model;
     }
 
-    public function analyzeTableDecisions($table_id)
+    public function analyzeTableDecisions($table_id, $variant_id)
     {
         $table = $this->read($table_id);
         $decisions = (new \MongoClient())->selectDB(env('DB_DATABASE'))
             ->selectCollection((new Decision)->getTable())
-            ->find(['table._id' => $table_id, 'applications' => ApplicationableHelper::getApplicationId()], ['rules']);
+            ->find(
+                [
+                    'table._id' => new \MongoId($table_id),
+                    'table.variant._id' => new \MongoId($variant_id),
+                    'applications' => ApplicationableHelper::getApplicationId()
+                ],
+                ['rules']
+            );
         $map = [];
 
         if (($decisionsAmount = $decisions->count()) > 0) {
@@ -107,7 +111,8 @@ class TablesRepository extends AbstractRepository
             }
         }
 
-        foreach ($table->rules as $rule) {
+        $variant = $table->getVariantForCheck($variant_id);
+        foreach ($variant->rules as $rule) {
             $ruleIndex = $rule->_id;
             foreach ($rule->conditions as $condition) {
                 $index = "$ruleIndex@" . strval($condition['_id']);
@@ -124,9 +129,12 @@ class TablesRepository extends AbstractRepository
                 round($map[$ruleIndex]['matched'] / $map[$ruleIndex]['requests'], 5) :
                 0;
             $rule->requests = $ruleHasRequests ? $map[$ruleIndex]['requests'] : 0;
-            $table->rules()->associate($rule);
+            $variant->rules()->associate($rule);
         }
+        $clonedTable = clone $table;
+        $clonedTable->variants = [];
+        $clonedTable->variants()->associate($variant);
 
-        return $table;
+        return $clonedTable;
     }
 }

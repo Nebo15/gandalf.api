@@ -7,8 +7,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\AdminIsNotActivatedException;
 use App\Models\Decision;
+use App\Models\User;
 use App\Services\Scoring;
+use Nebo15\LumenApplicationable\ApplicationableHelper;
+use Nebo15\LumenApplicationable\Models\Application;
 use Nebo15\REST\Response;
 use Illuminate\Http\Request;
 use App\Repositories\DecisionsRepository;
@@ -27,9 +31,15 @@ class ConsumerController extends Controller
         $this->decisionsRepository = $decisionsRepository;
     }
 
-    public function tableCheck(Request $request, Scoring $scoring, $id)
+    public function tableCheck(Request $request, Scoring $scoring, Application $application, $id)
     {
-        return $this->response->json($scoring->check($id, $request->all()));
+        if (!User::findById($application->users()->where('role', 'admin')->first()->user_id)->isActive()) {
+            throw new AdminIsNotActivatedException;
+        }
+
+        return $this->response->json(
+            $scoring->check($id, $request->all(), $application->getSettingsElem('show_meta', false))
+        );
     }
 
     public function decisions(Request $request)

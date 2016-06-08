@@ -28,7 +28,7 @@ class Scoring
         $this->conditionsTypes = new ConditionsTypes;
     }
 
-    public function check($id, $values)
+    public function check($id, $values, $showMeta = false)
     {
         $table = $this->tablesRepository->read($id);
         $validator = \Validator::make($values, $this->createValidationRules($table));
@@ -38,7 +38,6 @@ class Scoring
         $fields = $table->fields();
         $variant = $table->getVariantForCheck(isset($values['variant_id']) ? $values['variant_id'] : null);
 
-        $webhook = isset($values['webhook']) ? $values['webhook'] : null;
         $scoring_data = [
             'table' => [
                 '_id' => new \MongoId($table->getId()),
@@ -58,7 +57,6 @@ class Scoring
             'fields' => $fields->toArray(),
             'rules' => [],
             'request' => $values,
-            'webhook' => $webhook,
         ];
         $final_decision = null;
         $fieldsCollection = $fields->get();
@@ -92,7 +90,7 @@ class Scoring
                 $condition = $condition->getAttributes();
                 $scoring_rule['conditions'][] = $condition;
             }
-            if ($table->matching_type == 'all') {
+            if ($table->matching_type == 'scoring') {
                 if ($conditions_matched) {
                     $final_decision += floatval($rule->than);
                 }
@@ -107,13 +105,14 @@ class Scoring
             $scoring_rule['decision'] = $conditions_matched ? $rule->than : null;
             $scoring_data['rules'][] = $scoring_rule;
         }
-
         $scoring_data['final_decision'] = $final_decision ?: $variant->default_decision;
-        if ($webhook) {
-            # create webhook service
+
+        $response = (new Decision())->fill($scoring_data)->save()->toConsumerArray();
+        if (!$showMeta) {
+            unset($response['rules']);
         }
 
-        return (new Decision())->fill($scoring_data)->save()->toConsumerArray();
+        return $response;
     }
 
     private function checkCondition(Condition $condition, $value)
@@ -139,7 +138,7 @@ class Scoring
 
     private function createValidationRules(Table $table)
     {
-        $rules = ['webhook' => 'sometimes|required|url'];
+        $rules = ['variant_id' => 'sometimes|required|MongoId'];
         if ($fields = $table->fields) {
             foreach ($fields as $item) {
                 $rules[$item->key] = 'present|' . $this->getValidationRuleByType($item->type);

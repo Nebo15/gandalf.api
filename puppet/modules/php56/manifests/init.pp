@@ -19,31 +19,37 @@ class php56(
     require => Apt::Ppa['ppa:ondrej/php5-5.6']
   }->
 
-  package { $enhancers: ensure  => 'installed',install_options => ['-y', '--force-yes'],require  => Exec['apt-get update php56'], }
+  exec { "apt-get install packages":
+    command => "/usr/bin/apt-get install php5-fpm php5-cli php5-curl php5-mongo -y --force-yes",
+    require => Exec['apt-get update php56']
+  }
+
+#  package { $enhancers: ensure  => 'installed',
+#    install_options => ['-y --force-yes', '--allow-unauthenticated'],require  => Exec['apt-get update php56'], }
 
   file { "/etc/php5/fpm/pool.d/www.conf":
     path    => "/etc/php5/fpm/pool.d/www.conf",
     content => template('php56/php-fpm-www.conf.erb'),
-    require => Package[$enhancers],
-    notify  => Service['php5-fpm']
+    require => Exec['apt-get install packages'],
+    notify  => Service["php5-fpm"]
   }
   file { "/etc/php5/fpm/php.ini":
     path    => "/etc/php5/fpm/php.ini",
     content => template('php56/php-fpm.ini.erb'),
-    require => Package[$enhancers],
-    notify  => Service['php5-fpm']
+    require => Exec['apt-get install packages'],
+    notify  => Service["php5-fpm"]
   }
 
   file { "/etc/php5/fpm/php-fpm.conf":
     path    => "/etc/php5/fpm/php-fpm.conf",
     content => template('php56/php-fpm.conf.erb'),
-    require => Package[$enhancers],
-    notify  => Service['php5-fpm']
+    require => Exec['apt-get install packages'],
+    notify  => Service["php5-fpm"]
   }
 
   service { 'php5-fpm':
     ensure  => 'running',
     enable  => true,
-    require => Package[$enhancers],
+    require => Exec['apt-get install packages']
   }
 }

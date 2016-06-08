@@ -120,19 +120,19 @@ class ApiTester extends \Codeception\Actor
     {
         $this->assertTable($jsonPath, $code);
         $this->seeResponseMatchesJsonType([
-            'probability' => 'integer|float',
+            'probability' => 'integer|float|null',
             'requests' => 'integer'
-        ], "$jsonPath.rules[*]");
+        ], "$jsonPath.variants[*].rules[*]");
 
         $this->seeResponseMatchesJsonType([
-            'probability' => 'integer|float',
+            'probability' => 'integer|float|null',
             'requests' => 'integer'
-        ], "$jsonPath.rules[*].conditions[*]");
+        ], "$jsonPath.variants[*].rules[*].conditions[*]");
     }
 
-    public function assertTableDecisionsForAdmin($matching_rules_type = 'first', $jsonPath = '$.data')
+    public function assertTableDecisionsForAdmin($matching_rules_type = 'decision', $jsonPath = '$.data')
     {
-        $type = $matching_rules_type == 'all' ? 'integer|float' : 'string';
+        $type = $matching_rules_type == 'scoring' ? 'integer|float' : 'string';
         $this->seeResponseCodeIs(200);
         $rules = [
             '_id' => 'string',
@@ -146,7 +146,7 @@ class ApiTester extends \Codeception\Actor
             'fields' => 'array',
             'request' => 'array',
         ];
-        if ($matching_rules_type == 'first') {
+        if ($matching_rules_type == 'decision') {
             $rules['title'] = 'string';
             $rules['description'] = 'string';
         }
@@ -189,28 +189,39 @@ class ApiTester extends \Codeception\Actor
         ], "$jsonPath.table.variant");
     }
 
-    public function assertTableDecisionsForConsumer($matching_rules_type = 'first', $jsonPath = '$.data')
-    {
-        $type = $matching_rules_type == 'all' ? 'integer|float' : 'string';
+    public function assertTableDecisionsForConsumer(
+        $matching_rules_type = 'decision',
+        $showMeta = true,
+        $jsonPath = '$.data'
+    ) {
+        $type = $matching_rules_type == 'scoring' ? 'integer|float' : 'string';
         $this->seeResponseCodeIs(200);
         $rules = [
             '_id' => 'string',
             'table' => 'array',
             'final_decision' => $type,
             'request' => 'array',
-            'rules' => 'array',
         ];
-        if ($matching_rules_type == 'first') {
+        if ($showMeta) {
+            $rules['rules'] = 'array';
+        }
+        if ($matching_rules_type == 'decision') {
             $rules['title'] = 'string';
             $rules['description'] = 'string';
         }
         $this->seeResponseMatchesJsonType($rules, $jsonPath);
 
-        $this->seeResponseMatchesJsonType([
-            'decision' => "$type|null",
-            'title' => 'string',
-            'description' => 'string',
-        ], "$jsonPath.rules[*]");
+        if ($showMeta) {
+            $this->seeResponseMatchesJsonType([
+                'decision' => "$type|null",
+                'title' => 'string',
+                'description' => 'string',
+            ], "$jsonPath.rules[*]");
+            $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].than");
+            $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions");
+        } else {
+            $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules");
+        }
 
         $this->seeResponseMatchesJsonType([
             '_id' => 'string',
@@ -230,11 +241,9 @@ class ApiTester extends \Codeception\Actor
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.group");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.meta");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.default_decision");
-        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].than");
-        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules[*].conditions");
     }
 
-    public function checkDecision($table_id, array $data = [], $matching_rules_type = 'first')
+    public function checkDecision($table_id, array $data = [], $matching_rules_type = 'decision', $showMeta = true)
     {
         $data = $data ?: [
             'borrowers_phone_verification' => 'Positive',
@@ -247,7 +256,7 @@ class ApiTester extends \Codeception\Actor
             $data['matching_rules_type'] = $matching_rules_type;
         }
         $this->sendPOST("api/v1/tables/$table_id/decisions", $data);
-        $this->assertTableDecisionsForConsumer($matching_rules_type);
+        $this->assertTableDecisionsForConsumer($matching_rules_type, $showMeta);
 
         return $this->getResponseFields()->data;
     }
@@ -262,7 +271,7 @@ class ApiTester extends \Codeception\Actor
         return [
             'title' => 'Test title',
             'description' => 'Test description',
-            'matching_type' => 'first',
+            'matching_type' => 'decision',
             'variants_probability' => 'first',
             'fields' => [
                 [
@@ -354,14 +363,13 @@ class ApiTester extends \Codeception\Actor
                     ]
                 ]
             ]
-            
         ];
     }
 
     public function getShortTableDataMatchingTypeAll()
     {
         $tableData = $this->getTableShortData();
-        $tableData['matching_type'] = 'all';
+        $tableData['matching_type'] = 'scoring';
         $tableData['variants'][0]['default_decision'] = 15;
         $tableData['variants'][0]['rules'] = [
             [
@@ -463,7 +471,7 @@ class ApiTester extends \Codeception\Actor
         $data = [
             'title' => 'Test title',
             'description' => 'Test description',
-            'matching_type' => 'first',
+            'matching_type' => 'decision',
             'variants_probability' => '',
             'fields' => [],
             'variants' => [
@@ -536,7 +544,19 @@ class ApiTester extends \Codeception\Actor
             'scope' => 'array',
         ], "$jsonPath.users[*]");
 
-        $this->canSeeResponseJsonMatchesJsonPath("$jsonPath.consumers");
+        $this->cantSeeResponseJsonMatchesJsonPath("$jsonPath.consumers");
+    }
+
+    public function assertConsumers($jsonPath = '$.data[*]', $code = 200)
+    {
+        $this->seeResponseCodeIs($code);
+        $this->seeResponseMatchesJsonType([
+            'client_id' => 'string',
+            'client_secret' => 'string',
+            'description' => 'string',
+            'scope' => 'array',
+            '_id' => 'string',
+        ], $jsonPath);
     }
 
     public function assertResponseDataFields(array $fields, $code = 200)
@@ -555,11 +575,6 @@ class ApiTester extends \Codeception\Actor
         return json_decode($this->grabResponse());
     }
 
-    public function loginAdmin()
-    {
-        $this->amHttpAuthenticated('admin', 'admin');
-    }
-
     public function loginConsumer($consumer)
     {
         $this->logout();
@@ -572,7 +587,8 @@ class ApiTester extends \Codeception\Actor
         $this->sendPOST('api/v1/projects/consumers',
             ['description' => $this->getFaker()->text('20'), 'scope' => ['read', 'check']]);
 
-        return json_decode($this->grabResponse())->data->consumers[0];
+        $this->sendGET('api/v1/projects/consumers');
+        return json_decode($this->grabResponse())->data[0];
     }
 
     public function getMongo()
@@ -584,22 +600,23 @@ class ApiTester extends \Codeception\Actor
         return $this->mongo;
     }
 
-    public function createProjectAndSetHeader()
+    public function createProjectAndSetHeader(array $data = [])
     {
-        $project = $this->createProject();
+        $project = $this->createProject(false, $data);
         $this->setHeader('X-Application', $project->_id);
 
         return $project;
     }
 
-    public function createProject($new = false)
+    public function createProject($new = false, array $data = [])
     {
         if (!$this->project || $new) {
             $faker = $this->getFaker();
-            $project = [
+            $project = array_merge([
+                'settings' => ['show_meta' => true],
                 'title' => $faker->streetName,
                 'description' => $faker->text('150'),
-            ];
+            ], $data);
             $this->sendPOST('api/v1/projects', $project);
             $project = json_decode($this->grabResponse());
             $this->assertProject('$.data', 201);
@@ -609,7 +626,7 @@ class ApiTester extends \Codeception\Actor
         return $this->project;
     }
 
-    public function createUser($new = false, $email = '')
+    public function createUser($new = false, $email = '', $verify = true)
     {
         $this->createAndLoginClient();
         if (!$this->user || $new) {
@@ -619,7 +636,7 @@ class ApiTester extends \Codeception\Actor
                 'first_name' => $faker->firstName,
                 'last_name' => $faker->lastName,
                 'email' => ($email) ? $email : $faker->email,
-                'password' => $faker->password() . '1a',
+                'password' => $this->getPassword(),
                 'username' => $faker->firstName,
             ];
 
@@ -628,9 +645,10 @@ class ApiTester extends \Codeception\Actor
             $response = json_decode($this->grabResponse());
             $user_info = $response->data;
 
-
-            $this->sendPOST('api/v1/users/verify/email', ['token' => $response->sandbox->token_email->token]);
-            $this->seeResponseCodeIs(200);
+            if ($verify) {
+                $this->sendPOST('api/v1/users/verify/email', ['token' => $response->sandbox->token_email->token]);
+                $this->seeResponseCodeIs(200);
+            }
 
             $this->sendPOST('api/v1/oauth/',
                 [
@@ -642,10 +660,16 @@ class ApiTester extends \Codeception\Actor
 
             $user_info->token = json_decode($this->grabResponse());
             $user_info->password = $user_data['password'];
+            $user_info->sandbox = $response->sandbox;
             $this->user = $user_info;
         }
 
         return $this->user;
+    }
+
+    public function getPassword()
+    {
+        return $this->getFaker()->password() . '1aA';
     }
 
     public function createAndLoginUser()

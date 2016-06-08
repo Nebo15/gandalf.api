@@ -5,7 +5,7 @@
 
 This is a Back-End project for our Open-Source Decision Engine for Big-Data. You can find front-end here: [Nebo15/gandalf.web](https://github.com/Nebo15/gandalf.web).
 
-API docs is [here](http://nebo15.github.io/qbill.docs/gandalf.html#validation-conditions).
+API docs is [here](http://docs.gandalf4.apiary.io/#).
 
 It's build on top of PHP Lumen framework and MongoDB.
 
@@ -172,4 +172,4 @@ And your server will be ready for production use!
 
 # Full Docs
 
-You can find a full GUI and API docs on [this](http://nebo15.github.io/qbill.docs/gandalf.html) page.
+You can find a full GUI and API docs on [this](http://docs.gandalf4.apiary.io/#) page.

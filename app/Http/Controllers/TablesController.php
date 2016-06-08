@@ -27,7 +27,7 @@ class TablesController extends AbstractController
         'readList' => [
             'title' => 'sometimes|min:1',
             'description' => 'sometimes|min:1',
-            'matching_type' => 'sometimes|in:first,all',
+            'matching_type' => 'sometimes|in:decision,scoring',
         ]
     ];
 
@@ -36,11 +36,11 @@ class TablesController extends AbstractController
         $rules = [
             'title' => 'sometimes|string',
             'description' => 'sometimes|string',
-            'matching_type' => 'required|in:first,all',
+            'matching_type' => 'required|in:decision,scoring',
             'fields' => 'required|array',
             'fields.*._id' => 'sometimes|mongoId',
             'fields.*.title' => 'required|string',
-            'fields.*.key' => 'required|string|not_in:webhook,variant_id',
+            'fields.*.key' => 'required|string|not_in:variant_id',
             'fields.*.type' => 'required|in:numeric,boolean,string',
             'fields.*.source' => 'required|in:request',
             'fields.*.preset' => 'present|array',
@@ -84,8 +84,12 @@ class TablesController extends AbstractController
         );
     }
 
-    public function analytics($id)
+    public function analytics($id, $variant_id)
     {
-        return $this->response->json($this->getRepository()->analyzeTableDecisions($id)->toArray());
+        $this->validateRoute();
+
+        return $this->response->json(
+            $this->getRepository()->analyzeTableDecisions($id, $variant_id)->toArray()
+        );
     }
 }

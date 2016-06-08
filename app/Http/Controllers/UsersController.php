@@ -17,11 +17,11 @@ class UsersController extends AbstractController
 
     protected $validationRules = [
         'create' => [
-            'username' => 'required|unique:users,username|min:2|max:32',
-            'first_name' => 'sometimes|required|string|min:2|max:32',
-            'last_name' => 'sometimes|required|string|min:2|max:32',
+            'username' => 'required|unique:users,username|between:2,32',
+            'first_name' => 'sometimes|required|string|between:2,32',
+            'last_name' => 'sometimes|required|string|between:2,32',
             'email' => 'required|unique:users,email|email',
-            'password' => 'required|password',
+            'password' => 'required|between:6,32|password',
         ],
         'update' => [
             'username' => 'sometimes|required|unique:users,username|min:2|max:32',
@@ -51,8 +51,10 @@ class UsersController extends AbstractController
             ->query();
         if (strpos($this->request->input('name', ''), '@') === false) {
             $model->where(['username' => new \MongoRegex('/^' . ($this->request->input('name', '.')) . '.*/\i')]);
+            $model->where(['username' => ['$ne' => $this->request->user()->username]]);
         } else {
             $model->where(['email' => new \MongoRegex('/^' . ($this->request->input('name', '.')) . '.*/\i')]);
+            $model->where(['email' => ['$ne' => $this->request->user()->email]]);
         }
 
         return $this->response->jsonPaginator(
@@ -177,12 +179,12 @@ class UsersController extends AbstractController
         return $this->response->json($this->request->user()->toArray());
     }
 
-    public function invite()
+    public function invite(Application $application)
     {
         $current_user = $this->request->user()->getApplicationUser();
         $this->validationRules['invite']['scope'] = 'required|array|in:' . join(',', $current_user->scope);
         $this->validateRoute();
-        $project = app()->offsetGet('applicationable.application')->toArray();
+        $project = $application->toArray();
         $fill = $this->request->all();
         $fill['project'] = [
             '_id' => $project['_id'],

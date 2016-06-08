@@ -47,8 +47,8 @@ class TableValidator
     public function ruleThanType($attribute, $value, $parameters, Validator $validator)
     {
         $type = 'alpha_dash';
-        $rule_matching = array_get($validator->getData(), 'matching_type', 'first');
-        if ($rule_matching == 'all') {
+        $rule_matching = array_get($validator->getData(), 'matching_type', 'decision');
+        if ($rule_matching == 'scoring') {
             $type = 'numeric';
         }
         $validator = \Validator::make(

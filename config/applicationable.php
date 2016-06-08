@@ -8,6 +8,7 @@ return [
         'current_application' => '/projects/current',
         'consumers' => '/projects/consumers',
         'users' => '/projects/users',
+        'set_admin' => '/projects/users/admin',
     ],
     'scopes' => [
         'users' => [
@@ -16,6 +17,7 @@ return [
             'update',
             'delete',
             'check',
+            'get_consumers',
             'create_consumers',
             'update_consumers',
             'update_users',
@@ -43,6 +45,7 @@ return [
             '~^\/api\/v1\/admin\/changelog\/(.+)$~' => ['read'],
             '~^\/api\/v1\/admin\/changelog\/(.+)\/(.+)$~' => ['read'],
             '~^\/api\/v1\/admin\/changelog\/(.+)\/(.+)\/diff$~' => ['read'],
+            '~^\/api\/v1\/projects\/consumers~' => ['read', 'get_consumers'],
             '~^\/api\/v1\/projects\/current$~' => ['read'],
             '~^\/api\/v1\/projects\/users$~' => ['read'],
         ],
@@ -66,10 +69,11 @@ return [
         ],
         'delete' => [
             '~^\/api\/v1\/admin\/groups\/(.+)$~' => ['read', 'delete'],
+            '~^\/api\/v1\/projects\/users$~' => ['read', 'update', 'delete_users'],
+            '~^\/api\/v1\/projects\/consumers~' => ['read', 'update', 'delete_consumers'],
             '~^\/api\/v1\/projects\/(.+)$~' => ['read', 'delete_project'],
             '~^\/api\/v1\/admin\/tables\/(.+)$~' => ['read', 'delete'],
-            '~^\/api\/v1\/projects\/consumers~' => ['read', 'update', 'delete_consumers'],
-            '~^\/api\/v1\/projects\/users$~' => ['read', 'update', 'delete_users'],
+
         ],
     ],
 ];

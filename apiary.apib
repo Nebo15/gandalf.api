@@ -1,0 +1,864 @@
+FORMAT: 1A
+
+# Gandalf Decision Engine
+
+Gandalf is a Open-Source Decision Engine for Big-Data.
+
+Source code is available in our [GitHub Account](https://github.com/Nebo15/gandalf.api/). It's split in two separate parts:
+
+- [PHP, Laravel, MongoDB Back-End](https://github.com/Nebo15/gandalf.api/)
+- [Angular.js GUI](https://github.com/Nebo15/gandalf.web/)
+
+### Features
+
+- Customizable - have the freedom to design a decision rules you need and to manage data structure on the fly in a easy to understand way.
+- Split testing (aka. Champion Winner) - each table can have infinite number of different variants, you can allocate traffic between them and leave only best one later.
+- Decision History - all decisions are saved with all metadata: request parameters, decision table at request moment of time and decision itself.
+- Decision Analytics - you can review all decisions made by your tables and to analyze what rules is triggered more often.
+- Revisions History - rollback any changes that was made by you or your collaborators.
+- Tooling - debug your decision tables directly from Gandalf GUI.
+- SASS-based Role Model and oAuth 2.0 - you can create projects and share access among users to them.
+- Production-tested - several large NDA-closed PSP's and online lending platforms already use Gandalf.
+
+# Use Cases
+
+## Decision Table and Rules Engine
+
+There are many cases when you need to make decision based on input data. One good example is a decision to approve or decline lending application. You can setup a set of cut-off risk rules to decline applications for a high-risk applicants or to use a decision table to specify which categories of users will receive a loan on automatic basis.
+
+## Scoring Table
+
+Instead of rule decision you can set a score point that will be added to a final result.
+In a result you will get a total of all scores and you can make further decision based on this value.
+
+## State Transition Rules for BPM
+
+Sometimes you need to have very complex rules in your BPM-engine, that should tell you to which branch your task should be transitioned to. Use Gandalf to manage all those rules.
+
+# Support
+
+This project is continuously supported on behalf of our customers and as part of our own [SaaS-service](https://gandalf.nebo15.com/). We recommend to use it, you can create your own installation of Gandalf.
+
+Feel free to submit tickets in our GitHub repos, we will respond shortly. And if you want some custom conditions, e.g. 99.9% SLA - [contact us](mailto:support@nebo15.com).
+
+# How does it work?
+
+You simply create a decision or scoring table, define some rules and query this table via API.
+
+It makes Gandalf suitable for anti-fraud, loan scoring, transaction scoring, risk management, and as part any other decision making processes.
+
+# Tables
+
+Decision table is the main entity in Gandalf. It consists of columns that describe API request structure, rows that represent decision-making logic, and cells which describe a single validation rule.
+
+### Decision Table
+
+Decision table will apply all rules one by one, until one rule is passed and return value in Decision column for this rule.
+
+### Scoring Table
+
+Scoring table will sum all values in Scoring column and return their total.
+
+## Columns (Fields)
+
+Column represent specific request parameter. You can add additional parameters on a fly by adding a column. After saving table with new column all future API request should provide data for it. (Or at least ```null```, if you want to sometimes omit some request parts.)
+
+<aside class="notice">
+All request parameters are required!
+</aside>
+
+However, API consumer can provide more data and you don't need to specify column for each of request fields, in this case we will skip unused ones. Best practice is to feed table with any data you have, so you can use it when you need without changing back-end.
+
+Column can have following settings:
+
+- ```Title``` - human-readable string that describes field in interface.
+- ```Field API Key``` - field name from witch data will be taken. For example, if you add a field with key ```name``` than all API consumers should provide JSON with this field: ```{"name": "Some User Name"}```.
+- ```Type``` - type of data that will be submitted in this field. ```String```, ```Numeric``` or ```Boolean```.
+
+### Presets
+
+You can modify field value for table rows by adding field preset. For example, you have field called salary and it's too routine to add a "salaries greater than 1000" condition in each row, instead you can create preset that turns ```Numeric``` salary into ```Boolean``` type and simply turn on this validation in each rule.
+
+It should look something like this:
+
+- ```Title``` = ```Sufficient Salary```;
+- ```Field API Key``` = ```salary```;
+- ```Type``` = ```Numeric```;
+- ```Preset Condition``` = ```greater than```;
+- ```Preset Value``` = ```1000```.
+
+By checking checkbox below ```Low Salary```  column in a row, you will make sure that this row won't pass check untill ```salary``` is greater than ```1000```.
+
+## Rows (Rules)
+
+Row represents a single rule in decision table. All rows are checked in order it was defined. (You can reorder it by drag'n'drop.) Basically, you can think about relation between rows as ```OR``` logical operators (or as ```else if```'s).
+
+Row will return value selected in "Decision" column only if all validation rules in it have passed. Rules are checked in a same order as you see them in a table. You can reorder them by drug'n'drop.
+
+If no one of defined rows passed all conditions, then we will return ```final_decision``` that equals a value specified in "Default Decision" dropdown.
+
+> ```
+IF rule1 then return rule1.decision
+ELSEIF rule2 then return rule2.decision
+ELSEIF rule3 then return rule3.decision
+ELSEIF ruleN then return ruleN.decision
+ELSE default return default.decision
+```
+
+## Cells (Conditions)
+
+All cells in a row represent validations in an ```AND``` logical operator style (or you can thing about them as a bunch of conditions joined with ```&&``` inside ```if``` statement).
+
+Sometimes you have a big table and in some rows you prefer to skip some validations. For this case you can select special validation rule called ```is set```. Logically it means that ```{field_name} is set``` and this condition will always pass validation.
+
+> ```
+IF rule1(cellCondition1 && cellCondition2 && cellConditionN) then return rule1.decision
+ELSEIF ruleN(cellCondition1 && cellCondition2 && cellConditionN) then return ruleN.decision
+ELSE default return default.decision
+```
+
+### Available Conditions
+
+Available rules can differ based on a column type. Generally you should consider all rules logic as follows:
+```{request_field_vale} {condition} {condition_value}```. For some conditions you can omit their value.
+
+String fields support following conditions:
+
+- ```=``` - validation will pass if field value equals specified value.
+- ```!=``` - validation will pass if field value does not equal specified value.
+- ```in``` - validation will pass if field value eqals to one of listed values. Separate values by comma with space. If searched string have comma you can surround value by single qoute. For example: ```d,e``` in ```a, b, c, 'd,e'``` will return true.
+- ```not in``` - validation will pass if field value does not eqal to any of listed values.
+- ```contains``` - validation will pass if field value is contains specified value.
+- ```is set``` - validation will always pass. (Use it to skip some columns.)
+- ```is null``` - validation will pass if field value equals ```null```. (Use it check if some column is skipped.)
+
+Numeric supports:
+
+- ```=``` - validation will pass if field value equals specified value.
+- ```>``` - validation will pass if field value is greater than specified value.
+- ```>=``` - validation will pass if field value is greater or equal to a specified value.
+- ```<``` - validation will pass if field value is less than specified value.
+- ```<=``` - validation will pass if field value is less or equal to a specified value.
+- ```!=``` - validation will pass if field value does not equal specified value.
+- ```in``` - validation will pass if field value eqals to one of listed values. Separate values by comma with space. If searched string have comma you can surround value by single qoute. For example: ```d,e``` in ```a, b, c, 'd,e'``` will return true.
+- ```not in``` - validation will pass if field value does not eqal to any of listed values.
+- ```is set``` - validation will always pass. (Use it to skip some columns.)
+- ```is null``` - validation will pass if field value equals ```null```. (Use it check if some column is skipped.)
+
+Boolean supports:
+
+- ```true``` - will pass if field value is ```true```, ```1```, ```"1"``` or ```'1'```.
+- ```false``` - will pass if field value is ```false```, ```0```, ```"0"``` or ```'0'```.
+- ```is set``` - validation will always pass. (Use it to skip some columns.)
+- ```is null``` - validation will pass if field value equals ```null```. (Use it check if some column is skipped.)
+
+## Revisions
+
+All changes that is made to a table is saved in Revisions history. You can see who changed what, and rollback to any previous state of the table.
+
+Rollback will create a new Revision, so it can be canceled.
+
+## Split Testing
+
+Each table can have multiple variants. By adding a Variant you will start a Split Test for a table.
+
+All variants share same fields and this request structure, but can have different set of rules. It allows to test your hypothesis on how to make decision better, to measure improvement in third-party tool and to continuously improve your decision flow.
+
+You can manage traffic allocation for all variants, for example sending only 5% of requests to variant B.
+
+## Decision Analytics
+
+Each time Decision Table is called we will calculate how many times single condition was true, and how many times each rule returned it's decision. It allows you to see what rules work in real life, and to find ways to optimize your table.
+
+# Decision History
+
+All successful API request will lead to creating a Decision. You can find all Decisions in "Hisotry" tab.
+
+Decision shows all request parameters, decision engine response and decision table that was applied when request was made. It means that whenever you change your decision table, it won't affect history and you still will be able to understand decision flow for each moment of time.
+
+You can retry request on a latest table version by clicking "Debug" in request well.
+
+
+# Installation Guide
+
+## Back-End
+
+You can use [Vagrant](https://www.vagrantup.com/) to intialize a development environment. Simply install it, ```cd``` into your project directory and run:
+
+```
+vagrant up
+```
+
+Also you can notice that we use [Puppet](https://puppetlabs.com/puppet/puppet-open-source) as our configuration tool. Scripts located in [/puppet](https://github.com/Nebo15/gandalf.api/tree/master/puppet) directory of this repo. You can deploy code to your server and simply run:
+
+```
+set -o nounset -o errexit -o pipefail -o errtrace
+trap 'error "${BASH_SOURCE}" "${LINENO}"' ERR
+echo 127.0.0.1 gandalf.yourdomain.com | sudo tee -a /etc/hosts
+sudo /bin/bash puppet/initial/init.sh -u "www-data"
+```
+
+And your server will be ready for production use!
+
+## Front-End
+
+Todo.
+
+# Story behind Gandalf
+
+We - are production oriented team, and we work for a fintech company. Almost all project that we created need a decision engine that reduces business risks. And all solutions we can find is ether old and ugly, or very expensive. So we decided to create free open-source alternative, that will be scalable, reliable and flexible enough to cover 95% of cases.
+
+To make is suitable for Big Data we decided to build it on top of use very reliable open-source database MongoDB, that have good sharding capabilities and easy to maintain.
+
+Also we believe that vendor-lock is a bad thing, so we published all source code on a MIT license, so you are free to change it as you wish.
+
+Done by [Nebo #15](http://nebo15.com/).
+
+# Group User
+
+## Users [/api/v1/admin/users]
+
+### List All Users [GET]
+          
++ Parameters
+    + name: John (string) - Parameter searching users by usernames or emails. If name == jo, in the response users will be with usernames which starts on jo, Jo, JO. Searching by email enabled just when parameter has @
+    + size: 10 (number) - Amount of items on page
+    + page: 1 (number)
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (array[UserList])
+
+### Create User [POST]
+
++ Parameters
+    + email: email@example.com (string, required)
+    + password: p@ssword! (string, required) - Length 6-32, necessarily one letter and one number
+    + first_name: John (string)
+    + last_name: Smith (string)
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (User)
+        
+## Current User [/api/v1/users/current]
+
+
+### Info about current user [GET]
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (User)
+
+### Update user [PUT]
+
++ Parameters
+    + email: email@example.com (string, required)
+    + password: p@ssword! (string, required) - Length 6-32, necessarily one letter and one number
+    + first_name: John (string)
+    + last_name: Smith (string)
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (User)    
+
+## Verify Email [/users/verify/email]
+
+### Verify Email [POST]
+
++ Parameters
+    + token: $2y$10$.lp0OGb.nJSt... (string, required) - Token for verification email
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (User)   
+
+## Reset password [/api/v1/users/password/reset]
+
+### Get reset password url with token [POST]
+
+Send reset password url with token to User.email
+
++ Parameters
+    + email: email@example.com (string, required)
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+
+### Change user password by token [PUT]
+
++ Parameters
+    + token: $2y$10$.lp0OGb.nJSt... (string, required) - Token for password reset
+    + password: newP@s$w0rd (string, required) - New user password
+    
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (User)    
+
+## Invite User [/api/v1/invite]
+
+### Create invitation for user to the project [POST]
+
++ Parameters
+    + email: invite@wxample.com (string, required) - Email for invitation
+    + role: manager (string, required) Role of user in project
+    + scope: read, write (array, required) - Array of user scopes
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (UserInvitation)
+        
+## Get User Access Token [/api/v1/oauth]
+
+Get user access token, grant_type password scenario
+**Every request should be with Access Token**
+**-H 'Authorization: token_type access_token_here'**
+
+### Get User Access Token [POST]
+
++ Parameters
+    + `grant_type`: password, refresh_token (enum[string], required) - Grant Type
+    + username: John (string) - Username or user email, required if grant_type == password
+    + password: p@s$w0rd (string) - User password, required if grant_type == password
+    + `refresh_token`: %4y$10$;lp8OGb.nAct... (string) - Refresh token, required if grant_type == refresh_token
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (AccessToken)  
+
+
+# Group Projects
+
+## Projects [/api/v1/projects]
+### List All Projects [GET]
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (array[Project])  
+        
+### Create Project [POST]
+
+Can create project and in the feature link tables to it.
+When you created project, your feature requests should be with Header
+**-H 'X-Application: project_id'**
+
++ Parameters
+    + title: New project (string, required)
+    + description: Some cool description (string)
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (Project)  
+        
+### Update Project [PUT]
+
++ Parameters
+    + title: New project (string, required)
+    + description: Some cool description (string)
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (Project)  
+
+### Delete Project [DELETE]
+
+***WARNING!!!*** This method will delete all Tables and Groups which connected to the project
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+
+
+## Get Current Project [/api/v1/projects/current]
+### Get info about current project [GET]
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (Project)
+
+## Project Consumers [/api/v1/projects/consumers]
+
+### Create consumer [POST]
+
+Every into existing project user can create consumer with own scopes. 
+For login as consumer you should make Basic Auth client_id:client_secret
+
++ Parameters
+    + description: Bot (string, required) - Description of consumer
+    + scope: read,check (array, required) - Scopes of consumer
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (Project)
+
+### Update consumer [PUT]
+
++ Parameters
+    + `client_id`: clientId (string, required) - Client_id from consumer info
+    + description: Bot (string, required) - Description of consumer
+    + scope: read,check (array, required) - Scopes of consumer
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (Project)
+
+### Delete consumer [DELETE]
+
+Remove consumer from the project by client_id
+
++ Parameters
+    + `client_id`: clientId (string, required) - Client_id from consumer info
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (Project)    
+
+
+## Project Users [/api/v1/projects/users]
+
+### Add User To Project [POST]
+Adding existing user to the current project. Share project with other users with different scopes
+
++ Parameters
+    + user_id: 56c31536a60ad644060041af (string, required) - ID of existing User
+    + role: manager (string, required) Role of user in project
+    + scope: read, write (array, required) - Array of user scopes
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (Project) 
+
+### Get Info About Current User [GET]
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (ProjectUser) 
+
+### Update Project User [PUT]
+
++ Parameters
+    + user_id: 56c31536a60ad644060041af (string, required) - ID of existing User
+    + role: manager (string, required) Role of user in project
+    + scope: read, write (array, required) - Array of user scopes
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (Project) 
+
+### Delete User From Project  [DELETE]
++ Parameters
+    + user_id: 56c31536a60ad644060041af (string, required) - ID of existing User
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (Project)
+
+# Group Table
+
+Resources related to questions in the API.
+
+Warning! If you don't pass _id, new MongoID will be generated, EVEN for existing document! 
+
+## Tables [/api/v1/admin/tables]
+
+### Create Table [POST]
+
+Available rules conditions are: 
+* `$is_set` - field key exists in request and its value can be any
+* `$is_null` - **(null)** value must be NULL
+* `$eq` - **(string, numeric, boolean)** value must be EQUAL to the condition value
+* `$ne` - **(string, numeric, boolean)** value must be NOT EQUAL to the condition value
+* `$gt` - **(numeric)** value must be GREATER THAN condition value
+* `$gte` - **(numeric)** value must be GREATER THAN OR EQUAL to condition value
+* `$lt` - **(numeric)** value must be LESS THAN to condition value
+* `$lte` - **(numeric)** value must be LESS THAN OR EQUAL to condition value
+* `$between` - **(numeric)** value must be in range of condition value. Condition value must be separated by semicolon: *12,3;30* 
+* `$in` - **(string, numeric)** value must be one of the following in condition value. Condition value must be separated by comma: *10.8,'hello world'*
+* `$nin` - **(string, numeric)** value must NOT be one of the following in condition value. Condition value must be separated by comma: *10.8,'hello world'*
+
++ Request (application/json)
+    + Attributes (Table)
+
++ Response 201 (application/json)
+    + Attributes (object)
+        + meta 
+            + code: 201 (number) - HTTP response code
+        + data (Table)
+
+### List All Tables [GET]
+
++ Parameters
+    + title: Gandalf (string) - Filter by Table.title
+    + description: Description (string) - Filter by table description
+    + `matching_type`: scoring (string) - Filter by Table.matching_type
+    + size: 10 (number) - Amount of items on page
+    + page: 1 (number)
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (array[TableList])
+
+## Table by ID [/api/v1/admin/tables/{id}]        
+
+### Get [GET]
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (Table)
+
+### Update [PUT]
++ Request (application/json)
+    + Attributes (Table)
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta 
+            + code: 200 (number) - HTTP response code
+        + data (Table)
+
+### Delete [DELETE]
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta 
+            + code: 200 (number) - HTTP response code
+
+## Table Copy [/api/v1/admin/tables/{id}/copy]
+
+Create new Table from existing Table by id
+
+### Copy [POST]
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta 
+            + code: 200 (number) - HTTP response code
+        + data (Table)    
+
+
+## Table Analytics [/api/v1/admin/tables/{id}/{variant_id}/analytics]
+Get Table analytics by all made Decisions
+
+### Get [GET]
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta 
+            + code: 200 (number) - HTTP response code
+        + data (TableWithAnalytics)
+
+
+# Group Decision
+
+## Decisions All List [/admin/decisions]
+
+### Decisions All List [GET]
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta 
+            + code: 200 (number) - HTTP response code
+        + data (array[Decision])
+
+
+## Decisions By ID [/admin/decisions/{id}]
+
+### Get Decision[GET]
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta 
+            + code: 200 (number) - HTTP response code
+        + data (Decision)        
+        
+
+## Decisions Make [/tables/{id}/decisions]
+
+### Make [POST]
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta 
+            + code: 200 (number) - HTTP response code
+        + data (DecisionConsumer)        
+
+
+# Group Changelog
+
+## Changelog Tables List [/admin/changelog/tables]
+
+### Changelog Tables List [GET]
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta 
+            + code: 200 (number) - HTTP response code
+        + data (array[Changelog])
+
+
+## Changelog By Table [/admin/changelog/tables/{id}]
+
+Get Changelog by specific Table
+
+### Changelog By Table [GET]
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta 
+            + code: 200 (number) - HTTP response code
+        + data (array[Changelog])
+
+
+## Changelog Tables Diff [/admin/changelog/table/{id}/diff]
+
+View changes between two Tables.
+
+### Changelog Tables Diff [GET]
+
++ Parameters
+    + compare_with: 56c31536a60ad644060041af (string, required) - `Changelog ID. View changes relative from current (if not passed *original* parameter) Table state to passed Table state`
+    + original: 46a31536a60ad644060231aa (string) - Changelog ID. Set Table state, that will be compared with *compare_with* Table state
+
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta 
+            + code: 200 (number) - HTTP response code
+        + data 
+            + original 
+                (ChangelogTablesDiff)
+            + compare_with 
+                (arrayChangelogTablesDiff)
+
+
+## Changelog Table Rollback [/admin/changelog/tables/{table_id}/rollback/{changelog_id}]
+
+Rollback Table to some state that described in passed Changelog
+
+## Changelog Table Rollback [POST]
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta 
+            + code: 200 (number) - HTTP response code
+        + data 
+            + reverted
+                (Table)
+
+
+
+## Data Structures
+
+### TableList
++ _id: 56c31536a60ad644060041af (string) - MongoID
++ matching_type: decision,scoring (enum[string], required) - Matching type for Table
++ title: Table title (string) - Table title
++ description: Table title (string) - Table description
+
+### Table (TableList)
++ fields (array[Field])
++ variants (array[Variant])
+
+### Field
++ _id: 56c31536a60ad644060041af (string) - MongoID
++ key: salary (string, required) - API Field key for request
++ title: Field title (string, required) - Field title
++ type: numeric,boolean,string (enum[string], required) - Available field data types
++ preset (object) - Preset object. You can modify field value for table rows by adding field preset
+    + condition: $is_set,$is_null,$eq,$ne,$gt,$gte,$lt,$lte,$between,$in,$nin (enum[string], required)
+    + value: 1000 (string, required) - Value type can be different depends on condition
+
+### Variant
++ _id: 56c31536a60ad644060041af (string) - MongoID
++ default_decision: Decline (string, required)
++ title: Variant title (string) - Variant title
++ description: Variant description (string) - Variant description
++ default_title: No one Rule matched (string) - When Table processing does not match any rule, this field will be set by default to Decision.title
++ default_description: No one Rule matched (string) - When Table processing does not match any rule, this field will be set by default to Decision.description
++ rules (array[Rule], required)
+
+### Rule
++ _id: 56c31536a60ad644060041af (string) - MongoID
++ than: Approve (string, required)
++ title: Rule title (string, required)
++ description: Rule description (string, required)
++ conditions (array[Condition], required)
+
+### Condition
++ _id: 56c31536a60ad644060041af (string) - MongoID
++ field_key: salary (string, required)
++ condition: $is_set,$is_null,$eq,$ne,$gt,$gte,$lt,$lte,$between,$in,$nin (enum[string], required)
++ value: unemployed | 1000 | true (string, required)
+
+### TableWithAnalytics (Table)
++ variants (array[VariantWithAnalytics])
+
+### VariantWithAnalytics (Variant)
++ rules (array[RuleWithAnalytics], required)
+
+### RuleWithAnalytics (Rule)
++ conditions (array[ConditionWithAnalytics], required)
+
+### ConditionWithAnalytics (Condition)
++ probability: 0.67 (number) - Probability value between 0-1, where 1 is 100% matched result
++ requests: 217 (number) - Requests amount for current condition.
+
+### Decision
++ _id: 56c31536a60ad644060041af (string) - MongoID
++ title: Decision title (string) - Decision title
++ description: Decision description (string) - Decision description
++ final_decision: Approve (string) - Depends of the Table.matching_type could be as highest row in a table with all validations passed or sum of scoring points",
++ request
+    + salary: 1000 (string) - All passed parameters from request
++ table
+    + _id: 56c31536a60ad644060041af (string) - MongoID
+    + matching_type: decision,scoring (enum[string], required) - Matching type for Table
+    + title: Table title (string) - Table title
+    + description: Table title (string) - Table description
+    + applications
+    + variant
+        + _id: 56c31536a60ad644060041af (string) - MongoID
+        + title: Variant title (string) - Variant title
+        + description: Variant description (string) - Variant description
++ fields (array[Field])
++ rules (array[DecisionRule])
++ created_at: 2016-02-16 14:15:30 (string)
++ updated_at: 2016-02-16 14:15:30 (string)
+        
+### DecisionRule (Rule)
++ decision: Approve (string) - Matched Rule decision or Variant.default_decision 
++ conditions (array[Condition], required)
+
+### DecisionCondition (Condition)
++ matched: true (boolean) - Is current condition matched
+
+### DecisionConsumer (Decision)
++ _id: 56c31536a60ad644060041af (string) - MongoID
++ title: Decision title (string) - Decision title
++ description: Decision description (string) - Decision description
++ final_decision: Approve (string) - Depends of the Table.matching_type could be as highest row in a table with all validations passed or sum of scoring points",
++ request
+    + salary: 1000 (string) - All passed parameters from request
++ table
+    + _id: 56c31536a60ad644060041af (string) - MongoID
+    + matching_type: decision,scoring (enum[string], required) - Matching type for Table
+    + title: Table title (string) - Table title
+    + description: Table title (string) - Table description
+    + applications
+    + variant
+        + _id: 56c31536a60ad644060041af (string) - MongoID
+        + title: Variant title (string) - Variant title
+        + description: Variant description (string) - Variant description
++ rules
+    + title: Rule title (string, required)
+    + description: Rule description (string, required)
+    + decision: Approve (string) - Matched Rule decision or Variant.default_decision 
++ created_at: 2016-02-16 14:15:30 (string)
++ updated_at: 2016-02-16 14:15:30 (string)
+
+
+### Changelog
++ _id: 56c31536a60ad644060041af (string) - MongoID
++ author: Admin (string) - Who made changes
++ model
+    + _id: 56c31536a60ad644060041af (string) - MongoID
+    + table: table (string) - Model table name
++ created_at: 2016-02-16 14:15:30 (string)
++ updated_at: 2016-02-16 14:15:30 (string)
+
+### ChangelogTablesDiff (Changelog)
++ model
+    + _id: 56c31536a60ad644060041af (string) - MongoID
+    + table: table (string) - Model table name
+    + attributes (Table)
+
+### Project
++ _id: 56c31536a60ad644060041af (string) - MongoID
++ title: Gandalf (string) - Project title
++ users (array[ProjectUser])
++ consumers (array[Consumer])
+
+### ProjectUser
++ _id: 56c31536a60ad644060041af (string) - MongoID
++ user_id: 56c31536a60ad644060041af (string) - Unique identifier of a User, MongoID
++ role: manager (string) Role of user in project
++ scope: read, write, ... (array) - Array of user scopes
++ username: Freddy (string)
++ email: email@example.com (string) - User email
+
+### Consumer
++ _id: 56c31536a60ad644060041af (string) - MongoID
++ client_id: fe5fe8d15bb7a6a0daef36d2843c547c6d594b0c (string) - Client ID
++ client_secret: a7c70da3246a436bde66101d65741f9adf570726 (string) - Client secret
++ description: Description of project (string) - Optional description of client
++ scope: read, write, ... (array) - Array of user scopes
+
+
+### UserList
++ _id: 56c31536a60ad644060041af (string) - MongoID
++ username: Freddy (string)
+
+### User (UserList)
++ description: Some description (string) - Description of the matched rule or Table.default_description
++ email: email@example.com (string) - User email
++ created_at: 2016-02-16 14:15:30 (string)
++ updated_at: 2016-02-16 14:15:30 (string)
++ access_tokens (array[AccessToken])
++ refresh_tokens (array[RefreshToken])
+        
+### UserInvitation
++ role: manager (string) Role of user in project
++ project
+    + _id: 56c31536a60ad644060041af (string) - MongoID
+    + title First project (string) - Project title
++ scope: read, write (array) - Array of user scopes
++ email: email@example.com (string) - User email
++ created_at: 2016-02-16 14:15:30 (string)
++ updated_at: 2016-02-16 14:15:30 (string)
+
+### AccessToken
++ access_token: 2fc5a4e7a91771ca312c79e0ad2cc4c49d3b065d (string) - Unique access token for current user
++ expires_in: 360 (number) - Token lifetime, seconds
++ token_type: Bearer (string) - Type of access token
++ refresh_token: 8bcc30bf6ce74ddaf0ec5eff5a51141c7ba65ef9 (string) - Unique refresh token linked to some access token for current user 
+
+### RefreshToken
++ _id: 56c31536a60ad644060041af (string) - MongoID
++ refresh_token: 8bcc30bf6ce74ddaf0ec5eff5a51141c7ba65ef9 (string) - Unique refresh token linked to some access token for current user 
++ client_id: SomeId (string) - Client id for refresh token
+
+### Paging
++ size: 15 (number) - items per page
++ total: 40 (number) - amount of all items
++ current_page: 1 (number)
++ last_page: 3 (number)
