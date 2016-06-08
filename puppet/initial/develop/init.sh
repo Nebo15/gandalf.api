@@ -52,10 +52,10 @@ if [ ! -e ${modules_dir}/accounts ]; then
     sudo puppet module install --force puppetlabs-accounts --target-dir ${modules_dir}
 fi;
 
-sudo puppet apply --modulepath ${modules_dir} ${modules_dir}/../manifests/init.pp
+sudo puppet apply --modulepath ${modules_dir} ${modules_dir}/../manifests/develop/init.pp
 
 if [ ! -e ${modules_dir}/nginx ]; then
     sudo puppet module install --force jfryman-nginx --target-dir ${modules_dir}
 fi;
 
-sudo puppet apply --modulepath ${modules_dir} ${modules_dir}/../manifests/general.pp
+sudo puppet apply --modulepath ${modules_dir} ${modules_dir}/../manifests/develop/general.pp
