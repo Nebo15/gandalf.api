@@ -28,7 +28,7 @@ node default {
     path    => "/etc/nginx/sites-enabled/gandalf.api.conf",
     content => "
     server {
-    listen 81;
+    listen 80;
     error_log /var/log/nginx.log;
     server_name gandalf.dev;
     add_header 'Access-Control-Allow-Origin' *;
