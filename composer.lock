@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "953ed53acfa2cfff30d5a3f9cb8d90dd",
-    "content-hash": "1fa8d37d73bb8d10b3c7cefa5884bd04",
+    "hash": "fd432a26a99f3221c40217a12d2443dc",
+    "content-hash": "3bc9996fac2fffd0e60f5b0bd6259d7d",
     "packages": [
         {
             "name": "bshaffer/oauth2-server-php",
@@ -388,48 +388,6 @@
                 "uri"
             ],
             "time": "2016-04-13 19:56:01"
-        },
-        {
-            "name": "hipchat/hipchat-php",
-            "version": "v1.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hipchat/hipchat-php.git",
-                "reference": "5936c0a48d2d514d94bfc1d774b04c42cd3bc39e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hipchat/hipchat-php/zipball/5936c0a48d2d514d94bfc1d774b04c42cd3bc39e",
-                "reference": "5936c0a48d2d514d94bfc1d774b04c42cd3bc39e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "HipChat": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "HipChat",
-                    "email": "support@hipchat.com",
-                    "homepage": "https://www.hipchat.com",
-                    "role": "Company"
-                }
-            ],
-            "description": "PHP library for HipChat",
-            "homepage": "http://github.com/hipchat/hipchat-php",
-            "keywords": [
-                "hipchat"
-            ],
-            "time": "2015-04-28 22:48:40"
         },
         {
             "name": "illuminate/auth",
@@ -1754,49 +1712,6 @@
                 "schedule"
             ],
             "time": "2016-01-26 21:23:30"
-        },
-        {
-            "name": "nebo15/drunken-russian",
-            "version": "1.0.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Nebo15/drunken-russian.git",
-                "reference": "9a49b74bf00adab73c0a67fd4fea50053ca6091d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/drunken-russian/zipball/9a49b74bf00adab73c0a67fd4fea50053ca6091d",
-                "reference": "9a49b74bf00adab73c0a67fd4fea50053ca6091d",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "~6.0",
-                "hipchat/hipchat-php": "1.*",
-                "monolog/monolog": "1.*",
-                "php": ">=5.5.0"
-            },
-            "bin": [
-                "bin/drunken"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Drunken\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Tasks (queue) manager for PHP and MongoDB. 100% alcohol free.",
-            "keywords": [
-                "Tasks",
-                "manager",
-                "mongodb",
-                "php",
-                "queue"
-            ],
-            "time": "2016-04-04 11:04:15"
         },
         {
             "name": "nebo15/eloquent.changelog",

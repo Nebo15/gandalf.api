@@ -38,11 +38,13 @@ class ProjectsController extends AbstractController
     public function import(DbTransfer $dbTransfer, Application $application)
     {
         $this->validateRoute();
-        $file = $this->request->file('file');
+
+        $fileName = "dump-" . date('Y-m-d_H:i:s') . ".tar.gz";
         $prefixTmpFile = sys_get_temp_dir() . strval(new \MongoId);
-        $fileName =  "dump-" . date('Y-m-d_H:i:s') . ".tar.gz";
-        $file->move($prefixTmpFile, $fileName);
-        $dbTransfer->import($application->_id, $prefixTmpFile, $fileName);
+
+        $this->request->file('file')->move($prefixTmpFile, $fileName);
+        $dbTransfer->prepareImport('test', $prefixTmpFile, $fileName);
+//        $dbTransfer->prepareImport($this->request->user(), $application->_id, $prefixTmpFile, $fileName);
 
         return $this->response->json([], 202);
     }

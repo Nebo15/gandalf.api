@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
  * Class TablesRepository
  * @package App\Repositories
  * @method \App\Models\Table read($id)
+ * @method \App\Models\Table getModel()
  * @method \App\Models\Table[] findByIds(array $ids)
  */
 class TablesRepository extends AbstractRepository

@@ -7,26 +7,34 @@
 
 namespace App\Services;
 
-use Drunken\Task;
-use Drunken\Manager as DrunkenManager;
+use Log;
+use App\Models\User;
+use App\Models\Table;
+use Illuminate\Validation\Validator;
 
 class DbTransfer
 {
-    private $drunken;
+    private $user;
+    private $appId;
+    private $dirPath;
+    private $fileName;
+    private $errors = [];
 
-    public function __construct(DrunkenManager $drunken)
+    private $table;
+
+    public function __construct(Table $table)
     {
-        $this->drunken = $drunken;
+        $this->table = $table;
     }
 
     public function export($appId)
     {
+        # ToDo; check that collections not empty
         $prefixTmpFile = sys_get_temp_dir() . strval(new \MongoId) . '/';
         $collections = [
             'tables' => "'{applications: \"{$appId}\"}'",
             'decisions' => "'{applications: \"{$appId}\"}'",
             'changelogs' => "'{\"model.attributes.applications\": \"{$appId}\"}'",
-            'applications' => "'{_id: \"{$appId}\"}'",
         ];
         foreach ($collections as $collection => $query) {
             exec(sprintf(
@@ -43,20 +51,119 @@ class DbTransfer
         $archiveName = $prefixTmpFile . "dump-" . date('Y-m-d_H:i:s') . ".tar.gz";
         exec(sprintf("cd %s && tar -cvzf %s *.json", $prefixTmpFile, $archiveName));
 
-        return response()->download($archiveName);
+        return $archiveName;
     }
 
-    public function import($appId, $dirPath, $fileName)
+//    public function prepareImport(User $user, $appId, $dirPath, $fileName)
+    public function prepareImport($appId, $dirPath, $fileName)
     {
-        return $this->drunken->addTask(
-            new Task('ProjectImport', [
-                'db_host' => env('DB_HOST'),
-                'db_port' => env('DB_PORT'),
-                'db_name' => env('DB_DATABASE'),
-                'dir' => $dirPath,
-                'file' => $fileName,
-                'appId' => $appId,
-            ])
-        );
+//        $this->user = $user;
+        $this->appId = $appId;
+        $this->dirPath = $dirPath;
+        $this->fileName = $fileName;
+    }
+
+    public function import()
+    {
+        if ($this->appId and $this->dirPath and $this->fileName) {
+            $phar = new \PharData($this->dirPath . DIRECTORY_SEPARATOR . $this->fileName);
+            $phar->decompress()->extractTo($this->dirPath);
+
+            $jsonFileNames = ['tables.json', 'decisions.json', 'changelogs.json'];
+            $passedJsonFiles = scandir($this->dirPath);
+            if (count(array_intersect($jsonFileNames, $passedJsonFiles)) != count($jsonFileNames)) {
+                $this->addError('missed_json_files', array_diff($jsonFileNames, $passedJsonFiles));
+                return $this->sendErrors();
+            }
+
+            $filteredJson = array_fill_keys($jsonFileNames, []);
+
+            foreach ($jsonFileNames as $fileName) {
+                $handle = fopen($this->dirPath . DIRECTORY_SEPARATOR . $fileName, "r");
+                if ($handle) {
+                    while (($line = fgets($handle)) !== false) {
+                        // process the line read.
+                        $decoded = json_decode($line, true);
+                        if (json_last_error() == JSON_ERROR_NONE) {
+                            $filteredJson[$fileName][] = $this->filterJson($fileName, $decoded);
+                        } else {
+                            $this->addError($fileName, 'cannot_decode_json', json_last_error_msg());
+                            break;
+                        }
+
+                    }
+                    fclose($handle);
+                } else {
+                    $this->addError($fileName, 'cannot read file ');
+                }
+            }
+            if ($this->errors) {
+                return $this->sendErrors();
+            }
+            $res = [];
+            foreach ($filteredJson as $fileName => $tableData) {
+                file_put_contents($this->dirPath . DIRECTORY_SEPARATOR . $fileName, $tableData);
+                $cmd = sprintf(
+                    "mongorestore -h %s --port %s -d %s -c %s %s",
+                    env('DB_HOST'),
+                    env('DB_PORT'),
+                    env('DB_DATABASE'),
+                    str_replace('.json', '', $fileName),
+                    $this->dirPath . DIRECTORY_SEPARATOR . $fileName
+                );
+                $result = exec($cmd);
+
+                return $res[$fileName] = [$cmd => $result];
+            }
+            return $res;
+        }
+
+        return false;
+    }
+
+    private function filterJson($fileName, array $tableData)
+    {
+        $rules = $this->getValidationRules($fileName);
+        /** @var Validator $validator */
+        if ($rules) {
+            $validator = \Validator::make($tableData, $rules);
+            if ($validator->fails()) {
+                $this->addError($fileName, 'validation', $validator->getMessageBag());
+                return false;
+            }
+        }
+
+        return $tableData;
+    }
+
+    private function getValidationRules($fileName)
+    {
+        $rules = [];
+        switch ($fileName) {
+            case 'tables.json' :
+                $rules = $this->table->getValidationRules();
+                break;
+//            case 'decisions.json' :
+//                $rules = $this->table->getValidationRules();
+//                break;
+        }
+
+        return $rules;
+    }
+
+    private function addError($type, $err, $msg = null)
+    {
+        if (!array_key_exists($type, $this->errors)) {
+            $this->errors[$type] = [];
+        }
+        $this->errors[$type][] = $msg ?: $err;
+    }
+
+    private function sendErrors()
+    {
+        Log::err(print_r($this->errors, true));
+//        $this->user->email;
+        # send errors
+        return $this->errors;
     }
 }

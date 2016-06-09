@@ -67,6 +67,7 @@ $app->singleton(
 */
 
 $app->middleware([
+    App\Http\Middleware\Terminable::class,
     App\Http\Middleware\JsonMiddleware::class
 ]);
 
