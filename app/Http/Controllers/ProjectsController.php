@@ -29,17 +29,4 @@ class ProjectsController extends AbstractController
     {
         return response()->download($dbTransfer->export($application->_id));
     }
-
-    public function import(DbTransfer $dbTransfer, Application $application)
-    {
-        $this->validateRoute();
-
-        $fileName = "dump-" . date('Y-m-d_H:i:s') . ".tar.gz";
-        $prefixTmpFile = sys_get_temp_dir() . strval(new \MongoId);
-
-        $this->request->file('file')->move($prefixTmpFile, $fileName);
-        $dbTransfer->prepareImport($this->request->user(), $application->_id, $prefixTmpFile, $fileName);
-
-        return $this->response->json([], 202);
-    }
 }

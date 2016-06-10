@@ -69,7 +69,7 @@ $app->delete('api/v1/projects', [
 ]);
 $app->get('api/v1/projects/export', [
     'uses' => 'App\Http\Controllers\ProjectsController@export',
-//    'middleware' => ['oauth', 'applicationable', 'applicationable.acl'],
+    'middleware' => ['oauth', 'applicationable', 'applicationable.acl'],
 ]);
 
 $app->group(
