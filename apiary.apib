@@ -686,6 +686,7 @@ Rollback Table to some state that described in passed Changelog
 + description: Table title (string) - Table description
 
 ### Table (TableList)
++ variants_probability: first,random,percent(enum[string]) - Variants check strategy
 + fields (array[Field])
 + variants (array[Variant])
 
@@ -705,6 +706,7 @@ Rollback Table to some state that described in passed Changelog
 + description: Variant description (string) - Variant description
 + default_title: No one Rule matched (string) - When Table processing does not match any rule, this field will be set by default to Decision.title
 + default_description: No one Rule matched (string) - When Table processing does not match any rule, this field will be set by default to Decision.description
++ probability: 30 (number) - Required when **Table.variants_probability == variants_probability**, percent of probability. Sum of all probabilities should be equal to 100
 + rules (array[Rule], required)
 
 ### Rule

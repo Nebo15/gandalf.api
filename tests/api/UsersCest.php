@@ -13,7 +13,7 @@ class UsersCest
         $faker = $I->getFaker();
         $I->sendPOST(
             'api/v1/users/',
-            ['email' => $faker->email, 'password' => $faker->password() . '1a', 'username' => $faker->firstName]
+            ['email' => $faker->email, 'password' => $I->getPassword(), 'username' => $faker->firstName]
         );
         $I->seeResponseCodeIs(201);
     }
@@ -63,13 +63,13 @@ class UsersCest
         /** Normal user for Test Duplicate Username */
         $I->sendPOST(
             'api/v1/users/',
-            ['email' => $faker->email, 'password' => $faker->password() . '1a', 'username' => 'duplicate']
+            ['email' => $faker->email, 'password' => $I->getPassword(), 'username' => 'duplicate']
         );
         $I->seeResponseCodeIs(201);
         foreach ($badData as $key => $data) {
             $normalUserData = [
                 'email' => $faker->email,
-                'password' => $faker->password() . '1a',
+                'password' => $I->getPassword(),
                 'username' => $faker->firstName,
             ];
             foreach ($data as $item) {
@@ -160,7 +160,7 @@ class UsersCest
         $I->sendPOST('api/v1/users/password/reset', ['email' => $user->email]);
         $resp = json_decode($I->grabResponse());
 
-        $new_password = $I->getFaker()->password() . '1a';
+        $new_password = $I->getFaker()->password() . '2ZG';
         $I->sendPUT('api/v1/users/password/reset',
             ['token' => $resp->sandbox->reset_password_token->token, 'password' => $new_password]);
         $I->seeResponseCodeIs(200);
@@ -182,6 +182,22 @@ class UsersCest
             ]
         );
         $I->seeResponseCodeIs(200);
+    }
+
+    public function testPassword(ApiTester $I)
+    {
+        $faker = $I->getFaker();
+        $I->createAndLoginClient();
+        $invalidPass = [
+            '123', '1Aa34', 'JustAlpha', '#1(*&^(*&^', 'LongerThan32SymbolsMuchLongerAnd!'
+        ];
+        foreach ($invalidPass as $pass) {
+            $I->sendPOST(
+                'api/v1/users/',
+                ['email' => $faker->email, 'password' => $pass, 'username' => $faker->firstName]
+            );
+            $I->seeResponseCodeIs(422, "Password $pass should be detected as Invalid");
+        }
     }
 
     public function testInvitation(ApiTester $I)
@@ -254,13 +270,13 @@ class UsersCest
 
 
         $I->loginUser($first_user);
-        $I->checkDecision($table_id);
+        $I->makeDecision($table_id);
 
         $I->loginConsumer($consumer);
-        $I->checkDecision($table_id);
+        $I->makeDecision($table_id);
 
         $I->loginUser($second_user);
-        $I->checkDecision($table_id);
+        $I->makeDecision($table_id);
     }
 
     public function deleteAdminFromProject(ApiTester $I)

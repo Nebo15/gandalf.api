@@ -5,6 +5,8 @@
 
 namespace App\Http\Controllers;
 
+use Nebo15\REST\AbstractController;
+
 use Nebo15\REST\Response;
 use Illuminate\Http\Request;
 use Nebo15\REST\AbstractController;

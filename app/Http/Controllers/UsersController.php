@@ -17,11 +17,11 @@ class UsersController extends AbstractController
 
     protected $validationRules = [
         'create' => [
-            'username' => 'required|unique:users,username|min:2|max:32',
-            'first_name' => 'sometimes|required|string|min:2|max:32',
-            'last_name' => 'sometimes|required|string|min:2|max:32',
+            'username' => 'required|unique:users,username|between:2,32',
+            'first_name' => 'sometimes|required|string|between:2,32',
+            'last_name' => 'sometimes|required|string|between:2,32',
             'email' => 'required|unique:users,email|email',
-            'password' => 'required|password',
+            'password' => 'required|between:6,32|password',
         ],
         'update' => [
             'username' => 'sometimes|required|unique:users,username|min:2|max:32',

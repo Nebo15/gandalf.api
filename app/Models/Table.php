@@ -18,6 +18,7 @@ use Nebo15\REST\Interfaces\ListableInterface;
  * @property string $title
  * @property string $description
  * @property string $matching_type
+ * @property string $variants_probability
  * @property Variant[] $variants
  * @property Field[] $fields
  * @method static Decision findById($id)
@@ -114,15 +115,38 @@ class Table extends Base implements ListableInterface, Applicationable
      */
     public function getVariantForCheck($variantId = null)
     {
+        $variant = null;
         $collection = $this->variants()->get();
         if ($variantId) {
             $variant = $collection->find($variantId);
-        } elseif ($collection->count() > 0) {
-            $variant = $collection->random();
         } else {
-            $variant = $collection->first();
+            switch ($this->variants_probability) {
+                case 'first':
+                    $variant = $collection->first();
+                    break;
+                case 'random':
+                    $variant = $collection->count() > 1 ? $collection->random() : $collection->first();
+                    break;
+                case 'percent':
+                    if ($collection->count() == 1) {
+                        $variant = $collection->first();
+                    } else {
+                        $i = 0;
+                        $percent = rand(1, 100);
+                        /** @var Condition $item */
+                        foreach ($collection->all() as $item) {
+                            $i = $i + $item->probability;
+                            if ($i >= $percent) {
+                                $variant = $item;
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    $variant = $collection->first();
+            }
         }
-
         if (!$variant) {
             throw new VariantNotFound;
         }

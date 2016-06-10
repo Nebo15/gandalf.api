@@ -28,7 +28,7 @@ class Scoring
         $this->conditionsTypes = new ConditionsTypes;
     }
 
-    public function check($id, $values)
+    public function check($id, $values, $showMeta = false)
     {
         $table = $this->tablesRepository->read($id);
         $validator = \Validator::make($values, $this->createValidationRules($table));
@@ -107,7 +107,12 @@ class Scoring
         }
         $scoring_data['final_decision'] = $final_decision ?: $variant->default_decision;
 
-        return (new Decision())->fill($scoring_data)->save()->toConsumerArray();
+        $response = (new Decision())->fill($scoring_data)->save()->toConsumerArray();
+        if (!$showMeta) {
+            unset($response['rules']);
+        }
+
+        return $response;
     }
 
     private function checkCondition(Condition $condition, $value)

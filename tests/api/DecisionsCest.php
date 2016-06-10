@@ -13,7 +13,7 @@ class DecisionsCest
         $I->createProjectAndSetHeader();
         $I->createTable();
 
-        $decision = $I->checkDecision($I->getResponseFields()->data->_id);
+        $decision = $I->makeDecision($I->getResponseFields()->data->_id);
 
         $I->loginConsumer($I->createConsumer());
         $I->sendGET('api/v1/admin/decisions');
@@ -33,7 +33,7 @@ class DecisionsCest
         $table_data = $I->createTable();
 
         $table_id_with_decisions = $table_data->_id;
-        $decision_table = $I->checkDecision($table_id_with_decisions);
+        $decision_table = $I->makeDecision($table_id_with_decisions);
         $I->assertEquals('Approve', $decision_table->final_decision);
 
         $I->sendGET('api/v1/admin/decisions?table_id=' . $table_id_no_decisions);
@@ -47,7 +47,7 @@ class DecisionsCest
             $I->assertTableDecisionsForAdmin();
         }
 
-        $decision_data = $I->checkDecision($table_id_with_decisions, [
+        $decision_data = $I->makeDecision($table_id_with_decisions, [
             'borrowers_phone_verification' => 'invalid',
             'contact_person_phone_verification' => 'invalid',
             'internal_credit_history' => 'invalid',
@@ -87,17 +87,18 @@ class DecisionsCest
             ['points' => -25.5, 'request' => ['string' => 'Not', 'numeric' => 200, 'bool' => true]],
         ];
         foreach ($decisionsData as $item) {
-            $I->checkDecision($table->_id, $item['request'], 'scoring');
+            $I->makeDecision($table->_id, $item['request'], 'scoring');
             $I->assertResponseDataFields(['final_decision' => $item['points']]);
         }
     }
+
     public function checkDecisionAccess(ApiTester $I)
     {
         $user = $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
         $table = $I->createTable($I->getShortTableDataMatchingTypeAll());
         $decisions = ['points' => 15, 'request' => ['string' => 'Invalid', 'numeric' => 1, 'bool' => false]];
-        $data = $I->checkDecision($table->_id, $decisions['request'], 'scoring');
+        $data = $I->makeDecision($table->_id, $decisions['request'], 'scoring');
         $I->sendGET('api/v1/admin/decisions');
         $I->assertContains($data->_id, $I->grabResponse());
 
@@ -115,6 +116,7 @@ class DecisionsCest
         $I->sendGET('api/v1/admin/decisions');
         $I->assertContains($data->_id, $I->grabResponse());
     }
+
     public function checkManyVariants(ApiTester $I)
     {
         $I->createAndLoginUser();
@@ -168,7 +170,7 @@ class DecisionsCest
             ],
         ];
         foreach ($checkData as $item) {
-            $decision = $I->checkDecision($table->_id, $item);
+            $decision = $I->makeDecision($table->_id, $item);
             $I->assertTableDecisionsForConsumer();
 
             $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
@@ -183,9 +185,11 @@ class DecisionsCest
                 ]
             ]);
         }
-        $decision = $I->checkDecision($table->_id, ['numeric' => 500,
+        $decision = $I->makeDecision($table->_id, [
+            'numeric' => 500,
             'string' => 'Yes',
-            'bool' => false]);
+            'bool' => false
+        ]);
         $I->assertTableDecisionsForConsumer();
         $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
         $I->assertTableDecisionsForAdmin();
@@ -225,7 +229,7 @@ class DecisionsCest
         $I->createProjectAndSetHeader();
         $I->createTable($I->getTableShortData());
 
-        $decision = $I->checkDecision(
+        $decision = $I->makeDecision(
             $I->getResponseFields()->data->_id,
             ['bool' => true, 'numeric' => 123, 'string' => 'Yes']
         );
@@ -254,7 +258,7 @@ class DecisionsCest
         $I->createProjectAndSetHeader();
         $I->createTable($I->getTableShortData());
 
-        $decision = $I->checkDecision(
+        $decision = $I->makeDecision(
             $I->getResponseFields()->data->_id,
             ['bool' => true, 'numeric' => 123, 'string' => 'Yes']
         );
@@ -282,5 +286,14 @@ class DecisionsCest
         $I->sendPUT("api/v1/admin/decisions/{$decision->_id}/meta", []);
         $I->seeResponseCodeIs(422);
         $I->canSeeResponseJsonMatchesJsonPath('$.data.meta');
+    }
+
+    public function hideMeta(ApiTester $I)
+    {
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader(['settings' => ['show_meta' => false]]);
+        $I->createTable();
+
+        $I->makeDecision($I->getResponseFields()->data->_id, [], 'decision', false);
     }
 }
