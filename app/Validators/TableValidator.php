@@ -110,7 +110,7 @@ class TableValidator
         if ($value == 'percent') {
             $total = 0;
             foreach ($validator->getData()['variants'] as $variant) {
-                $total += $variant['probability'];
+                $total += isset($variant['probability']) ? $variant['probability'] : 0;
             }
             return 100 == $total;
         }
