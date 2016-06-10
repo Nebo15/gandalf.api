@@ -20,11 +20,11 @@ class DbTransfer
         ];
         foreach ($collections as $collection => $query) {
             exec(sprintf(
-                "mongoexport -h %s --port %s -d  %s -c %s --out %s",
+                "mongoexport -h %s --port %s -d %s -q %s -c %s --out %s",
                 env('DB_HOST'),
                 env('DB_PORT'),
                 env('DB_DATABASE'),
-//                $query,
+                $query,
                 $collection,
                 $prefixTmpFile . $collection . '.json'
             ));

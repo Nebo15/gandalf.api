@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\Table;
 use App\Services\DbTransfer;
 use Illuminate\Support\ServiceProvider;
 
@@ -16,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('\App\Services\DbTransfer', function () {
-            return new DbTransfer(new Table);
+            return new DbTransfer;
         });
     }
 }
