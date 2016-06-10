@@ -243,7 +243,7 @@ class ApiTester extends \Codeception\Actor
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.default_decision");
     }
 
-    public function checkDecision($table_id, array $data = [], $matching_rules_type = 'decision', $showMeta = true)
+    public function makeDecision($table_id, array $data = [], $matching_rules_type = 'decision', $showMeta = true)
     {
         $data = $data ?: [
             'borrowers_phone_verification' => 'Positive',
@@ -304,62 +304,69 @@ class ApiTester extends \Codeception\Actor
             ],
             'variants' => [
                 [
+                    'title' => 'Variant title',
+                    'description' => 'Variant description',
                     'default_title' => 'Title 100',
                     'default_description' => 'Description 220',
                     'default_decision' => 'Decline',
-                    'rules' => [
-                        [
-                            "_id" => $this->getMongoId(),
-                            'than' => 'Approve',
-                            'title' => 'Valid rule title',
-                            'description' => 'Valid rule description',
-                            'conditions' => [
-                                [
-                                    "_id" => $this->getMongoId(),
-                                    'field_key' => 'numeric',
-                                    'condition' => '$eq',
-                                    'value' => true
-                                ],
-                                [
-                                    "_id" => $this->getMongoId(),
-                                    'field_key' => 'string',
-                                    'condition' => '$eq',
-                                    'value' => 'Yes'
-                                ],
-                                [
-                                    "_id" => $this->getMongoId(),
-                                    'field_key' => 'bool',
-                                    'condition' => '$eq',
-                                    'value' => false
-                                ]
-                            ]
-                        ],
-                        [
-                            "_id" => $this->getMongoId(),
-                            'than' => 'Decline',
-                            'title' => 'Second title',
-                            'description' => 'Second description',
-                            'conditions' => [
-                                [
-                                    "_id" => $this->getMongoId(),
-                                    'field_key' => 'numeric',
-                                    'condition' => '$eq',
-                                    'value' => false
-                                ],
-                                [
-                                    "_id" => $this->getMongoId(),
-                                    'field_key' => 'string',
-                                    'condition' => '$eq',
-                                    'value' => 'Not'
-                                ],
-                                [
-                                    "_id" => $this->getMongoId(),
-                                    'field_key' => 'bool',
-                                    'condition' => '$eq',
-                                    'value' => true
-                                ]
-                            ]
-                        ]
+                    'rules' => $this->getVariantRules()
+                ]
+            ]
+        ];
+    }
+
+    public function getVariantRules()
+    {
+        return [
+            [
+                "_id" => $this->getMongoId(),
+                'than' => 'Approve',
+                'title' => 'Valid rule title',
+                'description' => 'Valid rule description',
+                'conditions' => [
+                    [
+                        "_id" => $this->getMongoId(),
+                        'field_key' => 'numeric',
+                        'condition' => '$eq',
+                        'value' => true
+                    ],
+                    [
+                        "_id" => $this->getMongoId(),
+                        'field_key' => 'string',
+                        'condition' => '$eq',
+                        'value' => 'Yes'
+                    ],
+                    [
+                        "_id" => $this->getMongoId(),
+                        'field_key' => 'bool',
+                        'condition' => '$eq',
+                        'value' => false
+                    ]
+                ]
+            ],
+            [
+                "_id" => $this->getMongoId(),
+                'than' => 'Decline',
+                'title' => 'Second title',
+                'description' => 'Second description',
+                'conditions' => [
+                    [
+                        "_id" => $this->getMongoId(),
+                        'field_key' => 'numeric',
+                        'condition' => '$eq',
+                        'value' => false
+                    ],
+                    [
+                        "_id" => $this->getMongoId(),
+                        'field_key' => 'string',
+                        'condition' => '$eq',
+                        'value' => 'Not'
+                    ],
+                    [
+                        "_id" => $this->getMongoId(),
+                        'field_key' => 'bool',
+                        'condition' => '$eq',
+                        'value' => true
                     ]
                 ]
             ]

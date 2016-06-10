@@ -14,9 +14,7 @@ class ValidationServiceProvider extends ServiceProvider
         Validator::extend('conditionsCount', 'App\Validators\TableValidator@conditionsCount');
         Validator::extend('conditionsFieldKey', 'App\Validators\TableValidator@conditionsFieldKey');
         Validator::extend('ruleThanType', 'App\Validators\TableValidator@ruleThanType');
-        Validator::extend('groupTablesFields', 'App\Validators\GroupValidator@tablesFields');
-        Validator::extend('groupTablesExists', 'App\Validators\GroupValidator@tablesExists');
-        Validator::extend('groupTableMatchingType', 'App\Validators\GroupValidator@tableMatchingType');
+        Validator::extend('probabilitySum', 'App\Validators\TableValidator@probabilitySum');
         Validator::extend('mongoId', function ($attribute, $value) {
             return \MongoId::isValid($value);
         });

@@ -74,7 +74,7 @@ class TablesCest
         $I->assertEquals('test_invalid_key', $table->variants[0]->rules[0]->conditions[0]->field_key);
 
         # assert preset
-        $decision = $I->checkDecision($table->_id, ['test_invalid_key' => 30]);
+        $decision = $I->makeDecision($table->_id, ['test_invalid_key' => 30]);
         $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
         $I->assertResponseDataFields([
             'final_decision' => 'Decline',
@@ -98,7 +98,7 @@ class TablesCest
             ],
         ]);
 
-        $decision = $I->checkDecision($table->_id, ['test_invalid_key' => 8]);
+        $decision = $I->makeDecision($table->_id, ['test_invalid_key' => 8]);
         $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
         $I->assertResponseDataFields([
             'title' => 'Valid rule title',
@@ -435,13 +435,13 @@ class TablesCest
         $I->seeResponseCodeIs(422);
 
         $I->loginConsumer($I->createConsumer());
-        $decision = $I->checkDecision($table->_id, ['is_set' => 1000, 'second' => 'test']);
+        $decision = $I->makeDecision($table->_id, ['is_set' => 1000, 'second' => 'test']);
 
         $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
         $I->seeResponseCodeIs(401);
 
         $I->loginUser($user);
-        $I->checkDecision($table->_id, ['is_set' => 1000, 'second' => 'test']);
+        $I->makeDecision($table->_id, ['is_set' => 1000, 'second' => 'test']);
 
         $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
         $I->assertResponseDataFields([
@@ -536,7 +536,7 @@ class TablesCest
             'third,comma' => [false, true, true],
         ];
         foreach ($data as $value => $results) {
-            $id = $I->checkDecision($table->_id, ['test' => $value, 'another' => $value, 'more' => $value])->_id;
+            $id = $I->makeDecision($table->_id, ['test' => $value, 'another' => $value, 'more' => $value])->_id;
             $I->sendGET('api/v1/admin/decisions/' . $id);
             $I->assertResponseDataFields(
                 [
@@ -605,11 +605,11 @@ class TablesCest
         # boolean
         $table = $I->createTable($table_data);
         foreach ([true, '1', 1] as $value) {
-            $I->checkDecision($table->_id, ['boolean' => $value]);
+            $I->makeDecision($table->_id, ['boolean' => $value]);
             $I->assertResponseDataFields(['final_decision' => 'Approve']);
         }
         foreach ([false, '0', 0, null] as $value) {
-            $I->checkDecision($table->_id, ['boolean' => $value]);
+            $I->makeDecision($table->_id, ['boolean' => $value]);
             $I->assertResponseDataFields(['final_decision' => 'Decline']);
         }
         foreach (['invalid', 'true', "true", 100] as $value) {
@@ -626,10 +626,10 @@ class TablesCest
             $I->seeResponseCodeIs(422);
         }
         foreach (['invalid', '123321', 'true', "true"] as $value) {
-            $I->checkDecision($table->_id, ['boolean' => $value]);
+            $I->makeDecision($table->_id, ['boolean' => $value]);
             $I->assertResponseDataFields(['final_decision' => 'Decline']);
         }
-        $I->checkDecision($table->_id, ['boolean' => 'string']);
+        $I->makeDecision($table->_id, ['boolean' => 'string']);
         $I->assertResponseDataFields(['final_decision' => 'Approve']);
 
         # numeric
@@ -641,11 +641,11 @@ class TablesCest
             $I->seeResponseCodeIs(422);
         }
         foreach ([100, "100"] as $value) {
-            $I->checkDecision($table->_id, ['boolean' => $value]);
+            $I->makeDecision($table->_id, ['boolean' => $value]);
             $I->assertResponseDataFields(['final_decision' => 'Decline']);
         }
         foreach ([100.15, "100.15"] as $value) {
-            $I->checkDecision($table->_id, ['boolean' => $value]);
+            $I->makeDecision($table->_id, ['boolean' => $value]);
             $I->assertResponseDataFields(['final_decision' => 'Approve']);
         }
     }
@@ -692,11 +692,11 @@ class TablesCest
             $I->seeResponseCodeIs(422);
         }
         foreach ([100, "100"] as $value) {
-            $I->checkDecision($table->_id, ['boolean' => $value]);
+            $I->makeDecision($table->_id, ['boolean' => $value]);
             $I->assertResponseDataFields(['final_decision' => 'Decline']);
         }
         foreach ([100.15, "100.15"] as $value) {
-            $I->checkDecision($table->_id, ['boolean' => $value]);
+            $I->makeDecision($table->_id, ['boolean' => $value]);
             $I->assertResponseDataFields(['final_decision' => 'Approve']);
         }
     }
@@ -748,7 +748,7 @@ class TablesCest
             '5.6' => 'Decline',
         ];
         foreach ($data as $value => $result) {
-            $decision = $I->checkDecision($table->_id, ['between' => floatval($value)]);
+            $decision = $I->makeDecision($table->_id, ['between' => floatval($value)]);
             $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
             $I->assertResponseDataFields(['final_decision' => $result]);
         }
@@ -1003,7 +1003,7 @@ class TablesCest
         ];
         foreach ($checkData as $data) {
             $data['variant_id'] = $variantId1;
-            $I->checkDecision($table->_id, $data, 'decision');
+            $I->makeDecision($table->_id, $data, 'decision');
         }
         $I->sendGET("api/v1/admin/tables/{$table->_id}/$variantId1/analytics");
         $I->assertTableWithAnalytics();
@@ -1061,7 +1061,7 @@ class TablesCest
         ];
         foreach ($checkData as $data) {
             $data['variant_id'] = $variantId1;
-            $I->checkDecision($table->_id, $data);
+            $I->makeDecision($table->_id, $data);
         }
 
         $I->sendGET("api/v1/admin/tables/{$table->_id}/$variantId1/analytics");
@@ -1135,5 +1135,81 @@ class TablesCest
         $I->setHeader('X-Application', $secondProject->_id);
         $I->sendGET('api/v1/admin/tables');
         $I->assertEquals(0, count($I->getResponseFields()->data));
+    }
+
+    public function testVariantsProbabilityPercent(ApiTester $I)
+    {
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
+
+        $data = $I->getTableShortData();
+        $data['variants_probability'] = 'percent';
+        $data['variants'][0]['probability'] = 10;
+        $data['variants'][0]['title'] = 'Variant 1';
+        $data['variants'][1] = [
+            'title' => 'Variant 2',
+            'default_title' => 'Variant 2',
+            'default_description' => 'Description Variant 2',
+            'default_decision' => 'Decline',
+            'probability' => 40,
+            'rules' => $I->getVariantRules(),
+        ];
+        $data['variants'][2] = [
+            'title' => 'Variant 3',
+            'default_title' => 'Variant 3',
+            'default_description' => 'Description Variant 3',
+            'default_decision' => 'Decline',
+            'probability' => 50,
+            'rules' => $I->getVariantRules(),
+        ];
+
+        $matched = [];
+        $table = $I->createTable($data);
+        for ($i = 0; $i < 100; $i++) {
+            $res = $I->makeDecision($table->_id, ['numeric' => 340, 'string' => 'Bad', 'bool' => true]);
+            $title = $res->table->variant->title;
+            if (!array_key_exists($title, $matched)) {
+                $matched[$title] = 0;
+            }
+            $matched[$title]++;
+        }
+        $I->assertEquals(3, count($matched), 'Some Table.variants for variants_probability=percent not matched');
+        $I->assertTrue($matched['Variant 1'] < $matched['Variant 2'], 'Variant 1 checked more than Variant 2');
+        $I->assertTrue($matched['Variant 1'] < $matched['Variant 3'], 'Variant 1 checked more than Variant 3');
+    }
+
+    public function testVariantsProbabilityInvalid(ApiTester $I)
+    {
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
+
+        # invalid variants_probability
+        $data = $I->getTableShortData();
+        $data['variants_probability'] = 'invalid';
+        $I->sendPOST('api/v1/admin/tables', $data);
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseContains('variants_probability');
+
+        # more than 100
+        $data['variants_probability'] = 'percent';
+        $data['variants'][0]['probability'] = 30;
+        $data['variants'][0]['title'] = 'Variant 1';
+        $data['variants'][1] = [
+            'title' => 'Variant 2',
+            'default_title' => 'Variant 2',
+            'default_description' => 'Description Variant 2',
+            'default_decision' => 'Decline',
+            'probability' => 71,
+            'rules' => $I->getVariantRules(),
+        ];
+        $I->sendPOST('api/v1/admin/tables', $data);
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseContains('variants_probability');
+
+        # less than 100
+        $data['variants'][0]['probability'] = 28;
+        $I->sendPOST('api/v1/admin/tables', $data);
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseContains('variants_probability');
     }
 }
