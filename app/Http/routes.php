@@ -67,18 +67,10 @@ $app->delete('api/v1/projects', [
     'uses' => 'App\Http\Controllers\ProjectsController@deleteProject',
     'middleware' => ['oauth', 'applicationable', 'applicationable.acl'],
 ]);
-
-$app->group(
-    [
-        'prefix' => 'api/v1/projects',
-        'namespace' => 'App\Http\Controllers',
-    //        'middleware' => ['oauth', 'applicationable', 'applicationable.acl'],
-    ],
-    function ($app) {
-        $app->get('/export', ['uses' => 'ProjectsController@export']);
-        $app->post('/import', ['uses' => 'ProjectsController@import']);
-    }
-);
+$app->get('api/v1/projects/export', [
+    'uses' => 'App\Http\Controllers\ProjectsController@export',
+//    'middleware' => ['oauth', 'applicationable', 'applicationable.acl'],
+]);
 
 $app->group(
     [

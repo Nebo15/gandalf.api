@@ -54,10 +54,9 @@ class DbTransfer
         return $archiveName;
     }
 
-//    public function prepareImport(User $user, $appId, $dirPath, $fileName)
-    public function prepareImport($appId, $dirPath, $fileName)
+    public function prepareImport(User $user, $appId, $dirPath, $fileName)
     {
-//        $this->user = $user;
+        $this->user = $user;
         $this->appId = $appId;
         $this->dirPath = $dirPath;
         $this->fileName = $fileName;
@@ -66,19 +65,23 @@ class DbTransfer
     public function import()
     {
         if ($this->appId and $this->dirPath and $this->fileName) {
+            Log::debug('import started');
             $phar = new \PharData($this->dirPath . DIRECTORY_SEPARATOR . $this->fileName);
             $phar->decompress()->extractTo($this->dirPath);
+            Log::debug('Archive decompressed');
 
             $jsonFileNames = ['tables.json', 'decisions.json', 'changelogs.json'];
             $passedJsonFiles = scandir($this->dirPath);
+            Log::debug('Scan decompressed files');
             if (count(array_intersect($jsonFileNames, $passedJsonFiles)) != count($jsonFileNames)) {
                 $this->addError('missed_json_files', array_diff($jsonFileNames, $passedJsonFiles));
                 return $this->sendErrors();
             }
 
+            Log::debug('Read decompressed files');
             $filteredJson = array_fill_keys($jsonFileNames, []);
-
             foreach ($jsonFileNames as $fileName) {
+                Log::debug('Read file ' . $fileName);
                 $handle = fopen($this->dirPath . DIRECTORY_SEPARATOR . $fileName, "r");
                 if ($handle) {
                     while (($line = fgets($handle)) !== false) {
@@ -115,6 +118,7 @@ class DbTransfer
 
                 return $res[$fileName] = [$cmd => $result];
             }
+            Log::debug(print_r($res, true));
             return $res;
         }
 
@@ -138,17 +142,7 @@ class DbTransfer
 
     private function getValidationRules($fileName)
     {
-        $rules = [];
-        switch ($fileName) {
-            case 'tables.json' :
-                $rules = $this->table->getValidationRules();
-                break;
-//            case 'decisions.json' :
-//                $rules = $this->table->getValidationRules();
-//                break;
-        }
-
-        return $rules;
+        return [];
     }
 
     private function addError($type, $err, $msg = null)
@@ -161,9 +155,6 @@ class DbTransfer
 
     private function sendErrors()
     {
-        Log::err(print_r($this->errors, true));
-//        $this->user->email;
-        # send errors
         return $this->errors;
     }
 }

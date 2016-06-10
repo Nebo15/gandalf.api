@@ -27,7 +27,6 @@ class Terminable
 
     public function terminate()
     {
-        $d = $this->dbTransfer->import();
-        Log::info(print_r($d, true));
+        $this->dbTransfer->import();
     }
 }
