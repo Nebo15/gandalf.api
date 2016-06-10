@@ -270,13 +270,13 @@ class UsersCest
 
 
         $I->loginUser($first_user);
-        $I->checkDecision($table_id);
+        $I->makeDecision($table_id);
 
         $I->loginConsumer($consumer);
-        $I->checkDecision($table_id);
+        $I->makeDecision($table_id);
 
         $I->loginUser($second_user);
-        $I->checkDecision($table_id);
+        $I->makeDecision($table_id);
     }
 
     public function deleteAdminFromProject(ApiTester $I)

@@ -24,6 +24,7 @@ class Variant extends Base
         'description' => '',
         'default_title' => '',
         'default_description' => '',
+        'probability' => 0,
     ];
 
     protected $visible = [
@@ -33,6 +34,7 @@ class Variant extends Base
         'default_decision',
         'default_title',
         'default_description',
+        'probability',
         'rules',
         'fields',
     ];
@@ -45,6 +47,7 @@ class Variant extends Base
         'default_description',
         'default_decision',
         'matching_type',
+        'probability',
     ];
 
     protected $casts = [

@@ -104,4 +104,17 @@ class TableValidator
 
         return false;
     }
+
+    public function probabilitySum($attribute, $value, $parameters, Validator $validator)
+    {
+        if ($value == 'percent') {
+            $total = 0;
+            foreach ($validator->getData()['variants'] as $variant) {
+                $total += $variant['probability'];
+            }
+            return 100 == $total;
+        }
+
+        return true;
+    }
 }
