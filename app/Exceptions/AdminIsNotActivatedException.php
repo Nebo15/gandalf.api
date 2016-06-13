@@ -7,6 +7,6 @@ class AdminIsNotActivatedException extends HttpException
 {
     public function __construct()
     {
-        parent::__construct(403, 'Project owner is not activated, try again later');
+        parent::__construct(403, 'admin_not_activated');
     }
 }
