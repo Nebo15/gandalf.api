@@ -76,7 +76,7 @@ class UsersCest
                 $normalUserData[$key] = $item;
                 $I->sendPOST('api/v1/users/', $normalUserData);
                 $I->seeResponseCodeIs(422);
-                $I->seeResponseContains('"error":"validation"}');
+                $I->seeResponseContains('"error":"validation"');
                 $I->seeResponseContains($key);
             }
         }
@@ -189,7 +189,11 @@ class UsersCest
         $faker = $I->getFaker();
         $I->createAndLoginClient();
         $invalidPass = [
-            '123', '1Aa34', 'JustAlpha', '#1(*&^(*&^', 'LongerThan32SymbolsMuchLongerAnd!'
+            '123',
+            '1Aa34',
+            'JustAlpha',
+            '#1(*&^(*&^',
+            'LongerThan32SymbolsMuchLongerAnd!'
         ];
         foreach ($invalidPass as $pass) {
             $I->sendPOST(

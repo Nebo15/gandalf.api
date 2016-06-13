@@ -7,7 +7,6 @@ use Illuminate\Contracts\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Nebo15\LumenApplicationable\Exceptions\AccessDeniedException;
-use Nebo15\LumenApplicationable\Exceptions\MiddlewareException;
 use Nebo15\LumenApplicationable\Exceptions\TryingToAddDuplicateUserException;
 use Nebo15\LumenApplicationable\Exceptions\XApplicationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -55,7 +54,6 @@ class Handler extends ExceptionHandler
 
         $http_code = 500;
         $error_code = 'internal_server_error';
-        $error_message = null;
 
         $meta = [];
 
@@ -64,28 +62,43 @@ class Handler extends ExceptionHandler
                 'meta' => [
                     'code' => 422,
                     'error' => 'validation',
+                    'error_message' => 'Validation failed',
                 ],
                 'data' => $e->errors(),
             ], 422, ['Content-Type' => 'application/json']);
         } elseif ($e instanceof AuthorizationException) {
             $http_code = 401;
             $error_code = 'unauthorized';
-            $meta['error_message'] = $e->getMessage();
         } elseif ($e instanceof ModelNotFoundException) {
             $http_code = 404;
             $error_code = $this->formatModelName($e->getModel()) . '_not_found';
         } elseif ($e instanceof HttpException) {
             $http_code = $e->getStatusCode();
-            $error_code = $e->getMessage() ?: 'http';
+            if (!$error_code = $e->getMessage()) {
+                switch ($http_code) {
+                    case 404:
+                        $error_code = 'not_found';
+                        break;
+                    case 405:
+                        $error_code = 'method_not_allowed';
+                        break;
+                    default:
+                        $error_code = 'http';
+                }
+            }
         } elseif ($e instanceof AccessDeniedException) {
             $http_code = 403;
             $error_code = 'access_denied';
             $data = json_decode($e->getMessage());
             $meta['error_message'] = $data->message;
             $meta['scopes'] = $data->scopes;
-        } elseif ($e instanceof XApplicationException or $e instanceof TryingToAddDuplicateUserException) {
+        } elseif ($e instanceof XApplicationException) {
             $http_code = 400;
-            $error_code = 'bad_request';
+            $error_code = 'invalid_app_header';
+            $meta['error_message'] = $e->getMessage();
+        } elseif ($e instanceof TryingToAddDuplicateUserException) {
+            $http_code = 400;
+            $error_code = 'duplicate_user';
             $meta['error_message'] = $e->getMessage();
         }
 

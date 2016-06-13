@@ -214,12 +214,79 @@ Also we believe that vendor-lock is a bad thing, so we published all source code
 
 Done by [Nebo #15](http://nebo15.com/).
 
+# Group Errors
+
+General error response contains **Meta** object with properties:
+  * `code` - HTTP response code
+  * `error` - short error code
+  * `message` - (optional) human-readable error message
+
+```json
+{
+  "meta": {
+    "code": 404,
+    "error": "not_found",
+    "error_message": "Resource not found"
+  }
+}
+```
+
+## Available errors
+
+| Code | Error code            | Message                                         | Comments                                                                                |
+|------|-----------------------|-------------------------------------------------|-----------------------------------------------------------------------------------------|
+| 400  | bad_request           | Depends on the context                          |                                                                                         |
+| 400  | invalid_app_header    | You should set correct 'X-Application' header   |                                                                                         |
+| 400  | duplicate_user        | Duplicate user                                  |                                                                                         |
+| 401  | unauthorized          | Unauthorized                                    |                                                                                         |
+| 403  | access_denied         | Depends on the context                          | Additional property `scopes`: array of scopes, e.g.: ```scopes: [is_admin, readable]``` |
+| 403  | admin_not_activated   | Project owner is not activated, try again later |                                                                                         |
+| 404  | not_found             | Resource not found                              |                                                                                         |
+| 404  | table_not_found       | Table not found                                 |                                                                                         |
+| 404  | variant_not_found     | Variant not found                               |                                                                                         |
+| 404  | decision_not_found    | Decision not found                              |                                                                                         |
+| 404  | changelog_not_found   | Changelog not found                             |                                                                                         |
+| 404  | token_not_found       | Token not found                                 |                                                                                         |
+| 405  | method_not_allowed    | Method Not Allowed                              | Wrong HTTP Method, e.g. required POST, sent GET                                         |
+| 422  | token_expired         | Token expired. Refresh or generate new token    |                                                                                         |
+| 422  | validation            | Validation failed                               | Contains additional property `data`. See example below                                  |
+| 500  | internal_server_error |                                                 | Server error
+
+## Validation error response
+
+Response contains property **data**, where described all invalid params.
+You can see in response properties digits `variants.0.rules`, this is an array index of fields, that contains invalid data.
+
+```json
+{
+  "meta": {
+    "code": 422,
+    "error": "validation",
+    "error_message": "Validation failed"
+  },
+  "data": {
+    "variants.0.default_decision": [
+      "The variants.0.default decision field is required."
+    ],
+    "variants.0.rules": [
+      "The variants.0.rules field is required."
+    ],
+    "matching_type": [
+      "The matching type field is required."
+    ],
+    "fields": [
+      "The fields field is required."
+    ]
+  }
+}
+```
+
 # Group User
 
 ## Users [/api/v1/admin/users]
 
 ### List All Users [GET]
-          
+
 + Parameters
     + name: John (string) - Parameter searching users by usernames or emails. If name == jo, in the response users will be with usernames which starts on jo, Jo, JO. Searching by email enabled just when parameter has @
     + size: 10 (number) - Amount of items on page
@@ -244,7 +311,7 @@ Done by [Nebo #15](http://nebo15.com/).
         + meta
             + code: 200 (number) - HTTP response code
         + data (User)
-        
+
 ## Current User [/api/v1/users/current]
 
 
@@ -268,7 +335,7 @@ Done by [Nebo #15](http://nebo15.com/).
     + Attributes (object)
         + meta
             + code: 200 (number) - HTTP response code
-        + data (User)    
+        + data (User)
 
 ## Verify Email [/users/verify/email]
 
@@ -281,7 +348,7 @@ Done by [Nebo #15](http://nebo15.com/).
     + Attributes (object)
         + meta
             + code: 200 (number) - HTTP response code
-        + data (User)   
+        + data (User)
 
 ## Reset password [/api/v1/users/password/reset]
 
@@ -302,12 +369,12 @@ Send reset password url with token to User.email
 + Parameters
     + token: $2y$10$.lp0OGb.nJSt... (string, required) - Token for password reset
     + password: newP@s$w0rd (string, required) - New user password
-    
+
 + Response 200 (application/json)
     + Attributes (object)
         + meta
             + code: 200 (number) - HTTP response code
-        + data (User)    
+        + data (User)
 
 ## Invite User [/api/v1/invite]
 
@@ -323,7 +390,7 @@ Send reset password url with token to User.email
         + meta
             + code: 200 (number) - HTTP response code
         + data (UserInvitation)
-        
+
 ## Get User Access Token [/api/v1/oauth]
 
 Get user access token, grant_type password scenario
@@ -342,7 +409,7 @@ Get user access token, grant_type password scenario
     + Attributes (object)
         + meta
             + code: 200 (number) - HTTP response code
-        + data (AccessToken)  
+        + data (AccessToken)
 
 
 # Group Projects
@@ -354,8 +421,8 @@ Get user access token, grant_type password scenario
     + Attributes (object)
         + meta
             + code: 200 (number) - HTTP response code
-        + data (array[Project])  
-        
+        + data (array[Project])
+
 ### Create Project [POST]
 
 Can create project and in the feature link tables to it.
@@ -370,8 +437,8 @@ When you created project, your feature requests should be with Header
     + Attributes (object)
         + meta
             + code: 200 (number) - HTTP response code
-        + data (Project)  
-        
+        + data (Project)
+
 ### Update Project [PUT]
 
 + Parameters
@@ -382,7 +449,7 @@ When you created project, your feature requests should be with Header
     + Attributes (object)
         + meta
             + code: 200 (number) - HTTP response code
-        + data (Project)  
+        + data (Project)
 
 ### Delete Project [DELETE]
 
@@ -406,7 +473,7 @@ When you created project, your feature requests should be with Header
 
 ### Create consumer [POST]
 
-Every into existing project user can create consumer with own scopes. 
+Every into existing project user can create consumer with own scopes.
 For login as consumer you should make Basic Auth client_id:client_secret
 
 + Parameters
@@ -442,7 +509,7 @@ Remove consumer from the project by client_id
     + Attributes (object)
         + meta
             + code: 200 (number) - HTTP response code
-        + data (Project)    
+        + data (Project)
 
 
 ## Project Users [/api/v1/projects/users]
@@ -459,14 +526,14 @@ Adding existing user to the current project. Share project with other users with
     + Attributes (object)
         + meta
             + code: 200 (number) - HTTP response code
-        + data (Project) 
+        + data (Project)
 
 ### Get Info About Current User [GET]
 + Response 200 (application/json)
     + Attributes (object)
         + meta
             + code: 200 (number) - HTTP response code
-        + data (ProjectUser) 
+        + data (ProjectUser)
 
 ### Update Project User [PUT]
 
@@ -479,7 +546,7 @@ Adding existing user to the current project. Share project with other users with
     + Attributes (object)
         + meta
             + code: 200 (number) - HTTP response code
-        + data (Project) 
+        + data (Project)
 
 ### Delete User From Project  [DELETE]
 + Parameters
@@ -494,13 +561,13 @@ Adding existing user to the current project. Share project with other users with
 
 Resources related to questions in the API.
 
-Warning! If you don't pass _id, new MongoID will be generated, EVEN for existing document! 
+Warning! If you don't pass _id, new MongoID will be generated, EVEN for existing document!
 
 ## Tables [/api/v1/admin/tables]
 
 ### Create Table [POST]
 
-Available rules conditions are: 
+Available rules conditions are:
 * `$is_set` - field key exists in request and its value can be any
 * `$is_null` - **(null)** value must be NULL
 * `$eq` - **(string, numeric, boolean)** value must be EQUAL to the condition value
@@ -509,7 +576,7 @@ Available rules conditions are:
 * `$gte` - **(numeric)** value must be GREATER THAN OR EQUAL to condition value
 * `$lt` - **(numeric)** value must be LESS THAN to condition value
 * `$lte` - **(numeric)** value must be LESS THAN OR EQUAL to condition value
-* `$between` - **(numeric)** value must be in range of condition value. Condition value must be separated by semicolon: *12,3;30* 
+* `$between` - **(numeric)** value must be in range of condition value. Condition value must be separated by semicolon: *12,3;30*
 * `$in` - **(string, numeric)** value must be one of the following in condition value. Condition value must be separated by comma: *10.8,'hello world'*
 * `$nin` - **(string, numeric)** value must NOT be one of the following in condition value. Condition value must be separated by comma: *10.8,'hello world'*
 
@@ -518,7 +585,7 @@ Available rules conditions are:
 
 + Response 201 (application/json)
     + Attributes (object)
-        + meta 
+        + meta
             + code: 201 (number) - HTTP response code
         + data (Table)
 
@@ -537,7 +604,7 @@ Available rules conditions are:
             + code: 200 (number) - HTTP response code
         + data (array[TableList])
 
-## Table by ID [/api/v1/admin/tables/{id}]        
+## Table by ID [/api/v1/admin/tables/{id}]
 
 ### Get [GET]
 + Response 200 (application/json)
@@ -551,14 +618,14 @@ Available rules conditions are:
     + Attributes (Table)
 + Response 200 (application/json)
     + Attributes (object)
-        + meta 
+        + meta
             + code: 200 (number) - HTTP response code
         + data (Table)
 
 ### Delete [DELETE]
 + Response 200 (application/json)
     + Attributes (object)
-        + meta 
+        + meta
             + code: 200 (number) - HTTP response code
 
 ## Table Copy [/api/v1/admin/tables/{id}/copy]
@@ -568,9 +635,9 @@ Create new Table from existing Table by id
 ### Copy [POST]
 + Response 200 (application/json)
     + Attributes (object)
-        + meta 
+        + meta
             + code: 200 (number) - HTTP response code
-        + data (Table)    
+        + data (Table)
 
 
 ## Table Analytics [/api/v1/admin/tables/{id}/{variant_id}/analytics]
@@ -579,7 +646,7 @@ Get Table analytics by all made Decisions
 ### Get [GET]
 + Response 200 (application/json)
     + Attributes (object)
-        + meta 
+        + meta
             + code: 200 (number) - HTTP response code
         + data (TableWithAnalytics)
 
@@ -591,7 +658,7 @@ Get Table analytics by all made Decisions
 ### Decisions All List [GET]
 + Response 200 (application/json)
     + Attributes (object)
-        + meta 
+        + meta
             + code: 200 (number) - HTTP response code
         + data (array[Decision])
 
@@ -601,19 +668,19 @@ Get Table analytics by all made Decisions
 ### Get Decision[GET]
 + Response 200 (application/json)
     + Attributes (object)
-        + meta 
+        + meta
             + code: 200 (number) - HTTP response code
-        + data (Decision)        
-        
+        + data (Decision)
+
 
 ## Decisions Make [/tables/{id}/decisions]
 
 ### Make [POST]
 + Response 200 (application/json)
     + Attributes (object)
-        + meta 
+        + meta
             + code: 200 (number) - HTTP response code
-        + data (DecisionConsumer)        
+        + data (DecisionConsumer)
 
 
 # Group Changelog
@@ -623,7 +690,7 @@ Get Table analytics by all made Decisions
 ### Changelog Tables List [GET]
 + Response 200 (application/json)
     + Attributes (object)
-        + meta 
+        + meta
             + code: 200 (number) - HTTP response code
         + data (array[Changelog])
 
@@ -635,7 +702,7 @@ Get Changelog by specific Table
 ### Changelog By Table [GET]
 + Response 200 (application/json)
     + Attributes (object)
-        + meta 
+        + meta
             + code: 200 (number) - HTTP response code
         + data (array[Changelog])
 
@@ -653,12 +720,12 @@ View changes between two Tables.
 
 + Response 200 (application/json)
     + Attributes (object)
-        + meta 
+        + meta
             + code: 200 (number) - HTTP response code
-        + data 
-            + original 
+        + data
+            + original
                 (ChangelogTablesDiff)
-            + compare_with 
+            + compare_with
                 (arrayChangelogTablesDiff)
 
 
