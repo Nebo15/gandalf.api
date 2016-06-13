@@ -5,11 +5,10 @@
 
 namespace App\Http\Controllers;
 
-use Nebo15\REST\AbstractController;
-
 use Nebo15\REST\Response;
 use Illuminate\Http\Request;
 use App\Services\ConditionsTypes;
+use Nebo15\REST\AbstractController;
 use Nebo15\REST\Interfaces\ListableInterface;
 
 /**
@@ -33,6 +32,7 @@ class TablesController extends AbstractController
 
     public function __construct(Request $request, Response $response, ConditionsTypes $conditionsTypes)
     {
+        $condRules = $conditionsTypes->getConditionsRules();
         $rules = [
             'title' => 'sometimes|string',
             'description' => 'sometimes|string',
@@ -46,7 +46,7 @@ class TablesController extends AbstractController
             'fields.*.preset' => 'present|array',
             'fields.*.preset._id' => 'mongoId',
             'fields.*.preset.value' => 'required_with:fields.*.preset',
-            'fields.*.preset.condition' => 'required_with:fields.*.preset|in:' . $conditionsTypes->getConditionsRules(),
+            'fields.*.preset.condition' => 'required_with:fields.*.preset|in:' . $condRules,
             'variants_probability' => 'sometimes|in:first,random,percent|probabilitySum',
             'variants' => 'required|array',
             'variants.*._id' => 'mongoId',
@@ -63,9 +63,10 @@ class TablesController extends AbstractController
             'variants.*.rules.*.conditions' => 'required|array|conditionsCount',
             'variants.*.rules.*.conditions.*._id' => 'mongoId',
             'variants.*.rules.*.conditions.*.field_key' => 'required|string',
-            'variants.*.rules.*.conditions.*.condition' => 'required|in:' . $conditionsTypes->getConditionsRules(),
+            'variants.*.rules.*.conditions.*.condition' => 'required|in:' . $condRules,
             'variants.*.rules.*.conditions.*.value' => 'required|conditionType',
         ];
+
         $this->validationRules['create'] = $rules;
         $this->validationRules['update'] = $rules;
 

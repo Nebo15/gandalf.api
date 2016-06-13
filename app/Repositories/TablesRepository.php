@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
  * Class TablesRepository
  * @package App\Repositories
  * @method \App\Models\Table read($id)
+ * @method \App\Models\Table getModel()
  * @method \App\Models\Table[] findByIds(array $ids)
  */
 class TablesRepository extends AbstractRepository
@@ -67,7 +68,7 @@ class TablesRepository extends AbstractRepository
     public function analyzeTableDecisions($table_id, $variant_id)
     {
         $table = $this->read($table_id);
-        $decisions = (new \MongoClient())->selectDB(env('DB_DATABASE'))
+        $decisions = (new \MongoClient)->selectDB(env('DB_DATABASE'))
             ->selectCollection((new Decision)->getTable())
             ->find(
                 [

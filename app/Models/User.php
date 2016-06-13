@@ -18,6 +18,18 @@ use Nebo15\LumenOauth2\Traits\Oauthable;
 use Nebo15\REST\Traits\ListableTrait;
 use Nebo15\REST\Interfaces\ListableInterface;
 
+/**
+ * Class User
+ * @package App\Models
+ * @property string $username
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $email
+ * @property string $password
+ * @property string $temporary_email
+ * @property bool $active
+ * @property array $tokens
+ */
 class User extends Base implements
     ListableInterface,
     AuthenticatableContract,
