@@ -618,7 +618,7 @@ Get Table analytics by all made Decisions
 
 # Group Changelog
 
-## Changelog Tables List [/admin/changelog/tables]
+## Changelog Tables List [/api/v1/admin/changelog/tables]
 
 ### Changelog Tables List [GET]
 + Response 200 (application/json)
@@ -628,7 +628,7 @@ Get Table analytics by all made Decisions
         + data (array[Changelog])
 
 
-## Changelog By Table [/admin/changelog/tables/{id}]
+## Changelog By Table [/api/v1/admin/changelog/tables/{id}]
 
 Get Changelog by specific Table
 
@@ -640,7 +640,7 @@ Get Changelog by specific Table
         + data (array[Changelog])
 
 
-## Changelog Tables Diff [/admin/changelog/table/{id}/diff]
+## Changelog Tables Diff [/api/v1/admin/changelog/table/{id}/diff]
 
 View changes between two Tables.
 
@@ -662,7 +662,7 @@ View changes between two Tables.
                 (arrayChangelogTablesDiff)
 
 
-## Changelog Table Rollback [/admin/changelog/tables/{table_id}/rollback/{changelog_id}]
+## Changelog Table Rollback [/api/v1/admin/changelog/tables/{table_id}/rollback/{changelog_id}]
 
 Rollback Table to some state that described in passed Changelog
 

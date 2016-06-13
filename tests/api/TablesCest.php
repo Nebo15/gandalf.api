@@ -827,7 +827,7 @@ class TablesCest
 
     public function update(ApiTester $I)
     {
-        $I->createAndLoginUser();
+        $user = $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
         $I->createTable();
 
@@ -870,6 +870,9 @@ class TablesCest
         $I->sendPUT('api/v1/admin/tables/' . $id, $data);
         $I->assertTable();
         $I->assertResponseDataFields($data);
+
+        $I->sendGET('api/v1/admin/changelog/tables');
+        $I->assertResponseDataFields(['author' => $user->username]);
     }
 
     public function copy(ApiTester $I)
