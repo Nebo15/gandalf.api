@@ -51,11 +51,22 @@ $app->group(
     [
         'prefix' => 'api/v1',
         'namespace' => 'App\Http\Controllers',
-        'middleware' => ['oauth'],
+        'middleware' => ['oauth', 'applicationable'],
     ],
     function ($app) {
         /** @var Laravel\Lumen\Application $app */
         $app->get('/users/current', ['uses' => 'UsersController@getUserInfo']);
+    }
+);
+
+$app->group(
+    [
+        'prefix' => 'api/v1',
+        'namespace' => 'App\Http\Controllers',
+        'middleware' => ['oauth'],
+    ],
+    function ($app) {
+        /** @var Laravel\Lumen\Application $app */
         $app->put('/users/current', ['uses' => 'UsersController@updateUser']);
         #Get list of users
         $app->get('/users', ['uses' => 'UsersController@readListWithFilters']);
