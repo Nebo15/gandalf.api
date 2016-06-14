@@ -7,7 +7,7 @@ cache:
     directories:
       - vendor/
 before_script:
-  - extension="mongodb.so"
+  - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - ls -la ./
   - touch storage/logs/lumen.log
   - sudo chmod 777 -Rf storage/
