@@ -992,7 +992,6 @@ class TablesCest
         ];
         $table = $I->createTable($tableData);
 
-
         $checkData = [
             ['numeric' => 340, 'string' => 'Bad', 'bool' => true],
             ['numeric' => 350, 'string' => 'Yes', 'bool' => false],
@@ -1008,27 +1007,27 @@ class TablesCest
             $data['variant_id'] = $variantId1;
             $I->makeDecision($table->_id, $data, 'decision');
         }
-        $I->sendGET("api/v1/admin/tables/{$table->_id}/$variantId1/analytics");
-        $I->assertTableWithAnalytics();
+//        $I->sendGET("api/v1/admin/tables/{$table->_id}/$variantId1/analytics");
+//        $I->assertTableWithAnalytics();
 
-        $checkProbabilities([
-            [
-                'rule' => round(1 / 9, 5),
-                'conditions' => [
-                    round(3 / 9, 5),
-                    round(4 / 9, 5),
-                    round(5 / 9, 5),
-                ]
-            ],
-            [
-                'rule' => 0,
-                'conditions' => [
-                    round(6 / 9, 5),
-                    round(3 / 9, 5),
-                    round(4 / 9, 5),
-                ]
-            ],
-        ], 9, 9);
+//        $checkProbabilities([
+//            [
+//                'rule' => round(1 / 9, 5),
+//                'conditions' => [
+//                    round(3 / 9, 5),
+//                    round(4 / 9, 5),
+//                    round(5 / 9, 5),
+//                ]
+//            ],
+//            [
+//                'rule' => 0,
+//                'conditions' => [
+//                    round(6 / 9, 5),
+//                    round(3 / 9, 5),
+//                    round(4 / 9, 5),
+//                ]
+//            ],
+//        ], 9, 9);
 
         $tableData['fields'][3] = [
             "key" => 'last',
@@ -1052,6 +1051,7 @@ class TablesCest
             'condition' => '$lt',
             'value' => 500
         ];
+        sleep(1);
         $I->sendPUT('api/v1/admin/tables/' . $table->_id, $tableData);
         $I->seeResponseCodeIs(200);
 
@@ -1071,29 +1071,24 @@ class TablesCest
         $I->assertTableWithAnalytics();
         $checkProbabilities([
             [
-                'rule' => round(1 / 14, 5),
+                'rule' => 0,
                 'conditions' => [
-                    round(6 / 14, 5),
-                    round(5 / 14, 5),
-                    round(7 / 14, 5),
+                    round(3 / 5, 5),
+                    round(1 / 5, 5),
+                    round(2 / 5, 5),
                     round(2 / 5, 5),
                 ]
             ],
             [
-                'rule' => round(2 / 14, 5),
+                'rule' => round(2 / 5, 5),
                 'conditions' => [
-                    round(8 / 14, 5),
-                    round(5 / 14, 5),
-                    round(7 / 14, 5),
+                    round(2 / 5, 5),
+                    round(2 / 5, 5),
+                    round(3 / 5, 5),
                     round(3 / 5, 5),
                 ]
             ],
-        ], [
-            'last' => 5,
-            'bool' => 14,
-            'string' => 14,
-            'numeric' => 14,
-        ], 14);
+        ], 5, 5);
 
         $I->sendGET("api/v1/admin/tables/{$table->_id}/$variantId2/analytics");
         $I->assertTableWithAnalytics();

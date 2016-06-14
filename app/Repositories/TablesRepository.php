@@ -74,12 +74,12 @@ class TablesRepository extends AbstractRepository
                 [
                     'table._id' => new \MongoId($table_id),
                     'table.variant._id' => new \MongoId($variant_id),
-                    'applications' => ApplicationableHelper::getApplicationId()
+                    'applications' => ApplicationableHelper::getApplicationId(),
+                    'created_at' => ['$gte' => new \MongoDate($table->updated_at->timestamp)]
                 ],
                 ['rules']
             );
         $map = [];
-
         if (($decisionsAmount = $decisions->count()) > 0) {
             foreach ($decisions as $decision) {
                 $rules = $decision['rules'];
