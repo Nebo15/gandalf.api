@@ -59,9 +59,17 @@ ssl_dhparam /etc/ssl/dhparam.pem;
     path    => "/etc/nginx/sites-enabled/gandalf.api.conf",
     content => "
     server {
-    listen 80;
+    listen 80 default_server;
+    server_name api.gndf.io;
+    rewrite ^/(.*)$ https://api.gndf.io/\$1 permanent;
+}
+    server {
+    listen 443 ssl;
     error_log /var/log/nginx.log;
     server_name api.gndf.io;
+    ssl_certificate      /etc/ssl/STAR_gndf_io.crt;
+    ssl_certificate_key  /etc/ssl/STAR_gndf_io.key;
+    ssl on;
     add_header 'Access-Control-Allow-Origin' *;
     add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE';
     add_header 'Access-Control-Allow-Headers' 'Authorization,Content-Type,Accept,Origin,User-Agent,DNT,Cache-Control,Keep-Alive,If-Modified-Since,X-Project-ID,X-Date,X-Accept-Charset,X-Application-ID,X-Device-Information,X-Application-Secret-Hash,X-Device-Push-Token,X-Application';
