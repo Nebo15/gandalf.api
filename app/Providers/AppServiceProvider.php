@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\DbTransfer;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,6 +14,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton('\App\Services\DbTransfer', function () {
+            return new DbTransfer;
+        });
     }
 }

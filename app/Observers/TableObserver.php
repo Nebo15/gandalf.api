@@ -5,6 +5,7 @@
 
 namespace App\Observers;
 
+use Auth;
 use \App\Models\Table;
 use Nebo15\Changelog\Changelog;
 
@@ -32,8 +33,9 @@ class TableObserver
 
     public function saved(Table $table)
     {
-        /** get user name */
-        Changelog::createFromModel($table, 'admin');
+        /** @var \App\Models\User $user */
+        $user = Auth::guard()->user();
+        Changelog::createFromModel($table, $user->username);
     }
 
     public function deleting(Table $table)

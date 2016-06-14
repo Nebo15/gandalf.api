@@ -6,10 +6,10 @@
 namespace App\Models;
 
 use App\Exceptions\VariantNotFound;
-use Nebo15\LumenApplicationable\Contracts\Applicationable;
-use Nebo15\LumenApplicationable\Traits\ApplicationableTrait;
 use Nebo15\REST\Traits\ListableTrait;
 use Nebo15\REST\Interfaces\ListableInterface;
+use Nebo15\LumenApplicationable\Contracts\Applicationable;
+use Nebo15\LumenApplicationable\Traits\ApplicationableTrait;
 
 /**
  * Class Table
