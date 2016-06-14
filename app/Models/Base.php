@@ -9,6 +9,8 @@ use Jenssegers\Mongodb\Model as Eloquent;
  * Class Base
  * @package App\Models
  * @property string $_id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  */
 abstract class Base extends Eloquent
 {
