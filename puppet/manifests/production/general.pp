@@ -9,6 +9,12 @@ node default {
     group           => 'deploybot',
     error_repotring => 0
   } ->
+  file { ["/www", "/var/www", "/var/www/.ssh", "/var/log", "/var/log/www"]:
+    ensure => "directory",
+    owner  => "deploybot",
+    group  => "deploybot",
+    mode   => 755
+  } ->
 
   class { 'newrelic::server::linux':
     newrelic_license_key  => $newrelic_key,
