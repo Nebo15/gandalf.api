@@ -121,12 +121,12 @@ class ApiTester extends \Codeception\Actor
         $this->assertTable($jsonPath, $code);
         $this->seeResponseMatchesJsonType([
             'probability' => 'integer|float|null',
-            'requests' => 'integer'
+            'requests' => 'integer',
         ], "$jsonPath.variants[*].rules[*]");
 
         $this->seeResponseMatchesJsonType([
             'probability' => 'integer|float|null',
-            'requests' => 'integer'
+            'requests' => 'integer',
         ], "$jsonPath.variants[*].rules[*].conditions[*]");
     }
 
@@ -283,7 +283,7 @@ class ApiTester extends \Codeception\Actor
                     "preset" => [
                         'condition' => '$gte',
                         'value' => 400,
-                    ]
+                    ],
                 ],
                 [
                     "_id" => $this->getMongoId(),
@@ -291,7 +291,7 @@ class ApiTester extends \Codeception\Actor
                     "title" => 'string',
                     "source" => "request",
                     "type" => 'string',
-                    'preset' => null
+                    'preset' => null,
                 ],
                 [
                     "_id" => $this->getMongoId(),
@@ -299,8 +299,8 @@ class ApiTester extends \Codeception\Actor
                     "title" => 'bool',
                     "source" => "request",
                     "type" => 'boolean',
-                    'preset' => null
-                ]
+                    'preset' => null,
+                ],
             ],
             'variants' => [
                 [
@@ -309,9 +309,9 @@ class ApiTester extends \Codeception\Actor
                     'default_title' => 'Title 100',
                     'default_description' => 'Description 220',
                     'default_decision' => 'Decline',
-                    'rules' => $this->getVariantRules()
-                ]
-            ]
+                    'rules' => $this->getVariantRules(),
+                ],
+            ],
         ];
     }
 
@@ -328,21 +328,21 @@ class ApiTester extends \Codeception\Actor
                         "_id" => $this->getMongoId(),
                         'field_key' => 'numeric',
                         'condition' => '$eq',
-                        'value' => true
+                        'value' => true,
                     ],
                     [
                         "_id" => $this->getMongoId(),
                         'field_key' => 'string',
                         'condition' => '$eq',
-                        'value' => 'Yes'
+                        'value' => 'Yes',
                     ],
                     [
                         "_id" => $this->getMongoId(),
                         'field_key' => 'bool',
                         'condition' => '$eq',
-                        'value' => false
-                    ]
-                ]
+                        'value' => false,
+                    ],
+                ],
             ],
             [
                 "_id" => $this->getMongoId(),
@@ -354,22 +354,22 @@ class ApiTester extends \Codeception\Actor
                         "_id" => $this->getMongoId(),
                         'field_key' => 'numeric',
                         'condition' => '$eq',
-                        'value' => false
+                        'value' => false,
                     ],
                     [
                         "_id" => $this->getMongoId(),
                         'field_key' => 'string',
                         'condition' => '$eq',
-                        'value' => 'Not'
+                        'value' => 'Not',
                     ],
                     [
                         "_id" => $this->getMongoId(),
                         'field_key' => 'bool',
                         'condition' => '$eq',
-                        'value' => true
-                    ]
-                ]
-            ]
+                        'value' => true,
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -388,21 +388,21 @@ class ApiTester extends \Codeception\Actor
                         'field_key' => 'numeric',
                         'condition' => '$eq',
                         'value' => true,
-                        'preset' => null
+                        'preset' => null,
                     ],
                     [
                         'field_key' => 'string',
                         'condition' => '$eq',
                         'value' => 'Yes',
-                        'preset' => null
+                        'preset' => null,
                     ],
                     [
                         'field_key' => 'bool',
                         'condition' => '$eq',
                         'value' => false,
-                        'preset' => null
-                    ]
-                ]
+                        'preset' => null,
+                    ],
+                ],
             ],
             [
                 'than' => -50.74445,
@@ -412,19 +412,19 @@ class ApiTester extends \Codeception\Actor
                     [
                         'field_key' => 'numeric',
                         'condition' => '$eq',
-                        'value' => false
+                        'value' => false,
                     ],
                     [
                         'field_key' => 'string',
                         'condition' => '$eq',
-                        'value' => 'Not'
+                        'value' => 'Not',
                     ],
                     [
                         'field_key' => 'bool',
                         'condition' => '$eq',
-                        'value' => true
-                    ]
-                ]
+                        'value' => true,
+                    ],
+                ],
             ],
             [
                 'than' => 25.24445,
@@ -434,20 +434,20 @@ class ApiTester extends \Codeception\Actor
                     [
                         'field_key' => 'numeric',
                         'condition' => '$eq',
-                        'value' => false
+                        'value' => false,
                     ],
                     [
                         'field_key' => 'string',
                         'condition' => '$eq',
-                        'value' => 'Not'
+                        'value' => 'Not',
                     ],
                     [
                         'field_key' => 'bool',
                         'condition' => '$eq',
-                        'value' => true
-                    ]
-                ]
-            ]
+                        'value' => true,
+                    ],
+                ],
+            ],
         ];
 
         return $tableData;
@@ -485,8 +485,8 @@ class ApiTester extends \Codeception\Actor
                 [
                     '_id' => $this->getMongoId(),
                     'default_decision' => 'Decline',
-                    'rules' => []
-                ]
+                    'rules' => [],
+                ],
             ],
         ];
 
@@ -566,6 +566,23 @@ class ApiTester extends \Codeception\Actor
         ], $jsonPath);
     }
 
+    public function assertCurrentUser($jsonPath = '$.data', $code = 200)
+    {
+        $this->seeResponseCodeIs($code);
+        $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
+            'active' => 'boolean',
+            'email' => 'string',
+            'temporary_email' => 'string|null',
+            'first_name' => 'string',
+            'last_name' => 'string',
+            'username' => 'string',
+            'access_tokens' => 'array',
+            'refresh_tokens' => 'array',
+            'scope' => 'array',
+        ], $jsonPath);
+    }
+
     public function assertResponseDataFields(array $fields, $code = 200)
     {
         $this->seeResponseCodeIs($code);
@@ -595,6 +612,7 @@ class ApiTester extends \Codeception\Actor
             ['description' => $this->getFaker()->text('20'), 'scope' => ['read', 'check']]);
 
         $this->sendGET('api/v1/projects/consumers');
+
         return json_decode($this->grabResponse())->data[0];
     }
 
