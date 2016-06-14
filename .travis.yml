@@ -7,6 +7,7 @@ cache:
     directories:
       - vendor/
 before_script:
+  - extension="mongodb.so"
   - ls -la ./
   - touch storage/logs/lumen.log
   - sudo chmod 777 -Rf storage/
@@ -18,7 +19,6 @@ before_script:
   - echo 127.0.0.1 gandalf.dev | sudo tee -a /etc/hosts
   - php5-fpm -i
   - composer install --prefer-source
-  - pecl -q install mongo && echo "extension=mongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 script:
   - vendor/bin/codecept run
   - vendor/bin/phpcs ./app --standard=PSR2 --warning-severity=0
