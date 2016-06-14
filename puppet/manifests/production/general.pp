@@ -48,7 +48,6 @@ ssl_dhparam /etc/ssl/dhparam.pem;
   ssl_session_cache shared:SSL:10m;
   ssl_session_timeout 10m;
   ssl_prefer_server_ciphers on;
-  server_tokens off;
 ",
     mode    => 0440,
     owner   => root,
