@@ -2,11 +2,12 @@ node default {
   include stdlib
   include apt
 
+  $newrelic_app_name = 'gandalf.api.production'
 
   class { 'php56':
-  user            => 'deploybot',
-  group           => 'deploybot',
-  error_repotring => 0
+    user            => 'deploybot',
+    group           => 'deploybot',
+    error_repotring => 0
   } ->
 
   class { 'newrelic::server::linux':
@@ -31,7 +32,8 @@ node default {
     keepalive_timeout   => '65',
     types_hash_max_size => '2048',
     server_tokens       => 'off',
-    gzip                => 'off'
+    gzip                => 'off',
+    ssl_dhparam         => '/etc/ssl/dhparam.pem'
   }
 
 

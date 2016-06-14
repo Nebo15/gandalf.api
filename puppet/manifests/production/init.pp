@@ -77,11 +77,6 @@ Cmnd_Alias        API_PUPPET = /usr/bin/puppet
 Cmnd_Alias        API_SERVICE = /usr/bin/service
 deploybot  ALL=NOPASSWD: API_PUPPET
 deploybot  ALL=NOPASSWD: API_SERVICE
-Defaults env_keep += \"FACTER_server_tags\"
-Defaults env_keep += \"FACTER_project_dir\"
-Defaults env_keep += \"FACTER_daemon_user\"
-Defaults env_keep += \"FACTER_error_reporting\"
-Defaults env_keep += \"FACTER_newrelic_app_name\"
 Defaults env_keep += \"FACTER_newrelic_key\"
 ",
     mode    => 0440,
