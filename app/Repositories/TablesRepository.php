@@ -73,8 +73,9 @@ class TablesRepository extends AbstractRepository
             ->find(
                 [
                     'table._id' => new \MongoDB\BSON\ObjectId($table_id),
-                    'table.variant._id' => new \MongoDB\BSON\ObjectId($variant_id),
-                    'applications' => ApplicationableHelper::getApplicationId()
+                    'table.variant._id' => new \MongoId($variant_id),
+                    'applications' => ApplicationableHelper::getApplicationId(),
+                    'created_at' => ['$gte' => new \MongoDate($table->updated_at->timestamp)]
                 ],
                 ['rules']
             );
