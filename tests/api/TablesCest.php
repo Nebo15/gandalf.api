@@ -1007,27 +1007,27 @@ class TablesCest
             $data['variant_id'] = $variantId1;
             $I->makeDecision($table->_id, $data, 'decision');
         }
-//        $I->sendGET("api/v1/admin/tables/{$table->_id}/$variantId1/analytics");
-//        $I->assertTableWithAnalytics();
+        $I->sendGET("api/v1/admin/tables/{$table->_id}/$variantId1/analytics");
+        $I->assertTableWithAnalytics();
 
-//        $checkProbabilities([
-//            [
-//                'rule' => round(1 / 9, 5),
-//                'conditions' => [
-//                    round(3 / 9, 5),
-//                    round(4 / 9, 5),
-//                    round(5 / 9, 5),
-//                ]
-//            ],
-//            [
-//                'rule' => 0,
-//                'conditions' => [
-//                    round(6 / 9, 5),
-//                    round(3 / 9, 5),
-//                    round(4 / 9, 5),
-//                ]
-//            ],
-//        ], 9, 9);
+        $checkProbabilities([
+            [
+                'rule' => round(1 / 9, 5),
+                'conditions' => [
+                    round(3 / 9, 5),
+                    round(4 / 9, 5),
+                    round(5 / 9, 5),
+                ]
+            ],
+            [
+                'rule' => 0,
+                'conditions' => [
+                    round(6 / 9, 5),
+                    round(3 / 9, 5),
+                    round(4 / 9, 5),
+                ]
+            ],
+        ], 9, 9);
 
         $tableData['fields'][3] = [
             "key" => 'last',
