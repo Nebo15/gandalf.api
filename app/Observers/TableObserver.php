@@ -34,8 +34,8 @@ class TableObserver
     public function saved(Table $table)
     {
         /** @var \App\Models\User $user */
-        $user = Auth::guard()->user();
-        Changelog::createFromModel($table, $user->username);
+//        $user = Auth::guard()->user();
+//        Changelog::createFromModel($table, $user->username);
     }
 
     public function deleting(Table $table)

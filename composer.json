@@ -8,9 +8,8 @@
         "php": ">=5.5.9",
         "laravel/lumen-framework": "5.2.*",
         "vlucas/phpdotenv": "~2.2",
-        "jenssegers/mongodb": "2.*",
+        "jenssegers/mongodb": "3.*",
         "nebo15/lumen.rest": "*",
-        "nebo15/eloquent.changelog": "*",
         "bugsnag/bugsnag-laravel": "1.*",
         "nebo15/lumen.applicationable": "*",
         "nebo15/lumen.oauth2-mongodb": "*",
@@ -19,7 +18,6 @@
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "phpunit/phpunit": "~4.0",
-        "sokil/php-mongo-migrator": "*",
         "squizlabs/php_codesniffer": "2.*",
         "barryvdh/laravel-ide-helper": "^2.1",
         "codeception/codeception": "*",

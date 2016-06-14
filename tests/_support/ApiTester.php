@@ -263,7 +263,7 @@ class ApiTester extends \Codeception\Actor
 
     public function getMongoId()
     {
-        return strval(new MongoId);
+        return strval(new MongoDB\BSON\ObjectId);
     }
 
     public function getTableShortData()
@@ -601,7 +601,8 @@ class ApiTester extends \Codeception\Actor
     public function getMongo()
     {
         if (!$this->mongo) {
-            $this->mongo = (new MongoClient())->selectDB('gandalf_test');
+//            $this->mongo = (new MongoClient())->selectDB('gandalf_test');
+            $this->mongo = new \MongoDB\Driver\Manager("mongodb://localhost:27017");
         }
 
         return $this->mongo;
@@ -701,7 +702,10 @@ class ApiTester extends \Codeception\Actor
                 'client_id' => md5($faker->name),
                 'client_secret' => $faker->password(32, 32),
             ];
-            $this->getMongo()->oauth_clients->insert($client);
+            $bulk = new MongoDB\Driver\BulkWrite;
+            $bulk->insert($client);
+            $res = $this->getMongo()->executeBulkWrite('gandalf_test.oauth_clients', $bulk);
+//            $this->getMongo()->oauth_clients->insert($client);
             $this->client = $client;
         }
         $this->loginClient($this->client);

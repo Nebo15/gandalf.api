@@ -3,7 +3,7 @@ namespace App\Models;
 
 use App\Exceptions\FailedToSaveModel;
 use App\Exceptions\IdNotFoundException;
-use Jenssegers\Mongodb\Model as Eloquent;
+use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
 
 /**
  * Class Base
@@ -32,7 +32,7 @@ abstract class Base extends Eloquent
 
     public function createId()
     {
-        $this->{self::PRIMARY_KEY} = new \MongoId();
+        $this->{self::PRIMARY_KEY} = new \MongoDB\BSON\ObjectId();
     }
 
     /**

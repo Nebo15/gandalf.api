@@ -40,12 +40,12 @@ class Scoring
 
         $scoring_data = [
             'table' => [
-                '_id' => new \MongoId($table->getId()),
+                '_id' => new \MongoDB\BSON\ObjectId($table->getId()),
                 'title' => $table->title,
                 'description' => $table->description,
                 'matching_type' => $table->matching_type,
                 'variant' => [
-                    '_id' => new \MongoId($variant->getId()),
+                    '_id' => new \MongoDB\BSON\ObjectId($variant->getId()),
                     'title' => $variant->title,
                     'description' => $variant->description,
                 ]
@@ -64,7 +64,7 @@ class Scoring
         /** @var \App\Models\Rule $rule */
         foreach ($variant->rules()->get() as $rule) {
             $scoring_rule = [
-                '_id' => new \MongoId($rule->_id),
+                '_id' => new \MongoDB\BSON\ObjectId($rule->_id),
                 'than' => $rule->than,
                 'title' => $rule->title,
                 'description' => $rule->description,

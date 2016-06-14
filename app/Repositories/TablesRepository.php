@@ -72,8 +72,8 @@ class TablesRepository extends AbstractRepository
             ->selectCollection((new Decision)->getTable())
             ->find(
                 [
-                    'table._id' => new \MongoId($table_id),
-                    'table.variant._id' => new \MongoId($variant_id),
+                    'table._id' => new \MongoDB\BSON\ObjectId($table_id),
+                    'table.variant._id' => new \MongoDB\BSON\ObjectId($variant_id),
                     'applications' => ApplicationableHelper::getApplicationId()
                 ],
                 ['rules']
