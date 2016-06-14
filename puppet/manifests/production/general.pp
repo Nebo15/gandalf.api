@@ -32,8 +32,7 @@ node default {
     keepalive_timeout   => '65',
     types_hash_max_size => '2048',
     server_tokens       => 'off',
-    gzip                => 'off',
-    ssl_dhparam         => '/etc/ssl/dhparam.pem'
+    gzip                => 'off'
   }
 
 
