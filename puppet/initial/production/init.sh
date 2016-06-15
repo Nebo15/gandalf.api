@@ -3,17 +3,6 @@ modules_dir=$(dirname $0)/../../modules
 cd ${modules_dir}/../..
 project_dir=$(pwd)
 new_relic_key=1231231231312312312
-LOCALE_LANGUAGE="en_US"
-LOCALE_CODESET="en_US.UTF-8"
-sudo locale-gen ${LOCALE_LANGUAGE} ${LOCALE_CODESET}
-sudo echo "export LANGUAGE=${LOCALE_CODESET}
-export LANG=${LOCALE_CODESET}
-export LC_ALL=${LOCALE_CODESET} " | sudo tee --append /etc/bash.bashrc
-echo ${TIMEZONE} | sudo tee /etc/timezone
-export LANGUAGE=${LOCALE_CODESET}
-export LANG=${LOCALE_CODESET}
-export LC_ALL=${LOCALE_CODESET}
-sudo dpkg-reconfigure locales
 
 show_help()
 {

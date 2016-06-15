@@ -38,6 +38,33 @@ class UsersCest
         $I->assertCurrentUser();
     }
 
+    public function createUserCorrectData(ApiTester $I)
+    {
+        $I->createAndLoginClient();
+        $faker = $I->getFaker();
+        $badData = [
+            'username' => [
+                'JL',
+                'some.username',
+                'some-username',
+                'some_username',
+                'some.username12345',
+            ]
+        ];
+        foreach ($badData as $key => $data) {
+            $normalUserData = [
+                'password' => $I->getPassword(),
+                'username' => $faker->firstName,
+            ];
+            foreach ($data as $item) {
+                $normalUserData['email'] = $faker->email;
+                $normalUserData[$key] = $item;
+                $I->sendPOST('api/v1/users/', $normalUserData);
+                $I->seeResponseCodeIs(201);
+            }
+        }
+    }
+
     public function createUserBadData(ApiTester $I)
     {
         $I->createAndLoginClient();
