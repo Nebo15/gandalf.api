@@ -484,7 +484,17 @@ For login as consumer you should make Basic Auth client_id:client_secret
     + Attributes (object)
         + meta
             + code: 200 (number) - HTTP response code
-        + data (Project)
+        + data (array[Consumer])
+
+### Get consumer [GET]
+
+Get list of consumers for project
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (array[Consumer])
 
 ### Update consumer [PUT]
 
@@ -497,7 +507,7 @@ For login as consumer you should make Basic Auth client_id:client_secret
     + Attributes (object)
         + meta
             + code: 200 (number) - HTTP response code
-        + data (Project)
+        + data (array[Consumer])
 
 ### Delete consumer [DELETE]
 
@@ -509,8 +519,7 @@ Remove consumer from the project by client_id
     + Attributes (object)
         + meta
             + code: 200 (number) - HTTP response code
-        + data (Project)
-
+        + data (array[Consumer])
 
 ## Project Users [/api/v1/projects/users]
 
@@ -551,6 +560,21 @@ Adding existing user to the current project. Share project with other users with
 ### Delete User From Project  [DELETE]
 + Parameters
     + user_id: 56c31536a60ad644060041af (string, required) - ID of existing User
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (Project)
+
+## Project admin [/api/v1/projects/users/admin]
+
+### Set admin rights [POST]
+Set admin rights and access level to another user
+**Admin role is Required**
+
++ Parameters
+    + user_id: 56c31536a60ad644060041af (string, required) - ID of existing User
+    
 + Response 200 (application/json)
     + Attributes (object)
         + meta
@@ -891,7 +915,6 @@ Rollback Table to some state that described in passed Changelog
 + client_secret: a7c70da3246a436bde66101d65741f9adf570726 (string) - Client secret
 + description: Description of project (string) - Optional description of client
 + scope: read, write, ... (array) - Array of user scopes
-
 
 ### UserList
 + _id: 56c31536a60ad644060041af (string) - MongoID
