@@ -20,7 +20,9 @@ class UsersCest
 
     public function editUser(ApiTester $I)
     {
+        $I->createAndLoginClient();
         $user = $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
         $user_edited_data = [
             'last_name' => $user->last_name . 'edited',
             'first_name' => $user->first_name . 'edited',
@@ -31,6 +33,9 @@ class UsersCest
         $I->seeResponseContains($user_edited_data['last_name']);
         $I->seeResponseContains($user_edited_data['first_name']);
         $I->seeResponseContains($user_edited_data['username']);
+
+        $I->sendGET('api/v1/users/current');
+        $I->assertCurrentUser();
     }
 
     public function createUserBadData(ApiTester $I)
