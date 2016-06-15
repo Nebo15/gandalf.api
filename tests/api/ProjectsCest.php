@@ -22,7 +22,7 @@ class ProjectsCest
 
         $I->setHeader('X-Application', $project_id);
         $I->sendPOST('api/v1/projects/consumers', ['description' => $faker->text('20'), 'scope' => ['check']]);
-        $I->assertProject('$.data', 201);
+        $I->assertConsumers('$.data[*]', 201);
 
         $I->sendPOST('api/v1/projects/consumers',
             ['description' => $faker->text('20'), 'scope' => ['check', 'undefined_scope']]);
@@ -137,6 +137,28 @@ class ProjectsCest
             ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['read', 'update', 'get_consumers']]);
         $I->loginUser($second_user);
         $I->sendGET('api/v1/projects/consumers');
+        $I->assertConsumers();
+    }
+
+    public function testConsumers(ApiTester $I)
+    {
+        $faker = $I->getFaker();
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
+        $I->createConsumer();
+        $I->sendPOST('api/v1/projects/consumers',
+            ['description' => $faker->text('20'), 'scope' => ['read', 'check']]);
+        $consumer = json_decode($I->grabResponse())->data[0];
+        $I->assertConsumers('$.data[*]', 201);
+
+        $text = $faker->text('20');
+        $I->sendPUT('api/v1/projects/consumers',
+            ['description' => $text, 'scope' => ['read', 'check'], 'client_id' => $consumer->client_id]);
+        $I->seeResponseContains($text);
+        $I->assertConsumers();
+
+        $I->sendDELETE('api/v1/projects/consumers', ['client_id' => $consumer->client_id]);
+        $I->cantSeeResponseContains($consumer->client_id);
         $I->assertConsumers();
     }
 }

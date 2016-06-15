@@ -58,19 +58,19 @@ return [
             '~^\/api\/v1\/tables\/(.+)\/decisions$~' => ['read', 'check'],
             '~^\/api\/v1\/groups\/(.+)\/decisions$~' => ['read', 'check'],
             '~^\/api\/v1\/projects\/users$~' => ['read', 'create', 'add_user'],
-            '~^\/api\/v1\/projects\/consumers~' => ['read', 'update', 'create_consumers'],
+            '~^\/api\/v1\/projects\/consumers~' => ['read', 'update', 'get_consumers', 'create_consumers'],
         ],
         'put' => [
             '~^\/api\/v1\/admin\/groups\/(.+)$~' => ['read', 'update'],
             '~^\/api\/v1\/admin\/tables\/(.+)$~' => ['read', 'update'],
             '~^\/api\/v1\/projects\/(.+)$~' => ['read', 'update', 'edit_project'],
-            '~^\/api\/v1\/projects\/consumers~' => ['read', 'update', 'update_consumers'],
+            '~^\/api\/v1\/projects\/consumers~' => ['read', 'update', 'get_consumers', 'update_consumers'],
             '~^\/api\/v1\/projects\/users$~' => ['read', 'update', 'update_users'],
         ],
         'delete' => [
             '~^\/api\/v1\/admin\/groups\/(.+)$~' => ['read', 'delete'],
             '~^\/api\/v1\/projects\/users$~' => ['read', 'update', 'delete_users'],
-            '~^\/api\/v1\/projects\/consumers~' => ['read', 'update', 'delete_consumers'],
+            '~^\/api\/v1\/projects\/consumers~' => ['read', 'update', 'get_consumers', 'delete_consumers'],
             '~^\/api\/v1\/projects\/(.+)$~' => ['read', 'delete_project'],
             '~^\/api\/v1\/admin\/tables\/(.+)$~' => ['read', 'delete'],
 

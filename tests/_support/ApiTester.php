@@ -659,7 +659,6 @@ class ApiTester extends \Codeception\Actor
 
             $user_data = [
                 'first_name' => $faker->firstName,
-                'last_name' => $faker->lastName,
                 'email' => ($email) ? $email : $faker->email,
                 'password' => $this->getPassword(),
                 'username' => $faker->firstName,
