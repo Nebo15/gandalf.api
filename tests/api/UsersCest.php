@@ -24,7 +24,7 @@ class UsersCest
         $user = $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
         $user_edited_data = [
-            'last_name' => $user->last_name . 'edited',
+            'last_name' => 'LastName',
             'first_name' => $user->first_name . 'edited',
             'username' => $user->username . 'edited',
         ];
