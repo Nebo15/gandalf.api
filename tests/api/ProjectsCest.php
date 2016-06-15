@@ -4,10 +4,11 @@ class ProjectsCest
 {
     public function _before(ApiTester $I, \Codeception\Scenario $scenario)
     {
+        $I->dropDatabase();
         $I->haveHttpHeader('Content-Type', 'application/json');
     }
 
-    public function createProject(ApiTester $I)
+    public function create(ApiTester $I)
     {
         $I->createAndLoginUser();
         $faker = $I->getFaker();

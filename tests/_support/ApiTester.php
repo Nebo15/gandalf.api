@@ -619,11 +619,15 @@ class ApiTester extends \Codeception\Actor
     public function getMongo()
     {
         if (!$this->mongo) {
-//            $this->mongo = (new MongoClient())->selectDB('gandalf_test');
             $this->mongo = new \MongoDB\Driver\Manager("mongodb://localhost:27017");
         }
 
         return $this->mongo;
+    }
+
+    public function dropDatabase()
+    {
+        $this->getMongo()->executeCommand('gandalf_test', new MongoDB\Driver\Command(['dropDatabase' => 1]));
     }
 
     public function createProjectAndSetHeader(array $data = [])
@@ -722,8 +726,7 @@ class ApiTester extends \Codeception\Actor
             ];
             $bulk = new MongoDB\Driver\BulkWrite;
             $bulk->insert($client);
-            $res = $this->getMongo()->executeBulkWrite('gandalf_test.oauth_clients', $bulk);
-//            $this->getMongo()->oauth_clients->insert($client);
+            $this->getMongo()->executeBulkWrite('gandalf_test.oauth_clients', $bulk);
             $this->client = $client;
         }
         $this->loginClient($this->client);

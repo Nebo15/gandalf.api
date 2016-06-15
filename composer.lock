@@ -1773,16 +1773,16 @@
         },
         {
             "name": "nebo15/eloquent.changelog",
-            "version": "0.1.0",
+            "version": "0.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/eloquent-changelog.git",
-                "reference": "4aae85885e8b3160dcfe88191a9a98a4b5deb9b3"
+                "reference": "666d1bf51c58601bb76701d27a06c7e8c5f9f4cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/eloquent-changelog/zipball/4aae85885e8b3160dcfe88191a9a98a4b5deb9b3",
-                "reference": "4aae85885e8b3160dcfe88191a9a98a4b5deb9b3",
+                "url": "https://api.github.com/repos/Nebo15/eloquent-changelog/zipball/666d1bf51c58601bb76701d27a06c7e8c5f9f4cb",
+                "reference": "666d1bf51c58601bb76701d27a06c7e8c5f9f4cb",
                 "shasum": ""
             },
             "require": {
@@ -1815,24 +1815,24 @@
                 "eloquent",
                 "laravel"
             ],
-            "time": "2016-06-15 12:34:34"
+            "time": "2016-06-15 14:15:30"
         },
         {
             "name": "nebo15/lumen.applicationable",
-            "version": "0.0.24",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/lumen-applicationable.git",
-                "reference": "c2329cc0f3682fab8d85405d7c54984270db2cc7"
+                "reference": "9bbe14e8bc10accf0cfd00612e4e93f73858d352"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/c2329cc0f3682fab8d85405d7c54984270db2cc7",
-                "reference": "c2329cc0f3682fab8d85405d7c54984270db2cc7",
+                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/9bbe14e8bc10accf0cfd00612e4e93f73858d352",
+                "reference": "9bbe14e8bc10accf0cfd00612e4e93f73858d352",
                 "shasum": ""
             },
             "require-dev": {
-                "jenssegers/mongodb": "2.*",
+                "jenssegers/mongodb": "3.*",
                 "laravel/lumen-framework": "5.2.*",
                 "squizlabs/php_codesniffer": "2.*"
             },
@@ -1857,20 +1857,20 @@
                 "lumen",
                 "mongodb"
             ],
-            "time": "2016-06-15 12:09:34"
+            "time": "2016-06-15 13:22:08"
         },
         {
             "name": "nebo15/lumen.oauth2-mongodb",
-            "version": "0.1.0",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/lumen-oauth2-mongo.git",
-                "reference": "27cfb6dbdd16629691a198395f3b1c52867738ea"
+                "reference": "3a2738a5489fb6b5f62876ae2ac9a30700a9e2be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-oauth2-mongo/zipball/27cfb6dbdd16629691a198395f3b1c52867738ea",
-                "reference": "27cfb6dbdd16629691a198395f3b1c52867738ea",
+                "url": "https://api.github.com/repos/Nebo15/lumen-oauth2-mongo/zipball/3a2738a5489fb6b5f62876ae2ac9a30700a9e2be",
+                "reference": "3a2738a5489fb6b5f62876ae2ac9a30700a9e2be",
                 "shasum": ""
             },
             "require": {
@@ -1902,20 +1902,20 @@
                 "mongo",
                 "oauth2"
             ],
-            "time": "2016-06-15 12:48:59"
+            "time": "2016-06-15 13:20:23"
         },
         {
             "name": "nebo15/lumen.rest",
-            "version": "0.0.11",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/lumen-rest.git",
-                "reference": "4b8eeb5da0aefa4f707f42a7d1161b3b7ca6156d"
+                "reference": "f9924027a33872ba731d0b8dc1d6baef7e4bdd58"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-rest/zipball/4b8eeb5da0aefa4f707f42a7d1161b3b7ca6156d",
-                "reference": "4b8eeb5da0aefa4f707f42a7d1161b3b7ca6156d",
+                "url": "https://api.github.com/repos/Nebo15/lumen-rest/zipball/f9924027a33872ba731d0b8dc1d6baef7e4bdd58",
+                "reference": "f9924027a33872ba731d0b8dc1d6baef7e4bdd58",
                 "shasum": ""
             },
             "require-dev": {
@@ -1944,7 +1944,7 @@
                 "lumen",
                 "rest"
             ],
-            "time": "2016-05-17 11:11:52"
+            "time": "2016-06-15 14:13:55"
         },
         {
             "name": "nesbot/carbon",

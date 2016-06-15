@@ -4,6 +4,7 @@ class TablesCest
 {
     public function _before(ApiTester $I)
     {
+        $I->dropDatabase();
         $I->haveHttpHeader('Content-Type', 'application/json');
     }
 
@@ -852,12 +853,12 @@ class TablesCest
                 'default_decision' => 'Decline',
                 'rules' => [
                     [
-                        '_id' => strval(new MongoId),
+                        '_id' => $I->getMongoId(),
                         'than' => 'Approve',
                         'description' => 'New rule',
                         'conditions' => [
                             [
-                                '_id' => strval(new MongoId),
+                                '_id' => $I->getMongoId(),
                                 'field_key' => 'test_key',
                                 'condition' => '$eq',
                                 'value' => 'test',
@@ -957,8 +958,8 @@ class TablesCest
         $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
 
-        $variantId1 = new MongoId;
-        $variantId2 = new MongoId;
+        $variantId1 = $I->getMongoId();
+        $variantId2 = $I->getMongoId();
 
         $tableData = $I->getTableShortData();
         $tableData['variants'][0]['_id'] = $variantId1;
