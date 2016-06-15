@@ -25,7 +25,7 @@ class UsersCest
         $user = $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
         $user_edited_data = [
-            'last_name' => $user->last_name . 'edited',
+            'last_name' => 'LastName',
             'first_name' => $user->first_name . 'edited',
             'username' => $user->username . 'edited',
         ];
@@ -37,6 +37,33 @@ class UsersCest
 
         $I->sendGET('api/v1/users/current');
         $I->assertCurrentUser();
+    }
+
+    public function createUserCorrectData(ApiTester $I)
+    {
+        $I->createAndLoginClient();
+        $faker = $I->getFaker();
+        $badData = [
+            'username' => [
+                'JL',
+                'some.username',
+                'some-username',
+                'some_username',
+                'some.username12345',
+            ]
+        ];
+        foreach ($badData as $key => $data) {
+            $normalUserData = [
+                'password' => $I->getPassword(),
+                'username' => $faker->firstName,
+            ];
+            foreach ($data as $item) {
+                $normalUserData['email'] = $faker->email;
+                $normalUserData[$key] = $item;
+                $I->sendPOST('api/v1/users/', $normalUserData);
+                $I->seeResponseCodeIs(201);
+            }
+        }
     }
 
     public function createUserBadData(ApiTester $I)
