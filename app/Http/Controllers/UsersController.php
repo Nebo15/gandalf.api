@@ -17,25 +17,25 @@ class UsersController extends AbstractController
 
     protected $validationRules = [
         'create' => [
-            'username' => 'required|unique:users,username|between:2,32',
-            'first_name' => 'sometimes|required|string|between:2,32',
-            'last_name' => 'sometimes|required|string|between:2,32',
+            'username' => 'required|unique:users,username|between:2,32|username',
+            'first_name' => 'sometimes|required|string|between:2,32|alpha',
+            'last_name' => 'sometimes|required|string|between:2,32|alpha',
             'email' => 'required|unique:users,email|email',
             'password' => 'required|between:6,32|password',
         ],
         'update' => [
-            'username' => 'sometimes|required|unique:users,username|min:2|max:32',
+            'username' => 'required|unique:users,username|between:2,32|username',
+            'first_name' => 'sometimes|required|string|between:2,32|alpha',
+            'last_name' => 'sometimes|required|string|between:2,32|alpha',
             'email' => 'sometimes|required|unique:users,email|email',
-            'first_name' => 'sometimes|required|string|min:2|max:32',
-            'last_name' => 'sometimes|required|string|min:2|max:32',
-            'password' => 'sometimes|required',
+            'password' => 'sometimes|required|between:6,32|password',
         ],
         'createResetPasswordToken' => [
             'email' => 'required|email',
         ],
         'changePassword' => [
             'token' => 'required',
-            'password' => 'required|password',
+            'password' => 'required|between:6,32|password',
         ],
         'invite' => [
             'email' => 'required|email',

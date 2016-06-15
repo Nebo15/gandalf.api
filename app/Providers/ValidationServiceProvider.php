@@ -40,6 +40,7 @@ class ValidationServiceProvider extends ServiceProvider
             return $between[0] < $between[1];
         });
         Validator::extend('password', 'App\Validators\PasswordValidator@validate');
+        Validator::extend('username', 'App\Validators\UsernameValidator@validate');
     }
 
     public function register()
