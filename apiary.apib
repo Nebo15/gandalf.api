@@ -300,12 +300,9 @@ You can see in response properties digits `variants.0.rules`, this is an array i
 
 ### Create User [POST]
 
-+ Parameters
-    + email: email@example.com (string, required)
-    + password: p@ssword! (string, required) - Length 6-32, necessarily one letter and one number
-    + first_name: John (string)
-    + last_name: Smith (string)
-
++ Request (application/json)
+    + Attributes (UpdateUser)
+        + username: John.Smith (string) - Length 2-32 /^ [a-zA-Z0-9-_\.]+$/
 + Response 200 (application/json)
     + Attributes (object)
         + meta
@@ -325,11 +322,8 @@ You can see in response properties digits `variants.0.rules`, this is an array i
 
 ### Update user [PUT]
 
-+ Parameters
-    + email: email@example.com (string, required)
-    + password: p@ssword! (string, required) - Length 6-32, necessarily one letter and one number
-    + first_name: John (string)
-    + last_name: Smith (string)
++  Request (application/json)
+    + Attributes (UpdateUser)
 
 + Response 200 (application/json)
     + Attributes (object)
@@ -341,8 +335,9 @@ You can see in response properties digits `variants.0.rules`, this is an array i
 
 ### Verify Email [POST]
 
-+ Parameters
-    + token: $2y$10$.lp0OGb.nJSt... (string, required) - Token for verification email
++ Request (application/json)
+    + Attributes
+        + token: $2y$10$.lp0OGb.nJSt... (string, required) - Token for verification email
 
 + Response 200 (application/json)
     + Attributes (object)
@@ -356,8 +351,9 @@ You can see in response properties digits `variants.0.rules`, this is an array i
 
 Send reset password url with token to User.email
 
-+ Parameters
-    + email: email@example.com (string, required)
++ Request (application/json)
+    + Attributes
+        + email: email@example.com (string, required)
 
 + Response 200 (application/json)
     + Attributes (object)
@@ -366,9 +362,10 @@ Send reset password url with token to User.email
 
 ### Change user password by token [PUT]
 
-+ Parameters
-    + token: $2y$10$.lp0OGb.nJSt... (string, required) - Token for password reset
-    + password: newP@s$w0rd (string, required) - New user password
++ Request (application/json)
+    + Attributes
+        + token: $2y$10$.lp0OGb.nJSt... (string, required) - Token for password reset
+        + password: newP@s$w0rd (string, required) - New user password
 
 + Response 200 (application/json)
     + Attributes (object)
@@ -380,10 +377,11 @@ Send reset password url with token to User.email
 
 ### Create invitation for user to the project [POST]
 
-+ Parameters
-    + email: invite@wxample.com (string, required) - Email for invitation
-    + role: manager (string, required) Role of user in project
-    + scope: read, write (array, required) - Array of user scopes
++ Request (application/json)
+    + Attributes
+        + email: invite@wxample.com (string, required) - Email for invitation
+        + role: manager (string, required) Role of user in project
+        + scope: read, write (array, required) - Array of user scopes
 
 + Response 200 (application/json)
     + Attributes (object)
@@ -399,11 +397,12 @@ Get user access token, grant_type password scenario
 
 ### Get User Access Token [POST]
 
-+ Parameters
-    + `grant_type`: password, refresh_token (enum[string], required) - Grant Type
-    + username: John (string) - Username or user email, required if grant_type == password
-    + password: p@s$w0rd (string) - User password, required if grant_type == password
-    + `refresh_token`: %4y$10$;lp8OGb.nAct... (string) - Refresh token, required if grant_type == refresh_token
++ Request (application/json)
+    + Attributes
+        + `grant_type`: password, refresh_token (enum[string], required) - Grant Type
+        + username: John (string) - Username or user email, required if grant_type == password
+        + password: p@s$w0rd (string) - User password, required if grant_type == password
+        + `refresh_token`: %4y$10$;lp8OGb.nAct... (string) - Refresh token, required if grant_type == refresh_token
 
 + Response 200 (application/json)
     + Attributes (object)
@@ -429,9 +428,8 @@ Can create project and in the feature link tables to it.
 When you created project, your feature requests should be with Header
 **-H 'X-Application: project_id'**
 
-+ Parameters
-    + title: New project (string, required)
-    + description: Some cool description (string)
++ Request (application/json)
+    + Attributes (CreateProject)
 
 + Response 200 (application/json)
     + Attributes (object)
@@ -441,9 +439,8 @@ When you created project, your feature requests should be with Header
 
 ### Update Project [PUT]
 
-+ Parameters
-    + title: New project (string, required)
-    + description: Some cool description (string)
++ Request (application/json)
+    + Attributes (CreateProject)
 
 + Response 200 (application/json)
     + Attributes (object)
@@ -476,9 +473,10 @@ When you created project, your feature requests should be with Header
 Every into existing project user can create consumer with own scopes.
 For login as consumer you should make Basic Auth client_id:client_secret
 
-+ Parameters
-    + description: Bot (string, required) - Description of consumer
-    + scope: read,check (array, required) - Scopes of consumer
++ Request (application/json)
+    + Attributes
+        + description: Bot (string, required) - Description of consumer
+        + scope: read,check (array, required) - Scopes of consumer
 
 + Response 200 (application/json)
     + Attributes (object)
@@ -498,10 +496,11 @@ Get list of consumers for project
 
 ### Update consumer [PUT]
 
-+ Parameters
-    + `client_id`: clientId (string, required) - Client_id from consumer info
-    + description: Bot (string, required) - Description of consumer
-    + scope: read,check (array, required) - Scopes of consumer
++ Request (application/json)
+    + Attributes
+        + `client_id`: clientId (string, required) - Client_id from consumer info
+        + description: Bot (string, required) - Description of consumer
+        + scope: read,check (array, required) - Scopes of consumer
 
 + Response 200 (application/json)
     + Attributes (object)
@@ -513,8 +512,9 @@ Get list of consumers for project
 
 Remove consumer from the project by client_id
 
-+ Parameters
-    + `client_id`: clientId (string, required) - Client_id from consumer info
++ Request (application/json)
+    + Attributes
+        + `client_id`: clientId (string, required) - Client_id from consumer info
 + Response 200 (application/json)
     + Attributes (object)
         + meta
@@ -526,10 +526,8 @@ Remove consumer from the project by client_id
 ### Add User To Project [POST]
 Adding existing user to the current project. Share project with other users with different scopes
 
-+ Parameters
-    + user_id: 56c31536a60ad644060041af (string, required) - ID of existing User
-    + role: manager (string, required) Role of user in project
-    + scope: read, write (array, required) - Array of user scopes
++ Request (application/json)
+    + Attributes (CreateProjectUser)
 
 + Response 200 (application/json)
     + Attributes (object)
@@ -546,10 +544,8 @@ Adding existing user to the current project. Share project with other users with
 
 ### Update Project User [PUT]
 
-+ Parameters
-    + user_id: 56c31536a60ad644060041af (string, required) - ID of existing User
-    + role: manager (string, required) Role of user in project
-    + scope: read, write (array, required) - Array of user scopes
++ Request (application/json)
+    + Attributes (CreateProjectUser)
 
 + Response 200 (application/json)
     + Attributes (object)
@@ -558,8 +554,9 @@ Adding existing user to the current project. Share project with other users with
         + data (Project)
 
 ### Delete User From Project  [DELETE]
-+ Parameters
-    + user_id: 56c31536a60ad644060041af (string, required) - ID of existing User
++ Request (application/json)
+    + Attributes
+        + user_id: 56c31536a60ad644060041af (string, required) - ID of existing User
 + Response 200 (application/json)
     + Attributes (object)
         + meta
@@ -572,8 +569,9 @@ Adding existing user to the current project. Share project with other users with
 Set admin rights and access level to another user
 **Admin role is Required**
 
-+ Parameters
-    + user_id: 56c31536a60ad644060041af (string, required) - ID of existing User
++ Request (application/json)
+    + Attributes
+        + user_id: 56c31536a60ad644060041af (string, required) - ID of existing User
     
 + Response 200 (application/json)
     + Attributes (object)
@@ -955,3 +953,18 @@ Rollback Table to some state that described in passed Changelog
 + total: 40 (number) - amount of all items
 + current_page: 1 (number)
 + last_page: 3 (number)
+
+### UpdateUser
++ email: email@example.com (string, required)
++ password: p@ssword! (string, required) - Length 6-32, necessarily one letter and one number
++ first_name: John (string) - Length 2-32 Apha
++ last_name: Smith (string) - Length 2-32 Apha
+
+### CreateProject
++ title: New project (string, required)
++ description: Some cool description (string)
+
+### CreateProjectUser
++ user_id: 56c31536a60ad644060041af (string, required) - ID of existing User
++ role: manager (string, required) Role of user in project
++ scope: read, write (array, required) - Array of user scopes
