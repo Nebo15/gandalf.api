@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "16a5ea5ff98439b3c983b23f8920f807",
-    "content-hash": "9f63bffb90f1e639f72e5e839135daf1",
+    "hash": "2cc92bf170acbf08701bc9b3c4122d97",
+    "content-hash": "a041831ea53371f92c563e89897f13e8",
     "packages": [
         {
             "name": "bshaffer/oauth2-server-php",
@@ -1772,17 +1772,63 @@
             "time": "2016-01-26 21:23:30"
         },
         {
-            "name": "nebo15/lumen.applicationable",
-            "version": "0.0.23",
+            "name": "nebo15/eloquent.changelog",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Nebo15/lumen-applicationable.git",
-                "reference": "64202f5d8fea986aebb6d0b8b0703420b7c68a9e"
+                "url": "https://github.com/Nebo15/eloquent-changelog.git",
+                "reference": "4aae85885e8b3160dcfe88191a9a98a4b5deb9b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/64202f5d8fea986aebb6d0b8b0703420b7c68a9e",
-                "reference": "64202f5d8fea986aebb6d0b8b0703420b7c68a9e",
+                "url": "https://api.github.com/repos/Nebo15/eloquent-changelog/zipball/4aae85885e8b3160dcfe88191a9a98a4b5deb9b3",
+                "reference": "4aae85885e8b3160dcfe88191a9a98a4b5deb9b3",
+                "shasum": ""
+            },
+            "require": {
+                "jenssegers/mongodb": "3.*",
+                "nebo15/lumen.rest": "*"
+            },
+            "require-dev": {
+                "laravel/lumen-framework": "5.2.*",
+                "squizlabs/php_codesniffer": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Nebo15\\Changelog\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paul Bardack",
+                    "homepage": "http://paulbardack.com"
+                }
+            ],
+            "description": "Eloquent changelog",
+            "keywords": [
+                "changelog",
+                "eloquent",
+                "laravel"
+            ],
+            "time": "2016-06-15 12:34:34"
+        },
+        {
+            "name": "nebo15/lumen.applicationable",
+            "version": "0.0.24",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Nebo15/lumen-applicationable.git",
+                "reference": "c2329cc0f3682fab8d85405d7c54984270db2cc7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/c2329cc0f3682fab8d85405d7c54984270db2cc7",
+                "reference": "c2329cc0f3682fab8d85405d7c54984270db2cc7",
                 "shasum": ""
             },
             "require-dev": {
@@ -1811,27 +1857,27 @@
                 "lumen",
                 "mongodb"
             ],
-            "time": "2016-06-06 12:55:57"
+            "time": "2016-06-15 12:09:34"
         },
         {
             "name": "nebo15/lumen.oauth2-mongodb",
-            "version": "0.0.12",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/lumen-oauth2-mongo.git",
-                "reference": "770311b1f6dc8cfe3b0422781af83c13fa5d6697"
+                "reference": "27cfb6dbdd16629691a198395f3b1c52867738ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-oauth2-mongo/zipball/770311b1f6dc8cfe3b0422781af83c13fa5d6697",
-                "reference": "770311b1f6dc8cfe3b0422781af83c13fa5d6697",
+                "url": "https://api.github.com/repos/Nebo15/lumen-oauth2-mongo/zipball/27cfb6dbdd16629691a198395f3b1c52867738ea",
+                "reference": "27cfb6dbdd16629691a198395f3b1c52867738ea",
                 "shasum": ""
             },
             "require": {
                 "bshaffer/oauth2-server-php": "~1.8"
             },
             "require-dev": {
-                "jenssegers/mongodb": "2.*",
+                "jenssegers/mongodb": "3.*",
                 "laravel/lumen-framework": "5.2.*",
                 "squizlabs/php_codesniffer": "2.*"
             },
@@ -1856,7 +1902,7 @@
                 "mongo",
                 "oauth2"
             ],
-            "time": "2016-05-25 12:35:49"
+            "time": "2016-06-15 12:48:59"
         },
         {
             "name": "nebo15/lumen.rest",
@@ -2244,16 +2290,16 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v3.1.0",
+            "version": "v3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "0343b2cedd0edb26cdc791212a8eb645c406018b"
+                "reference": "f5b7563f67779c6d3d5370e23448e707c858df3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/0343b2cedd0edb26cdc791212a8eb645c406018b",
-                "reference": "0343b2cedd0edb26cdc791212a8eb645c406018b",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/f5b7563f67779c6d3d5370e23448e707c858df3e",
+                "reference": "f5b7563f67779c6d3d5370e23448e707c858df3e",
                 "shasum": ""
             },
             "require": {
@@ -2300,7 +2346,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2016-04-12 18:27:47"
+            "time": "2016-06-06 11:42:41"
         },
         {
             "name": "symfony/finder",
@@ -2768,16 +2814,16 @@
         },
         {
             "name": "vlucas/phpdotenv",
-            "version": "v2.2.1",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/phpdotenv.git",
-                "reference": "63f37b9395e8041cd4313129c08ece896d06ca8e"
+                "reference": "9ca5644c536654e9509b9d257f53c58630eb2a6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/63f37b9395e8041cd4313129c08ece896d06ca8e",
-                "reference": "63f37b9395e8041cd4313129c08ece896d06ca8e",
+                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/9ca5644c536654e9509b9d257f53c58630eb2a6a",
+                "reference": "9ca5644c536654e9509b9d257f53c58630eb2a6a",
                 "shasum": ""
             },
             "require": {
@@ -2789,7 +2835,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.2-dev"
+                    "dev-master": "2.3-dev"
                 }
             },
             "autoload": {
@@ -2814,7 +2860,7 @@
                 "env",
                 "environment"
             ],
-            "time": "2016-04-15 10:48:49"
+            "time": "2016-06-14 14:14:52"
         },
         {
             "name": "wildbit/postmark-php",
@@ -4328,7 +4374,7 @@
         },
         {
             "name": "symfony/browser-kit",
-            "version": "v3.1.0",
+            "version": "v3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/browser-kit.git",
@@ -4385,7 +4431,7 @@
         },
         {
             "name": "symfony/class-loader",
-            "version": "v3.1.0",
+            "version": "v3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/class-loader.git",
@@ -4441,16 +4487,16 @@
         },
         {
             "name": "symfony/css-selector",
-            "version": "v3.1.0",
+            "version": "v3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
-                "reference": "e17f386efef7258ac671c24e727673abd086b0cf"
+                "reference": "c526d7b3cb4fe1673c6a34e13be2ff63f519df99"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/css-selector/zipball/e17f386efef7258ac671c24e727673abd086b0cf",
-                "reference": "e17f386efef7258ac671c24e727673abd086b0cf",
+                "url": "https://api.github.com/repos/symfony/css-selector/zipball/c526d7b3cb4fe1673c6a34e13be2ff63f519df99",
+                "reference": "c526d7b3cb4fe1673c6a34e13be2ff63f519df99",
                 "shasum": ""
             },
             "require": {
@@ -4490,11 +4536,11 @@
             ],
             "description": "Symfony CssSelector Component",
             "homepage": "https://symfony.com",
-            "time": "2016-03-04 07:56:56"
+            "time": "2016-06-06 11:42:41"
         },
         {
             "name": "symfony/dom-crawler",
-            "version": "v3.1.0",
+            "version": "v3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dom-crawler.git",
@@ -4550,16 +4596,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.1.0",
+            "version": "v3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "eca51b7b65eb9be6af88ad7cc91685f1556f5c9a"
+                "reference": "c5a7e7fc273c758b92b85dcb9c46149ccda89623"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/eca51b7b65eb9be6af88ad7cc91685f1556f5c9a",
-                "reference": "eca51b7b65eb9be6af88ad7cc91685f1556f5c9a",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/c5a7e7fc273c758b92b85dcb9c46149ccda89623",
+                "reference": "c5a7e7fc273c758b92b85dcb9c46149ccda89623",
                 "shasum": ""
             },
             "require": {
@@ -4595,7 +4641,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-05-26 21:46:24"
+            "time": "2016-06-14 11:18:07"
         },
         {
             "name": "webmozart/assert",

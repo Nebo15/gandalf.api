@@ -10,6 +10,7 @@
         "vlucas/phpdotenv": "~2.2",
         "jenssegers/mongodb": "3.*",
         "nebo15/lumen.rest": "*",
+        "nebo15/eloquent.changelog": "*",
         "bugsnag/bugsnag-laravel": "1.*",
         "nebo15/lumen.applicationable": "*",
         "nebo15/lumen.oauth2-mongodb": "*",
