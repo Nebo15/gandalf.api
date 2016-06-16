@@ -14,7 +14,7 @@ class php70(
   }->
 
   exec { "apt-get install packages":
-    command => "/usr/bin/apt-get install php7.0-fpm php7.0-cli php7.0-mcrypt php7.0-curl php7.0-dev php-pear libsasl2-dev php7.0-mbstring php7.0-gd php7.1-xml -y --force-yes",
+    command => "/usr/bin/apt-get install php7.0-fpm php7.0-cli php7.0-mcrypt php7.0-curl php7.0-dev php-pear libsasl2-dev php7.0-mbstring php7.0-gd php7.0-xml -y --force-yes",
     require => Exec['apt-get update']
   } ->
 
