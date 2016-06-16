@@ -31,13 +31,6 @@ node default {
     name    => 'uuid-runtime',
     ensure  => installed,
   }
-  class { 'timezone':
-    timezone => 'UTC',
-  } ->
-  class { 'locales':
-    default_locale  => 'en_US.UTF-8',
-    locales         => ['en_US.UTF-8 UTF-8'],
-  }->
   class { 'nebo15_users': } ->
     /**
      Mongo part start
