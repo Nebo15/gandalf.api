@@ -8,19 +8,19 @@ class php70(
 
   apt::ppa { 'ppa:ondrej/php': }
 
-  exec { "apt-get update php7.0":
-    command => "/usr/bin/apt-get update php7.0",
+  exec { "apt-get update":
+    command => "/usr/bin/apt-get update",
     require => Apt::Ppa['ppa:ondrej/php']
   }->
 
   exec { "apt-get install packages":
     command => "/usr/bin/apt-get install php7.0-fpm php7.0-cli php7.0-curl -y --force-yes",
-    require => Exec['apt-get update php7.0']
+    require => Exec['apt-get update']
   } ->
 
   exec { "install mongodb":
     command => "/usr/bin/pecl install mongodb",
-    require => Exec['apt-get update php7.0']
+    require => Exec['apt-get update']
   }
 
   file { "/etc/php/7.0/fpm/pool.d/www.conf":
@@ -46,21 +46,21 @@ class php70(
   file { "mongodb_fpm":
     path    => "/etc/php/7.0/fpm/conf.d/20-mongodb.ini",
     content => "extension=mongodb.so",
-    require => Exec['apt-get update php7.0'],
+    require => Exec['ainstall mongodb'],
     notify  => Service["php7.0-fpm"]
   }
 
   file { "mongodb_cli":
     path    => "/etc/php/7.0/cli/conf.d/20-mongodb.ini",
     content => "extension=mongodb.so",
-    require => Exec['apt-get update php7.0'],
+    require => Exec['ainstall mongodb'],
     notify  => Service["php7.0-fpm"]
   }
 
   file { "mongodb_mods":
     path    => "/etc/php/7.0/mods-available/mongodb.ini",
     content => "extension=mongodb.so",
-    require => Exec['apt-get update php7.0'],
+    require => Exec['install mongodb'],
     notify  => Service["php7.0-fpm"]
   }
 
