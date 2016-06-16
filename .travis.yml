@@ -18,8 +18,8 @@ before_script:
   - php7.0 -i
   - composer install --prefer-source
 script:
-  - vendor/bin/codecept run
   - vendor/bin/phpcs ./app --standard=PSR2 --warning-severity=0
+  - vendor/bin/codecept run -d
 after_failure:
   - ls -l /etc/nginx
   - ls -l /etc/nginx/sites-enabled
