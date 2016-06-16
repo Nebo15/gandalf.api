@@ -45,21 +45,27 @@ class php70(
 
   file { "mongodb_fpm":
     path    => "/etc/php/7.0/fpm/conf.d/20-mongodb.ini",
-    content => "extension=mongodb.so",
+    content => "
+    extension=mongodb.so
+    ",
     require => Exec['install mongodb'],
     notify  => Service["php7.0-fpm"]
   }
 
   file { "mongodb_cli":
     path    => "/etc/php/7.0/cli/conf.d/20-mongodb.ini",
-    content => "extension=mongodb.so",
+    content => "
+    extension=mongodb.so
+    ",
     require => Exec['install mongodb'],
     notify  => Service["php7.0-fpm"]
   }
 
   file { "mongodb_mods":
     path    => "/etc/php/7.0/mods-available/mongodb.ini",
-    content => "extension=mongodb.so",
+    content => "
+    extension=mongodb.so
+    ",
     require => Exec['install mongodb'],
     notify  => Service["php7.0-fpm"]
   }
