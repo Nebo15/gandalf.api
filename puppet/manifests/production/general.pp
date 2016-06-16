@@ -4,7 +4,7 @@ node default {
 
   $newrelic_app_name = 'gandalf.api.production'
 
-  class { 'php56':
+  class { 'php70':
     user            => 'deploybot',
     group           => 'deploybot',
     error_repotring => 0

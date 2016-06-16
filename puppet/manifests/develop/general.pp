@@ -3,9 +3,9 @@ node default {
   include apt
 
 
-  class { 'php56':
-  user            => 'deploybot',
-  group           => 'deploybot'
+  class { 'php70':
+    user            => 'deploybot',
+    group           => 'deploybot'
   } ->
 
   class { 'nginx':
