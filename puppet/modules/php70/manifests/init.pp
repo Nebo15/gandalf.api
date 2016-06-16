@@ -70,6 +70,27 @@ class php70(
     notify  => Service["php7.0-fpm"]
   }
 
+  file { ["/usr/local/openssl/include/openssl/", "/usr/local/openssl/lib/"]:
+    ensure => "directory",
+    owner  => "root",
+    group  => "root",
+    mode   => 755
+  } ->
+  file { '/usr/local/openssl/include/openssl/evp.h':
+    ensure => 'link',
+    target => '/usr/include/openssl/evp.h',
+  } ->
+  file { '/usr/local/openssl/lib/libssl.a':
+    ensure => 'link',
+    target => '/usr/lib/x86_64-linux-gnu/libssl.a',
+  } ->
+  file { '/usr/local/openssl/lib/':
+    ensure => 'link',
+    target => '/usr/lib/x86_64-linux-gnu/libssl.so',
+  }
+
+
+
   service { 'php7.0-fpm':
     ensure  => 'running',
     enable  => true,
