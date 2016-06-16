@@ -16,7 +16,7 @@ class ValidationServiceProvider extends ServiceProvider
         Validator::extend('ruleThanType', 'App\Validators\TableValidator@ruleThanType');
         Validator::extend('probabilitySum', 'App\Validators\TableValidator@probabilitySum');
         Validator::extend('mongoId', function ($attribute, $value) {
-            return \MongoId::isValid($value);
+            return preg_match('/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/', $value);
         });
         Validator::extend('metaKeysAmount', function ($attribute, $value) {
             return $value <= 24;

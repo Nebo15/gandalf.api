@@ -6,10 +6,14 @@
 namespace App\Repositories;
 
 use App\Models\Decision;
+use MongoDB\BSON\Regex;
+use MongoDB\Driver\Query;
+use MongoDB\BSON\ObjectID;
+use MongoDB\Driver\Manager;
+use MongoDB\BSON\UTCDatetime;
+use Nebo15\REST\AbstractRepository;
 use Nebo15\LumenApplicationable\ApplicationableHelper;
 use Nebo15\LumenApplicationable\Contracts\Applicationable;
-use Nebo15\REST\AbstractRepository;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
  * Class TablesRepository
@@ -35,7 +39,7 @@ class TablesRepository extends AbstractRepository
         $where = [];
         foreach ($filters as $field => $filter) {
             if (in_array($field, $available)) {
-                $where[$field] = new \MongoRegex("/$filter/i");
+                $where[$field] = new Regex($filter, 'i');
             }
         }
         if (!empty($filters['matching_type'])) {
@@ -68,35 +72,36 @@ class TablesRepository extends AbstractRepository
     public function analyzeTableDecisions($table_id, $variant_id)
     {
         $table = $this->read($table_id);
-        $decisions = (new \MongoClient)->selectDB(env('DB_DATABASE'))
-            ->selectCollection((new Decision)->getTable())
-            ->find(
-                [
-                    'table._id' => new \MongoId($table_id),
-                    'table.variant._id' => new \MongoId($variant_id),
-                    'applications' => ApplicationableHelper::getApplicationId(),
-                    'created_at' => ['$gte' => new \MongoDate($table->updated_at->timestamp)]
-                ],
-                ['rules']
-            );
+        $mongo = new Manager(sprintf("mongodb://%s:%d", env('DB_HOST'), env('DB_PORT')));
+        $query = new Query(
+            [
+            'table._id' => new ObjectID($table_id),
+            'table.variant._id' => new ObjectId($variant_id),
+            'applications' => ApplicationableHelper::getApplicationId(),
+            'created_at' => ['$gte' => new UTCDatetime($table->updated_at->timestamp * 1000)]
+            ],
+            ['projection' => ['rules' => 1]]
+        );
+        $decisions = $mongo->executeQuery(env('DB_DATABASE') . '.' . (new Decision)->getTable(), $query)->toArray();
         $map = [];
-        if (($decisionsAmount = $decisions->count()) > 0) {
+
+        if (($decisionsAmount = count($decisions)) > 0) {
             foreach ($decisions as $decision) {
-                $rules = $decision['rules'];
+                $rules = $decision->rules;
 
                 foreach ($rules as $rule) {
-                    if (!isset($rule['_id'])) {
+                    if (!isset($rule->_id)) {
                         # ignore old decisions without Rule._id
                         continue;
                     }
-                    $ruleIndex = strval($rule['_id']);
-                    foreach ($rule['conditions'] as $condition) {
-                        $index = "$ruleIndex@" . strval($condition['_id']);
+                    $ruleIndex = strval($rule->_id);
+                    foreach ($rule->conditions as $condition) {
+                        $index = "$ruleIndex@" . strval($condition->_id);
                         if (!isset($map[$index])) {
                             $map[$index] = ['matched' => 0, 'requests' => 0];
                         }
 
-                        if ($condition['matched'] === true) {
+                        if ($condition->matched === true) {
                             $map[$index]['matched']++;
                         }
                         $map[$index]['requests']++;
@@ -105,7 +110,7 @@ class TablesRepository extends AbstractRepository
                         $map[$ruleIndex] = ['matched' => 0, 'requests' => 0];
                     }
                     $map[$ruleIndex]['requests']++;
-                    if ($rule['than'] === $rule['decision']) {
+                    if ($rule->than === $rule->decision) {
                         $map[$ruleIndex]['matched']++;
                     }
                 }
@@ -116,7 +121,7 @@ class TablesRepository extends AbstractRepository
         foreach ($variant->rules as $rule) {
             $ruleIndex = $rule->_id;
             foreach ($rule->conditions as $condition) {
-                $index = "$ruleIndex@" . strval($condition['_id']);
+                $index = "$ruleIndex@" . strval($condition->_id);
                 if (array_key_exists($index, $map)) {
                     $condition->probability = round($map[$index]['matched'] / $map[$index]['requests'], 5);
                 } else {

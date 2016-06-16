@@ -12,7 +12,7 @@ class DbTransfer
     public function export($appId)
     {
         # ToDo; check that collections not empty
-        $prefixTmpFile = sys_get_temp_dir() . strval(new \MongoId) . '/';
+        $prefixTmpFile = sys_get_temp_dir() . strval(new \MongoDB\BSON\ObjectId) . '/';
         $collections = [
             'tables' => "'{applications: \"{$appId}\"}'",
             'decisions' => "'{applications: \"{$appId}\"}'",

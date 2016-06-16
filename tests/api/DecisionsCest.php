@@ -4,6 +4,7 @@ class DecisionsCest
 {
     public function _before(ApiTester $I)
     {
+        $I->dropDatabase();
         $I->haveHttpHeader('Content-Type', 'application/json');
     }
 

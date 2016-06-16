@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fd432a26a99f3221c40217a12d2443dc",
-    "content-hash": "3bc9996fac2fffd0e60f5b0bd6259d7d",
+    "hash": "2cc92bf170acbf08701bc9b3c4122d97",
+    "content-hash": "a041831ea53371f92c563e89897f13e8",
     "packages": [
         {
             "name": "bshaffer/oauth2-server-php",
@@ -1451,23 +1451,24 @@
         },
         {
             "name": "jenssegers/mongodb",
-            "version": "v2.3.5",
+            "version": "v3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jenssegers/laravel-mongodb.git",
-                "reference": "244f40b843e9278d2154ef1554abce3b78ee1370"
+                "reference": "e1c12ac063eb0d5f4f10cc91f6e269b67cae4e80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jenssegers/laravel-mongodb/zipball/244f40b843e9278d2154ef1554abce3b78ee1370",
-                "reference": "244f40b843e9278d2154ef1554abce3b78ee1370",
+                "url": "https://api.github.com/repos/jenssegers/laravel-mongodb/zipball/e1c12ac063eb0d5f4f10cc91f6e269b67cae4e80",
+                "reference": "e1c12ac063eb0d5f4f10cc91f6e269b67cae4e80",
                 "shasum": ""
             },
             "require": {
                 "illuminate/container": "^5.1",
                 "illuminate/database": "^5.1",
                 "illuminate/events": "^5.1",
-                "illuminate/support": "^5.1"
+                "illuminate/support": "^5.1",
+                "mongodb/mongodb": "^1.0.0"
             },
             "require-dev": {
                 "mockery/mockery": "^0.9",
@@ -1496,17 +1497,18 @@
                     "homepage": "https://jenssegers.com"
                 }
             ],
-            "description": "A MongoDB based Eloquent model and Query builder for Laravel 4",
+            "description": "A MongoDB based Eloquent model and Query builder for Laravel (Moloquent)",
             "homepage": "https://github.com/jenssegers/laravel-mongodb",
             "keywords": [
                 "database",
                 "eloquent",
                 "laravel",
                 "model",
+                "moloquent",
                 "mongo",
                 "mongodb"
             ],
-            "time": "2016-03-05 09:12:32"
+            "time": "2016-03-04 21:34:41"
         },
         {
             "name": "laravel/lumen-framework",
@@ -1591,6 +1593,61 @@
                 "lumen"
             ],
             "time": "2016-06-06 16:13:21"
+        },
+        {
+            "name": "mongodb/mongodb",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mongodb/mongo-php-library.git",
+                "reference": "faf8a1d86b5c10684ef91fa6c81475b0c7f95240"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mongodb/mongo-php-library/zipball/faf8a1d86b5c10684ef91fa6c81475b0c7f95240",
+                "reference": "faf8a1d86b5c10684ef91fa6c81475b0c7f95240",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mongodb": "^1.1.0",
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MongoDB\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Jeremy Mikola",
+                    "email": "jmikola@gmail.com"
+                },
+                {
+                    "name": "Hannes Magnusson",
+                    "email": "bjori@mongodb.com"
+                },
+                {
+                    "name": "Derick Rethans",
+                    "email": "github@derickrethans.nl"
+                }
+            ],
+            "description": "MongoDB driver library",
+            "homepage": "https://jira.mongodb.org/browse/PHPLIB",
+            "keywords": [
+                "database",
+                "driver",
+                "mongodb",
+                "persistence"
+            ],
+            "time": "2016-03-30 19:10:28"
         },
         {
             "name": "monolog/monolog",
@@ -1716,20 +1773,20 @@
         },
         {
             "name": "nebo15/eloquent.changelog",
-            "version": "0.0.5",
+            "version": "0.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/eloquent-changelog.git",
-                "reference": "a1ee0425e786f8b1ee23a34f5cd62e0c1e1bb6db"
+                "reference": "666d1bf51c58601bb76701d27a06c7e8c5f9f4cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/eloquent-changelog/zipball/a1ee0425e786f8b1ee23a34f5cd62e0c1e1bb6db",
-                "reference": "a1ee0425e786f8b1ee23a34f5cd62e0c1e1bb6db",
+                "url": "https://api.github.com/repos/Nebo15/eloquent-changelog/zipball/666d1bf51c58601bb76701d27a06c7e8c5f9f4cb",
+                "reference": "666d1bf51c58601bb76701d27a06c7e8c5f9f4cb",
                 "shasum": ""
             },
             "require": {
-                "jenssegers/mongodb": "2.*",
+                "jenssegers/mongodb": "3.*",
                 "nebo15/lumen.rest": "*"
             },
             "require-dev": {
@@ -1758,24 +1815,24 @@
                 "eloquent",
                 "laravel"
             ],
-            "time": "2016-05-26 13:15:26"
+            "time": "2016-06-15 14:15:30"
         },
         {
             "name": "nebo15/lumen.applicationable",
-            "version": "0.0.24",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/lumen-applicationable.git",
-                "reference": "c2329cc0f3682fab8d85405d7c54984270db2cc7"
+                "reference": "9bbe14e8bc10accf0cfd00612e4e93f73858d352"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/c2329cc0f3682fab8d85405d7c54984270db2cc7",
-                "reference": "c2329cc0f3682fab8d85405d7c54984270db2cc7",
+                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/9bbe14e8bc10accf0cfd00612e4e93f73858d352",
+                "reference": "9bbe14e8bc10accf0cfd00612e4e93f73858d352",
                 "shasum": ""
             },
             "require-dev": {
-                "jenssegers/mongodb": "2.*",
+                "jenssegers/mongodb": "3.*",
                 "laravel/lumen-framework": "5.2.*",
                 "squizlabs/php_codesniffer": "2.*"
             },
@@ -1800,27 +1857,27 @@
                 "lumen",
                 "mongodb"
             ],
-            "time": "2016-06-15 12:09:34"
+            "time": "2016-06-15 13:22:08"
         },
         {
             "name": "nebo15/lumen.oauth2-mongodb",
-            "version": "0.0.12",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/lumen-oauth2-mongo.git",
-                "reference": "770311b1f6dc8cfe3b0422781af83c13fa5d6697"
+                "reference": "3a2738a5489fb6b5f62876ae2ac9a30700a9e2be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-oauth2-mongo/zipball/770311b1f6dc8cfe3b0422781af83c13fa5d6697",
-                "reference": "770311b1f6dc8cfe3b0422781af83c13fa5d6697",
+                "url": "https://api.github.com/repos/Nebo15/lumen-oauth2-mongo/zipball/3a2738a5489fb6b5f62876ae2ac9a30700a9e2be",
+                "reference": "3a2738a5489fb6b5f62876ae2ac9a30700a9e2be",
                 "shasum": ""
             },
             "require": {
                 "bshaffer/oauth2-server-php": "~1.8"
             },
             "require-dev": {
-                "jenssegers/mongodb": "2.*",
+                "jenssegers/mongodb": "3.*",
                 "laravel/lumen-framework": "5.2.*",
                 "squizlabs/php_codesniffer": "2.*"
             },
@@ -1845,20 +1902,20 @@
                 "mongo",
                 "oauth2"
             ],
-            "time": "2016-05-25 12:35:49"
+            "time": "2016-06-15 13:20:23"
         },
         {
             "name": "nebo15/lumen.rest",
-            "version": "0.0.11",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/lumen-rest.git",
-                "reference": "4b8eeb5da0aefa4f707f42a7d1161b3b7ca6156d"
+                "reference": "f9924027a33872ba731d0b8dc1d6baef7e4bdd58"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-rest/zipball/4b8eeb5da0aefa4f707f42a7d1161b3b7ca6156d",
-                "reference": "4b8eeb5da0aefa4f707f42a7d1161b3b7ca6156d",
+                "url": "https://api.github.com/repos/Nebo15/lumen-rest/zipball/f9924027a33872ba731d0b8dc1d6baef7e4bdd58",
+                "reference": "f9924027a33872ba731d0b8dc1d6baef7e4bdd58",
                 "shasum": ""
             },
             "require-dev": {
@@ -1887,7 +1944,7 @@
                 "lumen",
                 "rest"
             ],
-            "time": "2016-05-17 11:11:52"
+            "time": "2016-06-15 14:13:55"
         },
         {
             "name": "nesbot/carbon",
@@ -2116,26 +2173,26 @@
         },
         {
             "name": "symfony/console",
-            "version": "v2.8.7",
+            "version": "v3.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "5ac8bc9aa77bb2edf06af3a1bb6bc1020d23acd3"
+                "reference": "382fc9ed852edabd6133e34f8549d7a7d99db115"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/5ac8bc9aa77bb2edf06af3a1bb6bc1020d23acd3",
-                "reference": "5ac8bc9aa77bb2edf06af3a1bb6bc1020d23acd3",
+                "url": "https://api.github.com/repos/symfony/console/zipball/382fc9ed852edabd6133e34f8549d7a7d99db115",
+                "reference": "382fc9ed852edabd6133e34f8549d7a7d99db115",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9",
+                "php": ">=5.5.9",
                 "symfony/polyfill-mbstring": "~1.0"
             },
             "require-dev": {
                 "psr/log": "~1.0",
-                "symfony/event-dispatcher": "~2.1|~3.0.0",
-                "symfony/process": "~2.1|~3.0.0"
+                "symfony/event-dispatcher": "~2.8|~3.0",
+                "symfony/process": "~2.8|~3.0"
             },
             "suggest": {
                 "psr/log": "For using the console logger",
@@ -2145,7 +2202,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
@@ -2172,7 +2229,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2016-06-06 15:06:25"
+            "time": "2016-06-06 15:08:35"
         },
         {
             "name": "symfony/debug",
@@ -2233,27 +2290,27 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.8.7",
+            "version": "v3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "2a6b8713f8bdb582058cfda463527f195b066110"
+                "reference": "f5b7563f67779c6d3d5370e23448e707c858df3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/2a6b8713f8bdb582058cfda463527f195b066110",
-                "reference": "2a6b8713f8bdb582058cfda463527f195b066110",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/f5b7563f67779c6d3d5370e23448e707c858df3e",
+                "reference": "f5b7563f67779c6d3d5370e23448e707c858df3e",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9"
+                "php": ">=5.5.9"
             },
             "require-dev": {
                 "psr/log": "~1.0",
-                "symfony/config": "~2.0,>=2.0.5|~3.0.0",
-                "symfony/dependency-injection": "~2.6|~3.0.0",
-                "symfony/expression-language": "~2.6|~3.0.0",
-                "symfony/stopwatch": "~2.3|~3.0.0"
+                "symfony/config": "~2.8|~3.0",
+                "symfony/dependency-injection": "~2.8|~3.0",
+                "symfony/expression-language": "~2.8|~3.0",
+                "symfony/stopwatch": "~2.8|~3.0"
             },
             "suggest": {
                 "symfony/dependency-injection": "",
@@ -2262,7 +2319,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.1-dev"
                 }
             },
             "autoload": {
@@ -2289,7 +2346,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2016-06-06 11:11:27"
+            "time": "2016-06-06 11:42:41"
         },
         {
             "name": "symfony/finder",
@@ -3288,59 +3345,6 @@
             "time": "2016-04-29 12:21:54"
         },
         {
-            "name": "jmikola/geojson",
-            "version": "1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jmikola/geojson.git",
-                "reference": "6ec3016cc0215667b7775f6ead7bd0337ad66eee"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jmikola/geojson/zipball/6ec3016cc0215667b7775f6ead7bd0337ad66eee",
-                "reference": "6ec3016cc0215667b7775f6ead7bd0337ad66eee",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~3.7"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "GeoJson\\": "src/"
-                },
-                "classmap": [
-                    "stubs/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jeremy Mikola",
-                    "email": "jmikola@gmail.com"
-                }
-            ],
-            "description": "GeoJSON implementation for PHP",
-            "homepage": "https://github.com/jmikola/geojson",
-            "keywords": [
-                "geo",
-                "geojson",
-                "geospatial"
-            ],
-            "time": "2015-09-27 15:35:21"
-        },
-        {
             "name": "phpdocumentor/reflection-common",
             "version": "1.0",
             "source": {
@@ -4291,111 +4295,6 @@
             "time": "2015-06-21 13:59:46"
         },
         {
-            "name": "sokil/php-mongo",
-            "version": "1.15.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sokil/php-mongo.git",
-                "reference": "bd87070803cd007cc3f87def2fdac5678c79fd6c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sokil/php-mongo/zipball/bd87070803cd007cc3f87def2fdac5678c79fd6c",
-                "reference": "bd87070803cd007cc3f87def2fdac5678c79fd6c",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mongo": ">=0.9.0",
-                "jmikola/geojson": "~1.0",
-                "php": ">=5.3",
-                "psr/log": "~1.0",
-                "symfony/event-dispatcher": ">=2.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "3.7.*",
-                "satooshi/php-coveralls": "0.7.*"
-            },
-            "suggest": {
-                "sokil/php-mongo-bundle": "Symfony Bundle",
-                "sokil/php-mongo-migrator": "Add support of migrations",
-                "sokil/php-mongo-yii": "Yii Framework component"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Sokil\\Mongo\\": "src/"
-                },
-                "classmap": [
-                    "stubs/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Dmytro Sokil",
-                    "email": "dmytro.sokil@gmail.com"
-                }
-            ],
-            "description": "PHP Object Document Mapper for MongoDB",
-            "homepage": "https://github.com/sokil/php-mongo",
-            "keywords": [
-                "mongodb",
-                "odm"
-            ],
-            "time": "2016-04-27 07:30:44"
-        },
-        {
-            "name": "sokil/php-mongo-migrator",
-            "version": "0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sokil/php-mongo-migrator.git",
-                "reference": "0177b5aba9ccad3bde66a3e91c54dc7f49cad149"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sokil/php-mongo-migrator/zipball/0177b5aba9ccad3bde66a3e91c54dc7f49cad149",
-                "reference": "0177b5aba9ccad3bde66a3e91c54dc7f49cad149",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mongo": ">=0.9.0",
-                "php": ">=5.3",
-                "sokil/php-mongo": "1.*",
-                "symfony/console": "2.*",
-                "symfony/event-dispatcher": "2.*",
-                "symfony/yaml": "2.*"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "3.7.*",
-                "satooshi/php-coveralls": "0.7.*"
-            },
-            "bin": [
-                "bin/mongo-migrator"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Sokil\\Mongo\\Migrator\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "sokil",
-                    "email": "dmytro.sokil@gmail.com"
-                }
-            ],
-            "description": "Migrations for mongo",
-            "time": "2016-04-28 06:14:32"
-        },
-        {
             "name": "squizlabs/php_codesniffer",
             "version": "2.6.1",
             "source": {
@@ -4697,25 +4596,25 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.7",
+            "version": "v3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "815fabf3f48c7d1df345a69d1ad1a88f59757b34"
+                "reference": "c5a7e7fc273c758b92b85dcb9c46149ccda89623"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/815fabf3f48c7d1df345a69d1ad1a88f59757b34",
-                "reference": "815fabf3f48c7d1df345a69d1ad1a88f59757b34",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/c5a7e7fc273c758b92b85dcb9c46149ccda89623",
+                "reference": "c5a7e7fc273c758b92b85dcb9c46149ccda89623",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9"
+                "php": ">=5.5.9"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.1-dev"
                 }
             },
             "autoload": {
@@ -4742,7 +4641,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-06-06 11:11:27"
+            "time": "2016-06-14 11:18:07"
         },
         {
             "name": "webmozart/assert",

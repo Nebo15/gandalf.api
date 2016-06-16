@@ -5,11 +5,12 @@
 
 namespace App\Http\Controllers;
 
+use MongoDB\BSON\Regex;
 use App\Models\Invitation;
-use Nebo15\LumenApplicationable\Models\Application;
+use Nebo15\REST\Response;
 use Nebo15\REST\AbstractController;
 use Nebo15\REST\Interfaces\ListableInterface;
-use Nebo15\REST\Response;
+use Nebo15\LumenApplicationable\Models\Application;
 
 class UsersController extends AbstractController
 {
@@ -50,10 +51,10 @@ class UsersController extends AbstractController
             ->getModel()
             ->query();
         if (strpos($this->request->input('name', ''), '@') === false) {
-            $model->where(['username' => new \MongoRegex('/^' . ($this->request->input('name', '.')) . '.*/\i')]);
+            $model->where(['username' => new Regex('^' . ($this->request->input('name', '.')) . '.*', 'i')]);
             $model->where(['username' => ['$ne' => $this->request->user()->username]]);
         } else {
-            $model->where(['email' => new \MongoRegex('/^' . ($this->request->input('name', '.')) . '.*/\i')]);
+            $model->where(['email' => new Regex('^' . ($this->request->input('name', '.')) . '.*', 'i')]);
             $model->where(['email' => ['$ne' => $this->request->user()->email]]);
         }
 

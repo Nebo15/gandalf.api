@@ -2,7 +2,7 @@ node default {
   include stdlib
   include apt
 
-  class { 'php56':
+  class { 'php70':
     user            => 'travis',
     group           => 'travis',
   }

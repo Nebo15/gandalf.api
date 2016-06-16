@@ -3,7 +3,7 @@ node default {
   include apt
 
 
-  class { 'php56':
+  class { 'php70':
     user            => 'vagrant',
     group           => 'vagrant'
   }
