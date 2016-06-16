@@ -84,7 +84,7 @@ class php70(
     ensure => 'link',
     target => '/usr/lib/x86_64-linux-gnu/libssl.a',
   } ->
-  file { '/usr/local/openssl/lib/':
+  file { '/usr/local/openssl/lib/libssl.so':
     ensure => 'link',
     target => '/usr/lib/x86_64-linux-gnu/libssl.so',
   }
