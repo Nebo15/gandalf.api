@@ -7,6 +7,9 @@ class php70(
   include apt
 
   apt::ppa { 'ppa:ondrej/php': }
+  php::pecl::module { "mongodb":
+    use_package => 'no',
+  }
 
   exec { "apt-get update php7.0":
     command => "/usr/bin/apt-get update php7.0",
@@ -17,8 +20,6 @@ class php70(
     command => "/usr/bin/apt-get install php7.0-fpm php7.0-cli php7.0-curl -y --force-yes",
     require => Exec['apt-get update php7.0']
   }
-
-  php::pecl::module { "mongodb": }
 
   file { "/etc/php/7.0/fpm/pool.d/www.conf":
     path    => "/etc/php/7.0/fpm/pool.d/www.conf",
