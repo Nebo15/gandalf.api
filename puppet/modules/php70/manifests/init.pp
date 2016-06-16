@@ -18,8 +18,13 @@ class php70(
     require => Exec['apt-get update php7.0']
   } ->
 
-  exec {"install mongodb":
+  exec { "install mongodb":
     command => "/usr/bin/pecl install mongodb",
+    require => Exec['apt-get update php7.0']
+  } ->
+
+  exec { "add mongodb.so":
+    command => "echo \"extension=mongodb.so\" > /etc/php/7.0/fpm/conf.d/20-mongodb.ini && echo \"extension=mongodb.so\" > /etc/php/7.0/cli/conf.d/20-mongodb.ini && echo \"extension=mongodb.so\" > /etc/php/7.0/mods-available/mongodb.ini",
     require => Exec['apt-get update php7.0']
   }
 
