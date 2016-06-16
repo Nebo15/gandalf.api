@@ -11,6 +11,7 @@ use App\Models\Table;
 use App\Models\Field;
 use App\Models\Decision;
 use App\Models\Condition;
+use \MongoDB\BSON\ObjectID;
 use App\Repositories\TablesRepository;
 use Illuminate\Contracts\Validation\ValidationException;
 
@@ -40,12 +41,12 @@ class Scoring
 
         $scoring_data = [
             'table' => [
-                '_id' => new \MongoDB\BSON\ObjectId($table->getId()),
+                '_id' => new ObjectID($table->getId()),
                 'title' => $table->title,
                 'description' => $table->description,
                 'matching_type' => $table->matching_type,
                 'variant' => [
-                    '_id' => new \MongoDB\BSON\ObjectId($variant->getId()),
+                    '_id' => new ObjectID($variant->getId()),
                     'title' => $variant->title,
                     'description' => $variant->description,
                 ]
@@ -64,7 +65,7 @@ class Scoring
         /** @var \App\Models\Rule $rule */
         foreach ($variant->rules()->get() as $rule) {
             $scoring_rule = [
-                '_id' => new \MongoDB\BSON\ObjectId($rule->_id),
+                '_id' => new ObjectID($rule->_id),
                 'than' => $rule->than,
                 'title' => $rule->title,
                 'description' => $rule->description,

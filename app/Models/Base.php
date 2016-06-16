@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 
+use \MongoDB\BSON\ObjectID;
 use App\Exceptions\FailedToSaveModel;
 use App\Exceptions\IdNotFoundException;
 use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
@@ -34,7 +35,7 @@ abstract class Base extends Eloquent
 
     public function createId()
     {
-        $this->{self::PRIMARY_KEY} = new \MongoDB\BSON\ObjectId();
+        $this->{self::PRIMARY_KEY} = new ObjectID;
     }
 
     /**

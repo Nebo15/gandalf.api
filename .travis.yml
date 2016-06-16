@@ -1,13 +1,10 @@
-language: php
-php:
-  - '7.0'
+language: generic
 dist: trusty
 sudo: true
 cache:
     directories:
       - vendor/
 before_script:
-  - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - ls -la ./
   - touch storage/logs/lumen.log
   - sudo chmod 777 -Rf storage/
@@ -35,4 +32,3 @@ after_failure:
   - cat /var/log/php-fpm.log;
   - cat /var/log/nginx.log;
   - cat $PWD/storage/logs/lumen.log;
-
