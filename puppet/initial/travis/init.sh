@@ -70,4 +70,4 @@ if [ ! -e ${modules_dir}/nginx ]; then
     sudo puppet module install --force jfryman-nginx --target-dir ${modules_dir}
 fi;
 
-sudo puppet apply --modulepath ${modules_dir} ${modules_dir}/../manifests/travis/general.pp
+sudo puppet apply -d --modulepath ${modules_dir} ${modules_dir}/../manifests/travis/general.pp
