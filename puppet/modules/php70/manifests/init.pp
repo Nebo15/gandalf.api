@@ -14,7 +14,7 @@ class php70(
   }->
 
   exec { "apt-get install packages":
-    command => "/usr/bin/apt-get install php7.0-fpm php7.0-cli php7.0-curl -y --force-yes",
+    command => "/usr/bin/apt-get install php7.0-fpm php7.0-cli php7.0-curl php-pear -y --force-yes",
     require => Exec['apt-get update']
   } ->
 
