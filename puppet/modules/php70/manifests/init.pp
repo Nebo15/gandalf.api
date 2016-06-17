@@ -5,6 +5,7 @@ class php70(
 ) {
 
   include apt
+  include pear
 
   apt::ppa { 'ppa:ondrej/php': }
 
@@ -18,10 +19,14 @@ class php70(
     require => Exec['apt-get update']
   } ->
 
-  exec { "install mongodb":
-    command => "/usr/bin/pecl install mongodb",
-    require => Exec['apt-get update']
+  pear::package { "mongodb":
+    repository => "pecl.php.net",
+    require => Exec['apt-get install packages']
   }
+#  exec { "install mongodb":
+#    command => "/usr/bin/pecl install mongodb",
+#    require => Exec['apt-get install packages']
+#  }
 
   file { "/etc/php/7.0/fpm/pool.d/www.conf":
     path    => "/etc/php/7.0/fpm/pool.d/www.conf",
@@ -48,7 +53,7 @@ class php70(
     content => "
     extension=mongodb.so
     ",
-    require => Exec['install mongodb'],
+    require => Pear::Package["mongodb"],
     notify  => Service["php7.0-fpm"]
   }
 
@@ -57,7 +62,7 @@ class php70(
     content => "
     extension=mongodb.so
     ",
-    require => Exec['install mongodb'],
+    require => Pear::Package["mongodb"],
     notify  => Service["php7.0-fpm"]
   }
 
@@ -66,11 +71,11 @@ class php70(
     content => "
     extension=mongodb.so
     ",
-    require => Exec['install mongodb'],
+    require => Pear::Package["mongodb"],
     notify  => Service["php7.0-fpm"]
   }
 
-  file { ["/usr/local/openssl/include/openssl/", "/usr/local/openssl/lib/"]:
+  file { ["/usr/local/openssl/", "/usr/local/openssl/include/", "/usr/local/openssl/include/openssl/", "/usr/local/openssl/lib/"]:
     ensure => "directory",
     owner  => "root",
     group  => "root",

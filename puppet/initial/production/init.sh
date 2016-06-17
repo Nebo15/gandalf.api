@@ -94,5 +94,8 @@ fi;
 if [ ! -e ${modules_dir}/newrelic ]; then
     sudo puppet module install --force fsalum-newrelic --target-dir ${modules_dir}
 fi;
+if [ ! -e ${modules_dir}/pear ]; then
+    sudo puppet module install --force rafaelfc-pear --target-dir ${modules_dir}
+fi;
 
 sudo FACTER_newrelic_key="${new_relic_key}" puppet apply --modulepath ${modules_dir} ${modules_dir}/../manifests/production/general.pp
