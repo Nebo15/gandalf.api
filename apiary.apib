@@ -185,7 +185,12 @@ You can retry request on a latest table version by clicking "Debug" in request w
 
 # Installation Guide
 
-## Back-End
+Both Front-End and Back-End contains:
+
+- Vagrantfile that allows to easily run local copy of Gandalf on your computer.
+- Puppet scripts that allows to install on any Ubuntu server all software that is required for Gandalf.
+
+## Starting with Vagrant
 
 You can use [Vagrant](https://www.vagrantup.com/) to intialize a development environment. Simply install it, ```cd``` into your project directory and run:
 
@@ -193,7 +198,9 @@ You can use [Vagrant](https://www.vagrantup.com/) to intialize a development env
 vagrant up
 ```
 
-Also you can notice that we use [Puppet](https://puppetlabs.com/puppet/puppet-open-source) as our configuration tool. Scripts located in [/puppet](https://github.com/Nebo15/gandalf.api/tree/master/puppet) directory of this repo. You can deploy code to your server and simply run:
+## Configuring production environment
+
+We use [Puppet](https://puppetlabs.com/puppet/puppet-open-source) as our configuration tool. Scripts located in [/puppet](https://github.com/Nebo15/gandalf.api/tree/master/puppet) directory of this repo. You can deploy code to your server and simply run:
 
 ```
 set -o nounset -o errexit -o pipefail -o errtrace
@@ -201,12 +208,6 @@ trap 'error "${BASH_SOURCE}" "${LINENO}"' ERR
 echo 127.0.0.1 gandalf.yourdomain.com | sudo tee -a /etc/hosts
 sudo /bin/bash puppet/initial/init.sh -u "www-data"
 ```
-
-And your server will be ready for production use!
-
-## Front-End
-
-Todo.
 
 # Story behind Gandalf
 
