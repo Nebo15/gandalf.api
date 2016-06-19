@@ -159,13 +159,17 @@ All changes that is made to a table is saved in Revisions history. You can see w
 
 Rollback will create a new Revision, so it can be canceled.
 
-## Split Testing
+## Split Testing (aka Champion Winner)
 
-Each table can have multiple variants. By adding a Variant you will start a Split Test for a table.
+Each table can have infinite number of variants, all of them share same fields (and request structure), but their rules can be totally different.
 
-All variants share same fields and this request structure, but can have different set of rules. It allows to test your hypothesis on how to make decision better, to measure improvement in third-party tool and to continuously improve your decision flow.
+It allows to apply scientific method in managing your design rules: you have a hyphotesis, you create a variant for it, test and make analytical decision on whatever if was true and should influence main decision flow.
 
-You can manage traffic allocation for all variants, for example sending only 5% of requests to variant B.
+Requests to the table can have different types of traffic allocation between variants:
+
+- ```First``` - request will always hit the first version of table. This will turn off split testing.
+- ```Percent``` - allows you to manually set how much requests (in percentage) will receive each table variant.
+- ```Random``` - randomly distribute requests between all variants.
 
 ## Decision Analytics
 
@@ -178,7 +182,6 @@ All successful API request will lead to creating a Decision. You can find all De
 Decision shows all request parameters, decision engine response and decision table that was applied when request was made. It means that whenever you change your decision table, it won't affect history and you still will be able to understand decision flow for each moment of time.
 
 You can retry request on a latest table version by clicking "Debug" in request well.
-
 
 # Installation Guide
 
