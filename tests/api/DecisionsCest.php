@@ -47,6 +47,8 @@ class DecisionsCest
             $I->sendGET('api/v1/admin/decisions/' . $item->_id);
             $I->assertTableDecisionsForAdmin();
         }
+        $I->sendGET('api/v1/admin/decisions/123');
+        $I->seeResponseCodeIs(404);
 
         $decision_data = $I->makeDecision($table_id_with_decisions, [
             'borrowers_phone_verification' => 'invalid',
