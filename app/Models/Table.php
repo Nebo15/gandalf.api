@@ -27,7 +27,7 @@ use Nebo15\LumenApplicationable\Traits\ApplicationableTrait;
  */
 class Table extends Base implements ListableInterface, Applicationable
 {
-    use ListableTrait, ApplicationableTrait;
+    use ApplicationableTrait;
 
     protected $listable = ['_id', 'title', 'description', 'matching_type'];
 
@@ -81,6 +81,23 @@ class Table extends Base implements ListableInterface, Applicationable
     public function variants()
     {
         return $this->embedsMany('App\Models\Variant');
+    }
+
+    public function toListArray()
+    {
+        $array = [];
+        foreach ($this->listable as $field) {
+            $array[$field] = $this->$field;
+        }
+        $array['variants'] = $this->variants()->get()->map(function (Variant $variant) {
+            return [
+                '_id' => $variant->_id,
+                'title' => $variant->title,
+                'description' => $variant->description,
+            ];
+        });
+
+        return $array;
     }
 
     public function setFields($fields)

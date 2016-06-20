@@ -56,7 +56,14 @@ class ApiTester extends \Codeception\Actor
             'title' => 'string',
             'description' => 'string',
             'matching_type' => 'string',
+            'variants' => 'array',
         ], $jsonPath);
+
+        $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
+            'title' => 'string',
+            'description' => 'string',
+        ], "$jsonPath.variants[*]");
 
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.fields");
