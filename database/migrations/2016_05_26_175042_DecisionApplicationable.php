@@ -1,34 +1,32 @@
 <?php
 
-class DecisionApplicationable extends \Sokil\Mongo\Migrator\AbstractMigration
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class DecisionApplicationable extends Migration
 {
     public function up()
     {
-        $this->getCollection('applications')->batchUpdate(
-            [
-                'users' => [
-                    '$elemMatch' => [
-                        'role' => 'admin',
-                        'scope' => [
-                            '$nin' => ['update_consumers']
-                        ]
-                    ]
-                ]
-            ],
-            [
-                '$push' => [
-                    'users.$.scope' => 'update_consumers'
+        $appColl = \DB::collection('applications');
+        $appColl->where('users', [
+            '$elemMatch' => [
+                'role' => 'admin',
+                'scope' => [
+                    '$nin' => ['update_consumers']
                 ]
             ]
-        );
+        ])->update([
+            '$push' => [
+                'users.$.scope' => 'update_consumers'
+            ]
+        ]);
 
-        $tablesCollection = $this->getCollection('tables')->find()->findAll();
         $tables = [];
-        foreach ($tablesCollection as $table) {
-            $tables[(string)$table->getid()] = $table->applications;
+        foreach (\DB::collection('tables')->get() as $table) {
+            $tables[(string)$table['_id']] = $table['applications'];
         }
 
-        $collection = (new \MongoClient())->selectDB($this->getDatabase()->getName())->selectCollection('decisions');
+        $collection = (new \MongoClient())->selectDB(env('DB_DATABASE'))->selectCollection('decisions');
         $decisions = $collection->find([], ['table', 'table_id']);
         $batchUpdate = (new \MongoUpdateBatch($collection));
         foreach ($decisions as $decision) {
@@ -42,6 +40,7 @@ class DecisionApplicationable extends \Sokil\Mongo\Migrator\AbstractMigration
                     ? $tables[(string)$decision['table']['_id']]
                     : [];
             }
+
             $batchUpdate->add([
                 'q' => ['_id' => $decision['_id']],
                 'u' => ['$set' => ['applications' => $applications]]

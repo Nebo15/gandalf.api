@@ -1,6 +1,9 @@
 <?php
 
-class AddTableVariants extends \Sokil\Mongo\Migrator\AbstractMigration
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class AddTableVariants extends Migration
 {
     public function up()
     {

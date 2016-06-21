@@ -1094,7 +1094,7 @@ namespace {
          * Begin a fluent query against a database collection.
          *
          * @param string $collection
-         * @return \Jenssegers\Mongodb\QueryBuilder 
+         * @return \Jenssegers\Mongodb\Query\Builder
          * @static 
          */
         public static function collection($collection){
@@ -1105,7 +1105,7 @@ namespace {
          * Begin a fluent query against a database collection.
          *
          * @param string $table
-         * @return \Jenssegers\Mongodb\QueryBuilder 
+         * @return \Jenssegers\Mongodb\Query\Builder
          * @static 
          */
         public static function table($table){
