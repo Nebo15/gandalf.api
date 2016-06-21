@@ -21,6 +21,7 @@ class DecisionsRepository extends AbstractRepository
 
     public function getDecisions($size = null, $table_id = null)
     {
+        /** @var \Jenssegers\Mongodb\Eloquent\Builder $query */
         if ($table_id) {
             $query = $this->getModel()->query()->where('table._id', $table_id);
             if ($query->count() <= 0) {
@@ -33,7 +34,7 @@ class DecisionsRepository extends AbstractRepository
             $query = Decision::orderBy(Decision::CREATED_AT, 'DESC');
         }
 
-        return $query->paginate(intval($size));
+        return $this->paginateQuery($query, $size);
     }
 
     public function getConsumerDecision($id)
