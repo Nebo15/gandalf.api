@@ -71,6 +71,10 @@ class Decision extends Base implements Applicationable
         'final_decision' => '',
     ];
 
+    protected $dateFormat = \DateTime::ISO8601;
+
+    protected $dates = ['created_at', 'updated_at'];
+
     protected $perPage = 20;
 
     public function rules()
@@ -93,8 +97,8 @@ class Decision extends Base implements Applicationable
             'description' => $this->description,
             'final_decision' => $this->final_decision,
             'request' => $this->request,
-            self::CREATED_AT => $this->getAttribute(self::CREATED_AT),
-            self::UPDATED_AT => $this->getAttribute(self::UPDATED_AT),
+            self::CREATED_AT => $this->getAttribute(self::CREATED_AT)->toIso8601String(),
+            self::UPDATED_AT => $this->getAttribute(self::UPDATED_AT)->toIso8601String(),
             'rules' => $this->rules()->get()->map(function (Rule $rule) {
                 return [
                     'title' => $rule->title,

@@ -208,6 +208,8 @@ class ApiTester extends \Codeception\Actor
             'table' => 'array',
             'final_decision' => $type,
             'request' => 'array',
+            'created_at' => 'string',
+            'updated_at' => 'string',
         ];
         if ($showMeta) {
             $rules['rules'] = 'array';
