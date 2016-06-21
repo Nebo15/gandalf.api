@@ -93,9 +93,9 @@ $app->group(
         /** @var Laravel\Lumen\Application $app */
 
         $app->get('/decisions', ['uses' => 'DecisionsController@readList']);
-        $app->get('/decisions/{id}', ['uses' => 'DecisionsController@read']);
-        $app->put('/decisions/{id}/meta', ['uses' => 'DecisionsController@updateMeta']);
-        $app->get('/tables/{id}/{variant_id:[0-9a-z]{24}}/analytics', ['uses' => 'TablesController@analytics']);
+        $app->get('/decisions/{id:[0-9a-z]{24}}', ['uses' => 'DecisionsController@read']);
+        $app->put('/decisions/{id:[0-9a-z]{24}}/meta', ['uses' => 'DecisionsController@updateMeta']);
+        $app->get('/tables/{id:[0-9a-z]{24}}/{variant_id:[0-9a-z]{24}}/analytics', ['uses' => 'TablesController@analytics']);
     }
 );
 
@@ -107,8 +107,8 @@ $app->group(
     ],
     function ($app) {
         /** @var Laravel\Lumen\Application $app */
-        $app->get('/decisions/{id}', ['uses' => 'ConsumerController@decision']);
-        $app->post('/tables/{id}/decisions', ['uses' => 'ConsumerController@tableCheck']);
+        $app->get('/decisions/{id:[0-9a-z]{24}}', ['uses' => 'ConsumerController@decision']);
+        $app->post('/tables/{id:[0-9a-z]{24}}/decisions', ['uses' => 'ConsumerController@tableCheck']);
         $app->post('/invite', ['uses' => 'UsersController@invite']);
     }
 );
