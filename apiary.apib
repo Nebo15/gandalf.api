@@ -832,11 +832,12 @@ Rollback Table to some state that described in passed Changelog
 + probability: 0.67 (number) - Probability value between 0-1, where 1 is 100% matched result
 + requests: 217 (number) - Requests amount for current condition.
 
-### Decision
+### DecisionConsumer
 + _id: 56c31536a60ad644060041af (string) - MongoID
 + title: Decision title (string) - Decision title
 + description: Decision description (string) - Decision description
 + final_decision: Approve (string) - Depends of the Table.matching_type could be as highest row in a table with all validations passed or sum of scoring points",
++ applications: gandalf, nebo (array) - Array of defined by user applications ids
 + request
     + salary: 1000 (string) - All passed parameters from request
 + table
@@ -844,36 +845,6 @@ Rollback Table to some state that described in passed Changelog
     + matching_type: decision,scoring (enum[string], required) - Matching type for Table
     + title: Table title (string) - Table title
     + description: Table title (string) - Table description
-    + applications
-    + variant
-        + _id: 56c31536a60ad644060041af (string) - MongoID
-        + title: Variant title (string) - Variant title
-        + description: Variant description (string) - Variant description
-+ fields (array[Field])
-+ rules (array[DecisionRule])
-+ created_at: 2016-02-16 14:15:30 (string)
-+ updated_at: 2016-02-16 14:15:30 (string)
-        
-### DecisionRule (Rule)
-+ decision: Approve (string) - Matched Rule decision or Variant.default_decision 
-+ conditions (array[Condition], required)
-
-### DecisionCondition (Condition)
-+ matched: true (boolean) - Is current condition matched
-
-### DecisionConsumer (Decision)
-+ _id: 56c31536a60ad644060041af (string) - MongoID
-+ title: Decision title (string) - Decision title
-+ description: Decision description (string) - Decision description
-+ final_decision: Approve (string) - Depends of the Table.matching_type could be as highest row in a table with all validations passed or sum of scoring points",
-+ request
-    + salary: 1000 (string) - All passed parameters from request
-+ table
-    + _id: 56c31536a60ad644060041af (string) - MongoID
-    + matching_type: decision,scoring (enum[string], required) - Matching type for Table
-    + title: Table title (string) - Table title
-    + description: Table title (string) - Table description
-    + applications
     + variant
         + _id: 56c31536a60ad644060041af (string) - MongoID
         + title: Variant title (string) - Variant title
@@ -881,10 +852,22 @@ Rollback Table to some state that described in passed Changelog
 + rules
     + title: Rule title (string, required)
     + description: Rule description (string, required)
-    + decision: Approve (string) - Matched Rule decision or Variant.default_decision 
+    + decision: Approve (string) - Matched Rule decision or Variant.default_decision
 + created_at: 2016-02-16 14:15:30 (string)
 + updated_at: 2016-02-16 14:15:30 (string)
 
+### Decision (DecisionConsumer)
++ meta: custom, meta, data (array) - Custom meta data
++ default_decision: Decline (string, required) - Value from Table.default_decision
++ fields (array[Field])
++ rules (array[DecisionRule])
+
+### DecisionRule (Rule)
++ decision: Approve (string) - Matched Rule decision or Variant.default_decision
++ conditions (array[Condition], required)
+
+### DecisionCondition (Condition)
++ matched: true (boolean) - Is current condition matched
 
 ### Changelog
 + _id: 56c31536a60ad644060041af (string) - MongoID
