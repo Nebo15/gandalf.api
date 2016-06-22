@@ -1,17 +1,20 @@
 <?php
 
-class Scopes extends \Sokil\Mongo\Migrator\AbstractMigration
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class Scopes extends Migration
 {
     public function up()
     {
-        $apps = $this->getCollection('applications')->find()->findAll();
-        foreach ($apps as $key => $app) {
-            if ($app->users) {
+        $apps = \DB::collection('applications')->get();
+        foreach ($apps as $app) {
+            if ($app['users']) {
                 $users = [];
-                foreach ($app->users as $k => $user) {
+                foreach ($app['users'] as $k => $user) {
                     $users[$k] = $user;
                     if ($user['role'] == 'admin') {
-                        $users[$k]['scope'] =[
+                        $users[$k]['scope'] = [
                             'create',
                             'read',
                             'update',
@@ -28,8 +31,7 @@ class Scopes extends \Sokil\Mongo\Migrator\AbstractMigration
                         ];
                     }
                 }
-                $app->users = $users;
-                $app->save();
+                \DB::collection('applications')->where('_id', strval($app['_id']))->update(['$set' => ['users' => $users]]);
             }
         }
     }
