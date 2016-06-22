@@ -119,11 +119,19 @@ class User extends Base implements
         return $this;
     }
 
+    /**
+     * @param $token
+     * @return User
+     */
     public function findByVerifyEmailToken($token)
     {
         return $this->findByToken($token, 'verify_email');
     }
 
+    /**
+     * @param $token
+     * @return User
+     */
     public function findByResetPasswordToken($token)
     {
         return $this->findByToken($token, 'reset_password');
