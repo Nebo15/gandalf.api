@@ -87,7 +87,7 @@ $app->group(
     [
         'prefix' => 'api/v1/admin',
         'namespace' => 'App\Http\Controllers',
-        'middleware' => ['oauth', 'applicationable', 'applicationable.acl'],
+    //        'middleware' => ['oauth', 'applicationable', 'applicationable.acl'],
     ],
     function ($app) {
         /** @var Laravel\Lumen\Application $app */

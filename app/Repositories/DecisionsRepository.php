@@ -19,7 +19,7 @@ class DecisionsRepository extends AbstractRepository
 {
     protected $modelClassName = 'App\Models\Decision';
 
-    public function getDecisions($size = null, $table_id = null)
+    public function getDecisions($size = null, $table_id = null, $variant_id = null)
     {
         /** @var \Jenssegers\Mongodb\Eloquent\Builder $query */
         if ($table_id) {
@@ -30,6 +30,8 @@ class DecisionsRepository extends AbstractRepository
                 throw $e;
             }
             $query = $query->orderBy(Decision::CREATED_AT, 'DESC');
+        } elseif ($variant_id) {
+            $query = $this->getModel()->query()->where('table.variant._id', $variant_id);
         } else {
             $query = Decision::orderBy(Decision::CREATED_AT, 'DESC');
         }

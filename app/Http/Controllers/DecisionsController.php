@@ -27,7 +27,11 @@ class DecisionsController extends AbstractController
     public function readList()
     {
         return $this->response->jsonPaginator(
-            $this->getRepository()->getDecisions($this->request->input('size'), $this->request->input('table_id'))
+            $this->getRepository()->getDecisions(
+                $this->request->input('size'),
+                $this->request->input('table_id'),
+                $this->request->input('variant_id')
+            )
         );
     }
 
