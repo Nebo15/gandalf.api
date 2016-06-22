@@ -36,5 +36,3 @@ class TableTypes extends Migration
             );
     }
 }
-
-

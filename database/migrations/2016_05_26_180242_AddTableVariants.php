@@ -7,90 +7,109 @@ class AddTableVariants extends Migration
 {
     public function up()
     {
-        $tables = $this->getCollection('tables')->find()->findAll();
         $indexedTables = [];
-        foreach ($tables as $table) {
-            $table->variants = [
+        foreach (\DB::collection('tables')->get() as $table) {
+            $table['variants'] = [
                 [
-                    '_id' => new MongoId,
-                    'title' => $table->title,
-                    'description' => $table->description,
-                    'default_title' => $table->default_title,
-                    'default_decision' => $table->default_decision,
-                    'default_description' => $table->default_description,
-                    'rules' => $table->rules
+                    '_id' => new MongoDB\BSON\ObjectID,
+                    'title' => $table['title'],
+                    'description' => $table['description'],
+                    'default_title' => $table['default_title'] ?? '',
+                    'default_decision' => $table['default_decision'] ?? '',
+                    'default_description' => $table['default_description'] ?? '',
+                    'rules' => $table['rules']
                 ]
             ];
-            $table->variants_probability = '';
-            unset($table->rules);
-            unset($table->default_title);
 
-            unset($table->default_decision);
-            unset($table->default_description);
-
-            $table->save();
-            $indexedTables[strval($table->_id)] = $table;
+            $id = strval($table['_id']);
+            \DB::collection('tables')->where('_id', $id)->update([
+                '$set' => [
+                    'variants_probability' => '',
+                    'variants' => $table['variants']
+                ],
+                '$unset' => [
+                    'rules' => null,
+                    'default_title' => null,
+                    'default_decision' => null,
+                    'default_description' => null,
+                ]
+            ]);
+            $indexedTables[$id] = $table;
         }
 
         $decisionsToRemove = [];
-        $collection = (new \MongoClient())->selectDB($this->getDatabase()->getName())->selectCollection('decisions');
-        $decisions = $collection->find([], ['table', 'table_id']);
-        $batchUpdate = (new \MongoUpdateBatch($collection));
-        foreach ($decisions as $decision) {
-            $tableId = array_key_exists('table_id', $decision)
-                ? strval($decision['table_id'])
-                : (array_key_exists('table', $decision) ? strval($decision['table']['_id']) : null);
 
-            if (!$tableId or !array_key_exists($tableId, $indexedTables)) {
-                $decisionsToRemove[] = $decision['_id'];
-            } else {
-                $table = $indexedTables[$tableId];
-                $variant = $table->variants[0];
-                $batchUpdate->add([
-                    'q' => ['_id' => $decision['_id']],
-                    'u' => [
-                        '$unset' => ['table_id' => null],
-                        '$set' => [
-                            'table' => [
-                                '_id' => $table->_id,
-                                'title' => $table->title,
-                                'description' => $table->description,
-                                'matching_type' => $table->matching_type,
-                                'variant' => [
-                                    '_id' => $variant['_id'],
-                                    'title' => $variant['title'],
-                                    'description' => $variant['description'],
+        $bulk = new MongoDB\Driver\BulkWrite;
+        $manager = new MongoDB\Driver\Manager(sprintf('mongodb://%s:%s', env('DB_HOST'), env('DB_PORT')));
+
+        $skip = 0;
+        $limit = 200;
+        while ($decisions = \DB::collection('decisions')->limit($limit)->skip($skip)->get()) {
+            if (!$decisions) {
+                break;
+            }
+            foreach ($decisions as $decision) {
+                $tableId = array_key_exists('table_id', $decision)
+                    ? strval($decision['table_id'])
+                    : (array_key_exists('table', $decision) ? strval($decision['table']['_id']) : null);
+
+                if (!$tableId or !array_key_exists($tableId, $indexedTables)) {
+                    $decisionsToRemove[] = $decision['_id'];
+                } else {
+                    $table = $indexedTables[$tableId];
+                    $variant = $table['variants'][0];
+                    $bulk->update(
+                        ['_id' => $decision['_id']],
+                        [
+                            '$unset' => ['table_id' => null],
+                            '$set' => [
+                                'table' => [
+                                    '_id' => $table['_id'],
+                                    'title' => $table['title'],
+                                    'description' => $table['description'],
+                                    'matching_type' => $table['matching_type'] ?? 'first',
+                                    'variant' => [
+                                        '_id' => $variant['_id'],
+                                        'title' => $variant['title'],
+                                        'description' => $variant['description'],
+                                    ]
                                 ]
                             ]
                         ]
-                    ]
-                ]);
+                    );
+                }
             }
+            $skip += $limit;
+            $manager->executeBulkWrite(env('DB_DATABASE') . '.decisions', $bulk);
         }
-        $batchUpdate->execute();
+
         if ($decisionsToRemove) {
-            $this->getCollection('decisions')->batchDelete(
-                ['_id' => ['$in' => $decisionsToRemove]]
-            );
+            \DB::collection('decisions')->where('_id', ['$in' => $decisionsToRemove])->delete();
         }
     }
 
     public function down()
     {
-        $tables = $this->getCollection('tables')->find()->findAll();
+        $tables = \DB::collection('tables')->get();
         foreach ($tables as $table) {
-            $variant = $table->variants[0];
-            $table->rules = $variant['rules'];
-            $table->default_title = $variant['default_title'];
-            $table->default_decision = $variant['default_decision'];
-            $table->default_description = $variant['default_description'];
-            unset($table->variants);
-            unset($table->variants_probability);
-            $table->save();
+            $variant = $table['variants'][0];
+            \DB::collection('tables')->where('_id', strval($table['_id']))->update([
+                '$set' => [
+                    'rules' => $variant['rules'],
+                    'default_title' => $variant['default_title'],
+                    'default_decision' => $variant['default_decision'],
+                    'default_description' => $variant['default_description'],
+                ],
+                '$unset' => [
+                    'variants' => null,
+                    'variants_probability' => null,
+                ]
+            ]);
         }
-
-        $this->getCollection('decisions')->update([],
-            ['$unset' => ['table.variant' => null]],
-            ['multiple' => true]);
+        \DB::collection('decisions')
+            ->update(
+                ['$unset' => ['table.variant' => null]],
+                ['multiple' => true]
+            );
     }
 }

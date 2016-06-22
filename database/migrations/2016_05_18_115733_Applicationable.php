@@ -7,16 +7,15 @@ class Applicationable extends Migration
 {
     public function up()
     {
-        $usersCollection = \DB::collection('users');
-        $user = $usersCollection->where('username', 'admin')->first();
+        $user = \DB::collection('users')->where('username', 'admin')->first();
         if (!$user) {
-            $usersCollection->insert([
+            \DB::collection('users')->insert([
                 'username' => 'admin',
                 'password' => '$2y$10$ur/AJm3FpWyCAAIEEcXQbebvMf0cUuT1dOKHC/.UNc9Z4MLe8mXJO',
                 'email' => 'admin@admin.com',
             ]);
         }
-        $user = $usersCollection->where('username', 'admin')->first();
+        $user = \DB::collection('users')->where('username', 'admin')->first();
 
         $applicationsCollection = \DB::collection('applications');
         $application = $applicationsCollection->where('title', 'migrated')->first();

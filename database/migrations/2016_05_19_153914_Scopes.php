@@ -7,8 +7,7 @@ class Scopes extends Migration
 {
     public function up()
     {
-        $appColl = \DB::collection('applications');
-        $apps = $appColl->get();
+        $apps = \DB::collection('applications')->get();
         foreach ($apps as $app) {
             if ($app['users']) {
                 $users = [];
@@ -32,7 +31,7 @@ class Scopes extends Migration
                         ];
                     }
                 }
-                $appColl->where('_id', strval($app['_id']))->update(['$set' => ['users' => $users]]);
+                \DB::collection('applications')->where('_id', strval($app['_id']))->update(['$set' => ['users' => $users]]);
             }
         }
     }

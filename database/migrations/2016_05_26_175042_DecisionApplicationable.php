@@ -26,27 +26,34 @@ class DecisionApplicationable extends Migration
             $tables[(string)$table['_id']] = $table['applications'];
         }
 
-        $collection = (new \MongoClient())->selectDB(env('DB_DATABASE'))->selectCollection('decisions');
-        $decisions = $collection->find([], ['table', 'table_id']);
-        $batchUpdate = (new \MongoUpdateBatch($collection));
-        foreach ($decisions as $decision) {
-            $applications = [];
-            if (array_key_exists('table_id', $decision)) {
-                $applications = (array_key_exists((string)$decision['table_id'], $tables))
-                    ? $tables[(string)$decision['table_id']]
-                    : [];
-            } elseif (array_key_exists('table', $decision)) {
-                $applications = array_key_exists((string)$decision['table']['_id'], $tables)
-                    ? $tables[(string)$decision['table']['_id']]
-                    : [];
-            }
+        $bulk = new MongoDB\Driver\BulkWrite;
+        $manager = new MongoDB\Driver\Manager(sprintf('mongodb://%s:%s', env('DB_HOST'), env('DB_PORT')));
 
-            $batchUpdate->add([
-                'q' => ['_id' => $decision['_id']],
-                'u' => ['$set' => ['applications' => $applications]]
-            ]);
+        $skip = 0;
+        $limit = 200;
+        while ($decisions = \DB::collection('decisions')->limit($limit)->skip($skip)->get()) {
+            if (!$decisions) {
+                break;
+            }
+            foreach ($decisions as $decision) {
+                $applications = [];
+                if (array_key_exists('table_id', $decision)) {
+                    $applications = (array_key_exists((string)$decision['table_id'], $tables))
+                        ? $tables[(string)$decision['table_id']]
+                        : [];
+                } elseif (array_key_exists('table', $decision)) {
+                    $applications = array_key_exists((string)$decision['table']['_id'], $tables)
+                        ? $tables[(string)$decision['table']['_id']]
+                        : [];
+                }
+                $bulk->update(
+                    ['_id' => $decision['_id']],
+                    ['$set' => ['applications' => $applications]]
+                );
+            }
+            $skip += $limit;
+            $manager->executeBulkWrite(env('DB_DATABASE') . '.decisions', $bulk);
         }
-        $batchUpdate->execute();
     }
 
     public function down()
