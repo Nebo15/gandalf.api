@@ -295,13 +295,14 @@ You can see in response properties digits `variants.0.rules`, this is an array i
 + Parameters
     + name: John (string) - Parameter searching users by usernames or emails. If name == jo, in the response users will be with usernames which starts on jo, Jo, JO. Searching by email enabled just when parameter has @
     + size: 10 (number) - Amount of items on page
-    + page: 1 (number)
+    + page: 1 (number) - current page
 
 + Response 200 (application/json)
     + Attributes (object)
         + meta
             + code: 200 (number) - HTTP response code
         + data (array[UserList])
+        + paging (Paging)
 
 ### Create User [POST]
 
@@ -421,11 +422,15 @@ Get user access token, grant_type password scenario
 ## Projects [/api/v1/projects]
 ### List All Projects [GET]
 
++ Parameters
+    + size: 10 (number) - Amount of items on page
+    + page: 1 (number) - current page
 + Response 200 (application/json)
     + Attributes (object)
         + meta
             + code: 200 (number) - HTTP response code
         + data (array[Project])
+        + paging (Paging)
 
 ### Create Project [POST]
 
@@ -630,6 +635,7 @@ Available rules conditions are:
         + meta
             + code: 200 (number) - HTTP response code
         + data (array[TableList])
+        + paging (Paging)
 
 ## Table by ID [/api/v1/admin/tables/{id}]
 
@@ -683,11 +689,17 @@ Get Table analytics by all made Decisions
 ## Decisions All List [/admin/decisions]
 
 ### Decisions All List [GET]
++ Parameters
+    + size: 1000 (number) - Amount of items on page
+    + page: 1 (number) - current page
+    + table_id: 576a80edce3c0c16be4d0c4d (string) - Filter by Table
+    + variant_id: 576a7f01ce3c0c02ed0e5d4f (string) - Filter by Variant
 + Response 200 (application/json)
     + Attributes (object)
         + meta
             + code: 200 (number) - HTTP response code
         + data (array[Decision])
+        + paging (Paging)
 
 
 ## Decisions By ID [/admin/decisions/{id}]
@@ -715,11 +727,15 @@ Get Table analytics by all made Decisions
 ## Changelog Tables List [/api/v1/admin/changelog/tables]
 
 ### Changelog Tables List [GET]
++ Parameters
+    + size: 1000 (number) - Amount of items on page
+    + page: 1 (number) - current page
 + Response 200 (application/json)
     + Attributes (object)
         + meta
             + code: 200 (number) - HTTP response code
         + data (array[Changelog])
+        + paging (Paging)
 
 
 ## Changelog By Table [/api/v1/admin/changelog/tables/{id}]

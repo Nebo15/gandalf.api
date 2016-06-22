@@ -197,6 +197,17 @@ class DecisionsCest
         $I->sendGET('api/v1/admin/decisions/' . $decision->_id);
         $I->assertTableDecisionsForAdmin();
         $I->assertTrue(in_array($I->getResponseFields()->data->table->variant->_id, [$variantId1, $variantId2]));
+
+        foreach ([$variantId1, $variantId2] as $variantId) {
+            $I->sendGET('api/v1/admin/decisions?variant_id=' . $variantId);
+            $I->seeResponseCodeIs(200);
+            foreach ($I->getResponseFields()->data as $decision) {
+                $I->assertTrue(
+                    $decision->table->variant->_id == $variantId,
+                    "Decision doesn't filtered by variant_id $variantId"
+                );
+            }
+        }
     }
 
 
