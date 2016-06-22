@@ -42,6 +42,7 @@ $app->group(
         /** @var Laravel\Lumen\Application $app */
         $app->post('/users', ['uses' => 'UsersController@create']);
         $app->post('/users/verify/email', ['uses' => 'UsersController@verifyEmail']);
+        $app->post('/users/verify/email/resend', ['uses' => 'UsersController@resendVerifyEmailToken']);
         $app->post('/users/password/reset', ['uses' => 'UsersController@createResetPasswordToken']);
         $app->put('/users/password/reset', ['uses' => 'UsersController@changePassword']);
     }

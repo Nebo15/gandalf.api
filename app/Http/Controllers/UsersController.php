@@ -12,6 +12,11 @@ use Nebo15\REST\AbstractController;
 use Nebo15\REST\Interfaces\ListableInterface;
 use Nebo15\LumenApplicationable\Models\Application;
 
+/**
+ * Class UsersController
+ * @package App\Http\Controllers
+ * @method \App\Repositories\UsersRepository getRepository()
+ */
 class UsersController extends AbstractController
 {
     protected $repositoryClassName = 'App\Repositories\UsersRepository';
@@ -47,19 +52,17 @@ class UsersController extends AbstractController
 
     public function readListWithFilters()
     {
-        $model = $this->getRepository()
-            ->getModel()
-            ->query();
+        $query = $this->getRepository()->getModel()->query();
         if (strpos($this->request->input('name', ''), '@') === false) {
-            $model->where(['username' => new Regex('^' . ($this->request->input('name', '.')) . '.*', 'i')]);
-            $model->where(['username' => ['$ne' => $this->request->user()->username]]);
+            $query->where(['username' => new Regex('^' . ($this->request->input('name', '.')) . '.*', 'i')]);
+            $query->where(['username' => ['$ne' => $this->request->user()->username]]);
         } else {
-            $model->where(['email' => new Regex('^' . ($this->request->input('name', '.')) . '.*', 'i')]);
-            $model->where(['email' => ['$ne' => $this->request->user()->email]]);
+            $query->where(['email' => new Regex('^' . ($this->request->input('name', '.')) . '.*', 'i')]);
+            $query->where(['email' => ['$ne' => $this->request->user()->email]]);
         }
 
         return $this->response->jsonPaginator(
-            $model->paginate(intval($this->request->input('size'))),
+            $this->getRepository()->paginateQuery($query, $this->request->input('size')),
             [],
             function (ListableInterface $model) {
                 return $model->toListArray();
@@ -70,10 +73,27 @@ class UsersController extends AbstractController
     public function verifyEmail()
     {
         return $this->response->json(
-            $this->getRepository()->getModel()->findByVerifyEmailToken($this->request->input('token'))
+            $this->getRepository()->getModel()
+                ->findByVerifyEmailToken($this->request->input('token'))
                 ->verifyEmail()->save()
                 ->toArray()
         );
+    }
+
+    public function resendVerifyEmailToken()
+    {
+        $user = $this->getRepository()->getModel();
+        $user->createVerifyEmailToken()->save();
+        $this->getMailService()->sendEmailConfirmation(
+            $user->temporary_email,
+            $user->getVerifyEmailToken()['token'],
+            $user->username
+        );
+        if (env('APP_ENV') == 'local') {
+            $sandboxData['token_email'] = $user->getVerifyEmailToken();
+        }
+
+        return $this->response->json();
     }
 
 
@@ -149,17 +169,14 @@ class UsersController extends AbstractController
     {
         $this->validateRoute();
         $email = $this->request->input('email');
-        $user = null;
+        /** @var \App\Models\User $user */
         $user = $this->getRepository()->getModel()->query()->where(['email' => $email])->firstOrFail();
 
         $return = [];
         $sandboxData = [];
         $user->createResetPasswordToken();
-        /**
-         * @var Mail $mail
-         */
-        $mail = app('\App\Services\Mail');
-        $mail->sendRecoveryPassword($email, $user->getResetPasswordToken()['token'], $user);
+
+        $this->getMailService()->sendRecoveryPassword($email, $user->getResetPasswordToken()['token'], $user);
         $user->save();
 
         if (env('APP_ENV') == 'local') {
@@ -195,5 +212,13 @@ class UsersController extends AbstractController
         ];
 
         return $this->response->json((new Invitation())->fill($fill)->save()->toArray());
+    }
+
+    /**
+     * @return \App\Services\Mail
+     */
+    private function getMailService()
+    {
+        return app('\App\Services\Mail');
     }
 }

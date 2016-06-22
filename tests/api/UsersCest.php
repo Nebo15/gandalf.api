@@ -316,6 +316,13 @@ class UsersCest
         $I->makeDecision($table_id);
     }
 
+    public function resendVerifyEmailToken(ApiTester $I)
+    {
+        $I->createUser(true, '', false);
+        $I->sendPOST('api/v1/users/verify/email/resend');
+        $I->seeResponseCodeIs(200);
+    }
+
     public function deleteAdminFromProject(ApiTester $I)
     {
         $user = $I->createAndLoginUser();
