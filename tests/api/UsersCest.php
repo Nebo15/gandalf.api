@@ -13,8 +13,12 @@ class UsersCest
         $I->createAndLoginClient();
         $faker = $I->getFaker();
         $I->sendPOST(
-            'api/v1/users/',
-            ['email' => $faker->email, 'password' => $I->getPassword(), 'username' => $faker->firstName]
+            'api/v1/users/', [
+                'email' => $faker->email,
+                'password' => $I->getPassword(),
+                'username' => $faker->firstName,
+                'last_name' => "O'Really",
+            ]
         );
         $I->seeResponseCodeIs(201);
     }

@@ -25,7 +25,7 @@ class UsersController extends AbstractController
         'create' => [
             'username' => 'required|unique:users,username|between:2,32|username',
             'first_name' => 'sometimes|required|string|between:2,32|alpha',
-            'last_name' => 'sometimes|required|string|between:2,32|alpha',
+            'last_name' => 'sometimes|required|string|between:2,32|last_name',
             'email' => 'required|unique:users,email|email',
             'password' => 'required|between:6,32|password',
         ],
