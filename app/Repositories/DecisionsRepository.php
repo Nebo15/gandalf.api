@@ -6,7 +6,6 @@
 namespace App\Repositories;
 
 use App\Models\Decision;
-use Nebo15\LumenApplicationable\ApplicationableHelper;
 use Nebo15\REST\AbstractRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Contracts\Validation\ValidationException;
