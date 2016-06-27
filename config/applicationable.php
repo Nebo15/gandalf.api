@@ -64,13 +64,13 @@ return [
             '~^\/api\/v1\/admin\/groups\/(.+)$~' => ['read', 'update'],
             '~^\/api\/v1\/admin\/tables\/(.+)$~' => ['read', 'update'],
             '~^\/api\/v1\/projects\/(.+)$~' => ['read', 'update', 'edit_project'],
-            '~^\/api\/v1\/projects\/consumers~' => ['read', 'update', 'get_consumers', 'update_consumers'],
-            '~^\/api\/v1\/projects\/users$~' => ['read', 'update', 'update_users'],
+            '~^\/api\/v1\/projects\/consumers~' => ['read', 'get_consumers', 'update_consumers'],
+            '~^\/api\/v1\/projects\/users$~' => ['read', 'update_users'],
         ],
         'delete' => [
             '~^\/api\/v1\/admin\/groups\/(.+)$~' => ['read', 'delete'],
-            '~^\/api\/v1\/projects\/users$~' => ['read', 'update', 'delete_users'],
-            '~^\/api\/v1\/projects\/consumers~' => ['read', 'update', 'get_consumers', 'delete_consumers'],
+            '~^\/api\/v1\/projects\/users$~' => ['read', 'delete_users'],
+            '~^\/api\/v1\/projects\/consumers~' => ['read', 'get_consumers', 'delete_consumers'],
             '~^\/api\/v1\/projects\/(.+)$~' => ['read', 'delete_project'],
             '~^\/api\/v1\/admin\/tables\/(.+)$~' => ['read', 'delete'],
 
