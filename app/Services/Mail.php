@@ -27,7 +27,7 @@ class Mail
             [
                 'product_name' => 'Gandalf',
                 'name' => $name,
-                'action_url' => str_replace('{code}', $code, env('services.link.confirmation_email')),
+                'action_url' => str_replace('{code}', $code, config('services.link.confirmation_email')),
                 'username' => $name,
             ]
         );
@@ -46,7 +46,7 @@ class Mail
             [
                 'product_name' => 'Gandalf',
                 'name' => $user->username,
-                'action_url' => str_replace('{code}', $code, env('services.link.reset_password')),
+                'action_url' => str_replace('{code}', $code, config('services.link.reset_password')),
                 'username' => $user->username,
             ]
         );
@@ -65,7 +65,7 @@ class Mail
             [
                 'product_name' => 'Gandalf',
                 'name' => $invitation->email,
-                'action_url' => env('services.link.invite'),
+                'action_url' => config('services.link.invite'),
             ]
         );
     }
