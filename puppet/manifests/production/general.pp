@@ -9,23 +9,23 @@ node default {
     group           => 'deploybot',
     error_repotring => 0
   } ->
-file { ["/www", "/var/www", "/var/www/.ssh", "/var/log", "/var/log/www"]:
+  file { ["/www", "/var/www", "/var/www/.ssh", "/var/log", "/var/log/www"]:
     ensure => "directory",
     owner  => "deploybot",
     group  => "deploybot",
     mode   => 755
   } ->
 
-class { 'newrelic::server::linux':
+  class { 'newrelic::server::linux':
     newrelic_license_key  => $newrelic_key,
   } ~>
-class { 'newrelic::agent::php':
+  class { 'newrelic::agent::php':
     newrelic_license_key  => $newrelic_key,
     newrelic_ini_appname  => $newrelic_app_name,
     newrelic_php_conf_dir => ['/etc/php5/mods-available'],
   }
 
-class { 'nginx':
+  class { 'nginx':
     daemon_user         => 'deploybot',
     worker_processes    => 4,
     pid                 => '/run/nginx.pid',
@@ -40,7 +40,7 @@ class { 'nginx':
     server_tokens       => 'off',
     gzip                => 'off'
   } ->
-file { "/etc/nginx/conf.d/ssl.conf":
+  file { "/etc/nginx/conf.d/ssl.conf":
     content => "\
 ssl_dhparam /etc/ssl/dhparam.pem;
   ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
@@ -55,16 +55,16 @@ ssl_dhparam /etc/ssl/dhparam.pem;
   }
 
 
-cron { "/usr/bin/php /www/gandalf.api/current/artisan schedule:run >> /dev/null 2>&1":
+  cron { "/usr/bin/php /www/gandalf.api/current/artisan schedule:run >> /dev/null 2>&1":
     command => "/usr/bin/php /www/gandalf.api/current/artisan schedule:run >> /dev/null 2>&1",
     user    => deploybot,
-    ensure => present,
+    ensure  => present,
     hour    => "*",
     minute  => "*",
-    month => "*"
+    month   => "*"
   }
 
-file { "gandalf_config":
+  file { "gandalf_config":
     path    => "/etc/nginx/sites-enabled/gandalf.api.conf",
     content => "
     server {
@@ -91,6 +91,6 @@ root /www/gandalf.api/current/public;
 include /www/gandalf.api/current/config/nginx/nginx.conf;
 }
 ",
-notify = > Service["nginx"]
-}
+  notify = > Service["nginx"]
+  }
 }
