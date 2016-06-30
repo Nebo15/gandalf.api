@@ -54,13 +54,14 @@ ssl_dhparam /etc/ssl/dhparam.pem;
     group   => root,
   }
 
+
   cron { "/usr/bin/php /www/gandalf.api/current/artisan schedule:run >> /dev/null 2>&1":
     command => "/usr/bin/php /www/gandalf.api/current/artisan schedule:run >> /dev/null 2>&1",
     user    => deploybot,
-    ensure => present,
+    ensure  => present,
     hour    => "*",
     minute  => "*",
-    month => "*"
+    month   => "*"
   }
 
   file { "gandalf_config":
@@ -71,7 +72,8 @@ ssl_dhparam /etc/ssl/dhparam.pem;
     server_name api.gndf.io;
     rewrite ^/(.*)$ https://api.gndf.io/\$1 permanent;
 }
-    server {
+
+server {
     listen 443 ssl;
     error_log /var/log/nginx.log;
     server_name api.gndf.io;
@@ -85,10 +87,10 @@ ssl_dhparam /etc/ssl/dhparam.pem;
     if (\$request_method = OPTIONS ) {
     return 200;
     }
-    root /www/gandalf.api/current/public;
-    include /www/gandalf.api/current/config/nginx/nginx.conf;
+root /www/gandalf.api/current/public;
+include /www/gandalf.api/current/config/nginx/nginx.conf;
 }
-    ",
-    notify  => Service["nginx"]
+",
+  notify = > Service["nginx"]
   }
 }
