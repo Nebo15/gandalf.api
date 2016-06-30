@@ -82,7 +82,8 @@ class UsersController extends AbstractController
 
     public function resendVerifyEmailToken()
     {
-        $user = $this->getRepository()->getModel();
+        /** @var \App\Models\User $user */
+        $user = $this->request->user();
         $user->createVerifyEmailToken()->save();
         $this->getMailService()->sendEmailConfirmation(
             $user->temporary_email,
