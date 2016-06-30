@@ -19,10 +19,11 @@ class DatabaseSeeder extends Seeder
     private function seedApplication()
     {
         $appId = new ObjectID('5745cc5af70466a1098b456e');
-        $userId = new ObjectID('576bf5f9ce3c0c02ee2d314e');
+        $userId = new ObjectID('5774f3b7ce3c0c02ed0e63a0');
+        $adminId = new ObjectID('576bf5f9ce3c0c02ee2d314e');
 
         \DB::collection('users')->insert([
-            '_id' => $userId,
+            '_id' => $adminId,
             'username' => 'admin',
             'first_name' => 'admin',
             'last_name' => 'admin',
@@ -40,7 +41,33 @@ class DatabaseSeeder extends Seeder
             "refreshTokens" => [
                 [
                     "refresh_token" => "fc02f2234b57f289aa88cff798f2e0459fc23708",
-                    "client_id" => "d599f6666ccd1375d8b9063891b2baa3",
+                    "client_id" => "d82f82004384c8835454603277bed410",
+                    "expires" => 2567903453,
+                    "scope" => null,
+                ]
+            ]
+        ]);
+
+        \DB::collection('users')->insert([
+            '_id' => $userId,
+            'username' => 'demo',
+            'first_name' => 'demo',
+            'last_name' => 'demo',
+            'email' => 'demo@gndf.io',
+            'password' => '$2y$10$7Tb7VdLL7pcolrFaCDSjfe/qM09sBWi.os/.SULGNYQRRXog5rKsm',
+            'active' => true,
+            "accessTokens" => [
+                [
+                    "access_token" => "30609021b25294415df089403a577c2519df1212",
+                    "client_id" => "d82f82004384c8835454603277bed410",
+                    "expires" => 2566697453,
+                    "scope" => null,
+                ]
+            ],
+            "refreshTokens" => [
+                [
+                    "refresh_token" => "fa01c2234b57f289ee88cff798f2e0459fc16799",
+                    "client_id" => "d82f82004384c8835454603277bed410",
                     "expires" => 2567903453,
                     "scope" => null,
                 ]
@@ -54,7 +81,7 @@ class DatabaseSeeder extends Seeder
             "description" => "Sample application.",
             "users" => [
                 [
-                    "user_id" => $userId,
+                    "user_id" => $adminId,
                     "role" => "admin",
                     "scope" => [
                         "create",
@@ -71,6 +98,15 @@ class DatabaseSeeder extends Seeder
                         "delete_project",
                         "delete_consumers",
                         "delete_users"
+                    ],
+                ],
+                [
+                    "user_id" => $userId,
+                    "role" => "user",
+                    "scope" => [
+                        "read",
+                        "check",
+                        "get_consumers",
                     ],
                 ],
             ],
