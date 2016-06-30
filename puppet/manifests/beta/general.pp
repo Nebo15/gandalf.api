@@ -47,7 +47,7 @@ node default {
     root /www/gandalf.api/current/public;
     include /www/gandalf.api/current/config/nginx/nginx.conf;
 }
-",
-  notify = > Service["nginx"]
+    ",
+    notify  => Service["nginx"]
   }
 }
