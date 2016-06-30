@@ -550,6 +550,8 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseMatchesJsonType([
             '_id' => 'string',
             'title' => 'string',
+            'description' => 'string',
+            'settings' => 'array',
             'users' => 'array',
         ], $jsonPath);
 

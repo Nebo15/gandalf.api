@@ -58,16 +58,16 @@
         },
         {
             "name": "bugsnag/bugsnag",
-            "version": "v2.8.0",
+            "version": "v2.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bugsnag/bugsnag-php.git",
-                "reference": "474e3a826b2601cb931fa0368f95718e265743c0"
+                "reference": "332b32222ab100ebedfd71c053600708bc30abc1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bugsnag/bugsnag-php/zipball/474e3a826b2601cb931fa0368f95718e265743c0",
-                "reference": "474e3a826b2601cb931fa0368f95718e265743c0",
+                "url": "https://api.github.com/repos/bugsnag/bugsnag-php/zipball/332b32222ab100ebedfd71c053600708bc30abc1",
+                "reference": "332b32222ab100ebedfd71c053600708bc30abc1",
                 "shasum": ""
             },
             "require": {
@@ -79,7 +79,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "2.9-dev"
                 }
             },
             "autoload": {
@@ -107,7 +107,7 @@
                 "logging",
                 "tracking"
             ],
-            "time": "2016-06-21 16:52:08"
+            "time": "2016-06-24 14:47:31"
         },
         {
             "name": "bugsnag/bugsnag-laravel",
@@ -338,16 +338,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.3.0",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "31382fef2889136415751badebbd1cb022a4ed72"
+                "reference": "5c6447c9df362e8f8093bda8f5d8873fe5c7f65b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/31382fef2889136415751badebbd1cb022a4ed72",
-                "reference": "31382fef2889136415751badebbd1cb022a4ed72",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/5c6447c9df362e8f8093bda8f5d8873fe5c7f65b",
+                "reference": "5c6447c9df362e8f8093bda8f5d8873fe5c7f65b",
                 "shasum": ""
             },
             "require": {
@@ -363,7 +363,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0-dev"
+                    "dev-master": "1.4-dev"
                 }
             },
             "autoload": {
@@ -392,7 +392,7 @@
                 "stream",
                 "uri"
             ],
-            "time": "2016-04-13 19:56:01"
+            "time": "2016-06-24 23:00:38"
         },
         {
             "name": "illuminate/auth",
@@ -1824,16 +1824,16 @@
         },
         {
             "name": "nebo15/lumen.applicationable",
-            "version": "0.1.2",
+            "version": "0.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/lumen-applicationable.git",
-                "reference": "3553625e86ff7e12a76aff12dee42235b881a69e"
+                "reference": "b616b8621e4037e5787172e051dfa71f0fa259fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/3553625e86ff7e12a76aff12dee42235b881a69e",
-                "reference": "3553625e86ff7e12a76aff12dee42235b881a69e",
+                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/b616b8621e4037e5787172e051dfa71f0fa259fe",
+                "reference": "b616b8621e4037e5787172e051dfa71f0fa259fe",
                 "shasum": ""
             },
             "require-dev": {
@@ -1862,7 +1862,7 @@
                 "lumen",
                 "mongodb"
             ],
-            "time": "2016-06-23 10:13:05"
+            "time": "2016-06-30 14:10:23"
         },
         {
             "name": "nebo15/lumen.oauth2-mongodb",
@@ -3078,16 +3078,16 @@
         },
         {
             "name": "codeception/codeception",
-            "version": "2.2.1",
+            "version": "2.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/Codeception.git",
-                "reference": "f137636f0c185e7d4a495b9cea70c1afae27dfc7"
+                "reference": "8d80bb4ec7470e8df5de0e4c401785bc3fa1f4f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/f137636f0c185e7d4a495b9cea70c1afae27dfc7",
-                "reference": "f137636f0c185e7d4a495b9cea70c1afae27dfc7",
+                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/8d80bb4ec7470e8df5de0e4c401785bc3fa1f4f6",
+                "reference": "8d80bb4ec7470e8df5de0e4c401785bc3fa1f4f6",
                 "shasum": ""
             },
             "require": {
@@ -3100,6 +3100,8 @@
                 "php": ">=5.4.0 <8.0",
                 "phpunit/php-code-coverage": ">=2.1.3",
                 "phpunit/phpunit": ">4.8.20 <5.5",
+                "sebastian/comparator": "~1.1",
+                "sebastian/diff": "^1.4",
                 "symfony/browser-kit": ">=2.7 <4.0",
                 "symfony/console": ">=2.7 <4.0",
                 "symfony/css-selector": ">=2.7 <4.0",
@@ -3163,7 +3165,7 @@
                 "functional testing",
                 "unit testing"
             ],
-            "time": "2016-06-03 12:44:06"
+            "time": "2016-06-29 00:59:28"
         },
         {
             "name": "doctrine/instantiator",
