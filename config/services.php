@@ -15,7 +15,7 @@ return [
         'invite' => env('LINK_INVITE', 'http://gandalf.dev/registration'),
     ],
     'email' => [
-        'enabled' => env('EMAIL_ENABLED', false)
+        'enabled' => env('EMAIL_ENABLED', false),
     ],
     'status' => [
         'decisions_per_minute_link' => env('STATUS_DPM_LINK', 'http://status.gndf.io/api/v1/metrics/1/points'),
