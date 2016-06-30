@@ -30,7 +30,6 @@ class ApiTester extends \Codeception\Actor
     public function __construct(\Codeception\Scenario $scenario)
     {
         $this->scenario = $scenario;
-        $this->scenario->stopIfBlocked();
     }
 
     public function getFaker($locale = 'en_US')
