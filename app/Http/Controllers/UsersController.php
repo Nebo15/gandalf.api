@@ -90,11 +90,18 @@ class UsersController extends AbstractController
             $user->getVerifyEmailToken()['token'],
             $user->username
         );
+        $sandboxData = [];
         if (env('APP_ENV') == 'local') {
             $sandboxData['token_email'] = $user->getVerifyEmailToken();
         }
 
-        return $this->response->json();
+        return $this->response->json(
+            [],
+            Response::HTTP_CREATED,
+            [],
+            [],
+            $sandboxData
+        );
     }
 
 
@@ -117,7 +124,7 @@ class UsersController extends AbstractController
                     $application->setUser([
                         'user_id' => (string)$user->_id,
                         'role' => $item->role,
-                        'scope' => $item->scope
+                        'scope' => $item->scope,
                     ])->save();
                 }
             }
@@ -197,6 +204,7 @@ class UsersController extends AbstractController
     {
         $resp = $this->request->user()->toArray();
         $resp['scope'] = $this->request->user()->getApplicationUser()->scope;
+
         return $this->response->json($resp);
     }
 
