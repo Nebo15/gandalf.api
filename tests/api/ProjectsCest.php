@@ -162,4 +162,14 @@ class ProjectsCest
         $I->cantSeeResponseContains($consumer->client_id);
         $I->assertConsumers();
     }
+
+    public function testSettings(ApiTester $I)
+    {
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
+
+        $I->sendPUT('api/v1/projects', ['settings' => []]);
+        $I->assertProject();
+        $I->assertTrue(($I->getResponseFields()->data->settings instanceof \StdClass));
+    }
 }

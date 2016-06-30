@@ -165,13 +165,11 @@ class UsersCest
         $I->seeResponseCodeIs(401);
 
         $I->loginClient($I->getCurrentClient());
-        $I->sendPOST('api/v1/oauth/',
-            [
-                'grant_type' => 'password',
-                'username' => $user->email,
-                'password' => $user->password,
-            ]
-        );
+        $I->sendPOST('api/v1/oauth/', [
+            'grant_type' => 'password',
+            'username' => $user->email,
+            'password' => $user->password,
+        ]);
         $I->seeResponseCodeIs(200);
 
         $token = json_decode($I->grabResponse());
@@ -202,22 +200,18 @@ class UsersCest
             ['token' => $resp->sandbox->reset_password_token->token, 'password' => $new_password]);
         $I->seeResponseCodeIs(200);
 
-        $I->sendPOST('api/v1/oauth/',
-            [
-                'grant_type' => 'password',
-                'username' => $user->email,
-                'password' => $old_password,
-            ]
-        );
+        $I->sendPOST('api/v1/oauth/', [
+            'grant_type' => 'password',
+            'username' => $user->email,
+            'password' => $old_password,
+        ]);
         $I->seeResponseCodeIs(401);
 
-        $I->sendPOST('api/v1/oauth/',
-            [
-                'grant_type' => 'password',
-                'username' => $user->email,
-                'password' => $new_password,
-            ]
-        );
+        $I->sendPOST('api/v1/oauth/', [
+            'grant_type' => 'password',
+            'username' => $user->email,
+            'password' => $new_password,
+        ]);
         $I->seeResponseCodeIs(200);
     }
 
@@ -370,5 +364,4 @@ class UsersCest
         $I->sendDELETE('api/v1/projects/users', ['user_id' => $user->_id]);
         $I->seeResponseCodeIs(200);
     }
-
 }
