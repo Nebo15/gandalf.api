@@ -116,6 +116,7 @@ class User extends Base implements
     public function changePassword($new_password)
     {
         $this->setAttribute('password', $new_password);
+
         return $this;
     }
 
@@ -160,7 +161,7 @@ class User extends Base implements
 
     private function getInternalToken($type)
     {
-        return (array_key_exists($type, $this->attributes['tokens'])) ?
+        return (array_key_exists('tokens', $this->attributes) && array_key_exists($type, $this->attributes['tokens'])) ?
             $this->attributes['tokens'][$type] :
             false;
     }
