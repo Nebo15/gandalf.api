@@ -316,9 +316,11 @@ class UsersCest
 
     public function resendVerifyEmailToken(ApiTester $I)
     {
-        $I->createUser(true, '', false);
-        $I->sendPOST('api/v1/users/verify/email/resend');
+        $user = $I->createUser(true, '', false);
+        $I->sendPOST('api/v1/users/verify/email/resend', ['email' => $user->email]);
         $I->seeResponseCodeIs(200);
+        $I->sendPOST('api/v1/users/verify/email/resend', ['email' => 'wrong@email.com']);
+        $I->seeResponseCodeIs(404);
     }
 
     public function deleteAdminFromProject(ApiTester $I)

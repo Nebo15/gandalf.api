@@ -18,9 +18,8 @@ class ProjectsController extends AbstractController
 
     public function deleteProject(Application $application)
     {
-        $current_application = app()->offsetGet('applicationable.application');
         Table::where(['applications' => ['$in' => [$application->_id]]])->delete();
-        $current_application->delete();
+        $application->delete();
 
         return $this->response->json();
     }

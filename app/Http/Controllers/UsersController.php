@@ -5,6 +5,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use MongoDB\BSON\Regex;
 use App\Models\Invitation;
 use Nebo15\REST\Response;
@@ -83,18 +84,25 @@ class UsersController extends AbstractController
     public function resendVerifyEmailToken()
     {
         /** @var \App\Models\User $user */
-        $user = $this->request->user();
+        $user = User::where('temporary_email', $this->request->input('email'))->firstOrFail();
         $user->createVerifyEmailToken()->save();
         $this->getMailService()->sendEmailConfirmation(
             $user->temporary_email,
             $user->getVerifyEmailToken()['token'],
             $user->username
         );
+        $sandboxData = [];
         if (env('APP_ENV') == 'local') {
             $sandboxData['token_email'] = $user->getVerifyEmailToken();
         }
 
-        return $this->response->json();
+        return $this->response->json(
+            [],
+            Response::HTTP_OK,
+            [],
+            [],
+            $sandboxData
+        );
     }
 
 
@@ -117,7 +125,7 @@ class UsersController extends AbstractController
                     $application->setUser([
                         'user_id' => (string)$user->_id,
                         'role' => $item->role,
-                        'scope' => $item->scope
+                        'scope' => $item->scope,
                     ])->save();
                 }
             }
@@ -197,6 +205,7 @@ class UsersController extends AbstractController
     {
         $resp = $this->request->user()->toArray();
         $resp['scope'] = $this->request->user()->getApplicationUser()->scope;
+
         return $this->response->json($resp);
     }
 
