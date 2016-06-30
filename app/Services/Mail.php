@@ -19,18 +19,19 @@ class Mail
         if (false == config('services.email.enabled')) {
             return null;
         }
-
-        $this->postmark->sendEmailWithTemplate(
-            config('services.postmark.sender'),
-            $email,
-            config('services.postmark.templates.welcome'),
-            [
-                'product_name' => 'Gandalf',
-                'name' => $name,
-                'action_url' => str_replace('{code}', $code, env('services.link.confirmation_email')),
-                'username' => $name,
-            ]
-        );
+        if (config('services.postmark.templates.welcome')) {
+            $this->postmark->sendEmailWithTemplate(
+                config('services.postmark.sender'),
+                $email,
+                config('services.postmark.templates.welcome'),
+                [
+                    'product_name' => 'Gandalf',
+                    'name' => $name,
+                    'action_url' => str_replace('{code}', $code, config('services.link.confirmation_email')),
+                    'username' => $name,
+                ]
+            );
+        }
     }
 
     public function sendRecoveryPassword($email, $code, $user)
@@ -39,17 +40,19 @@ class Mail
             return null;
         }
 
-        $this->postmark->sendEmailWithTemplate(
-            config('services.postmark.sender'),
-            $email,
-            config('services.postmark.templates.reset_password'),
-            [
-                'product_name' => 'Gandalf',
-                'name' => $user->username,
-                'action_url' => str_replace('{code}', $code, env('services.link.reset_password')),
-                'username' => $user->username,
-            ]
-        );
+        if (config('services.postmark.templates.reset_password')) {
+            $this->postmark->sendEmailWithTemplate(
+                config('services.postmark.sender'),
+                $email,
+                config('services.postmark.templates.reset_password'),
+                [
+                    'product_name' => 'Gandalf',
+                    'name' => $user->username,
+                    'action_url' => str_replace('{code}', $code, config('services.link.reset_password')),
+                    'username' => $user->username,
+                ]
+            );
+        }
     }
 
     public function sendEmailInvitation($invitation)
@@ -57,16 +60,17 @@ class Mail
         if (false == config('services.email.enabled')) {
             return null;
         }
-
-        $this->postmark->sendEmailWithTemplate(
-            config('services.postmark.sender'),
-            $invitation->email,
-            config('services.postmark.templates.invite'),
-            [
-                'product_name' => 'Gandalf',
-                'name' => $invitation->email,
-                'action_url' => env('services.link.invite'),
-            ]
-        );
+        if (config('services.postmark.templates.invite')) {
+            $this->postmark->sendEmailWithTemplate(
+                config('services.postmark.sender'),
+                $invitation->email,
+                config('services.postmark.templates.invite'),
+                [
+                    'product_name' => 'Gandalf',
+                    'name' => $invitation->email,
+                    'action_url' => config('services.link.invite'),
+                ]
+            );
+        }
     }
 }

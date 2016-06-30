@@ -57,10 +57,10 @@ ssl_dhparam /etc/ssl/dhparam.pem;
   cron { "/usr/bin/php /www/gandalf.api/current/artisan schedule:run >> /dev/null 2>&1":
     command => "/usr/bin/php /www/gandalf.api/current/artisan schedule:run >> /dev/null 2>&1",
     user    => deploybot,
-    ensure => present,
+    ensure  => present,
     hour    => "*",
     minute  => "*",
-    month => "*"
+    month   => "*"
   }
 
   file { "gandalf_config":
