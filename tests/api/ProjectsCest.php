@@ -71,6 +71,18 @@ class ProjectsCest
         $I->seeResponseContains('"description":"Edited"');
     }
 
+
+    public function export(ApiTester $I)
+    {
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
+        $I->createTable();
+        $I->sendGET('api/v1/projects/export');
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseMatchesJsonType(['url' => 'string'], '$.data');
+        $I->assertTrue(false !== file_get_contents($I->getResponseFields()->data->url));
+    }
+    
     public function delete(ApiTester $I)
     {
         $I->createAndLoginUser();

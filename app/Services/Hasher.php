@@ -6,13 +6,13 @@ use Illuminate\Hashing\BcryptHasher;
 
 class Hasher
 {
-    public static function getToken()
+    public static function getToken($length = 32)
     {
         return str_replace(
             '/',
             '',
             (new BcryptHasher())->make(
-                self::generateRandomString(32),
+                self::generateRandomString($length),
                 ['salt' => mcrypt_create_iv(22, MCRYPT_DEV_URANDOM)]
             )
         );
