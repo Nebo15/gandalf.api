@@ -125,7 +125,7 @@ class TableValidator
     public function decisionType($attribute, $value, $parameters, Validator $validator)
     {
         if (array_get($validator->getData(), 'matching_type', 'decision') == 'scoring') {
-            return $value == 'numeric';
+            return 'numeric' == $value;
         }
 
         return true;
