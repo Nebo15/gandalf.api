@@ -22,6 +22,8 @@ script:
   - vendor/bin/phpcs ./app --standard=PSR2 --warning-severity=0
   - vendor/bin/codecept run
 after_failure:
+  - sudo apt-get install tree -y -f
+  - tree /www/gandalf.api/public/
   - ls -l /etc/nginx
   - ls -l /etc/nginx/sites-enabled
   - echo $PWD
