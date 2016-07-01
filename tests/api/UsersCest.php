@@ -8,7 +8,7 @@ class UsersCest
         $I->haveHttpHeader('Content-Type', 'application/json');
     }
 
-    public function createUserSuccess(ApiTester $I)
+    public function createSuccess(ApiTester $I)
     {
         $I->createAndLoginClient();
         $faker = $I->getFaker();
@@ -23,7 +23,7 @@ class UsersCest
         $I->seeResponseCodeIs(201);
     }
 
-    public function editUser(ApiTester $I)
+    public function edit(ApiTester $I)
     {
         $I->createAndLoginClient();
         $user = $I->createAndLoginUser();
@@ -43,7 +43,7 @@ class UsersCest
         $I->assertCurrentUser();
     }
 
-    public function createUserCorrectData(ApiTester $I)
+    public function createCorrect(ApiTester $I)
     {
         $I->createAndLoginClient();
         $faker = $I->getFaker();
@@ -54,7 +54,7 @@ class UsersCest
                 'some-username',
                 'some_username',
                 'some.username12345',
-            ]
+            ],
         ];
         foreach ($badData as $key => $data) {
             $normalUserData = [
@@ -70,7 +70,7 @@ class UsersCest
         }
     }
 
-    public function createUserBadData(ApiTester $I)
+    public function createNotCorrect(ApiTester $I)
     {
         $I->createAndLoginClient();
         $faker = $I->getFaker();
@@ -119,7 +119,7 @@ class UsersCest
         }
     }
 
-    public function findUsers(ApiTester $I, $scenario)
+    public function find(ApiTester $I, $scenario)
     {
         $usersList = [
             $I->createUser(true),
@@ -215,7 +215,7 @@ class UsersCest
         $I->seeResponseCodeIs(200);
     }
 
-    public function testPassword(ApiTester $I)
+    public function passwordNotCorrect(ApiTester $I)
     {
         $faker = $I->getFaker();
         $I->createAndLoginClient();
@@ -224,7 +224,7 @@ class UsersCest
             '1Aa34',
             'JustAlpha',
             '#1(*&^(*&^',
-            'LongerThan32SymbolsMuchLongerAnd!'
+            'LongerThan32SymbolsMuchLongerAnd!',
         ];
         foreach ($invalidPass as $pass) {
             $I->sendPOST(
@@ -235,19 +235,19 @@ class UsersCest
         }
     }
 
-    public function testInvitation(ApiTester $I)
+    public function invitation(ApiTester $I)
     {
         $faker = $I->getFaker();
         $I->createAndLoginUser();
         $first_project = $I->createProjectAndSetHeader();
         $second_user_email = $faker->email;
         $I->sendPOST('api/v1/invite',
-            ['email' => $second_user_email, 'role' => 'manager', 'scope' => ['read', 'create']]);
+            ['email' => $second_user_email, 'role' => 'manager', 'scope' => ['tables_create', 'tables_view']]);
         $I->seeResponseCodeIs(200);
         $second_project = $I->createProject(true);
         $I->setHeader('X-Application', $second_project->_id);
         $I->sendPOST('api/v1/invite',
-            ['email' => $second_user_email, 'role' => 'manager', 'scope' => ['read', 'create']]);
+            ['email' => $second_user_email, 'role' => 'manager', 'scope' => ['tables_create', 'tables_view']]);
         $I->seeResponseCodeIs(200);
 
         $I->logout();
@@ -286,7 +286,7 @@ class UsersCest
         $I->seeResponseContains("Project owner is not activated, try again later");
 
         $I->sendPOST('api/v1/projects/users',
-            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['read', 'check']]);
+            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['tables_view', 'tables_query']]);
 
         $I->loginUser($second_user);
         $I->sendPOST("api/v1/tables/$table_id/decisions", $data);
@@ -323,7 +323,7 @@ class UsersCest
         $I->seeResponseCodeIs(404);
     }
 
-    public function deleteAdminFromProject(ApiTester $I)
+    public function deleteAdminFromTheProject(ApiTester $I)
     {
         $user = $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
@@ -333,15 +333,27 @@ class UsersCest
         $I->loginUser($user);
 
         $I->sendPOST('api/v1/projects/users',
-            ['user_id' => $second_user->_id, 'role' => 'admin', 'scope' => ['read', 'update', 'delete_users']]);
+            [
+                'user_id' => $second_user->_id,
+                'role' => 'admin',
+                'scope' => ['tables_view', 'tables_update', 'users_manage'],
+            ]);
         $I->seeResponseCodeIs(422);
 
         $I->sendPOST('api/v1/projects/users',
-            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['read', 'update', 'delete_users']]);
+            [
+                'user_id' => $second_user->_id,
+                'role' => 'manager',
+                'scope' => ['tables_view', 'tables_update', 'users_manage'],
+            ]);
         $I->seeResponseCodeIs(201);
 
         $I->sendPOST('api/v1/projects/users',
-            ['user_id' => $third_user->_id, 'role' => 'manager', 'scope' => ['read', 'update', 'delete_users']]);
+            [
+                'user_id' => $third_user->_id,
+                'role' => 'manager',
+                'scope' => ['tables_view', 'tables_update', 'users_manage'],
+            ]);
         $I->seeResponseCodeIs(201);
 
         $I->loginUser($second_user);

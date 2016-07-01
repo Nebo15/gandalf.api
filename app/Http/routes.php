@@ -11,9 +11,7 @@
 |
 */
 
-$app->get('/', function () use ($app) {
-    return response('ok');
-});
+$app->get('/', ['uses' => 'App\Http\Controllers\UsersController@test']);
 
 /** @var Nebo15\REST\Router $api */
 $api = $app->make('Nebo15\REST\Router');

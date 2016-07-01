@@ -33,3 +33,4 @@ after_failure:
   - cat /var/log/php-fpm.log;
   - cat /var/log/nginx.log;
   - cat $PWD/storage/logs/lumen.log;
+  - cat $PWD/tests/_output/*;

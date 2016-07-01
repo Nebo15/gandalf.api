@@ -153,12 +153,12 @@ class TablesCest
         $I->seeResponseContains('The scope field is required');
 
         $I->sendPOST('api/v1/projects/users',
-            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['create', 'read', 'uncreated_scope']]);
+            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['tables_create', 'tables_view', 'uncreated_scope']]);
         $I->seeResponseCodeIs(422);
         $I->seeResponseContains('The selected scope is invalid.');
 
         $I->sendPOST('api/v1/projects/users',
-            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['create', 'read', 'update']]);
+            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['tables_create', 'tables_view', 'tables_update']]);
         $I->seeResponseCodeIs(201);
         $I->loginUser($second_user);
         $I->sendGET('api/v1/admin/tables/' . $table->_id);
@@ -1200,7 +1200,7 @@ class TablesCest
         $I->seeResponseContains('decision_type');
     }
 
-    public function testVariantsProbabilityPercent(ApiTester $I)
+    public function variantsProbabilityPercent(ApiTester $I)
     {
         $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
@@ -1241,7 +1241,7 @@ class TablesCest
         $I->assertTrue($matched['Variant 1'] < $matched['Variant 3'], 'Variant 1 checked more than Variant 3');
     }
 
-    public function testVariantsProbabilityInvalid(ApiTester $I)
+    public function variantsProbabilityInvalid(ApiTester $I)
     {
         $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
