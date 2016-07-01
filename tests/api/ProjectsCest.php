@@ -172,4 +172,18 @@ class ProjectsCest
         $I->assertProject();
         $I->assertTrue(($I->getResponseFields()->data->settings instanceof \StdClass));
     }
+
+    public function getCurrentUserScope(ApiTester $I)
+    {
+        $user = $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
+        $I->loginClient($I->getCurrentClient());
+        $second_user = $I->createUser(true);
+        $I->loginUser($user);
+        $I->sendPOST('api/v1/projects/users',
+            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['read', 'update']]);
+        $I->loginUser($second_user);
+        $I->sendGET('api/v1/projects/users');
+        $I->assertProjectUser();
+    }
 }

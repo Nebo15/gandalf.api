@@ -589,7 +589,19 @@ class ApiTester extends \Codeception\Actor
             'username' => 'string',
             'access_tokens' => 'array',
             'refresh_tokens' => 'array',
+        ], $jsonPath);
+    }
+
+    public function assertProjectUser($jsonPath = '$.data', $code = 200)
+    {
+        $this->seeResponseCodeIs($code);
+        $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
+            'user_id' => 'string',
+            'role' => 'string',
             'scope' => 'array',
+            'username' => 'string',
+            'email' => 'string',
         ], $jsonPath);
     }
 

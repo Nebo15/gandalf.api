@@ -25,6 +25,7 @@ class Handler extends ExceptionHandler
         ModelNotFoundException::class,
         AuthorizationException::class,
         AccessDeniedException::class,
+        TryingToAddDuplicateUserException::class,
     ];
 
     /**

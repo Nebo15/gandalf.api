@@ -203,10 +203,7 @@ class UsersController extends AbstractController
 
     public function getUserInfo()
     {
-        $resp = $this->request->user()->toArray();
-        $resp['scope'] = $this->request->user()->getApplicationUser()->scope;
-
-        return $this->response->json($resp);
+        return $this->response->json($this->request->user()->toArray());
     }
 
     public function invite(Application $application)
