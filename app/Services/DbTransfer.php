@@ -12,7 +12,7 @@ class DbTransfer
     public function export($appId)
     {
         # ToDo; check that collections not empty
-        $prefixTmpFile = tempnam(sys_get_temp_dir(), strval(new \MongoDB\BSON\ObjectId));
+        $prefixTmpFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . strval(new \MongoDB\BSON\ObjectId) . DIRECTORY_SEPARATOR;
         $collections = [
             'tables' => "'{applications: \"{$appId}\"}'",
             'decisions' => "'{applications: \"{$appId}\"}'",
@@ -36,6 +36,7 @@ class DbTransfer
             $output
         );
         \Log::addDebug(json_encode($output));
+
         return config('services.link.dump_project') . '/' . $archiveName;
     }
 }
