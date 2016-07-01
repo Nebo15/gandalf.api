@@ -19,14 +19,11 @@ script:
   - vendor/bin/phpcs ./app --standard=PSR2 --warning-severity=0
   - vendor/bin/codecept run
 after_failure:
-  - ls -la /tmp/*
-  - ls -la /home/travis/build/Nebo15/gandalf.api/public/dump
   - ls -l /etc/nginx
   - ls -l /etc/nginx/sites-enabled
   - echo $PWD
   - ls -la ./
   - ls -la ../
-  - ls -l /www
   - cat /etc/nginx/sites-enabled/*
   - cat /etc/nginx/nginx.conf
   - cat /var/log/www/*.log;
