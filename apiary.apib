@@ -476,6 +476,19 @@ When you created project, your feature requests should be with Header
         + meta
             + code: 200 (number) - HTTP response code
 
+## Export Project [/api/v1/projects/export]
+### Export Project [GET]
+
+Creates tar.gz archive with all Tables, Decisions and Changelogs documents.
+Download link will be available within 24 hours.
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data
+            + url: `http://gndf.io/dump/2016-07-01_13:00:58-$2y$10$MlqjEVA1D3CxS.tar.gz` (string) - Download link
+
 
 ## Get Current Project [/api/v1/projects/current]
 ### Get info about current project [GET]

@@ -10,6 +10,7 @@ return [
         ],
     ],
     'link' => [
+        'dump_project' => env('LINK_DUMP_PROJECT', 'http://gandalf.dev/dump'),
         'confirmation_email' => env('LINK_CONFIRMATION_EMAIL', 'http://gandalf.dev/email/{code}'),
         'reset_password' => env('LINK_RESET_PASSWORD', 'http://gandalf.dev/reset_password/{code}'),
         'invite' => env('LINK_INVITE', 'http://gandalf.dev/registration'),

@@ -38,8 +38,8 @@ node default {
     if (\$request_method = OPTIONS ) {
     return 200;
     }
-    root /www/gandalf.api/public;
-    include /www/gandalf.api/config/nginx/nginx.conf;
+    root /home/travis/build/Nebo15/gandalf.api/public;
+    include /home/travis/build/Nebo15/gandalf.api/config/nginx/nginx.conf;
 }
     ",
     notify  => Service["nginx"]
