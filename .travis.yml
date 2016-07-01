@@ -11,6 +11,7 @@ before_script:
   - echo $PWD
   - sudo mkdir /www
   - sudo ln -s $PWD /www/gandalf.api
+  - sudo chown travis:travis /www/
   - cp ./.env.example ./.env
   - bash puppet/initial/travis/init.sh
   - sudo service php7.0-fpm restart
@@ -30,6 +31,6 @@ after_failure:
   - cat /etc/nginx/sites-enabled/*
   - cat /etc/nginx/nginx.conf
   - cat /var/log/www/*.log;
-  - cat /var/log/php7.0-fpm.log;
+  - sudo cat /var/log/php7.0-fpm.log;
   - cat /var/log/nginx.log;
   - cat $PWD/storage/logs/lumen.log;
