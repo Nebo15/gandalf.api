@@ -8,10 +8,6 @@ before_script:
   - ls -la ./
   - touch storage/logs/lumen.log
   - sudo chmod 777 -Rf storage/
-  - echo $PWD
-  - sudo mkdir /www
-  - sudo ln -s $PWD /www/gandalf.api
-  - sudo chown travis:travis /www/
   - cp ./.env.example ./.env
   - bash puppet/initial/travis/init.sh
   - sudo service php7.0-fpm restart
@@ -22,8 +18,7 @@ script:
   - vendor/bin/phpcs ./app --standard=PSR2 --warning-severity=0
   - vendor/bin/codecept run
 after_failure:
-  - sudo apt-get install tree -y -f
-  - tree /www/gandalf.api/public/
+  - ls -la /home/travis/build/Nebo15/gandalf.api/dump
   - ls -l /etc/nginx
   - ls -l /etc/nginx/sites-enabled
   - echo $PWD
