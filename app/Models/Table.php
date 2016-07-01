@@ -29,6 +29,8 @@ class Table extends Base implements ListableInterface, Applicationable
 {
     use ApplicationableTrait;
 
+    protected $perPage = 20;
+
     protected $listable = ['_id', 'title', 'description', 'matching_type'];
 
     protected $attributes = [
@@ -43,6 +45,7 @@ class Table extends Base implements ListableInterface, Applicationable
         'title',
         'description',
         'matching_type',
+        'decision_type',
         'variants_probability',
         'fields',
         'variants',
@@ -52,15 +55,14 @@ class Table extends Base implements ListableInterface, Applicationable
         'title',
         'description',
         'matching_type',
+        'decision_type',
         'variants_probability',
     ];
 
-    protected $perPage = 20;
-
     protected $casts = [
         '_id' => 'string',
-        'title',
-        'description',
+        'title' => 'string',
+        'description' => 'string',
         'default_title' => 'string',
         'default_description' => 'string',
     ];

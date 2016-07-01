@@ -46,11 +46,15 @@ class TableValidator
 
     public function ruleThanType($attribute, $value, $parameters, Validator $validator)
     {
-        $type = 'alpha_dash';
-        $rule_matching = array_get($validator->getData(), 'matching_type', 'decision');
-        if ($rule_matching == 'scoring') {
+        if (array_get($validator->getData(), 'matching_type', 'decision') == 'scoring') {
             $type = 'numeric';
+        } else {
+            $type = array_get($validator->getData(), 'decision_type');
+            if (!in_array($type, ['alpha_num', 'numeric', 'string', 'json'])) {
+                return false;
+            }
         }
+
         $validator = \Validator::make(
             ['value' => $value],
             ['value' => "required|$type"]
@@ -113,6 +117,15 @@ class TableValidator
                 $total += isset($variant['probability']) ? $variant['probability'] : 0;
             }
             return 100 == $total;
+        }
+
+        return true;
+    }
+
+    public function decisionType($attribute, $value, $parameters, Validator $validator)
+    {
+        if (array_get($validator->getData(), 'matching_type', 'decision') == 'scoring') {
+            return $value == 'numeric';
         }
 
         return true;
