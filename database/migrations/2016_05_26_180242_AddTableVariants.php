@@ -17,7 +17,7 @@ class AddTableVariants extends Migration
                     'default_title' => $table['default_title'] ?? '',
                     'default_decision' => $table['default_decision'] ?? '',
                     'default_description' => $table['default_description'] ?? '',
-                    'rules' => $table['rules']
+                    'rules' => $table['rules'] ?? [],
                 ]
             ];
 
