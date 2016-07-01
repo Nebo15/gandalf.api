@@ -763,8 +763,8 @@ class TablesCest
         }
 
         foreach (['1.223.33', 100.01, '10;8', '1;2;3', '3,3'] as $item) {
-            $tableData['rules'][0]['conditions'][0]['value'] = $item;
-            $I->sendPOST('api/v1/admin/tables', ['table' => $tableData]);
+            $tableData['variants'][0]['rules'][0]['conditions'][0]['value'] = $item;
+            $I->sendPOST('api/v1/admin/tables', $tableData);
             $I->seeResponseCodeIs(422);
         }
     }
