@@ -2,13 +2,11 @@
 namespace App\Console\Commands;
 
 use App\Models\Decision;
-use Carbon\Carbon;
-use Illuminate\Console\Command;
 use MongoDB\BSON\UTCDatetime;
+use Illuminate\Console\Command;
 
 class SendStatistic extends Command
 {
-
     protected $signature = 'send:statistic';
 
     protected $description = 'Send statistic of usage to CachetHQ service';

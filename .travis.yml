@@ -8,9 +8,7 @@ before_script:
   - ls -la ./
   - touch storage/logs/lumen.log
   - sudo chmod 777 -Rf storage/
-  - echo $PWD
-  - sudo mkdir /www
-  - sudo ln -s $PWD /www/gandalf.api
+  - sudo chmod 777 -Rf public/dump/
   - cp ./.env.example ./.env
   - bash puppet/initial/travis/init.sh
   - sudo service php7.0-fpm restart
@@ -26,10 +24,9 @@ after_failure:
   - echo $PWD
   - ls -la ./
   - ls -la ../
-  - ls -l /www
   - cat /etc/nginx/sites-enabled/*
   - cat /etc/nginx/nginx.conf
   - cat /var/log/www/*.log;
-  - cat /var/log/php-fpm.log;
+  - sudo cat /var/log/php7.0-fpm.log;
   - cat /var/log/nginx.log;
   - cat $PWD/storage/logs/lumen.log;

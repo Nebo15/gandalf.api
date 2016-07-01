@@ -37,9 +37,7 @@ fi;
 if [ ! -e /www ]; then
     sudo mkdir /www/
     sudo chmod 755 /www/
-    sudo chown www-data:www-data /www/
-    sudo mkdir -p /var/www/.ssh
-    sudo chown -Rf www-data:www-data /var/www/
+    sudo chown travis:travis /www/
 fi;
 
 if [ ! -e ${modules_dir}/stdlib ]; then

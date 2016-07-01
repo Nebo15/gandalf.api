@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\SendStatistic::class,
+        \App\Console\Commands\DeleteOutdatedProjectDumps::class,
     ];
 
     /**
@@ -25,5 +26,6 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('send:statistic')->everyMinute();
+        $schedule->command('dump:remove')->twiceDaily(1, 13);
     }
 }
