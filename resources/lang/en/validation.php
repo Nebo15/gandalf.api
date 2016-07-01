@@ -77,7 +77,7 @@ return [
     'condition_type' => 'Condition value consist invalid type',
     'conditions_count' => 'Different amount of the Rule.conditions and Field.keys',
     'conditions_field' => 'Condition key must exist in Fields.keys',
-    'rule_than_type' => 'Value must be alpha_numeric_dash for matching_type=all or numeric for matching_type=first',
+    'rule_than_type' => 'Value should be the same type as defined in the decision_type field',
     'group_tables_fields' => 'All Table.fields must be identical',
     'group_tables_exists' => 'Table must exist',
     'group_table_matching_type' => 'All Table.matching_type must be defined as "first"',

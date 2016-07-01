@@ -61,7 +61,7 @@ class DecisionsRepository extends AbstractRepository
             $i++;
         }
         $values['meta_keys_amount'] = count($rules) / 2;
-        $rules['meta_keys_amount'] = 'metaKeysAmount';
+        $rules['meta_keys_amount'] = 'numeric|max:24';
 
         $validator = \Validator::make($values, $rules);
         if ($validator->fails()) {

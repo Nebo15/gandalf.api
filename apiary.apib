@@ -790,7 +790,8 @@ Rollback Table to some state that described in passed Changelog
 
 ### TableList
 + _id: 56c31536a60ad644060041af (string) - MongoID
-+ matching_type: decision,scoring (enum[string], required) - Matching type for Table
++ `matching_type`: decision,scoring (enum[string], required) - Matching type for Table
++ `decision_type`: alpha_num,numeric,string,json (enum[string], required) - Validation rule for Variant.default_decision and Rule.than fields
 + title: Table title (string) - Table title
 + description: Table title (string) - Table description
 + variants: (array[VariantList])

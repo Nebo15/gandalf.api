@@ -66,7 +66,6 @@ class ApiTester extends \Codeception\Actor
 
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.fields");
-
     }
 
     public function assertTable($jsonPath = '$.data', $code = 200)
@@ -280,6 +279,7 @@ class ApiTester extends \Codeception\Actor
             'title' => 'Test title',
             'description' => 'Test description',
             'matching_type' => 'decision',
+            'decision_type' => 'alpha_num',
             'variants_probability' => 'first',
             'fields' => [
                 [
@@ -384,6 +384,7 @@ class ApiTester extends \Codeception\Actor
     public function getShortTableDataMatchingTypeAll()
     {
         $tableData = $this->getTableShortData();
+        $tableData['decision_type'] = 'numeric';
         $tableData['matching_type'] = 'scoring';
         $tableData['variants'][0]['default_decision'] = 15;
         $tableData['variants'][0]['rules'] = [
@@ -486,6 +487,7 @@ class ApiTester extends \Codeception\Actor
         $data = [
             'title' => 'Test title',
             'description' => 'Test description',
+            'decision_type' => 'alpha_num',
             'matching_type' => 'decision',
             'variants_probability' => '',
             'fields' => [],
