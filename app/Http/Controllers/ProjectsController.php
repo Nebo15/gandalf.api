@@ -26,6 +26,6 @@ class ProjectsController extends AbstractController
 
     public function export(DbTransfer $dbTransfer, Application $application)
     {
-        return response()->download($dbTransfer->export($application->_id));
+        return $this->response->json(['url' => $dbTransfer->export($application->_id)]);
     }
 }

@@ -30,7 +30,7 @@ class ProjectsCest
         $I->seeResponseCodeIs(422);
     }
 
-    public function projectVisibility(ApiTester $I)
+    public function visibility(ApiTester $I)
     {
         $first_user = $I->createUser(true);
         $second_user = $I->createUser(true);
@@ -57,7 +57,7 @@ class ProjectsCest
         $I->assertNotContains($project->_id, $I->grabResponse());
     }
 
-    public function updateProject(ApiTester $I)
+    public function update(ApiTester $I)
     {
         $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
@@ -66,7 +66,17 @@ class ProjectsCest
         $I->seeResponseContains('"description":"Edited"');
     }
 
-    public function deleteProject(ApiTester $I)
+    public function export(ApiTester $I)
+    {
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
+        $I->createTable();
+        $I->sendGET('api/v1/projects/export');
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseMatchesJsonType(['url' => 'string'], '$.data');
+    }
+
+    public function delete(ApiTester $I)
     {
         $I->createAndLoginUser();
         $I->createProjectAndSetHeader();

@@ -30,9 +30,9 @@ class DbTransfer
             ));
         }
         # create archive
-        $archiveName = $prefixTmpFile . "dump-" . date('Y-m-d_H:i:s') . ".tar.gz";
-        exec(sprintf("cd %s && tar -cvzf %s *.json", $prefixTmpFile, $archiveName));
+        $archiveName = gmdate('Y-m-d_H:i:s') . '-' . Hasher::getToken(50) . ".tar.gz";
+        exec(sprintf("cd %s && tar -cvzf '%s' *.json", $prefixTmpFile, __DIR__ . "/../../public/dump/$archiveName"));
 
-        return $archiveName;
+        return config('services.link.dump_project') . '/' . $archiveName;
     }
 }
