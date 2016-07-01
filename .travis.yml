@@ -30,6 +30,6 @@ after_failure:
   - cat /etc/nginx/sites-enabled/*
   - cat /etc/nginx/nginx.conf
   - cat /var/log/www/*.log;
-  - cat /var/log/php-fpm.log;
+  - cat /var/log/php7.0-fpm.log;
   - cat /var/log/nginx.log;
   - cat $PWD/storage/logs/lumen.log;
