@@ -317,7 +317,6 @@ You can see in response properties digits `variants.0.rules`, this is an array i
 
 ## Current User [/api/v1/users/current]
 
-
 ### Info about current user [GET]
 
 + Response 200 (application/json)
@@ -533,6 +532,13 @@ Remove consumer from the project by client_id
 
 ## Project Users [/api/v1/projects/users]
 
+### Get Info About Current User [GET]
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+        + data (ProjectUser)
+
 ### Add User To Project [POST]
 Adding existing user to the current project. Share project with other users with different scopes
 
@@ -544,13 +550,6 @@ Adding existing user to the current project. Share project with other users with
         + meta
             + code: 200 (number) - HTTP response code
         + data (Project)
-
-### Get Info About Current User [GET]
-+ Response 200 (application/json)
-    + Attributes (object)
-        + meta
-            + code: 200 (number) - HTTP response code
-        + data (ProjectUser)
 
 ### Update Project User [PUT]
 
@@ -936,7 +935,6 @@ Rollback Table to some state that described in passed Changelog
 + updated_at: 2016-02-16 14:15:30 (string)
 + access_tokens (array[AccessToken])
 + refresh_tokens (array[RefreshToken])
-+ scope: read, write (array) - Array of user scopes
 
 ### UserInvitation
 + role: manager (string) Role of user in project
