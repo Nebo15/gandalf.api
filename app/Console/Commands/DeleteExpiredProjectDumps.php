@@ -10,11 +10,11 @@ namespace App\Console\Commands;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
-class DeleteOutdatedProjectDumps extends Command
+class DeleteExpiredProjectDumps extends Command
 {
-    protected $signature = 'dump:remove';
+    protected $signature = 'dump:delete';
 
-    protected $description = 'Remove outdated project dumps';
+    protected $description = 'Delete expired project dumps';
 
     public function handle()
     {
