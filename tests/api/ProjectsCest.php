@@ -22,7 +22,7 @@ class ProjectsCest
         $project_id = $project->data->_id;
 
         $I->setHeader('X-Application', $project_id);
-        $I->sendPOST('api/v1/projects/consumers', ['description' => $faker->text('20'), 'scope' => ['tables_query']]);
+        $I->sendPOST('api/v1/projects/consumers', ['description' => $faker->text('20'), 'scope' => ['decisions_make']]);
         $I->assertConsumers('$.data[*]', 201);
 
         $I->sendPOST('api/v1/projects/consumers',
@@ -169,7 +169,7 @@ class ProjectsCest
         $I->createProjectAndSetHeader();
         $I->createConsumer();
         $I->sendPOST('api/v1/projects/consumers',
-            ['description' => $faker->text('20'), 'scope' => ['decisions_view', 'tables_query']]);
+            ['description' => $faker->text('20'), 'scope' => ['decisions_view', 'decisions_make']]);
         $consumer = json_decode($I->grabResponse())->data[0];
         $I->assertConsumers('$.data[*]', 201);
 
@@ -177,7 +177,7 @@ class ProjectsCest
         $I->sendPUT('api/v1/projects/consumers',
             [
                 'description' => $text,
-                'scope' => ['decisions_view', 'tables_query'],
+                'scope' => ['decisions_view', 'decisions_make'],
                 'client_id' => $consumer->client_id,
             ]);
         $I->seeResponseContains($text);

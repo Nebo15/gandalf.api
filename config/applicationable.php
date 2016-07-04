@@ -21,7 +21,7 @@ return [
             'tables_view',
             'tables_update',
             'tables_delete',
-            'tables_query',
+            'decisions_make',
             'consumers_get',
             'consumers_manage',
             'users_manage',
@@ -31,7 +31,7 @@ return [
         ],
         'consumers' => [
             'decisions_view',
-            'tables_query',
+            'decisions_make',
         ],
     ],
     'acl' => [
@@ -58,7 +58,7 @@ return [
             '~^\/api\/v1\/admin\/tables$~' => ['tables_create'],
             '~^\/api\/v1\/admin\/tables\/(.+)\/copy$~' => ['tables_create'],
             '~^\/api\/v1\/admin\/changelog\/(.+)\/(.+)\/rollback\/(.+)$~' => ['tables_update'],
-            '~^\/api\/v1\/tables\/(.+)\/decisions$~' => ['tables_query'],
+            '~^\/api\/v1\/tables\/(.+)\/decisions$~' => ['decisions_make'],
             '~^\/api\/v1\/projects\/users$~' => ['users_manage'],
             '~^\/api\/v1\/projects\/consumers~' => ['consumers_manage'],
         ],

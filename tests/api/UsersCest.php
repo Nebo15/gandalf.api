@@ -286,7 +286,7 @@ class UsersCest
         $I->seeResponseContains("Project owner is not activated, try again later");
 
         $I->sendPOST('api/v1/projects/users',
-            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['tables_view', 'tables_query']]);
+            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['tables_view', 'decisions_make']]);
 
         $I->loginUser($second_user);
         $I->sendPOST("api/v1/tables/$table_id/decisions", $data);

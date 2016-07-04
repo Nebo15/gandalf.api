@@ -4,15 +4,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class NewScopes extends Migration
-{/**
- * users' => [
- *
- * ],
- * 'consumers' => [
- * 'read' => 'decisions_view
- * 'check' => 'tables_query
- * ],
- */
+{
     /**
      * Run the migrations.
      *
@@ -26,7 +18,7 @@ class NewScopes extends Migration
             'read' => 'tables_view',
             'update' => 'tables_update',
             'delete' => 'tables_delete',
-            'check' => 'tables_query',
+            'check' => 'decisions_make',
             'get_consumers' => 'consumers_get',
             'create_consumers' => 'consumers_manage',
             'update_consumers' => 'consumers_manage',
@@ -40,7 +32,7 @@ class NewScopes extends Migration
 
         $consumers_associated = [
             'read' => 'decisions_view',
-            'check' => 'tables_query',
+            'check' => 'decisions_make',
         ];
 
         $apps = \DB::collection('applications')->get();
@@ -69,8 +61,8 @@ class NewScopes extends Migration
                     $consumers[$k] = $consumer;
                     $consumers[$k]['scope'] = [];
                     foreach ($consumer['scope'] as $scope) {
-                        if (in_array($scope, array_keys($associated))) {
-                            $consumers[$k]['scope'][] = $associated[$scope];
+                        if (in_array($scope, array_keys($consumers_associated))) {
+                            $consumers[$k]['scope'][] = $consumers_associated[$scope];
                         } else {
                             $consumers[$k]['scope'][] = $scope;
                         }

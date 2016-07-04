@@ -633,7 +633,7 @@ class ApiTester extends \Codeception\Actor
     public function createConsumer()
     {
         $this->sendPOST('api/v1/projects/consumers',
-            ['description' => $this->getFaker()->text('20'), 'scope' => ['decisions_view', 'tables_query']]);
+            ['description' => $this->getFaker()->text('20'), 'scope' => ['decisions_view', 'decisions_make']]);
         $this->seeResponseCodeIs(201);
 
         $this->sendGET('api/v1/projects/consumers');
