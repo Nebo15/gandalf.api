@@ -54,7 +54,7 @@ class NewScopes extends Migration
                 }
                 $set['users'] = $users;
             }
-            if ($app['consumers']) {
+            if (array_key_exists('consumers', $app) && $app['consumers']) {
                 $consumers = [];
                 foreach ($app['consumers'] as $k => $consumer)
                 {
