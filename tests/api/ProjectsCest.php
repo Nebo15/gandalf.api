@@ -22,7 +22,7 @@ class ProjectsCest
         $project_id = $project->data->_id;
 
         $I->setHeader('X-Application', $project_id);
-        $I->sendPOST('api/v1/projects/consumers', ['description' => $faker->text('20'), 'scope' => ['check']]);
+        $I->sendPOST('api/v1/projects/consumers', ['description' => $faker->text('20'), 'scope' => ['decisions_make']]);
         $I->assertConsumers('$.data[*]', 201);
 
         $I->sendPOST('api/v1/projects/consumers',
@@ -42,19 +42,24 @@ class ProjectsCest
 
         $I->assertContains($project->_id, $I->grabResponse());
         $I->sendPOST('api/v1/projects/users',
-            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['create', 'read', 'update']]);
+            [
+                'user_id' => $second_user->_id,
+                'role' => 'manager',
+                'scope' => ['tables_create', 'tables_update'],
+            ]);
+        $I->seeResponseCodeIs(422);
+        
+        $I->sendPOST('api/v1/projects/users',
+            [
+                'user_id' => $second_user->_id,
+                'role' => 'manager',
+                'scope' => ['tables_create', 'tables_view', 'tables_update'],
+            ]
+        );
         $I->seeResponseCodeIs(201);
         $I->loginUser($second_user);
         $I->sendGET('api/v1/projects');
         $I->assertContains($project->_id, $I->grabResponse());
-
-        $I->loginUser($first_user);
-        $I->sendPUT('api/v1/projects/users',
-            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['create', 'update']]);
-
-        $I->loginUser($second_user);
-        $I->sendGET('api/v1/projects');
-        $I->assertNotContains($project->_id, $I->grabResponse());
     }
 
     public function update(ApiTester $I)
@@ -66,6 +71,7 @@ class ProjectsCest
         $I->seeResponseContains('"description":"Edited"');
     }
 
+
     public function export(ApiTester $I)
     {
         $I->createAndLoginUser();
@@ -76,7 +82,7 @@ class ProjectsCest
         $I->seeResponseMatchesJsonType(['url' => 'string'], '$.data');
         $I->assertTrue(false !== file_get_contents($I->getResponseFields()->data->url));
     }
-
+    
     public function delete(ApiTester $I)
     {
         $I->createAndLoginUser();
@@ -88,7 +94,7 @@ class ProjectsCest
         $I->seeResponseCodeIs(404);
     }
 
-    public function testScope(ApiTester $I)
+    public function scope(ApiTester $I)
     {
         $user = $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
@@ -96,11 +102,11 @@ class ProjectsCest
         $second_user = $I->createUser(true);
         $I->loginUser($user);
         $I->sendPOST('api/v1/projects/users',
-            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['read', 'update']]);
+            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['tables_view', 'tables_update']]);
         $I->loginUser($second_user);
         $I->sendPOST('api/v1/admin/tables', $I->getTableData());
         $I->seeResponseCodeIs(403);
-        $I->seeResponseContains('"meta":{"error_message":"Bad Scopes","scopes":["create"],"code":403,"error":"access_denied"}');
+        $I->seeResponseContains('"meta":{"error_message":"Bad Scopes","scopes":["tables_create"],"code":403,"error":"access_denied"}');
     }
 
     public function duplicateUserToTheProject(ApiTester $I)
@@ -111,15 +117,15 @@ class ProjectsCest
         $second_user = $I->createUser(true);
         $I->loginUser($user);
         $I->sendPOST('api/v1/projects/users',
-            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['read', 'update']]);
+            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['tables_view', 'tables_update']]);
         $I->seeResponseCodeIs(201);
         $I->sendPOST('api/v1/projects/users',
-            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['read', 'update']]);
+            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['tables_view', 'tables_update']]);
         $I->seeResponseCodeIs(400);
         $I->seeResponseContains('duplicate user');
 
         $I->sendPOST('api/v1/projects/users',
-            ['user_id' => $user->_id, 'role' => 'manager', 'scope' => ['read', 'update']]);
+            ['user_id' => $user->_id, 'role' => 'manager', 'scope' => ['tables_view', 'tables_update']]);
         $I->seeResponseCodeIs(400);
         $I->seeResponseContains('duplicate user');
     }
@@ -140,32 +146,40 @@ class ProjectsCest
         $I->sendGET('api/v1/projects/consumers');
         $I->assertConsumers();
         $I->sendPOST('api/v1/projects/users',
-            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['read', 'update']]);
+            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['tables_view', 'tables_update']]);
         $I->loginUser($second_user);
         $I->sendGET('api/v1/projects/consumers');
         $I->seeResponseCodeIs(403);
         $I->loginUser($user);
         $I->sendPUT('api/v1/projects/users/',
-            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['read', 'update', 'get_consumers']]);
+            [
+                'user_id' => $second_user->_id,
+                'role' => 'manager',
+                'scope' => ['tables_view', 'tables_update', 'consumers_get'],
+            ]);
         $I->loginUser($second_user);
         $I->sendGET('api/v1/projects/consumers');
         $I->assertConsumers();
     }
 
-    public function testConsumers(ApiTester $I)
+    public function consumers(ApiTester $I)
     {
         $faker = $I->getFaker();
         $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
         $I->createConsumer();
         $I->sendPOST('api/v1/projects/consumers',
-            ['description' => $faker->text('20'), 'scope' => ['read', 'check']]);
+            ['description' => $faker->text('20'), 'scope' => ['decisions_view', 'decisions_make']]);
         $consumer = json_decode($I->grabResponse())->data[0];
         $I->assertConsumers('$.data[*]', 201);
 
         $text = $faker->text('20');
         $I->sendPUT('api/v1/projects/consumers',
-            ['description' => $text, 'scope' => ['read', 'check'], 'client_id' => $consumer->client_id]);
+            [
+                'description' => $text,
+                'scope' => ['decisions_view', 'decisions_make'],
+                'client_id' => $consumer->client_id,
+            ]);
         $I->seeResponseContains($text);
         $I->assertConsumers();
 
@@ -174,7 +188,7 @@ class ProjectsCest
         $I->assertConsumers();
     }
 
-    public function testSettings(ApiTester $I)
+    public function settings(ApiTester $I)
     {
         $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
@@ -192,7 +206,7 @@ class ProjectsCest
         $second_user = $I->createUser(true);
         $I->loginUser($user);
         $I->sendPOST('api/v1/projects/users',
-            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['read', 'update']]);
+            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['tables_view', 'tables_update']]);
         $I->loginUser($second_user);
         $I->sendGET('api/v1/projects/users');
         $I->assertProjectUser();
