@@ -26,7 +26,7 @@ return [
             'consumers_manage',
             'users_manage',
             'project_update',
-            'delete_project',
+            'project_delete',
             'decisions_view',
         ],
         'consumers' => [
