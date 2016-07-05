@@ -390,7 +390,7 @@ class UsersCest
         ];
         $filter = ['_id' => new MongoDB\BSON\ObjectID($user->_id)];
         $bulk = new MongoDB\Driver\BulkWrite;
-        $bulk->update($filter, ['$set' => ['tokens' => $tokens, 'refreshTokens.0.expires' => time()]]);
+        $bulk->update($filter, ['$set' => ['tokens' => $tokens, 'refreshTokens.0.expires' => time() - 1]]);
         $I->getMongo()->executeBulkWrite('gandalf_test.users', $bulk);
 
         exec('php artisan tokens:delete');
@@ -399,7 +399,7 @@ class UsersCest
         $rows = $I->getMongo()->executeQuery('gandalf_test.users', $query);
         $user = $rows->toArray()[0];
 
-        $I->assertFalse(property_exists($user->tokens, 'verify_email'));
-        $I->assertEquals(0, count($user->refreshTokens));
+        $I->assertFalse(property_exists($user->tokens, 'verify_email'), 'Expired verify_email token don\'t deleted');
+        $I->assertEquals(0, count($user->refreshTokens), 'Expired refresh token do not deleted');
     }
 }
