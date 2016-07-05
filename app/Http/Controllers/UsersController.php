@@ -30,7 +30,7 @@ class UsersController extends AbstractController
             'email' => 'required|unique:users,email|email',
             'password' => 'required|between:6,32|password',
         ],
-        'update' => [
+        'createOrUpdate' => [
             'username' => 'required|unique:users,username|between:2,32|username',
             'first_name' => 'sometimes|required|string|between:2,32|alpha',
             'last_name' => 'sometimes|required|string|between:2,32|alpha',
@@ -140,7 +140,7 @@ class UsersController extends AbstractController
         );
     }
 
-    public function updateUser()
+    public function createOrUpdate()
     {
         $this->validateRoute();
         $model = $this->getRepository()->createOrUpdate(

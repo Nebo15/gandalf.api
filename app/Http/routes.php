@@ -54,7 +54,7 @@ $app->group(
     ],
     function ($app) {
         /** @var Laravel\Lumen\Application $app */
-        $app->put('/users/current', ['uses' => 'UsersController@updateUser']);
+        $app->put('/users/current', ['uses' => 'UsersController@createOrUpdate']);
         $app->get('/users/current', ['uses' => 'UsersController@getUserInfo']);
         #Get list of users
         $app->get('/users', ['uses' => 'UsersController@readListWithFilters']);
