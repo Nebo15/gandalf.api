@@ -26,11 +26,11 @@ class DeleteExpiredTokens extends Command
             ->orWhere('tokens.verify_email.expired', '<=', $time)
             ->get();
 
-        foreach ($users as $user) {
-            $filter = function ($item) use ($time) {
-                return $item->expires >= $time;
-            };
+        $filter = function ($item) use ($time) {
+            return $item->expires >= $time;
+        };
 
+        foreach ($users as $user) {
             $filteredAccessTokens = $user->accessTokens()->reject($filter);
             if ($filteredAccessTokens->count() > 0) {
                 $user->accessTokens()->dissociate($filteredAccessTokens);
