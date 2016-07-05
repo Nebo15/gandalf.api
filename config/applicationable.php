@@ -64,9 +64,9 @@ return [
         ],
         'put' => [
             '~^\/api\/v1\/admin\/tables\/(.+)$~' => ['tables_update'],
-            '~^\/api\/v1\/projects\/(.+)$~' => ['project_update'],
             '~^\/api\/v1\/projects\/consumers~' => ['consumers_manage'],
             '~^\/api\/v1\/projects\/users$~' => ['users_manage'],
+            '~^\/api\/v1\/projects\/(.+)$~' => ['project_update'],
         ],
         'delete' => [
             '~^\/api\/v1\/projects\/users$~' => ['users_manage'],

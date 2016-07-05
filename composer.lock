@@ -1824,16 +1824,16 @@
         },
         {
             "name": "nebo15/lumen.applicationable",
-            "version": "0.1.5",
+            "version": "0.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/lumen-applicationable.git",
-                "reference": "73398cf0ccc06a9006406c9fc7649b73c8ae7fb7"
+                "reference": "6ad47cda25b6da071fb9637d9b6beb481d0f0e26"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/73398cf0ccc06a9006406c9fc7649b73c8ae7fb7",
-                "reference": "73398cf0ccc06a9006406c9fc7649b73c8ae7fb7",
+                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/6ad47cda25b6da071fb9637d9b6beb481d0f0e26",
+                "reference": "6ad47cda25b6da071fb9637d9b6beb481d0f0e26",
                 "shasum": ""
             },
             "require-dev": {
@@ -1862,7 +1862,7 @@
                 "lumen",
                 "mongodb"
             ],
-            "time": "2016-07-01 14:32:09"
+            "time": "2016-07-05 14:53:43"
         },
         {
             "name": "nebo15/lumen.oauth2-mongodb",
@@ -2905,16 +2905,16 @@
     "packages-dev": [
         {
             "name": "barryvdh/laravel-ide-helper",
-            "version": "v2.2.0",
+            "version": "v2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-ide-helper.git",
-                "reference": "a9484c67d1305e9e2c71d2dfaaed6639200d874c"
+                "reference": "28af7cd19ca41cc0c63dd1de2b46c2b84d31c463"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/a9484c67d1305e9e2c71d2dfaaed6639200d874c",
-                "reference": "a9484c67d1305e9e2c71d2dfaaed6639200d874c",
+                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/28af7cd19ca41cc0c63dd1de2b46c2b84d31c463",
+                "reference": "28af7cd19ca41cc0c63dd1de2b46c2b84d31c463",
                 "shasum": ""
             },
             "require": {
@@ -2937,7 +2937,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.1-dev"
+                    "dev-master": "2.2-dev"
                 }
             },
             "autoload": {
@@ -2967,7 +2967,7 @@
                 "phpstorm",
                 "sublime"
             ],
-            "time": "2016-06-13 19:36:24"
+            "time": "2016-07-04 11:52:48"
         },
         {
             "name": "barryvdh/reflection-docblock",

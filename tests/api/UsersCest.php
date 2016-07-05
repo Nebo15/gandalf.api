@@ -389,6 +389,48 @@ class UsersCest
         $I->seeResponseCodeIs(200);
     }
 
+    public function canNotEditItself(ApiTester $I)
+    {
+        $user = $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
+        $I->sendPUT('api/v1/projects/users',
+            [
+                'user_id' => $user->_id,
+                'role' => 'manager',
+                'scope' => ['tables_view', 'tables_update', 'users_manage'],
+            ]);
+        $I->seeResponseCodeIs(403);
+        $I->loginClient($I->getCurrentClient());
+        $second_user = $I->createUser(true);
+        $I->loginUser($user);
+        $I->sendPOST('api/v1/projects/users',
+            [
+                'user_id' => $second_user->_id,
+                'role' => 'manager',
+                'scope' => ['tables_view', 'tables_update', 'users_manage'],
+            ]);
+        $I->seeResponseCodeIs(201);
+        $I->loginUser($second_user);
+        $I->sendPUT('api/v1/projects/users',
+            [
+                'user_id' => $user->_id,
+                'role' => 'manager',
+                'scope' => ['tables_view', 'tables_update', 'users_manage'],
+            ]);
+        $I->seeResponseCodeIs(403);
+        $I->loginUser($user);
+        $I->sendPOST('api/v1/projects/users/admin', ['user_id' => $second_user->_id]);
+        $I->seeResponseCodeIs(200);
+        $I->loginUser($second_user);
+        $I->sendPUT('api/v1/projects/users',
+            [
+                'user_id' => $user->_id,
+                'role' => 'manager',
+                'scope' => ['tables_view', 'tables_update', 'users_manage'],
+            ]);
+        $I->seeResponseCodeIs(200);
+    }
+
     public function removeTokens(ApiTester $I)
     {
         $user = $I->createUser();
@@ -400,7 +442,7 @@ class UsersCest
             ],
             'verify_email' => [
                 "token" => '$3y$10$iiPJClTgDWOgP0SR1ZgwLeMO4qNZkGFXHRjRpkyl.xC1K6OLPxExK',
-                "expired" => time() - 1
+                "expired" => time() - 1,
             ],
         ];
         $filter = ['_id' => new MongoDB\BSON\ObjectID($user->_id)];
