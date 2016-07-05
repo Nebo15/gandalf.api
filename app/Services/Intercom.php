@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\User;
 use App\Models\Decision;
 
 class Intercom extends BaseEvents
@@ -13,7 +14,7 @@ class Intercom extends BaseEvents
         $this->intercom = $intercom;
     }
 
-    public function decisionMake(Decision $decision)
+    public function decisionMake(Decision $decision, $userId)
     {
 
     }

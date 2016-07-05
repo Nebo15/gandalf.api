@@ -11,6 +11,7 @@ use App\Events\Decisions;
 
 use App\Services\Intercom;
 use App\Services\Mixpanel;
+use Nebo15\LumenApplicationable\Models\Application;
 
 class EventListener
 {
@@ -25,6 +26,8 @@ class EventListener
 
     public function decisionMake(Decisions\Make $event)
     {
+//        $event->decision->query()->where()
+//        $admin = Application::where('users.role', 'admin');
         $this->intercom->decisionMake($event->decision);
         $this->mixpanel->decisionMake($event->decision);
     }

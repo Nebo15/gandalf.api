@@ -25,7 +25,7 @@ class Mixpanel extends BaseEvents
         $this->mixpanel = $mixpanel;
     }
 
-    public function decisionMake(Decision $decision)
+    public function decisionMake(Decision $decision, $userId)
     {
 
     }

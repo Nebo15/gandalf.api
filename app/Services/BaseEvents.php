@@ -6,5 +6,5 @@ use App\Models\Decision;
 
 abstract class BaseEvents
 {
-    abstract public function decisionMake(Decision $decision);
+    abstract public function decisionMake(Decision $decision, $userId);
 }
