@@ -45,7 +45,27 @@ class UsersCest
         }
     }
 
-    public function createInvalid(ApiTester $I)
+    public function update(ApiTester $I)
+    {
+        $I->createAndLoginClient();
+        $user = $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
+        $user_edited_data = [
+            'last_name' => 'LastName',
+            'first_name' => $user->first_name . 'edited',
+            'username' => $user->username . 'edited',
+        ];
+        $I->sendPUT('api/v1/users/current', $user_edited_data);
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseContains($user_edited_data['last_name']);
+        $I->seeResponseContains($user_edited_data['first_name']);
+        $I->seeResponseContains($user_edited_data['username']);
+
+        $I->sendGET('api/v1/users/current');
+        $I->assertCurrentUser();
+    }
+
+    public function createUpdateInvalid(ApiTester $I)
     {
         $I->createAndLoginClient();
         $faker = $I->getFaker();
@@ -92,26 +112,21 @@ class UsersCest
                 $I->seeResponseContains($key);
             }
         }
-    }
-
-    public function edit(ApiTester $I)
-    {
-        $I->createAndLoginClient();
-        $user = $I->createAndLoginUser();
-        $I->createProjectAndSetHeader();
-        $user_edited_data = [
-            'last_name' => 'LastName',
-            'first_name' => $user->first_name . 'edited',
-            'username' => $user->username . 'edited',
-        ];
-        $I->sendPUT('api/v1/users/current', $user_edited_data);
-        $I->seeResponseCodeIs(200);
-        $I->seeResponseContains($user_edited_data['last_name']);
-        $I->seeResponseContains($user_edited_data['first_name']);
-        $I->seeResponseContains($user_edited_data['username']);
-
-        $I->sendGET('api/v1/users/current');
-        $I->assertCurrentUser();
+        $I->createAndLoginUser(true);
+        foreach ($badData as $key => $data) {
+            $normalUserData = [
+                'email' => $faker->email,
+                'password' => $I->getPassword(),
+                'username' => $faker->firstName,
+            ];
+            foreach ($data as $item) {
+                $normalUserData[$key] = $item;
+                $I->sendPUT('api/v1/users/current', $normalUserData);
+                $I->seeResponseCodeIs(422);
+                $I->seeResponseContains('"error":"validation"');
+                $I->seeResponseContains($key);
+            }
+        }
     }
 
     public function find(ApiTester $I, $scenario)
