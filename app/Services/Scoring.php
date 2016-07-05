@@ -110,7 +110,7 @@ class Scoring
         $scoring_data['final_decision'] = $final_decision ?: $variant->default_decision;
 
         $decision = (new Decision())->fill($scoring_data)->save();
-        \Event::fire(new Make($decision));
+        \Event::fire(new Make($decision, $table->getApplications()));
         $response = $decision->toConsumerArray();
         if (!$showMeta) {
             unset($response['rules']);
