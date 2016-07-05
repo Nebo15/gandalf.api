@@ -12,6 +12,7 @@ use App\Models\Field;
 use App\Models\Decision;
 use App\Models\Condition;
 use \MongoDB\BSON\ObjectID;
+use App\Events\Decisions\Make;
 use App\Repositories\TablesRepository;
 use Illuminate\Contracts\Validation\ValidationException;
 
@@ -108,7 +109,9 @@ class Scoring
         }
         $scoring_data['final_decision'] = $final_decision ?: $variant->default_decision;
 
-        $response = (new Decision())->fill($scoring_data)->save()->toConsumerArray();
+        $decision = (new Decision())->fill($scoring_data)->save();
+        \Event::fire(new Make($decision));
+        $response = $decision->toConsumerArray();
         if (!$showMeta) {
             unset($response['rules']);
         }
