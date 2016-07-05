@@ -28,7 +28,6 @@ class DecisionsCest
     {
         $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
-        $I->createProject(true);
         $table_data = $I->createTable();
         $table_id_no_decisions = $table_data->_id;
 
