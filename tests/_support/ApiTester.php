@@ -726,9 +726,9 @@ class ApiTester extends \Codeception\Actor
         return $this->getFaker()->password() . '1aA';
     }
 
-    public function createAndLoginUser()
+    public function createAndLoginUser($new = false)
     {
-        $user = $this->createUser();
+        $user = $this->createUser($new);
         $this->loginUser($user);
 
         return $user;
