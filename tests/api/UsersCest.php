@@ -8,7 +8,7 @@ class UsersCest
         $I->haveHttpHeader('Content-Type', 'application/json');
     }
 
-    public function createSuccess(ApiTester $I)
+    public function createOk(ApiTester $I)
     {
         $I->createAndLoginClient();
         $faker = $I->getFaker();
@@ -21,33 +21,8 @@ class UsersCest
             ]
         );
         $I->seeResponseCodeIs(201);
-    }
 
-    public function edit(ApiTester $I)
-    {
-        $I->createAndLoginClient();
-        $user = $I->createAndLoginUser();
-        $I->createProjectAndSetHeader();
-        $user_edited_data = [
-            'last_name' => 'LastName',
-            'first_name' => $user->first_name . 'edited',
-            'username' => $user->username . 'edited',
-        ];
-        $I->sendPUT('api/v1/users/current', $user_edited_data);
-        $I->seeResponseCodeIs(200);
-        $I->seeResponseContains($user_edited_data['last_name']);
-        $I->seeResponseContains($user_edited_data['first_name']);
-        $I->seeResponseContains($user_edited_data['username']);
-
-        $I->sendGET('api/v1/users/current');
-        $I->assertCurrentUser();
-    }
-
-    public function createCorrect(ApiTester $I)
-    {
-        $I->createAndLoginClient();
-        $faker = $I->getFaker();
-        $badData = [
+        $names = [
             'username' => [
                 'JL',
                 'some.username',
@@ -56,7 +31,7 @@ class UsersCest
                 'some.username12345',
             ],
         ];
-        foreach ($badData as $key => $data) {
+        foreach ($names as $key => $data) {
             $normalUserData = [
                 'password' => $I->getPassword(),
                 'username' => $faker->firstName,
@@ -70,7 +45,7 @@ class UsersCest
         }
     }
 
-    public function createNotCorrect(ApiTester $I)
+    public function createInvalid(ApiTester $I)
     {
         $I->createAndLoginClient();
         $faker = $I->getFaker();
@@ -117,6 +92,26 @@ class UsersCest
                 $I->seeResponseContains($key);
             }
         }
+    }
+
+    public function edit(ApiTester $I)
+    {
+        $I->createAndLoginClient();
+        $user = $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
+        $user_edited_data = [
+            'last_name' => 'LastName',
+            'first_name' => $user->first_name . 'edited',
+            'username' => $user->username . 'edited',
+        ];
+        $I->sendPUT('api/v1/users/current', $user_edited_data);
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseContains($user_edited_data['last_name']);
+        $I->seeResponseContains($user_edited_data['first_name']);
+        $I->seeResponseContains($user_edited_data['username']);
+
+        $I->sendGET('api/v1/users/current');
+        $I->assertCurrentUser();
     }
 
     public function find(ApiTester $I, $scenario)
@@ -377,5 +372,34 @@ class UsersCest
         $I->loginUser($second_user);
         $I->sendDELETE('api/v1/projects/users', ['user_id' => $user->_id]);
         $I->seeResponseCodeIs(200);
+    }
+
+    public function removeTokens(ApiTester $I)
+    {
+        $user = $I->createUser();
+        $I->getMongo();
+        $tokens = [
+            'reset_password' => [
+                "token" => '$2y$10$iiPJClTgDWOgP0SR1ZgwLeMO4qNZkGFXHRjRpkyl.xC2K6OLPxExK',
+                "expired" => time() + 30,
+            ],
+            'verify_email' => [
+                "token" => '$3y$10$iiPJClTgDWOgP0SR1ZgwLeMO4qNZkGFXHRjRpkyl.xC1K6OLPxExK',
+                "expired" => time() - 1
+            ],
+        ];
+        $filter = ['_id' => new MongoDB\BSON\ObjectID($user->_id)];
+        $bulk = new MongoDB\Driver\BulkWrite;
+        $bulk->update($filter, ['$set' => ['tokens' => $tokens, 'refreshTokens.0.expires' => time() - 1]]);
+        $I->getMongo()->executeBulkWrite('gandalf_test.users', $bulk);
+
+        exec('php artisan tokens:delete');
+
+        $query = new MongoDB\Driver\Query($filter);
+        $rows = $I->getMongo()->executeQuery('gandalf_test.users', $query);
+        $user = $rows->toArray()[0];
+
+        $I->assertFalse(property_exists($user->tokens, 'verify_email'), 'Expired verify_email token don\'t deleted');
+        $I->assertEquals(0, count($user->refreshTokens), 'Expired refresh token do not deleted');
     }
 }
