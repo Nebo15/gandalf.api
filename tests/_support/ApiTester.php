@@ -30,7 +30,6 @@ class ApiTester extends \Codeception\Actor
     public function __construct(\Codeception\Scenario $scenario)
     {
         $this->scenario = $scenario;
-        $this->scenario->stopIfBlocked();
     }
 
     public function getFaker($locale = 'en_US')
@@ -67,7 +66,6 @@ class ApiTester extends \Codeception\Actor
 
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.rules");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.fields");
-
     }
 
     public function assertTable($jsonPath = '$.data', $code = 200)
@@ -281,6 +279,7 @@ class ApiTester extends \Codeception\Actor
             'title' => 'Test title',
             'description' => 'Test description',
             'matching_type' => 'decision',
+            'decision_type' => 'alpha_num',
             'variants_probability' => 'first',
             'fields' => [
                 [
@@ -385,6 +384,7 @@ class ApiTester extends \Codeception\Actor
     public function getShortTableDataMatchingTypeAll()
     {
         $tableData = $this->getTableShortData();
+        $tableData['decision_type'] = 'numeric';
         $tableData['matching_type'] = 'scoring';
         $tableData['variants'][0]['default_decision'] = 15;
         $tableData['variants'][0]['rules'] = [
@@ -487,6 +487,7 @@ class ApiTester extends \Codeception\Actor
         $data = [
             'title' => 'Test title',
             'description' => 'Test description',
+            'decision_type' => 'alpha_num',
             'matching_type' => 'decision',
             'variants_probability' => '',
             'fields' => [],
@@ -551,6 +552,8 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseMatchesJsonType([
             '_id' => 'string',
             'title' => 'string',
+            'description' => 'string',
+            'settings' => 'array',
             'users' => 'array',
         ], $jsonPath);
 
@@ -588,7 +591,19 @@ class ApiTester extends \Codeception\Actor
             'username' => 'string',
             'access_tokens' => 'array',
             'refresh_tokens' => 'array',
+        ], $jsonPath);
+    }
+
+    public function assertProjectUser($jsonPath = '$.data', $code = 200)
+    {
+        $this->seeResponseCodeIs($code);
+        $this->seeResponseMatchesJsonType([
+            '_id' => 'string',
+            'user_id' => 'string',
+            'role' => 'string',
             'scope' => 'array',
+            'username' => 'string',
+            'email' => 'string',
         ], $jsonPath);
     }
 
@@ -618,7 +633,8 @@ class ApiTester extends \Codeception\Actor
     public function createConsumer()
     {
         $this->sendPOST('api/v1/projects/consumers',
-            ['description' => $this->getFaker()->text('20'), 'scope' => ['read', 'check']]);
+            ['description' => $this->getFaker()->text('20'), 'scope' => ['decisions_view', 'decisions_make']]);
+        $this->seeResponseCodeIs(201);
 
         $this->sendGET('api/v1/projects/consumers');
 
@@ -710,9 +726,9 @@ class ApiTester extends \Codeception\Actor
         return $this->getFaker()->password() . '1aA';
     }
 
-    public function createAndLoginUser()
+    public function createAndLoginUser($new = false)
     {
-        $user = $this->createUser();
+        $user = $this->createUser($new);
         $this->loginUser($user);
 
         return $user;

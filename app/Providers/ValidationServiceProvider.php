@@ -15,33 +15,13 @@ class ValidationServiceProvider extends ServiceProvider
         Validator::extend('conditionsFieldKey', 'App\Validators\TableValidator@conditionsFieldKey');
         Validator::extend('ruleThanType', 'App\Validators\TableValidator@ruleThanType');
         Validator::extend('probabilitySum', 'App\Validators\TableValidator@probabilitySum');
-        Validator::extend('mongoId', function ($attribute, $value) {
-            return preg_match('/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/', $value);
-        });
-        Validator::extend('metaKeysAmount', function ($attribute, $value) {
-            return $value <= 24;
-        });
-        Validator::extend('betweenString', function ($attribute, $value) {
-            if (strpos($value, ';') === false) {
-                return false;
-            }
-
-            $between = array_map(function ($item) {
-                return floatval(str_replace(',', '.', $item));
-            }, explode(';', $value));
-
-            if (count($between) > 2) {
-                return false;
-            }
-            if (!is_numeric($between[0]) or !is_numeric($between[1])) {
-                return false;
-            }
-
-            return $between[0] < $between[1];
-        });
+        Validator::extend('decision_type', 'App\Validators\TableValidator@decisionType');
         Validator::extend('password', 'App\Validators\UserValidator@password');
         Validator::extend('username', 'App\Validators\UserValidator@username');
         Validator::extend('last_name', 'App\Validators\UserValidator@lastName');
+        Validator::extend('mongoId', 'App\Validators\GeneralValidator@mongoId');
+        Validator::extend('betweenString', 'App\Validators\GeneralValidator@betweenString');
+        Validator::extend('json', 'App\Validators\GeneralValidator@json');
     }
 
     public function register()

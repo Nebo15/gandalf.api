@@ -37,6 +37,7 @@ class TablesController extends AbstractController
             'title' => 'sometimes|string',
             'description' => 'sometimes|string',
             'matching_type' => 'required|in:decision,scoring',
+            'decision_type' => 'required|in:alpha_num,numeric,string,json|decision_type',
             'fields' => 'required|array',
             'fields.*._id' => 'sometimes|mongoId',
             'fields.*.title' => 'required|string',

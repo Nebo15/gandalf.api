@@ -18,15 +18,14 @@ class ProjectsController extends AbstractController
 
     public function deleteProject(Application $application)
     {
-        $current_application = app()->offsetGet('applicationable.application');
         Table::where(['applications' => ['$in' => [$application->_id]]])->delete();
-        $current_application->delete();
+        $application->delete();
 
         return $this->response->json();
     }
 
     public function export(DbTransfer $dbTransfer, Application $application)
     {
-        return response()->download($dbTransfer->export($application->_id));
+        return $this->response->json(['url' => $dbTransfer->export($application->_id)]);
     }
 }

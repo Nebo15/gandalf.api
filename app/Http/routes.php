@@ -11,9 +11,7 @@
 |
 */
 
-$app->get('/', function () use ($app) {
-    return response('ok');
-});
+$app->get('/', ['uses' => 'App\Http\Controllers\UsersController@test']);
 
 /** @var Nebo15\REST\Router $api */
 $api = $app->make('Nebo15\REST\Router');
@@ -52,23 +50,12 @@ $app->group(
     [
         'prefix' => 'api/v1',
         'namespace' => 'App\Http\Controllers',
-        'middleware' => ['oauth', 'applicationable'],
-    ],
-    function ($app) {
-        /** @var Laravel\Lumen\Application $app */
-        $app->get('/users/current', ['uses' => 'UsersController@getUserInfo']);
-    }
-);
-
-$app->group(
-    [
-        'prefix' => 'api/v1',
-        'namespace' => 'App\Http\Controllers',
         'middleware' => ['oauth'],
     ],
     function ($app) {
         /** @var Laravel\Lumen\Application $app */
-        $app->put('/users/current', ['uses' => 'UsersController@updateUser']);
+        $app->put('/users/current', ['uses' => 'UsersController@createOrUpdate']);
+        $app->get('/users/current', ['uses' => 'UsersController@getUserInfo']);
         #Get list of users
         $app->get('/users', ['uses' => 'UsersController@readListWithFilters']);
 

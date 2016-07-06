@@ -153,12 +153,12 @@ class TablesCest
         $I->seeResponseContains('The scope field is required');
 
         $I->sendPOST('api/v1/projects/users',
-            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['create', 'read', 'uncreated_scope']]);
+            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['tables_create', 'tables_view', 'uncreated_scope']]);
         $I->seeResponseCodeIs(422);
         $I->seeResponseContains('The selected scope is invalid.');
 
         $I->sendPOST('api/v1/projects/users',
-            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['create', 'read', 'update']]);
+            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['tables_create', 'tables_view', 'tables_update']]);
         $I->seeResponseCodeIs(201);
         $I->loginUser($second_user);
         $I->sendGET('api/v1/admin/tables/' . $table->_id);
@@ -263,6 +263,7 @@ class TablesCest
         $I->seeResponseContains('variants.0.default_description');
         $I->seeResponseContains('variants.0.rules.1.conditions');
         $I->seeResponseContains('matching_type');
+        $I->seeResponseContains('decision_type');
         $I->seeResponseContains('variants.0.rules.0.conditions.0');
         $I->seeResponseContains('variants.0.rules.1.conditions.0');
         $I->seeResponseContains('variants.0.rules.1.conditions.2');
@@ -273,6 +274,7 @@ class TablesCest
 
         $I->sendPOST('api/v1/admin/tables', [
             'default_decision' => 'Decline',
+            'decision_type' => 'invalid',
             'fields' => [
                 [
                     "key" => '1',
@@ -302,6 +304,7 @@ class TablesCest
         ]);
         $I->seeResponseCodeIs(422);
         $I->seeResponseContains('variants.0.rules.0.conditions.0.value');
+        $I->seeResponseContains('decision_type');
 
         $I->sendPOST('api/v1/admin/tables', [
             'default_decision' => 'Decline',
@@ -380,6 +383,7 @@ class TablesCest
             'title' => 'Test title',
             'description' => 'Test description',
             'matching_type' => 'decision',
+            'decision_type' => 'alpha_num',
             'fields' => [
                 [
                     "key" => ' IS SET ',
@@ -472,6 +476,7 @@ class TablesCest
             'title' => 'Test title',
             'description' => 'Test description',
             'matching_type' => 'decision',
+            'decision_type' => 'alpha_num',
             'fields' => [
                 [
                     "key" => 'test',
@@ -573,6 +578,7 @@ class TablesCest
             'title' => 'Test',
             'description' => 'Test',
             'matching_type' => 'decision',
+            'decision_type' => 'alpha_num',
             'fields' => [
                 [
                     "key" => 'boolean',
@@ -659,6 +665,7 @@ class TablesCest
             'title' => 'Test',
             'description' => 'Test',
             'matching_type' => 'decision',
+            'decision_type' => 'alpha_num',
             'fields' => [
                 [
                     "key" => 'boolean',
@@ -710,6 +717,7 @@ class TablesCest
             'title' => 'Test title',
             'description' => 'Test description',
             'matching_type' => 'decision',
+            'decision_type' => 'alpha_num',
             'fields' => [
                 [
                     "key" => 'between',
@@ -755,8 +763,8 @@ class TablesCest
         }
 
         foreach (['1.223.33', 100.01, '10;8', '1;2;3', '3,3'] as $item) {
-            $tableData['rules'][0]['conditions'][0]['value'] = $item;
-            $I->sendPOST('api/v1/admin/tables', ['table' => $tableData]);
+            $tableData['variants'][0]['rules'][0]['conditions'][0]['value'] = $item;
+            $I->sendPOST('api/v1/admin/tables', $tableData);
             $I->seeResponseCodeIs(422);
         }
     }
@@ -1136,7 +1144,63 @@ class TablesCest
         $I->assertEquals(0, count($I->getResponseFields()->data));
     }
 
-    public function testVariantsProbabilityPercent(ApiTester $I)
+    public function decisionType(ApiTester $I)
+    {
+        $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
+
+        # alpha_num
+
+        $tableData = $I->getTableShortData();
+        $tableData['decision_type'] = 'alpha_num';
+        $I->createTable($tableData);
+
+        # numeric invalid
+
+        $tableData['decision_type'] = 'numeric';
+        $tableData['variants'][0]['than'] = 'string';
+        $tableData['variants'][0]['default_decision'] = 'string';
+        $I->sendPOST('api/v1/admin/tables', $tableData);
+        $I->seeResponseCodeIs(422);
+        $response = $I->getResponseFields()->data;
+        $I->assertTrue(array_key_exists('variants.0.default_decision', $response));
+        $I->assertTrue(array_key_exists('variants.0.rules.0.than', $response));
+        $I->assertTrue(array_key_exists('variants.0.rules.1.than', $response));
+
+        # numeric valid
+
+        $tableData['variants'][0]['default_decision'] = 1;
+        $tableData['variants'][0]['rules'][0]['than'] = -202;
+        $tableData['variants'][0]['rules'][1]['than'] = 123.34;
+        $I->createTable($tableData);
+
+        # json
+
+        $tableData = $I->getTableShortData();
+        $tableData['decision_type'] = 'json';
+        $tableData['variants'][0]['default_decision'] = '{}';
+        $tableData['variants'][0]['rules'][0]['than'] = '{"ok":true}';
+        $tableData['variants'][0]['rules'][1]['than'] = '[123,456]';
+        $I->createTable($tableData);
+
+        # invalid json
+
+        $tableData['variants'][0]['rules'][1]['than'] = '{invalid json}';
+        $I->sendPOST('api/v1/admin/tables', $tableData);
+        $I->seeResponseCodeIs(422);
+        $response = $I->getResponseFields()->data;
+        $I->assertTrue(array_key_exists('variants.0.rules.1.than', $response));
+
+        # for scoring decision_type is always numeric
+
+        $tableData = $I->getShortTableDataMatchingTypeAll();
+        $tableData['decision_type'] = 'json';
+        $I->sendPOST('api/v1/admin/tables', $tableData);
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseContains('decision_type');
+    }
+
+    public function variantsProbabilityPercent(ApiTester $I)
     {
         $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
@@ -1177,7 +1241,7 @@ class TablesCest
         $I->assertTrue($matched['Variant 1'] < $matched['Variant 3'], 'Variant 1 checked more than Variant 3');
     }
 
-    public function testVariantsProbabilityInvalid(ApiTester $I)
+    public function variantsProbabilityInvalid(ApiTester $I)
     {
         $I->createAndLoginUser();
         $I->createProjectAndSetHeader();

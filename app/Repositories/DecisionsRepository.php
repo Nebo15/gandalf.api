@@ -6,6 +6,7 @@
 namespace App\Repositories;
 
 use App\Models\Decision;
+use Nebo15\LumenApplicationable\ApplicationableHelper;
 use Nebo15\REST\AbstractRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Contracts\Validation\ValidationException;
@@ -35,6 +36,7 @@ class DecisionsRepository extends AbstractRepository
         } else {
             $query = Decision::orderBy(Decision::CREATED_AT, 'DESC');
         }
+        $query = $query->where('applications', ApplicationableHelper::getApplicationId());
 
         return $this->paginateQuery($query, $size);
     }
@@ -59,7 +61,7 @@ class DecisionsRepository extends AbstractRepository
             $i++;
         }
         $values['meta_keys_amount'] = count($rules) / 2;
-        $rules['meta_keys_amount'] = 'metaKeysAmount';
+        $rules['meta_keys_amount'] = 'numeric|max:24';
 
         $validator = \Validator::make($values, $rules);
         if ($validator->fails()) {

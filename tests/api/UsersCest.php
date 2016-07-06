@@ -8,7 +8,7 @@ class UsersCest
         $I->haveHttpHeader('Content-Type', 'application/json');
     }
 
-    public function createUserSuccess(ApiTester $I)
+    public function createOk(ApiTester $I)
     {
         $I->createAndLoginClient();
         $faker = $I->getFaker();
@@ -21,9 +21,31 @@ class UsersCest
             ]
         );
         $I->seeResponseCodeIs(201);
+
+        $names = [
+            'username' => [
+                'JL',
+                'some.username',
+                'some-username',
+                'some_username',
+                'some.username12345',
+            ],
+        ];
+        foreach ($names as $key => $data) {
+            $normalUserData = [
+                'password' => $I->getPassword(),
+                'username' => $faker->firstName,
+            ];
+            foreach ($data as $item) {
+                $normalUserData['email'] = $faker->email;
+                $normalUserData[$key] = $item;
+                $I->sendPOST('api/v1/users/', $normalUserData);
+                $I->seeResponseCodeIs(201);
+            }
+        }
     }
 
-    public function editUser(ApiTester $I)
+    public function update(ApiTester $I)
     {
         $I->createAndLoginClient();
         $user = $I->createAndLoginUser();
@@ -43,34 +65,7 @@ class UsersCest
         $I->assertCurrentUser();
     }
 
-    public function createUserCorrectData(ApiTester $I)
-    {
-        $I->createAndLoginClient();
-        $faker = $I->getFaker();
-        $badData = [
-            'username' => [
-                'JL',
-                'some.username',
-                'some-username',
-                'some_username',
-                'some.username12345',
-            ]
-        ];
-        foreach ($badData as $key => $data) {
-            $normalUserData = [
-                'password' => $I->getPassword(),
-                'username' => $faker->firstName,
-            ];
-            foreach ($data as $item) {
-                $normalUserData['email'] = $faker->email;
-                $normalUserData[$key] = $item;
-                $I->sendPOST('api/v1/users/', $normalUserData);
-                $I->seeResponseCodeIs(201);
-            }
-        }
-    }
-
-    public function createUserBadData(ApiTester $I)
+    public function createUpdateInvalid(ApiTester $I)
     {
         $I->createAndLoginClient();
         $faker = $I->getFaker();
@@ -117,9 +112,24 @@ class UsersCest
                 $I->seeResponseContains($key);
             }
         }
+        $I->createAndLoginUser(true);
+        foreach ($badData as $key => $data) {
+            $normalUserData = [
+                'email' => $faker->email,
+                'password' => $I->getPassword(),
+                'username' => $faker->firstName,
+            ];
+            foreach ($data as $item) {
+                $normalUserData[$key] = $item;
+                $I->sendPUT('api/v1/users/current', $normalUserData);
+                $I->seeResponseCodeIs(422);
+                $I->seeResponseContains('"error":"validation"');
+                $I->seeResponseContains($key);
+            }
+        }
     }
 
-    public function findUsers(ApiTester $I, $scenario)
+    public function find(ApiTester $I, $scenario)
     {
         $usersList = [
             $I->createUser(true),
@@ -165,13 +175,11 @@ class UsersCest
         $I->seeResponseCodeIs(401);
 
         $I->loginClient($I->getCurrentClient());
-        $I->sendPOST('api/v1/oauth/',
-            [
-                'grant_type' => 'password',
-                'username' => $user->email,
-                'password' => $user->password,
-            ]
-        );
+        $I->sendPOST('api/v1/oauth/', [
+            'grant_type' => 'password',
+            'username' => $user->email,
+            'password' => $user->password,
+        ]);
         $I->seeResponseCodeIs(200);
 
         $token = json_decode($I->grabResponse());
@@ -202,26 +210,22 @@ class UsersCest
             ['token' => $resp->sandbox->reset_password_token->token, 'password' => $new_password]);
         $I->seeResponseCodeIs(200);
 
-        $I->sendPOST('api/v1/oauth/',
-            [
-                'grant_type' => 'password',
-                'username' => $user->email,
-                'password' => $old_password,
-            ]
-        );
+        $I->sendPOST('api/v1/oauth/', [
+            'grant_type' => 'password',
+            'username' => $user->email,
+            'password' => $old_password,
+        ]);
         $I->seeResponseCodeIs(401);
 
-        $I->sendPOST('api/v1/oauth/',
-            [
-                'grant_type' => 'password',
-                'username' => $user->email,
-                'password' => $new_password,
-            ]
-        );
+        $I->sendPOST('api/v1/oauth/', [
+            'grant_type' => 'password',
+            'username' => $user->email,
+            'password' => $new_password,
+        ]);
         $I->seeResponseCodeIs(200);
     }
 
-    public function testPassword(ApiTester $I)
+    public function passwordNotCorrect(ApiTester $I)
     {
         $faker = $I->getFaker();
         $I->createAndLoginClient();
@@ -230,7 +234,7 @@ class UsersCest
             '1Aa34',
             'JustAlpha',
             '#1(*&^(*&^',
-            'LongerThan32SymbolsMuchLongerAnd!'
+            'LongerThan32SymbolsMuchLongerAnd!',
         ];
         foreach ($invalidPass as $pass) {
             $I->sendPOST(
@@ -241,19 +245,19 @@ class UsersCest
         }
     }
 
-    public function testInvitation(ApiTester $I)
+    public function invitation(ApiTester $I)
     {
         $faker = $I->getFaker();
         $I->createAndLoginUser();
         $first_project = $I->createProjectAndSetHeader();
         $second_user_email = $faker->email;
         $I->sendPOST('api/v1/invite',
-            ['email' => $second_user_email, 'role' => 'manager', 'scope' => ['read', 'create']]);
+            ['email' => $second_user_email, 'role' => 'manager', 'scope' => ['tables_create', 'tables_view']]);
         $I->seeResponseCodeIs(200);
         $second_project = $I->createProject(true);
         $I->setHeader('X-Application', $second_project->_id);
         $I->sendPOST('api/v1/invite',
-            ['email' => $second_user_email, 'role' => 'manager', 'scope' => ['read', 'create']]);
+            ['email' => $second_user_email, 'role' => 'manager', 'scope' => ['tables_create', 'tables_view']]);
         $I->seeResponseCodeIs(200);
 
         $I->logout();
@@ -292,7 +296,7 @@ class UsersCest
         $I->seeResponseContains("Project owner is not activated, try again later");
 
         $I->sendPOST('api/v1/projects/users',
-            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['read', 'check']]);
+            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['tables_view', 'decisions_make']]);
 
         $I->loginUser($second_user);
         $I->sendPOST("api/v1/tables/$table_id/decisions", $data);
@@ -322,12 +326,14 @@ class UsersCest
 
     public function resendVerifyEmailToken(ApiTester $I)
     {
-        $I->createUser(true, '', false);
-        $I->sendPOST('api/v1/users/verify/email/resend');
+        $user = $I->createUser(true, '', false);
+        $I->sendPOST('api/v1/users/verify/email/resend', ['email' => $user->email]);
         $I->seeResponseCodeIs(200);
+        $I->sendPOST('api/v1/users/verify/email/resend', ['email' => 'wrong@email.com']);
+        $I->seeResponseCodeIs(404);
     }
 
-    public function deleteAdminFromProject(ApiTester $I)
+    public function deleteAdminFromTheProject(ApiTester $I)
     {
         $user = $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
@@ -337,15 +343,27 @@ class UsersCest
         $I->loginUser($user);
 
         $I->sendPOST('api/v1/projects/users',
-            ['user_id' => $second_user->_id, 'role' => 'admin', 'scope' => ['read', 'update', 'delete_users']]);
+            [
+                'user_id' => $second_user->_id,
+                'role' => 'admin',
+                'scope' => ['tables_view', 'tables_update', 'users_manage'],
+            ]);
         $I->seeResponseCodeIs(422);
 
         $I->sendPOST('api/v1/projects/users',
-            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['read', 'update', 'delete_users']]);
+            [
+                'user_id' => $second_user->_id,
+                'role' => 'manager',
+                'scope' => ['tables_view', 'tables_update', 'users_manage'],
+            ]);
         $I->seeResponseCodeIs(201);
 
         $I->sendPOST('api/v1/projects/users',
-            ['user_id' => $third_user->_id, 'role' => 'manager', 'scope' => ['read', 'update', 'delete_users']]);
+            [
+                'user_id' => $third_user->_id,
+                'role' => 'manager',
+                'scope' => ['tables_view', 'tables_update', 'users_manage'],
+            ]);
         $I->seeResponseCodeIs(201);
 
         $I->loginUser($second_user);
@@ -371,4 +389,74 @@ class UsersCest
         $I->seeResponseCodeIs(200);
     }
 
+    public function canNotEditItself(ApiTester $I)
+    {
+        $user = $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
+        $I->sendPUT('api/v1/projects/users',
+            [
+                'user_id' => $user->_id,
+                'role' => 'manager',
+                'scope' => ['tables_view', 'tables_update', 'users_manage'],
+            ]);
+        $I->seeResponseCodeIs(403);
+        $I->loginClient($I->getCurrentClient());
+        $second_user = $I->createUser(true);
+        $I->loginUser($user);
+        $I->sendPOST('api/v1/projects/users',
+            [
+                'user_id' => $second_user->_id,
+                'role' => 'manager',
+                'scope' => ['tables_view', 'tables_update', 'users_manage'],
+            ]);
+        $I->seeResponseCodeIs(201);
+        $I->loginUser($second_user);
+        $I->sendPUT('api/v1/projects/users',
+            [
+                'user_id' => $user->_id,
+                'role' => 'manager',
+                'scope' => ['tables_view', 'tables_update', 'users_manage'],
+            ]);
+        $I->seeResponseCodeIs(403);
+        $I->loginUser($user);
+        $I->sendPOST('api/v1/projects/users/admin', ['user_id' => $second_user->_id]);
+        $I->seeResponseCodeIs(200);
+        $I->loginUser($second_user);
+        $I->sendPUT('api/v1/projects/users',
+            [
+                'user_id' => $user->_id,
+                'role' => 'manager',
+                'scope' => ['tables_view', 'tables_update', 'users_manage'],
+            ]);
+        $I->seeResponseCodeIs(200);
+    }
+
+    public function removeTokens(ApiTester $I)
+    {
+        $user = $I->createUser();
+        $I->getMongo();
+        $tokens = [
+            'reset_password' => [
+                "token" => '$2y$10$iiPJClTgDWOgP0SR1ZgwLeMO4qNZkGFXHRjRpkyl.xC2K6OLPxExK',
+                "expired" => time() + 30,
+            ],
+            'verify_email' => [
+                "token" => '$3y$10$iiPJClTgDWOgP0SR1ZgwLeMO4qNZkGFXHRjRpkyl.xC1K6OLPxExK',
+                "expired" => time() - 1,
+            ],
+        ];
+        $filter = ['_id' => new MongoDB\BSON\ObjectID($user->_id)];
+        $bulk = new MongoDB\Driver\BulkWrite;
+        $bulk->update($filter, ['$set' => ['tokens' => $tokens, 'refreshTokens.0.expires' => time() - 1]]);
+        $I->getMongo()->executeBulkWrite('gandalf_test.users', $bulk);
+
+        exec('php artisan tokens:delete');
+
+        $query = new MongoDB\Driver\Query($filter);
+        $rows = $I->getMongo()->executeQuery('gandalf_test.users', $query);
+        $user = $rows->toArray()[0];
+
+        $I->assertFalse(property_exists($user->tokens, 'verify_email'), 'Expired verify_email token don\'t deleted');
+        $I->assertEquals(0, count($user->refreshTokens), 'Expired refresh token do not deleted');
+    }
 }
