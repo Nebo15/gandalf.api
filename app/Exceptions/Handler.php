@@ -91,9 +91,8 @@ class Handler extends ExceptionHandler
         } elseif ($e instanceof AccessDeniedException) {
             $http_code = 403;
             $error_code = 'access_denied';
-            $data = json_decode($e->getMessage());
-            $meta['error_message'] = $data->message;
-            $meta['scopes'] = $data->scopes;
+            $meta['error_message'] = $e->scopes ? 'Bad Scopes' : $e->getMessage();
+            $meta['scopes'] = $e->scopes;
         } elseif ($e instanceof XApplicationException) {
             $http_code = 400;
             $error_code = 'invalid_app_header';

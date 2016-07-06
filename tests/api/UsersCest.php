@@ -45,7 +45,27 @@ class UsersCest
         }
     }
 
-    public function createInvalid(ApiTester $I)
+    public function update(ApiTester $I)
+    {
+        $I->createAndLoginClient();
+        $user = $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
+        $user_edited_data = [
+            'last_name' => 'LastName',
+            'first_name' => $user->first_name . 'edited',
+            'username' => $user->username . 'edited',
+        ];
+        $I->sendPUT('api/v1/users/current', $user_edited_data);
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseContains($user_edited_data['last_name']);
+        $I->seeResponseContains($user_edited_data['first_name']);
+        $I->seeResponseContains($user_edited_data['username']);
+
+        $I->sendGET('api/v1/users/current');
+        $I->assertCurrentUser();
+    }
+
+    public function createUpdateInvalid(ApiTester $I)
     {
         $I->createAndLoginClient();
         $faker = $I->getFaker();
@@ -92,26 +112,21 @@ class UsersCest
                 $I->seeResponseContains($key);
             }
         }
-    }
-
-    public function edit(ApiTester $I)
-    {
-        $I->createAndLoginClient();
-        $user = $I->createAndLoginUser();
-        $I->createProjectAndSetHeader();
-        $user_edited_data = [
-            'last_name' => 'LastName',
-            'first_name' => $user->first_name . 'edited',
-            'username' => $user->username . 'edited',
-        ];
-        $I->sendPUT('api/v1/users/current', $user_edited_data);
-        $I->seeResponseCodeIs(200);
-        $I->seeResponseContains($user_edited_data['last_name']);
-        $I->seeResponseContains($user_edited_data['first_name']);
-        $I->seeResponseContains($user_edited_data['username']);
-
-        $I->sendGET('api/v1/users/current');
-        $I->assertCurrentUser();
+        $I->createAndLoginUser(true);
+        foreach ($badData as $key => $data) {
+            $normalUserData = [
+                'email' => $faker->email,
+                'password' => $I->getPassword(),
+                'username' => $faker->firstName,
+            ];
+            foreach ($data as $item) {
+                $normalUserData[$key] = $item;
+                $I->sendPUT('api/v1/users/current', $normalUserData);
+                $I->seeResponseCodeIs(422);
+                $I->seeResponseContains('"error":"validation"');
+                $I->seeResponseContains($key);
+            }
+        }
     }
 
     public function find(ApiTester $I, $scenario)
@@ -374,6 +389,48 @@ class UsersCest
         $I->seeResponseCodeIs(200);
     }
 
+    public function canNotEditItself(ApiTester $I)
+    {
+        $user = $I->createAndLoginUser();
+        $I->createProjectAndSetHeader();
+        $I->sendPUT('api/v1/projects/users',
+            [
+                'user_id' => $user->_id,
+                'role' => 'manager',
+                'scope' => ['tables_view', 'tables_update', 'users_manage'],
+            ]);
+        $I->seeResponseCodeIs(403);
+        $I->loginClient($I->getCurrentClient());
+        $second_user = $I->createUser(true);
+        $I->loginUser($user);
+        $I->sendPOST('api/v1/projects/users',
+            [
+                'user_id' => $second_user->_id,
+                'role' => 'manager',
+                'scope' => ['tables_view', 'tables_update', 'users_manage'],
+            ]);
+        $I->seeResponseCodeIs(201);
+        $I->loginUser($second_user);
+        $I->sendPUT('api/v1/projects/users',
+            [
+                'user_id' => $user->_id,
+                'role' => 'manager',
+                'scope' => ['tables_view', 'tables_update', 'users_manage'],
+            ]);
+        $I->seeResponseCodeIs(403);
+        $I->loginUser($user);
+        $I->sendPOST('api/v1/projects/users/admin', ['user_id' => $second_user->_id]);
+        $I->seeResponseCodeIs(200);
+        $I->loginUser($second_user);
+        $I->sendPUT('api/v1/projects/users',
+            [
+                'user_id' => $user->_id,
+                'role' => 'manager',
+                'scope' => ['tables_view', 'tables_update', 'users_manage'],
+            ]);
+        $I->seeResponseCodeIs(200);
+    }
+
     public function removeTokens(ApiTester $I)
     {
         $user = $I->createUser();
@@ -385,7 +442,7 @@ class UsersCest
             ],
             'verify_email' => [
                 "token" => '$3y$10$iiPJClTgDWOgP0SR1ZgwLeMO4qNZkGFXHRjRpkyl.xC1K6OLPxExK',
-                "expired" => time() - 1
+                "expired" => time() - 1,
             ],
         ];
         $filter = ['_id' => new MongoDB\BSON\ObjectID($user->_id)];

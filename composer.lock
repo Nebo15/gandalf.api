@@ -2011,16 +2011,16 @@
         },
         {
             "name": "nebo15/lumen.applicationable",
-            "version": "0.1.5",
+            "version": "0.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nebo15/lumen-applicationable.git",
-                "reference": "73398cf0ccc06a9006406c9fc7649b73c8ae7fb7"
+                "reference": "6ad47cda25b6da071fb9637d9b6beb481d0f0e26"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/73398cf0ccc06a9006406c9fc7649b73c8ae7fb7",
-                "reference": "73398cf0ccc06a9006406c9fc7649b73c8ae7fb7",
+                "url": "https://api.github.com/repos/Nebo15/lumen-applicationable/zipball/6ad47cda25b6da071fb9637d9b6beb481d0f0e26",
+                "reference": "6ad47cda25b6da071fb9637d9b6beb481d0f0e26",
                 "shasum": ""
             },
             "require-dev": {
@@ -2049,7 +2049,7 @@
                 "lumen",
                 "mongodb"
             ],
-            "time": "2016-07-01 14:32:09"
+            "time": "2016-07-05 14:53:43"
         },
         {
             "name": "nebo15/lumen.intercom",
