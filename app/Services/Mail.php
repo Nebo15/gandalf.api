@@ -66,8 +66,8 @@ class Mail
                 $invitation->email,
                 config('services.postmark.templates.invite'),
                 [
-                    'product_name' => 'Gandalf',
-                    'name' => $invitation->email,
+                    'email' => $invitation->email,
+                    'project_name' => $invitation->project->title,
                     'action_url' => config('services.link.invite'),
                 ]
             );
