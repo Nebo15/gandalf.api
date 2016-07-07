@@ -9,11 +9,14 @@
         "laravel/lumen-framework": "5.2.*",
         "vlucas/phpdotenv": "~2.2",
         "jenssegers/mongodb": "3.*",
+        "bugsnag/bugsnag-laravel": "1.*",
+        "mixpanel/mixpanel-php" : "2.*",
         "nebo15/lumen.rest": "*",
         "nebo15/eloquent.changelog": "*",
-        "bugsnag/bugsnag-laravel": "1.*",
         "nebo15/lumen.applicationable": "*",
         "nebo15/lumen.oauth2-mongodb": "*",
+        "nebo15/lumen.intercom": "*",
+        "nebo15/lumen.mixpanel": "*",
         "wildbit/postmark-php": "^2.2"
     },
     "require-dev": {

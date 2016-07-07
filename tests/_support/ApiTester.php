@@ -585,6 +585,7 @@ class ApiTester extends \Codeception\Actor
             '_id' => 'string',
             'active' => 'boolean',
             'email' => 'string',
+            'secure_code' => 'string',
             'temporary_email' => 'string|null',
             'first_name' => 'string',
             'last_name' => 'string',
