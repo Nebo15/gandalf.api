@@ -145,6 +145,7 @@ class ApiTester extends \Codeception\Actor
             'meta' => 'array',
             'default_decision' => $type,
             'final_decision' => $type,
+            'application' => 'string',
             'updated_at' => 'string',
             'created_at' => 'string',
             'rules' => 'array',
@@ -192,6 +193,8 @@ class ApiTester extends \Codeception\Actor
             'title' => 'string',
             'description' => 'string',
         ], "$jsonPath.table.variant");
+
+        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.applications");
     }
 
     public function assertTableDecisionsForConsumer(
@@ -203,6 +206,7 @@ class ApiTester extends \Codeception\Actor
         $this->seeResponseCodeIs(200);
         $rules = [
             '_id' => 'string',
+            'application' => 'string',
             'table' => 'array',
             'final_decision' => $type,
             'request' => 'array',
@@ -248,6 +252,7 @@ class ApiTester extends \Codeception\Actor
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.group");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.meta");
         $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.default_decision");
+        $this->dontSeeResponseJsonMatchesJsonPath("$jsonPath.applications");
     }
 
     public function makeDecision($table_id, array $data = [], $matching_rules_type = 'decision', $showMeta = true)
