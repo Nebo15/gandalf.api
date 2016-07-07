@@ -70,7 +70,9 @@ $app->singleton(
 $app->middleware([
     App\Http\Middleware\JsonMiddleware::class
 ]);
-
+$app->routeMiddleware([
+    'basic' => App\Http\Middleware\BasicMiddleware::class
+]);
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers
