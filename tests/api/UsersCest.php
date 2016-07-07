@@ -206,8 +206,24 @@ class UsersCest
         $resp = json_decode($I->grabResponse());
 
         $new_password = $I->getPassword();
-        $I->sendPUT('api/v1/users/password/reset',
-            ['token' => $resp->sandbox->reset_password_token->token, 'password' => $new_password]);
+        $I->sendPUT('api/v1/users/password/reset', [
+            'token' => $resp->sandbox->reset_password_token->token,
+            'password' => $new_password,
+        ]);
+        $I->seeResponseCodeIs(422);
+
+        $I->sendPUT('api/v1/users/password/reset', [
+            'token' => $resp->sandbox->reset_password_token->token,
+            'password' => $new_password,
+            'current_password' => $new_password,
+        ]);
+        $I->seeResponseCodeIs(401);
+
+        $I->sendPUT('api/v1/users/password/reset', [
+            'token' => $resp->sandbox->reset_password_token->token,
+            'password' => $new_password,
+            'current_password' => $old_password,
+        ]);
         $I->seeResponseCodeIs(200);
 
         $I->sendPOST('api/v1/oauth/', [
