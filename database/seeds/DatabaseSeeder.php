@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder
 
     private function seedApplication()
     {
-        $appId = new ObjectID('5745cc5af70466a1098b456e');
         $userId = new ObjectID('5774f3b7ce3c0c02ed0e63a0');
         $adminId = new ObjectID('576bf5f9ce3c0c02ee2d314e');
 
@@ -85,6 +84,7 @@ class DatabaseSeeder extends Seeder
             "description" => "Sample application.",
             "users" => [
                 [
+                    "_id" => new ObjectID,
                     "user_id" => $adminId,
                     "role" => "admin",
                     "scope" => [
@@ -105,6 +105,7 @@ class DatabaseSeeder extends Seeder
                     ],
                 ],
                 [
+                    "_id" => new ObjectID,
                     "user_id" => $userId,
                     "role" => "user",
                     "scope" => [
@@ -116,6 +117,7 @@ class DatabaseSeeder extends Seeder
             ],
             "consumers" => [
                 [
+                    "_id" => new ObjectID,
                     "client_id" => "demo",
                     "client_secret" => "demo",
                     "description" => "Demo consumer",
@@ -128,7 +130,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         \DB::collection('oauth_clients')->insert([
-            "_id" => $appId,
+            "_id" => new ObjectID('5745cc5af70466a1098b456e'),
             "client_id" => "d82f82004384c8835454603277bed410",
             "client_secret" => "+0+~^db49+R9WX%sdS~-EsZrK!'uVe;H"
         ]);
