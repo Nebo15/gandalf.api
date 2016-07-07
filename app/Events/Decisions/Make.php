@@ -11,12 +11,10 @@ use App\Models\Decision;
 
 class Make
 {
-    public $appId;
     public $decision;
 
-    public function __construct(Decision $decision, $app_id)
+    public function __construct(Decision $decision)
     {
         $this->decision = $decision;
-        $this->appId = $app_id;
     }
 }

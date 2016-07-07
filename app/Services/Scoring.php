@@ -52,6 +52,7 @@ class Scoring
                     'description' => $variant->description,
                 ]
             ],
+            'application' => $appId,
             'applications' => $table->getApplications(),
             'title' => $variant->default_title,
             'description' => $variant->default_description,
@@ -110,7 +111,7 @@ class Scoring
         $scoring_data['final_decision'] = $final_decision ?: $variant->default_decision;
 
         $decision = (new Decision())->fill($scoring_data)->save();
-        \Event::fire(new Make($decision, $appId));
+        \Event::fire(new Make($decision));
         $response = $decision->toConsumerArray();
         if (!$showMeta) {
             unset($response['rules']);
