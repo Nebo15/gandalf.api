@@ -69,6 +69,7 @@ $app->singleton(
 
 $app->middleware([
     App\Http\Middleware\JsonMiddleware::class,
+    App\Http\Middleware\NewRelicMiddleware::class,
     \Nebo15\LumenIntercom\Middleware\TerminableMiddleware::class,
     \Nebo15\LumenMixpanel\Middleware\TerminableMiddleware::class,
 ]);
