@@ -27,8 +27,8 @@ class EventListener
 
     public function decisionMake(Decisions\Make $event)
     {
-        $apps = Application::where('users.role', 'admin')
-            ->whereIn('_id', $event->applications)
+        $apps = Application::where('_id', $event->appId)
+            ->where('users.role', 'admin')
             ->get(['users.user_id', 'users.role']);
         $userIds = [];
         foreach ($apps as $app) {

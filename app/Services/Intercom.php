@@ -19,16 +19,15 @@ class Intercom extends BaseEvents
         if (false == env('INTERCOM_ENABLED')) {
             return false;
         }
-        $custom_attributes = [];
-        $custom_attributes['username'] = $user->username;
-        $custom_attributes['first_name'] = $user->first_name;
-        $custom_attributes['last_name'] = $user->last_name;
-
         $user_data = [
             'user_id' => $user->getId(),
             'email' => $user->email,
             'last_request_at' => time(),
-            'custom_attributes' => $custom_attributes,
+            'custom_attributes' => [
+                'username' => $user->username,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+            ],
         ];
         $this->intercom->updateUser($user_data, true);
     }
