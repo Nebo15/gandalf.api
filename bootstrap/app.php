@@ -72,9 +72,6 @@ $app->middleware([
     \Nebo15\LumenIntercom\Middleware\TerminableMiddleware::class,
     \Nebo15\LumenMixpanel\Middleware\TerminableMiddleware::class,
 ]);
-$app->routeMiddleware([
-    'basic' => App\Http\Middleware\BasicMiddleware::class
-]);
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers
