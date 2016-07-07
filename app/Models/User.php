@@ -29,6 +29,7 @@ use Nebo15\REST\Interfaces\ListableInterface;
  * @property string $temporary_email
  * @property bool $active
  * @property array $tokens
+ * @method static \Illuminate\Database\Eloquent\Builder where($column, $operator = null, $value = null, $boolean = 'and')
  */
 class User extends Base implements
     ListableInterface,
@@ -66,9 +67,13 @@ class User extends Base implements
         'password',
     ];
 
-    public function createVerifyEmailToken()
+    /*
+     * Password token
+     */
+
+    public function createResetPasswordToken()
     {
-        $this->attributes['tokens']['verify_email'] = [
+        $this->attributes['tokens']['reset_password'] = [
             'token' => Hasher::getToken(),
             'expired' => time() + 3600,
         ];
@@ -76,9 +81,41 @@ class User extends Base implements
         return $this;
     }
 
-    public function createResetPasswordToken()
+    public function getResetPasswordToken()
     {
-        $this->attributes['tokens']['reset_password'] = [
+        return $this->getInternalToken('reset_password');
+    }
+
+    /**
+     * @param $token
+     * @return User
+     */
+    public function findByResetPasswordToken($token)
+    {
+        return $this->findByToken($token, 'reset_password');
+    }
+
+    public function removeResetPasswordToken()
+    {
+        unset($this->attributes['tokens']['reset_password']);
+
+        return $this;
+    }
+
+    public function changePassword($new_password)
+    {
+        $this->setAttribute('password', $new_password);
+
+        return $this;
+    }
+
+    /*
+     * Email token
+     */
+
+    public function createVerifyEmailToken()
+    {
+        $this->attributes['tokens']['verify_email'] = [
             'token' => Hasher::getToken(),
             'expired' => time() + 3600,
         ];
@@ -91,31 +128,12 @@ class User extends Base implements
         return $this->getInternalToken('verify_email');
     }
 
-    public function getResetPasswordToken()
-    {
-        return $this->getInternalToken('reset_password');
-    }
-
-    public function removeVerifyEmailToken()
-    {
-        unset($this->attributes['tokens']['verify_email']);
-
-        return $this;
-    }
-
     public function verifyEmail()
     {
         $this->email = $this->temporary_email;
         $this->temporary_email = null;
         $this->active = true;
         $this->removeVerifyEmailToken();
-
-        return $this;
-    }
-
-    public function changePassword($new_password)
-    {
-        $this->setAttribute('password', $new_password);
 
         return $this;
     }
@@ -129,13 +147,11 @@ class User extends Base implements
         return $this->findByToken($token, 'verify_email');
     }
 
-    /**
-     * @param $token
-     * @return User
-     */
-    public function findByResetPasswordToken($token)
+    public function removeVerifyEmailToken()
     {
-        return $this->findByToken($token, 'reset_password');
+        unset($this->attributes['tokens']['verify_email']);
+
+        return $this;
     }
 
     public function findByToken($token, $type, $field = null, $value = null)
@@ -158,6 +174,10 @@ class User extends Base implements
     {
         return $this->active;
     }
+
+    /*
+     * Private functions
+     */
 
     private function getInternalToken($type)
     {

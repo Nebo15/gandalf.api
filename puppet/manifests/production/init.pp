@@ -17,7 +17,7 @@ class sethostname(
 
 node default {
 
-  $host_name = "gndf.io"
+  $host_name = "api.gndf.io"
 
   include stdlib
   include apt

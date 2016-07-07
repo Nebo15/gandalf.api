@@ -113,7 +113,11 @@ class DecisionsCest
 
         $I->loginUser($user);
         $I->sendPOST('api/v1/projects/users',
-            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['create', 'read', 'update']]);
+            [
+                'user_id' => $second_user->_id,
+                'role' => 'manager',
+                'scope' => ['tables_create', 'tables_view', 'tables_update', 'decisions_view'],
+            ]);
 
         $I->loginUser($second_user);
         $I->sendGET('api/v1/admin/decisions');
@@ -140,21 +144,21 @@ class DecisionsCest
                         [
                             'field_key' => 'numeric',
                             'condition' => '$eq',
-                            'value' => true
+                            'value' => true,
                         ],
                         [
                             'field_key' => 'string',
                             'condition' => '$eq',
-                            'value' => 'Variant'
+                            'value' => 'Variant',
                         ],
                         [
                             'field_key' => 'bool',
                             'condition' => '$eq',
-                            'value' => true
-                        ]
-                    ]
-                ]
-            ]
+                            'value' => true,
+                        ],
+                    ],
+                ],
+            ],
         ];
         $table = $I->createTable($tableData);
 
@@ -183,15 +187,15 @@ class DecisionsCest
                 'table' => [
                     '_id' => $table->_id,
                     'variant' => [
-                        '_id' => $item['variant_id']
-                    ]
-                ]
+                        '_id' => $item['variant_id'],
+                    ],
+                ],
             ]);
         }
         $decision = $I->makeDecision($table->_id, [
             'numeric' => 500,
             'string' => 'Yes',
-            'bool' => false
+            'bool' => false,
         ]);
         $I->assertTableDecisionsForConsumer();
         $I->sendGET('api/v1/admin/decisions/' . $decision->_id);

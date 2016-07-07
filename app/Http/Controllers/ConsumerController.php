@@ -33,12 +33,21 @@ class ConsumerController extends Controller
 
     public function tableCheck(Request $request, Scoring $scoring, Application $application, $id)
     {
-        if (!User::findById($application->users()->where('role', 'admin')->first()->user_id)->isActive()) {
+        $users = $application->users()->where('role', 'admin')->all();
+        if (!$users) {
+            throw new AdminIsNotActivatedException;
+        }
+        $userIds = [];
+        foreach ($users as $user) {
+            $userIds[] = strval($user['user_id']);
+        }
+        $users = User::whereIn('_id', $userIds)->where('active', true);
+        if ($users->count() == 0) {
             throw new AdminIsNotActivatedException;
         }
 
         return $this->response->json(
-            $scoring->check($id, $request->all(), $application->getSettingsElem('show_meta', false))
+            $scoring->check($id, $request->all(), $application->_id, $application->getSettingsElem('show_meta', false))
         );
     }
 

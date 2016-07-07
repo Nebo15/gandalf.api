@@ -11,7 +11,7 @@
 |
 */
 
-$app->get('/', function () use ($app) {
+$app->get('/', function () {
     return response('ok');
 });
 
@@ -40,6 +40,7 @@ $app->group(
     ],
     function ($app) {
         /** @var Laravel\Lumen\Application $app */
+        $app->get('/users/username', ['uses' => 'UsersController@validateUsername']);
         $app->post('/users', ['uses' => 'UsersController@create']);
         $app->post('/users/verify/email', ['uses' => 'UsersController@verifyEmail']);
         $app->post('/users/verify/email/resend', ['uses' => 'UsersController@resendVerifyEmailToken']);
@@ -52,23 +53,12 @@ $app->group(
     [
         'prefix' => 'api/v1',
         'namespace' => 'App\Http\Controllers',
-        'middleware' => ['oauth', 'applicationable'],
-    ],
-    function ($app) {
-        /** @var Laravel\Lumen\Application $app */
-        $app->get('/users/current', ['uses' => 'UsersController@getUserInfo']);
-    }
-);
-
-$app->group(
-    [
-        'prefix' => 'api/v1',
-        'namespace' => 'App\Http\Controllers',
         'middleware' => ['oauth'],
     ],
     function ($app) {
         /** @var Laravel\Lumen\Application $app */
-        $app->put('/users/current', ['uses' => 'UsersController@updateUser']);
+        $app->put('/users/current', ['uses' => 'UsersController@createOrUpdate']);
+        $app->get('/users/current', ['uses' => 'UsersController@getUserInfo']);
         #Get list of users
         $app->get('/users', ['uses' => 'UsersController@readListWithFilters']);
 
