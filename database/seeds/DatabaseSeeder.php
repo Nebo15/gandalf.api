@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             'active' => true,
             "accessTokens" => [
                 [
+                    "_id" => new ObjectID,
                     "access_token" => "40509021b25294415df089403a577c2519df5757",
                     "client_id" => "d82f82004384c8835454603277bed410",
                     "expires" => 2566697453,
@@ -40,6 +41,7 @@ class DatabaseSeeder extends Seeder
             ],
             "refreshTokens" => [
                 [
+                    "_id" => new ObjectID,
                     "refresh_token" => "fc02f2234b57f289aa88cff798f2e0459fc23708",
                     "client_id" => "d82f82004384c8835454603277bed410",
                     "expires" => 2567903453,
@@ -58,6 +60,7 @@ class DatabaseSeeder extends Seeder
             'active' => true,
             "accessTokens" => [
                 [
+                    "_id" => new ObjectID,
                     "access_token" => "30609021b25294415df089403a577c2519df1212",
                     "client_id" => "d82f82004384c8835454603277bed410",
                     "expires" => 2566697453,
@@ -66,6 +69,7 @@ class DatabaseSeeder extends Seeder
             ],
             "refreshTokens" => [
                 [
+                    "_id" => new ObjectID,
                     "refresh_token" => "fa01c2234b57f289ee88cff798f2e0459fc16799",
                     "client_id" => "d82f82004384c8835454603277bed410",
                     "expires" => 2567903453,
