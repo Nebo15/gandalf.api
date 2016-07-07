@@ -68,9 +68,11 @@ $app->singleton(
 */
 
 $app->middleware([
-    App\Http\Middleware\JsonMiddleware::class
+    App\Http\Middleware\JsonMiddleware::class,
+    App\Http\Middleware\NewRelicMiddleware::class,
+    \Nebo15\LumenIntercom\Middleware\TerminableMiddleware::class,
+    \Nebo15\LumenMixpanel\Middleware\TerminableMiddleware::class,
 ]);
-
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers
@@ -88,11 +90,13 @@ $app->register(Nebo15\Changelog\ServiceProvider::class);
 $app->register(App\Providers\ValidationServiceProvider::class);
 $app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 $app->register(App\Providers\BugsnagServiceProvider::class);
+$app->register(\Nebo15\LumenMixpanel\MixpanelServiceProvider::class);
+$app->register(\Nebo15\LumenIntercom\IntercomServiceProvider::class);
 
 $app->register(Nebo15\LumenOauth2\Providers\ServiceProvider::class);
 $app->register(Nebo15\LumenApplicationable\ServiceProvider::class);
 $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
+$app->register(App\Providers\EventServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

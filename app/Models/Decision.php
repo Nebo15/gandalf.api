@@ -17,6 +17,7 @@ use Nebo15\LumenApplicationable\Traits\ApplicationableTrait;
  * @property string $description
  * @property string $default_decision
  * @property string $final_decision
+ * @property string $application
  * @property array $request
  * @property array $table
  * @property array $meta
@@ -37,6 +38,7 @@ class Decision extends Base implements Applicationable
         'description',
         'meta',
         'table',
+        'application',
         'fields',
         'request',
         'rules',
@@ -51,6 +53,7 @@ class Decision extends Base implements Applicationable
         'description',
         'meta',
         'table',
+        'application',
         'fields',
         'request',
         'rules',
@@ -70,6 +73,14 @@ class Decision extends Base implements Applicationable
         'default_decision' => '',
         'final_decision' => '',
     ];
+
+    public function __construct(array $attributes = [])
+    {
+        $this->attributes = array_merge($this->attributes, ['applications' => []]);
+        parent::__construct($attributes);
+    }
+
+    protected $hidden = ['applications'];
 
     protected $dateFormat = \DateTime::ISO8601;
 
@@ -92,7 +103,7 @@ class Decision extends Base implements Applicationable
         return [
             '_id' => $this->getId(),
             'table' => $this->getTableArray(),
-            'applications' => $this->getApplications(),
+            'application' => $this->application,
             'title' => $this->title,
             'description' => $this->description,
             'final_decision' => $this->final_decision,

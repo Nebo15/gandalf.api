@@ -22,7 +22,7 @@ node default {
   class { 'newrelic::agent::php':
     newrelic_license_key  => $newrelic_key,
     newrelic_ini_appname  => $newrelic_app_name,
-    newrelic_php_conf_dir => ['/etc/php5/mods-available'],
+    newrelic_php_conf_dir => ['/etc/php/7.0/mods-available'],
   }
 
   class { 'nginx':
@@ -54,6 +54,7 @@ ssl_dhparam /etc/ssl/dhparam.pem;
     group   => root,
   }
 
+
   cron { "/usr/bin/php /www/gandalf.api/current/artisan schedule:run >> /dev/null 2>&1":
     command => "/usr/bin/php /www/gandalf.api/current/artisan schedule:run >> /dev/null 2>&1",
     user    => deploybot,
@@ -71,7 +72,8 @@ ssl_dhparam /etc/ssl/dhparam.pem;
     server_name api.gndf.io;
     rewrite ^/(.*)$ https://api.gndf.io/\$1 permanent;
 }
-    server {
+
+server {
     listen 443 ssl;
     error_log /var/log/nginx.log;
     server_name api.gndf.io;
@@ -83,7 +85,7 @@ ssl_dhparam /etc/ssl/dhparam.pem;
     add_header 'Access-Control-Allow-Headers' 'Authorization,Content-Type,Accept,Origin,User-Agent,DNT,Cache-Control,Keep-Alive,If-Modified-Since,X-Project-ID,X-Date,X-Accept-Charset,X-Application-ID,X-Device-Information,X-Application-Secret-Hash,X-Device-Push-Token,X-Application';
     add_header 'X-Frame-Options' 'DENY';
     if (\$request_method = OPTIONS ) {
-    return 200;
+      return 200;
     }
     root /www/gandalf.api/current/public;
     include /www/gandalf.api/current/config/nginx/nginx.conf;

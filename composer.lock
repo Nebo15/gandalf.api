@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2cc92bf170acbf08701bc9b3c4122d97",
-    "content-hash": "a041831ea53371f92c563e89897f13e8",
+    "hash": "ec6165098a2d6dfeab51da07a25cc750",
+    "content-hash": "23857066582a40ff9a42683a9b121bc6",
     "packages": [
         {
             "name": "bshaffer/oauth2-server-php",
@@ -58,23 +58,23 @@
         },
         {
             "name": "bugsnag/bugsnag",
-            "version": "v2.9.0",
+            "version": "v2.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bugsnag/bugsnag-php.git",
-                "reference": "332b32222ab100ebedfd71c053600708bc30abc1"
+                "reference": "c5b1ccf493a9451bf6e2bde4f1d41346e6d89322"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bugsnag/bugsnag-php/zipball/332b32222ab100ebedfd71c053600708bc30abc1",
-                "reference": "332b32222ab100ebedfd71c053600708bc30abc1",
+                "url": "https://api.github.com/repos/bugsnag/bugsnag-php/zipball/c5b1ccf493a9451bf6e2bde4f1d41346e6d89322",
+                "reference": "c5b1ccf493a9451bf6e2bde4f1d41346e6d89322",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.8|~5.0"
+                "phpunit/phpunit": "^4.8|^5.0"
             },
             "type": "library",
             "extra": {
@@ -107,26 +107,29 @@
                 "logging",
                 "tracking"
             ],
-            "time": "2016-06-24 14:47:31"
+            "time": "2016-07-07 01:17:22"
         },
         {
             "name": "bugsnag/bugsnag-laravel",
-            "version": "v1.6.4",
+            "version": "v1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bugsnag/bugsnag-laravel.git",
-                "reference": "a354622693b2f9d2907bf28405e4f47715f995b4"
+                "reference": "54758847fd546355fdec9f87555a0b6dc76da9ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bugsnag/bugsnag-laravel/zipball/a354622693b2f9d2907bf28405e4f47715f995b4",
-                "reference": "a354622693b2f9d2907bf28405e4f47715f995b4",
+                "url": "https://api.github.com/repos/bugsnag/bugsnag-laravel/zipball/54758847fd546355fdec9f87555a0b6dc76da9ea",
+                "reference": "54758847fd546355fdec9f87555a0b6dc76da9ea",
                 "shasum": ""
             },
             "require": {
-                "bugsnag/bugsnag": ">=2.5.0",
-                "illuminate/support": "4.*|5.*",
+                "bugsnag/bugsnag": "^2.5",
+                "illuminate/support": "^4.0|^5.0",
                 "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8|^5.0"
             },
             "type": "library",
             "autoload": {
@@ -154,7 +157,7 @@
                 "logging",
                 "tracking"
             ],
-            "time": "2016-03-09 19:00:14"
+            "time": "2016-07-07 01:35:07"
         },
         {
             "name": "doctrine/inflector",
@@ -222,6 +225,102 @@
                 "string"
             ],
             "time": "2015-11-06 14:35:42"
+        },
+        {
+            "name": "guzzle/guzzle",
+            "version": "v3.9.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/guzzle3.git",
+                "reference": "0645b70d953bc1c067bbc8d5bc53194706b628d9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/guzzle3/zipball/0645b70d953bc1c067bbc8d5bc53194706b628d9",
+                "reference": "0645b70d953bc1c067bbc8d5bc53194706b628d9",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.3.3",
+                "symfony/event-dispatcher": "~2.1"
+            },
+            "replace": {
+                "guzzle/batch": "self.version",
+                "guzzle/cache": "self.version",
+                "guzzle/common": "self.version",
+                "guzzle/http": "self.version",
+                "guzzle/inflection": "self.version",
+                "guzzle/iterator": "self.version",
+                "guzzle/log": "self.version",
+                "guzzle/parser": "self.version",
+                "guzzle/plugin": "self.version",
+                "guzzle/plugin-async": "self.version",
+                "guzzle/plugin-backoff": "self.version",
+                "guzzle/plugin-cache": "self.version",
+                "guzzle/plugin-cookie": "self.version",
+                "guzzle/plugin-curlauth": "self.version",
+                "guzzle/plugin-error-response": "self.version",
+                "guzzle/plugin-history": "self.version",
+                "guzzle/plugin-log": "self.version",
+                "guzzle/plugin-md5": "self.version",
+                "guzzle/plugin-mock": "self.version",
+                "guzzle/plugin-oauth": "self.version",
+                "guzzle/service": "self.version",
+                "guzzle/stream": "self.version"
+            },
+            "require-dev": {
+                "doctrine/cache": "~1.3",
+                "monolog/monolog": "~1.0",
+                "phpunit/phpunit": "3.7.*",
+                "psr/log": "~1.0",
+                "symfony/class-loader": "~2.1",
+                "zendframework/zend-cache": "2.*,<2.3",
+                "zendframework/zend-log": "2.*,<2.3"
+            },
+            "suggest": {
+                "guzzlehttp/guzzle": "Guzzle 5 has moved to a new package name. The package you have installed, Guzzle 3, is deprecated."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.9-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Guzzle": "src/",
+                    "Guzzle\\Tests": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                },
+                {
+                    "name": "Guzzle Community",
+                    "homepage": "https://github.com/guzzle/guzzle/contributors"
+                }
+            ],
+            "description": "PHP HTTP client. This library is deprecated in favor of https://packagist.org/packages/guzzlehttp/guzzle",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "client",
+                "curl",
+                "framework",
+                "http",
+                "http client",
+                "rest",
+                "web service"
+            ],
+            "abandoned": "guzzlehttp/guzzle",
+            "time": "2015-03-18 18:23:50"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1455,6 +1554,52 @@
             "time": "2016-05-28 21:20:12"
         },
         {
+            "name": "intercom/intercom-php",
+            "version": "v1.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/intercom/intercom-php.git",
+                "reference": "c7ef82f005d23590137a19df7ab6c36d69083510"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/intercom/intercom-php/zipball/c7ef82f005d23590137a19df7ab6c36d69083510",
+                "reference": "c7ef82f005d23590137a19df7ab6c36d69083510",
+                "shasum": ""
+            },
+            "require": {
+                "guzzle/guzzle": "~3.9",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~3.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Intercom": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache Version 2"
+            ],
+            "authors": [
+                {
+                    "name": "Intercom Platform Team",
+                    "homepage": "http://intercom.io"
+                }
+            ],
+            "description": "Intercom API client built on top of Guzzle 3",
+            "keywords": [
+                "Guzzle",
+                "api",
+                "intercom",
+                "intercom.io"
+            ],
+            "time": "2015-10-15 10:47:13"
+        },
+        {
             "name": "jenssegers/mongodb",
             "version": "v3.0.2",
             "source": {
@@ -1598,6 +1743,51 @@
                 "lumen"
             ],
             "time": "2016-06-06 16:13:21"
+        },
+        {
+            "name": "mixpanel/mixpanel-php",
+            "version": "2.6.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mixpanel/mixpanel-php.git",
+                "reference": "7031e213554436793e0927184f41be72dcd63eb6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mixpanel/mixpanel-php/zipball/7031e213554436793e0927184f41be72dcd63eb6",
+                "reference": "7031e213554436793e0927184f41be72dcd63eb6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0"
+            },
+            "require-dev": {
+                "phpdocumentor/phpdocumentor": "2.*",
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "lib/Mixpanel.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mixpanel <dev@mixpanel.com>",
+                    "homepage": "https://mixpanel.com/"
+                }
+            ],
+            "description": "The Official PHP library for Mixpanel",
+            "homepage": "https://mixpanel.com/help/reference/php",
+            "keywords": [
+                "mixpanel",
+                "mixpanel php"
+            ],
+            "time": "2014-06-11 19:10:51"
         },
         {
             "name": "mongodb/mongodb",
@@ -1863,6 +2053,84 @@
                 "mongodb"
             ],
             "time": "2016-07-05 14:53:43"
+        },
+        {
+            "name": "nebo15/lumen.intercom",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Nebo15/lumen-intercom.git",
+                "reference": "aecceebcf1d4a49af96624228b6043f5e1a86677"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Nebo15/lumen-intercom/zipball/aecceebcf1d4a49af96624228b6043f5e1a86677",
+                "reference": "aecceebcf1d4a49af96624228b6043f5e1a86677",
+                "shasum": ""
+            },
+            "require": {
+                "intercom/intercom-php": "1.3.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Nebo15\\LumenIntercom\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oleh Samorai"
+                }
+            ],
+            "description": "Intercom service for lumen",
+            "keywords": [
+                "intercom",
+                "lumen"
+            ],
+            "time": "2015-11-16 09:56:51"
+        },
+        {
+            "name": "nebo15/lumen.mixpanel",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Nebo15/lumen-mixpanel.git",
+                "reference": "434d1f55ce6ea5cc92e883f7549b68b015fe05c5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Nebo15/lumen-mixpanel/zipball/434d1f55ce6ea5cc92e883f7549b68b015fe05c5",
+                "reference": "434d1f55ce6ea5cc92e883f7549b68b015fe05c5",
+                "shasum": ""
+            },
+            "require": {
+                "mixpanel/mixpanel-php": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Nebo15\\LumenMixpanel\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oleh Samorai"
+                }
+            ],
+            "description": "Mixpanel Service Provider for lumen",
+            "keywords": [
+                "lumen",
+                "mixpanel"
+            ],
+            "time": "2015-11-06 17:59:54"
         },
         {
             "name": "nebo15/lumen.oauth2-mongodb",
@@ -2295,27 +2563,27 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v3.1.2",
+            "version": "v2.8.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "7f9839ede2070f53e7e2f0849b9bd14748c434c5"
+                "reference": "b180b70439dca70049b6b9b7e21d75e6e5d7aca9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/7f9839ede2070f53e7e2f0849b9bd14748c434c5",
-                "reference": "7f9839ede2070f53e7e2f0849b9bd14748c434c5",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/b180b70439dca70049b6b9b7e21d75e6e5d7aca9",
+                "reference": "b180b70439dca70049b6b9b7e21d75e6e5d7aca9",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9"
+                "php": ">=5.3.9"
             },
             "require-dev": {
                 "psr/log": "~1.0",
-                "symfony/config": "~2.8|~3.0",
-                "symfony/dependency-injection": "~2.8|~3.0",
-                "symfony/expression-language": "~2.8|~3.0",
-                "symfony/stopwatch": "~2.8|~3.0"
+                "symfony/config": "~2.0,>=2.0.5|~3.0.0",
+                "symfony/dependency-injection": "~2.6|~3.0.0",
+                "symfony/expression-language": "~2.6|~3.0.0",
+                "symfony/stopwatch": "~2.3|~3.0.0"
             },
             "suggest": {
                 "symfony/dependency-injection": "",
@@ -2324,7 +2592,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.1-dev"
+                    "dev-master": "2.8-dev"
                 }
             },
             "autoload": {
@@ -2351,7 +2619,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2016-06-29 05:41:56"
+            "time": "2016-06-29 05:29:29"
         },
         {
             "name": "symfony/finder",

@@ -315,6 +315,16 @@ You can see in response properties digits `variants.0.rules`, this is an array i
             + code: 200 (number) - HTTP response code
         + data (User)
 
+## Validate Username [/api/v1/admin/users/username]
+### Validate Username [GET]
+
++ Parameters
+    + username: John (string) - Username for validation
++ Response 200 (application/json)
+    + Attributes (object)
+        + meta
+            + code: 200 (number) - HTTP response code
+
 ## Current User [/api/v1/users/current]
 
 ### Info about current user [GET]
@@ -382,6 +392,7 @@ Send reset password url with token to User.email
     + Attributes
         + token: $2y$10$.lp0OGb.nJSt... (string, required) - Token for password reset
         + password: newP@s$w0rd (string, required) - New user password
+        + current_password: 0ldP@s$w0rd (string, required) - Current user password
 
 + Response 200 (application/json)
     + Attributes (object)
@@ -877,7 +888,7 @@ Rollback Table to some state that described in passed Changelog
 + title: Decision title (string) - Decision title
 + description: Decision description (string) - Decision description
 + final_decision: Approve (string) - Depends of the Table.matching_type could be as highest row in a table with all validations passed or sum of scoring points",
-+ applications: gandalf, nebo (array) - Array of defined by user applications ids
++ application: gandalf (string) - Application id
 + request
     + salary: 1000 (string) - All passed parameters from request
 + table

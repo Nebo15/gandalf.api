@@ -6,6 +6,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\Intercom;
 use MongoDB\BSON\Regex;
 use App\Models\Invitation;
 use Nebo15\REST\Response;
@@ -23,6 +24,9 @@ class UsersController extends AbstractController
     protected $repositoryClassName = 'App\Repositories\UsersRepository';
 
     protected $validationRules = [
+        'validateUsername' => [
+            'username' => 'required|unique:users,username|between:2,32|username',
+        ],
         'create' => [
             'username' => 'required|unique:users,username|between:2,32|username',
             'first_name' => 'sometimes|required|string|between:2,32|alpha',
@@ -43,6 +47,7 @@ class UsersController extends AbstractController
         'changePassword' => [
             'token' => 'required',
             'password' => 'required|between:6,32|password',
+            'current_password' => 'required',
         ],
         'invite' => [
             'email' => 'required|email',
@@ -50,6 +55,13 @@ class UsersController extends AbstractController
             'scope' => 'required|array',
         ],
     ];
+
+    public function validateUsername()
+    {
+        $this->validateRoute();
+
+        return $this->response->json();
+    }
 
     public function readListWithFilters()
     {
@@ -166,11 +178,12 @@ class UsersController extends AbstractController
         $this->validateRoute();
 
         return $this->response->json(
-            $this->getRepository()->getModel()->findByResetPasswordToken(
-                $this->request->input('token')
-            )->changePassword(
-                $this->request->input('password')
-            )->save()->toArray()
+            $this->getRepository()
+                ->changePassword(
+                    $this->request->input('token'),
+                    $this->request->input('password'),
+                    $this->request->input('current_password')
+                )->toArray()
         );
     }
 
@@ -201,9 +214,12 @@ class UsersController extends AbstractController
         );
     }
 
-    public function getUserInfo()
+    public function getUserInfo(Intercom $intercom)
     {
-        return $this->response->json($this->request->user()->toArray());
+        $user = $this->request->user()->toArray();
+        $user['secure_code'] = $intercom->generateSecureCode($user['_id']);
+
+        return $this->response->json($user);
     }
 
     public function invite(Application $application)
@@ -217,8 +233,10 @@ class UsersController extends AbstractController
             '_id' => $project['_id'],
             'title' => $project['title'],
         ];
+        $invitation = (new Invitation())->fill($fill)->save();
+        $this->getMailService()->sendEmailInvitation($invitation);
 
-        return $this->response->json((new Invitation())->fill($fill)->save()->toArray());
+        return $this->response->json($invitation->toArray());
     }
 
     /**

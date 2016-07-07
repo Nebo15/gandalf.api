@@ -12,6 +12,7 @@ use App\Models\Field;
 use App\Models\Decision;
 use App\Models\Condition;
 use \MongoDB\BSON\ObjectID;
+use App\Events\Decisions\Make;
 use App\Repositories\TablesRepository;
 use Illuminate\Contracts\Validation\ValidationException;
 
@@ -29,7 +30,7 @@ class Scoring
         $this->conditionsTypes = new ConditionsTypes;
     }
 
-    public function check($id, $values, $showMeta = false)
+    public function check($id, $values, $appId, $showMeta = false)
     {
         $table = $this->tablesRepository->read($id);
         $validator = \Validator::make($values, $this->createValidationRules($table));
@@ -51,6 +52,7 @@ class Scoring
                     'description' => $variant->description,
                 ]
             ],
+            'application' => $appId,
             'applications' => $table->getApplications(),
             'title' => $variant->default_title,
             'description' => $variant->default_description,
@@ -108,7 +110,9 @@ class Scoring
         }
         $scoring_data['final_decision'] = $final_decision ?: $variant->default_decision;
 
-        $response = (new Decision())->fill($scoring_data)->save()->toConsumerArray();
+        $decision = (new Decision())->fill($scoring_data)->save();
+        \Event::fire(new Make($decision));
+        $response = $decision->toConsumerArray();
         if (!$showMeta) {
             unset($response['rules']);
         }
