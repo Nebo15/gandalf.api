@@ -16,11 +16,16 @@ class UsersCest
             'api/v1/users/', [
                 'email' => $faker->email,
                 'password' => $I->getPassword(),
-                'username' => $faker->firstName,
+                'username' => $username = $faker->firstName,
                 'last_name' => "O'Really",
             ]
         );
         $I->seeResponseCodeIs(201);
+
+        $I->sendGET('api/v1/users/username?username=' . $username);
+        $I->seeResponseCodeIs(422);
+        $I->sendGET('api/v1/users/username?username=' . $username . '-unique');
+        $I->seeResponseCodeIs(200);
 
         $names = [
             'username' => [

@@ -24,6 +24,9 @@ class UsersController extends AbstractController
     protected $repositoryClassName = 'App\Repositories\UsersRepository';
 
     protected $validationRules = [
+        'validateUsername' => [
+            'username' => 'required|unique:users,username|between:2,32|username',
+        ],
         'create' => [
             'username' => 'required|unique:users,username|between:2,32|username',
             'first_name' => 'sometimes|required|string|between:2,32|alpha',
@@ -51,6 +54,13 @@ class UsersController extends AbstractController
             'scope' => 'required|array',
         ],
     ];
+
+    public function validateUsername()
+    {
+        $this->validateRoute();
+
+        return $this->response->json();
+    }
 
     public function readListWithFilters()
     {
@@ -206,7 +216,7 @@ class UsersController extends AbstractController
     {
         $user = $this->request->user()->toArray();
         $user['secure_code'] = $intercom->generateSecureCode($user['_id']);
-        
+
         return $this->response->json($user);
     }
 

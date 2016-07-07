@@ -40,6 +40,7 @@ $app->group(
     ],
     function ($app) {
         /** @var Laravel\Lumen\Application $app */
+        $app->get('/users/username', ['uses' => 'UsersController@validateUsername']);
         $app->post('/users', ['uses' => 'UsersController@create']);
         $app->post('/users/verify/email', ['uses' => 'UsersController@verifyEmail']);
         $app->post('/users/verify/email/resend', ['uses' => 'UsersController@resendVerifyEmailToken']);
