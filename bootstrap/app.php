@@ -96,7 +96,7 @@ $app->register(\Nebo15\LumenIntercom\IntercomServiceProvider::class);
 $app->register(Nebo15\LumenOauth2\Providers\ServiceProvider::class);
 $app->register(Nebo15\LumenApplicationable\ServiceProvider::class);
 $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
+$app->register(App\Providers\EventServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

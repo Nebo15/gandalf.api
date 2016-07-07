@@ -205,7 +205,7 @@ class UsersController extends AbstractController
     public function getUserInfo(Intercom $intercom)
     {
         $user = $this->request->user()->toArray();
-        $user['secure_code'] = $intercom->generateSecureCode($user['_id']); 
+        $user['secure_code'] = $intercom->generateSecureCode($user['_id']);
         
         return $this->response->json($user);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\User;
 use App\Models\Decision;
 
 /**
@@ -25,10 +26,49 @@ class Mixpanel extends BaseEvents
         $this->mixpanel = $mixpanel;
     }
 
-    public function decisionMake(Decision $decision, $userId)
+    public function userCreate(User $user)
     {
-        $this->mixpanel->setIdentity($userId);
-        $this->mixpanel->addUserEvent('increment', 'decisions_count', 1);
-        $this->mixpanel->addTrackEvent('last_decision_created_at', ['created_at' => time()]);
+        $this->userCreateOrUpdate($user, 'user-create');
+    }
+
+    public function userUpdate(User $user)
+    {
+        $this->userCreateOrUpdate($user, 'user-update');
+    }
+
+    public function decisionMake(Decision $decision, array $user_ids)
+    {
+        if (false == env('MIXPANEL_ENABLED')) {
+            return false;
+        }
+        foreach ($user_ids as $id) {
+            $this->mixpanel->setIdentity($id);
+            $this->mixpanel->addUserEvent('set', '', ['Last Decision created_at' => time()]);
+            $this->mixpanel->addUserEvent('increment', 'Decisions count', 1);
+        }
+    }
+
+    protected function userCreateOrUpdate(User $user, $type)
+    {
+        if (false == env('MIXPANEL_ENABLED')) {
+            return false;
+        }
+        $this->mixpanel->setIdentity($user->getId());
+        $this->mixpanel->addTrackEvent(
+            $type,
+            [
+                'created_at' => time(),
+                'username' => $user->username,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'email' => $user->email,
+            ]
+        );
+        $this->mixpanel->addUserEvent('set', $type, [
+            '$email' => $user->email,
+            '$username' => $user->username,
+            '$first_name' => $user->first_name,
+            '$last_name' => $user->last_name,
+        ]);
     }
 }

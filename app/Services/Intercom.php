@@ -14,20 +14,60 @@ class Intercom extends BaseEvents
         $this->intercom = $intercom;
     }
 
-    public function decisionMake(Decision $decision, $userIds)
+    public function userCreateOrUpdate(User $user)
     {
-        foreach ($userIds as $userId) {
-            $this->intercom->getUser();
-            $this->intercom->updateUser([
-                'user_id' => $userId,
-                'decisions_count' => 1,
-                'last_decision_created_at' => time(),
+        if (false == env('INTERCOM_ENABLED')) {
+            return false;
+        }
+        $custom_attributes = [];
+        $custom_attributes['username'] = $user->username;
+        $custom_attributes['first_name'] = $user->first_name;
+        $custom_attributes['last_name'] = $user->last_name;
+
+        $user_data = [
+            'user_id' => $user->getId(),
+            'email' => $user->email,
+            'last_request_at' => time(),
+            'custom_attributes' => $custom_attributes,
+        ];
+        $this->intercom->updateUser($user_data, true);
+    }
+
+    public function decisionMake(Decision $decision, array $user_ids)
+    {
+        if (false == env('INTERCOM_ENABLED')) {
+            return false;
+        }
+        $table_id = strval($decision->table['_id']);
+        $variant_id = strval($decision->table['variant']['_id']);
+        $meta = [
+            'decision_id' => strval($decision->_id),
+            'table_id' => $table_id,
+            'table_title' => $decision->table['title'],
+            'matching_type' => $decision->table['matching_type'],
+            'variant_id' => [
+                'value' => $variant_id,
+                'url' => str_replace(
+                    ['{table_id}', '{variant_id}'],
+                    [$table_id, $variant_id],
+                    config('services.link.admin_variant')
+                )
+            ],
+            'variant_title' => $decision->table['variant']['title'],
+        ];
+
+        foreach ($user_ids as $user_id) {
+            $this->intercom->createEvent([
+                'event_name' => 'decision-made',
+                'created_at' => time(),
+                'user_id' => $user_id,
+                'metadata' => $meta,
             ], true);
         }
     }
 
-    public function generateSecureCode($userId)
+    public function generateSecureCode($user_id)
     {
-        return hash_hmac('sha256', $userId, env('INTERCOM_APP_KEY'));
+        return hash_hmac('sha256', $user_id, env('INTERCOM_APP_SECRET'));
     }
 }

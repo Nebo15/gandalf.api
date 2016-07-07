@@ -58,23 +58,23 @@
         },
         {
             "name": "bugsnag/bugsnag",
-            "version": "v2.9.0",
+            "version": "v2.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bugsnag/bugsnag-php.git",
-                "reference": "332b32222ab100ebedfd71c053600708bc30abc1"
+                "reference": "c5b1ccf493a9451bf6e2bde4f1d41346e6d89322"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bugsnag/bugsnag-php/zipball/332b32222ab100ebedfd71c053600708bc30abc1",
-                "reference": "332b32222ab100ebedfd71c053600708bc30abc1",
+                "url": "https://api.github.com/repos/bugsnag/bugsnag-php/zipball/c5b1ccf493a9451bf6e2bde4f1d41346e6d89322",
+                "reference": "c5b1ccf493a9451bf6e2bde4f1d41346e6d89322",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.8|~5.0"
+                "phpunit/phpunit": "^4.8|^5.0"
             },
             "type": "library",
             "extra": {
@@ -107,26 +107,29 @@
                 "logging",
                 "tracking"
             ],
-            "time": "2016-06-24 14:47:31"
+            "time": "2016-07-07 01:17:22"
         },
         {
             "name": "bugsnag/bugsnag-laravel",
-            "version": "v1.6.4",
+            "version": "v1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bugsnag/bugsnag-laravel.git",
-                "reference": "a354622693b2f9d2907bf28405e4f47715f995b4"
+                "reference": "54758847fd546355fdec9f87555a0b6dc76da9ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bugsnag/bugsnag-laravel/zipball/a354622693b2f9d2907bf28405e4f47715f995b4",
-                "reference": "a354622693b2f9d2907bf28405e4f47715f995b4",
+                "url": "https://api.github.com/repos/bugsnag/bugsnag-laravel/zipball/54758847fd546355fdec9f87555a0b6dc76da9ea",
+                "reference": "54758847fd546355fdec9f87555a0b6dc76da9ea",
                 "shasum": ""
             },
             "require": {
-                "bugsnag/bugsnag": ">=2.5.0",
-                "illuminate/support": "4.*|5.*",
+                "bugsnag/bugsnag": "^2.5",
+                "illuminate/support": "^4.0|^5.0",
                 "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8|^5.0"
             },
             "type": "library",
             "autoload": {
@@ -154,7 +157,7 @@
                 "logging",
                 "tracking"
             ],
-            "time": "2016-03-09 19:00:14"
+            "time": "2016-07-07 01:35:07"
         },
         {
             "name": "doctrine/inflector",

@@ -7,6 +7,7 @@
 
 namespace App\Listeners;
 
+use App\Events\Users;
 use App\Events\Decisions;
 
 use App\Services\Intercom;
@@ -26,11 +27,31 @@ class EventListener
 
     public function decisionMake(Decisions\Make $event)
     {
-        $admins = Application::where('users.role', 'admin')->whereIn('_id', $event->applications)->get();
-        \Log::err($admins->count());
-        die();
-        $this->intercom->decisionMake($event->decision);
-        $this->mixpanel->decisionMake($event->decision);
+        $apps = Application::where('users.role', 'admin')
+            ->whereIn('_id', $event->applications)
+            ->get(['users.user_id', 'users.role']);
+        $userIds = [];
+        foreach ($apps as $app) {
+            foreach ($app->users as $user) {
+                if ($user->role == 'admin') {
+                    $userIds[] = strval($user->user_id);
+                }
+            }
+        }
+        $this->intercom->decisionMake($event->decision, $userIds);
+        $this->mixpanel->decisionMake($event->decision, $userIds);
+    }
+
+    public function userCreate(Users\Create $event)
+    {
+        $this->mixpanel->userCreate($event->user);
+        $this->intercom->userCreateOrUpdate($event->user);
+    }
+
+    public function userUpdate(Users\Update $event)
+    {
+        $this->mixpanel->userUpdate($event->user);
+        $this->intercom->userCreateOrUpdate($event->user);
     }
 
     /**
@@ -42,5 +63,7 @@ class EventListener
     public function subscribe($events)
     {
         $events->listen('App\Events\Decisions\Make', 'App\Listeners\EventListener@decisionMake');
+        $events->listen('App\Events\Users\Create', 'App\Listeners\EventListener@userCreate');
+        $events->listen('App\Events\Users\Update', 'App\Listeners\EventListener@userUpdate');
     }
 }
