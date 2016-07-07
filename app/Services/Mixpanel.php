@@ -27,6 +27,8 @@ class Mixpanel extends BaseEvents
 
     public function decisionMake(Decision $decision, $userId)
     {
-
+        $this->mixpanel->setIdentity($userId);
+        $this->mixpanel->addUserEvent('increment', 'decisions_count', 1);
+        $this->mixpanel->addTrackEvent('last_decision_created_at', ['created_at' => time()]);
     }
 }

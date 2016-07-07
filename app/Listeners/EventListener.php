@@ -26,8 +26,9 @@ class EventListener
 
     public function decisionMake(Decisions\Make $event)
     {
-        $event->decision->query()->where()->
-        $admin = Application::where('users.role', 'admin')->whereIn('', ['']);
+        $admins = Application::where('users.role', 'admin')->whereIn('_id', $event->applications)->get();
+        \Log::err($admins->count());
+        die();
         $this->intercom->decisionMake($event->decision);
         $this->mixpanel->decisionMake($event->decision);
     }

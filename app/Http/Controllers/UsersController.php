@@ -6,6 +6,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\Intercom;
 use MongoDB\BSON\Regex;
 use App\Models\Invitation;
 use Nebo15\REST\Response;
@@ -201,9 +202,12 @@ class UsersController extends AbstractController
         );
     }
 
-    public function getUserInfo()
+    public function getUserInfo(Intercom $intercom)
     {
-        return $this->response->json($this->request->user()->toArray());
+        $user = $this->request->user()->toArray();
+        $user['secure_code'] = $intercom->generateSecureCode($user['_id']); 
+        
+        return $this->response->json($user);
     }
 
     public function invite(Application $application)
