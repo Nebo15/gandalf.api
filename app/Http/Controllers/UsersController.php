@@ -217,8 +217,10 @@ class UsersController extends AbstractController
             '_id' => $project['_id'],
             'title' => $project['title'],
         ];
+        $invitation = (new Invitation())->fill($fill)->save();
+        $this->getMailService()->sendEmailInvitation($invitation);
 
-        return $this->response->json((new Invitation())->fill($fill)->save()->toArray());
+        return $this->response->json($invitation->toArray());
     }
 
     /**
