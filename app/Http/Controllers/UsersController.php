@@ -44,6 +44,7 @@ class UsersController extends AbstractController
         'changePassword' => [
             'token' => 'required',
             'password' => 'required|between:6,32|password',
+            'current_password' => 'required',
         ],
         'invite' => [
             'email' => 'required|email',
@@ -167,11 +168,12 @@ class UsersController extends AbstractController
         $this->validateRoute();
 
         return $this->response->json(
-            $this->getRepository()->getModel()->findByResetPasswordToken(
-                $this->request->input('token')
-            )->changePassword(
-                $this->request->input('password')
-            )->save()->toArray()
+            $this->getRepository()
+                ->changePassword(
+                    $this->request->input('token'),
+                    $this->request->input('password'),
+                    $this->request->input('current_password')
+                )->toArray()
         );
     }
 
@@ -206,7 +208,7 @@ class UsersController extends AbstractController
     {
         $user = $this->request->user()->toArray();
         $user['secure_code'] = $intercom->generateSecureCode($user['_id']);
-        
+
         return $this->response->json($user);
     }
 

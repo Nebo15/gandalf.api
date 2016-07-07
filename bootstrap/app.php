@@ -73,7 +73,6 @@ $app->middleware([
     \Nebo15\LumenIntercom\Middleware\TerminableMiddleware::class,
     \Nebo15\LumenMixpanel\Middleware\TerminableMiddleware::class,
 ]);
-
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers
