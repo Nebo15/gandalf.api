@@ -22,7 +22,7 @@ node default {
   class { 'newrelic::agent::php':
     newrelic_license_key  => $newrelic_key,
     newrelic_ini_appname  => $newrelic_app_name,
-    newrelic_php_conf_dir => ['/etc/php5/mods-available'],
+    newrelic_php_conf_dir => ['/etc/php/7.0/mods-available'],
   }
 
   class { 'nginx':
