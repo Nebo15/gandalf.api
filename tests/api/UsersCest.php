@@ -69,6 +69,21 @@ class UsersCest
         $I->sendGET('api/v1/users/current');
         $I->assertCurrentUser();
 
+        # change email
+
+        $I->sendPUT('api/v1/users/current', ['email' => 'new@email.com']);
+        $I->assertResponseDataFields(['email' => $user->email, 'temporary_email' => 'new@email.com']);
+
+        $I->loginClient($I->getCurrentClient());
+        $I->sendPOST('api/v1/users/verify/email', ['token' => $I->getResponseFields()->sandbox->token_email->token]);
+        $I->seeResponseCodeIs(200);
+
+        $I->loginUser($user);
+        $I->sendGET('api/v1/users/current');
+        $I->assertResponseDataFields(['email' => 'new@email.com']);
+
+        # change password
+
         $I->sendPUT('api/v1/users/current', ['password' => 'asdQWE123', 'current_password' => $user->password]);
         $I->seeResponseCodeIs(200);
 

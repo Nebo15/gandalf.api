@@ -40,6 +40,9 @@ class UsersRepository extends AbstractRepository
         }
         if (array_key_exists('email', $values)) {
             $values['temporary_email'] = $values['email'];
+            if ($id) {
+                unset($values['email']);
+            }
         }
         $user->fill($values)->save();
 
