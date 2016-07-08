@@ -88,20 +88,17 @@ class DatabaseSeeder extends Seeder
                     "user_id" => $adminId,
                     "role" => "admin",
                     "scope" => [
-                        "create",
-                        "read",
-                        "update",
-                        "delete",
-                        "check",
-                        "get_consumers",
-                        "create_consumers",
-                        "update_consumers",
-                        "update_users",
-                        "add_user",
-                        "edit_project",
-                        "delete_project",
-                        "delete_consumers",
-                        "delete_users"
+                        'tables_create',
+                        'tables_view',
+                        'tables_update',
+                        'tables_delete',
+                        'decisions_make',
+                        'consumers_get',
+                        'consumers_manage',
+                        'users_manage',
+                        'project_update',
+                        'project_delete',
+                        'decisions_view',
                     ],
                 ],
                 [
@@ -109,9 +106,9 @@ class DatabaseSeeder extends Seeder
                     "user_id" => $userId,
                     "role" => "user",
                     "scope" => [
-                        "read",
-                        "check",
-                        "get_consumers",
+                        'tables_view',
+                        'decisions_make',
+                        'consumers_get',
                     ],
                 ],
             ],
@@ -122,8 +119,8 @@ class DatabaseSeeder extends Seeder
                     "client_secret" => "demo",
                     "description" => "Demo consumer",
                     "scope" => [
-                        "read",
-                        "check"
+                        'decisions_view',
+                        'decisions_make',
                     ],
                 ]
             ]
@@ -145,7 +142,7 @@ class DatabaseSeeder extends Seeder
             "default_title" => "DEFAULT_SCORE",
             "default_description" => "No scoring rules was applied.",
             "applications" => [
-                "5745cc5af70466a1098b456e"
+                "576bf5f9ce3c0c02ee2d314d"
             ],
             "default_decision" => 30,
             "matching_type" => "all",
