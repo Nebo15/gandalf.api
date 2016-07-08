@@ -10,6 +10,8 @@ use App\Events\Users\Create;
 use App\Events\Users\Update;
 use Nebo15\REST\AbstractRepository;
 use Illuminate\Auth\Access\AuthorizationException;
+use Nebo15\LumenApplicationable\ApplicationableHelper;
+use Nebo15\LumenApplicationable\Contracts\Applicationable;
 
 /**
  * Class UsersRepository
@@ -25,27 +27,30 @@ class UsersRepository extends AbstractRepository
     public function createOrUpdate($values, $id = null)
     {
         /** @var User $user */
-        $user = parent::createOrUpdate($values, $id);
-        \Event::fire($id ? new Update($user) : new Create($user));
-
-        return $user;
-    }
-
-    /**
-     * @param $token
-     * @param $new_pwd
-     * @param $pwd
-     * @return User
-     * @throws AuthorizationException
-     */
-    public function changePassword($token, $new_pwd, $pwd)
-    {
-        /** @var User $user */
-        $user = $this->getModel()->findByResetPasswordToken($token);
-        if (!$user->getPasswordHasher()->check($pwd, $user->password)) {
+        $user = $id ? $this->read($id) : $this->getModel()->newInstance();
+        if ($id and
+            array_key_exists('password', $values) and
+            !$user->getPasswordHasher()->check($values['current_password'], $user->password)
+        ) {
             throw new AuthorizationException;
         }
 
-        return $user->changePassword($new_pwd)->save();
+        if ($user instanceof Applicationable) {
+            ApplicationableHelper::addApplication($user);
+        }
+
+        if (array_key_exists('email', $values) and !env('ACTIVATE_ALL_USERS')) {
+            $values['temporary_email'] = $values['email'];
+            if ($id) {
+                unset($values['email']);
+            }
+            $user->createVerifyEmailToken();
+        }
+
+        $user->fill($values)->save();
+
+        \Event::fire($id ? new Update($user) : new Create($user));
+
+        return $user;
     }
 }
