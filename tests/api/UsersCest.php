@@ -77,6 +77,7 @@ class UsersCest
         $I->loginClient($I->getCurrentClient());
         $I->sendPOST('api/v1/users/verify/email', ['token' => $I->getResponseFields()->sandbox->token_email->token]);
         $I->seeResponseCodeIs(200);
+        $I->assertResponseDataFields(['temporary_email' => null]);
 
         $I->loginUser($user);
         $I->sendGET('api/v1/users/current');
