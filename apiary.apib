@@ -392,7 +392,6 @@ Send reset password url with token to User.email
     + Attributes
         + token: $2y$10$.lp0OGb.nJSt... (string, required) - Token for password reset
         + password: newP@s$w0rd (string, required) - New user password
-        + current_password: 0ldP@s$w0rd (string, required) - Current user password
 
 + Response 200 (application/json)
     + Attributes (object)
@@ -1000,8 +999,9 @@ Rollback Table to some state that described in passed Changelog
 + last_page: 3 (number)
 
 ### UpdateUser
-+ email: email@example.com (string, required)
-+ password: p@ssword! (string, required) - Length 6-32, necessarily one letter and one number
++ email: email@example.com (string)
++ password: p@ssword! (string) - Length 6-32, necessarily one letter and one number
++ current_password: 0ldP@s$w0rd (string, required) - Current user password, required with field **password**
 + first_name: John (string) - Length 2-32 Apha
 + last_name: Smith (string) - Length 2-32 Apha
 

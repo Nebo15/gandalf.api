@@ -17,6 +17,10 @@ class UserObserver
                 list($user->username) = explode('@', $user->temporary_email);
             }
         }
+        if ($user->isDirty('email')) {
+            $user->temporary_email = $user->email;
+            $user->createVerifyEmailToken();
+        }
         if (true === env('ACTIVATE_ALL_USERS')) {
             $user->active = true;
         }
@@ -33,9 +37,9 @@ class UserObserver
 
     public function updating(User $user)
     {
-        /**
-         * TODO: email is dirty set email to temporary
-         */
+        if ($user->isDirty('temporary_email')) {
+            $user->createVerifyEmailToken();
+        }
     }
 
     public function updated(User $user)
@@ -44,10 +48,6 @@ class UserObserver
 
     public function saving(User $user)
     {
-        if ($user->isDirty('email')) {
-            $user->temporary_email = $user->email;
-            $user->createVerifyEmailToken();
-        }
         if ($user->isDirty('password')) {
             $user->password = $user->getPasswordHasher()->make($user->password);
         }

@@ -10,6 +10,8 @@ use App\Events\Users\Create;
 use App\Events\Users\Update;
 use Nebo15\REST\AbstractRepository;
 use Illuminate\Auth\Access\AuthorizationException;
+use Nebo15\LumenApplicationable\ApplicationableHelper;
+use Nebo15\LumenApplicationable\Contracts\Applicationable;
 
 /**
  * Class UsersRepository
@@ -25,7 +27,22 @@ class UsersRepository extends AbstractRepository
     public function createOrUpdate($values, $id = null)
     {
         /** @var User $user */
-        $user = parent::createOrUpdate($values, $id);
+        $user = $id ? $this->read($id) : $this->getModel()->newInstance();
+        if ($id and
+            array_key_exists('password', $values) and
+            !$user->getPasswordHasher()->check($values['current_password'], $user->password)
+        ) {
+            throw new AuthorizationException;
+        }
+
+        if ($user instanceof Applicationable) {
+            ApplicationableHelper::addApplication($user);
+        }
+        if (array_key_exists('email', $values)) {
+            $values['temporary_email'] = $values['email'];
+        }
+        $user->fill($values)->save();
+
         \Event::fire($id ? new Update($user) : new Create($user));
 
         return $user;
@@ -42,9 +59,7 @@ class UsersRepository extends AbstractRepository
     {
         /** @var User $user */
         $user = $this->getModel()->findByResetPasswordToken($token);
-        if (!$user->getPasswordHasher()->check($pwd, $user->password)) {
-            throw new AuthorizationException;
-        }
+
 
         return $user->changePassword($new_pwd)->save();
     }

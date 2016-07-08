@@ -50,7 +50,7 @@ class UsersCest
         }
     }
 
-    public function update(ApiTester $I)
+    public function updateOk(ApiTester $I)
     {
         $I->createAndLoginClient();
         $user = $I->createAndLoginUser();
@@ -68,13 +68,32 @@ class UsersCest
 
         $I->sendGET('api/v1/users/current');
         $I->assertCurrentUser();
+
+        $I->sendPUT('api/v1/users/current', ['password' => 'asdQWE123', 'current_password' => $user->password]);
+        $I->seeResponseCodeIs(200);
+
+        $I->loginClient($I->getCurrentClient());
+        $I->sendPOST('api/v1/oauth/', [
+            'grant_type' => 'password',
+            'username' => $user->username . 'edited',
+            'password' => 'asdQWE123',
+        ]);
+        $I->seeResponseCodeIs(200);
     }
 
     public function createUpdateInvalid(ApiTester $I)
     {
         $I->createAndLoginClient();
         $faker = $I->getFaker();
-        $badData = [
+
+        /** Normal user for Test Duplicate Username */
+        $I->sendPOST(
+            'api/v1/users/',
+            ['email' => $faker->email, 'password' => $I->getPassword(), 'username' => 'duplicate', 'active' => true]
+        );
+        $I->assertResponseDataFields(['active' => false], 201);
+
+        $invalidData = [
             'email' => [
                 '',
                 null,
@@ -97,13 +116,7 @@ class UsersCest
                 'withoutdigit',
             ],
         ];
-        /** Normal user for Test Duplicate Username */
-        $I->sendPOST(
-            'api/v1/users/',
-            ['email' => $faker->email, 'password' => $I->getPassword(), 'username' => 'duplicate']
-        );
-        $I->seeResponseCodeIs(201);
-        foreach ($badData as $key => $data) {
+        foreach ($invalidData as $key => $data) {
             $normalUserData = [
                 'email' => $faker->email,
                 'password' => $I->getPassword(),
@@ -117,21 +130,20 @@ class UsersCest
                 $I->seeResponseContains($key);
             }
         }
+
         $I->createAndLoginUser(true);
-        foreach ($badData as $key => $data) {
-            $normalUserData = [
-                'email' => $faker->email,
-                'password' => $I->getPassword(),
-                'username' => $faker->firstName,
-            ];
+        foreach ($invalidData as $key => $data) {
             foreach ($data as $item) {
-                $normalUserData[$key] = $item;
-                $I->sendPUT('api/v1/users/current', $normalUserData);
+                $I->sendPUT('api/v1/users/current', [$key => $item]);
                 $I->seeResponseCodeIs(422);
                 $I->seeResponseContains('"error":"validation"');
                 $I->seeResponseContains($key);
             }
         }
+        # change password
+        $I->sendPUT('api/v1/users/current', ['password' => $I->getPassword()]);
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseContains('current_password');
     }
 
     public function find(ApiTester $I, $scenario)
@@ -213,21 +225,7 @@ class UsersCest
         $new_password = $I->getPassword();
         $I->sendPUT('api/v1/users/password/reset', [
             'token' => $resp->sandbox->reset_password_token->token,
-            'password' => $new_password,
-        ]);
-        $I->seeResponseCodeIs(422);
-
-        $I->sendPUT('api/v1/users/password/reset', [
-            'token' => $resp->sandbox->reset_password_token->token,
-            'password' => $new_password,
-            'current_password' => $new_password,
-        ]);
-        $I->seeResponseCodeIs(401);
-
-        $I->sendPUT('api/v1/users/password/reset', [
-            'token' => $resp->sandbox->reset_password_token->token,
-            'password' => $new_password,
-            'current_password' => $old_password,
+            'password' => $new_password
         ]);
         $I->seeResponseCodeIs(200);
 

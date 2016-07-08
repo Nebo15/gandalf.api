@@ -49,7 +49,7 @@ class User extends Base implements
 
     protected $visible = ['_id', 'username', 'temporary_email', 'email', 'first_name', 'last_name', 'active'];
 
-    protected $fillable = ['username', 'temporary_email', 'email', 'active', 'password', 'first_name', 'last_name'];
+    protected $fillable = ['username', 'temporary_email', 'email', 'password', 'first_name', 'last_name'];
 
     protected $attributes = [
         'active' => false,

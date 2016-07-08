@@ -34,12 +34,13 @@ class UsersController extends AbstractController
             'email' => 'required|unique:users,email|email',
             'password' => 'required|between:6,32|password',
         ],
-        'createOrUpdate' => [
-            'username' => 'required|unique:users,username|between:2,32|username',
+        'updateUser' => [
+            'username' => 'sometimes|required|unique:users,username|between:2,32|username',
             'first_name' => 'sometimes|required|string|between:2,32|alpha',
             'last_name' => 'sometimes|required|string|between:2,32|alpha',
             'email' => 'sometimes|required|unique:users,email|email',
             'password' => 'sometimes|required|between:6,32|password',
+            'current_password' => 'required_with:password',
         ],
         'createResetPasswordToken' => [
             'email' => 'required|email',
@@ -47,7 +48,6 @@ class UsersController extends AbstractController
         'changePassword' => [
             'token' => 'required',
             'password' => 'required|between:6,32|password',
-            'current_password' => 'required',
         ],
         'invite' => [
             'email' => 'required|email',
@@ -121,10 +121,9 @@ class UsersController extends AbstractController
     public function create()
     {
         $this->validateRoute();
-
         $user = $this->getRepository()->createOrUpdate($this->request->all());
-        $sandboxData = [];
 
+        $sandboxData = [];
         if (env('APP_ENV') == 'local') {
             $sandboxData['token_email'] = $user->getVerifyEmailToken();
         }
@@ -152,20 +151,21 @@ class UsersController extends AbstractController
         );
     }
 
-    public function createOrUpdate()
+    public function updateUser()
     {
         $this->validateRoute();
-        $model = $this->getRepository()->createOrUpdate(
+        $user = $this->getRepository()->createOrUpdate(
             $this->request->request->all(),
             $this->request->user()->getId()
         );
+
         $sandboxData = [];
         if (env('APP_ENV') == 'local') {
-            $sandboxData['token_email'] = $model->getVerifyEmailToken();
+            $sandboxData['token_email'] = $user->getVerifyEmailToken();
         }
 
         return $this->response->json(
-            $model->toArray(),
+            $user->toArray(),
             Response::HTTP_OK,
             [],
             [],
@@ -179,11 +179,10 @@ class UsersController extends AbstractController
 
         return $this->response->json(
             $this->getRepository()
-                ->changePassword(
-                    $this->request->input('token'),
-                    $this->request->input('password'),
-                    $this->request->input('current_password')
-                )->toArray()
+                ->getModel()
+                ->findByResetPasswordToken($this->request->input('token'))
+                ->changePassword($this->request->input('password'))
+                ->save()->toArray()
         );
     }
 
