@@ -17,10 +17,6 @@ class UserObserver
                 list($user->username) = explode('@', $user->temporary_email);
             }
         }
-        if ($user->isDirty('email')) {
-            $user->temporary_email = $user->email;
-            $user->createVerifyEmailToken();
-        }
         if (true === env('ACTIVATE_ALL_USERS')) {
             $user->active = true;
         }
@@ -37,9 +33,6 @@ class UserObserver
 
     public function updating(User $user)
     {
-        if ($user->isDirty('temporary_email')) {
-            $user->createVerifyEmailToken();
-        }
     }
 
     public function updated(User $user)

@@ -38,32 +38,19 @@ class UsersRepository extends AbstractRepository
         if ($user instanceof Applicationable) {
             ApplicationableHelper::addApplication($user);
         }
-        if (array_key_exists('email', $values)) {
+
+        if (array_key_exists('email', $values) and !env('ACTIVATE_ALL_USERS')) {
             $values['temporary_email'] = $values['email'];
             if ($id) {
                 unset($values['email']);
             }
+            $user->createVerifyEmailToken();
         }
+
         $user->fill($values)->save();
 
         \Event::fire($id ? new Update($user) : new Create($user));
 
         return $user;
-    }
-
-    /**
-     * @param $token
-     * @param $new_pwd
-     * @param $pwd
-     * @return User
-     * @throws AuthorizationException
-     */
-    public function changePassword($token, $new_pwd, $pwd)
-    {
-        /** @var User $user */
-        $user = $this->getModel()->findByResetPasswordToken($token);
-
-
-        return $user->changePassword($new_pwd)->save();
     }
 }
