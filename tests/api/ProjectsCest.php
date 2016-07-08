@@ -85,9 +85,18 @@ class ProjectsCest
     
     public function delete(ApiTester $I)
     {
-        $I->createAndLoginUser();
+        $user = $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
+        $I->loginClient($I->getCurrentClient());
+        $second_user = $I->createUser(true);
+        $I->loginUser($user);
         $table = $I->createTable();
+        $I->sendPOST('api/v1/projects/users',
+            ['user_id' => $second_user->_id, 'role' => 'manager', 'scope' => ['tables_view', 'tables_update']]);
+        $I->loginUser($second_user);
+        $I->sendDELETE('api/v1/projects');
+        $I->seeResponseCodeIs(403);
+        $I->loginUser($user);
         $I->sendDELETE('api/v1/projects');
         $I->seeResponseCodeIs(200);
         $I->sendGET('api/v1/admin/tables' . $table->_id);
