@@ -43,6 +43,7 @@ class Mixpanel extends BaseEvents
         }
         foreach ($user_ids as $id) {
             $this->mixpanel->setIdentity($id);
+            $this->mixpanel->setIp($this->getIp());
             $this->mixpanel->addUserEvent('set', '', ['Last Decision created_at' => time()]);
             $this->mixpanel->addUserEvent('increment', 'Decisions count', 1);
         }
@@ -54,6 +55,7 @@ class Mixpanel extends BaseEvents
             return false;
         }
         $this->mixpanel->setIdentity($user->getId());
+        $this->mixpanel->setIp($this->getIp());
         $this->mixpanel->addTrackEvent(
             $type,
             [
