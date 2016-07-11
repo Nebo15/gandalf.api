@@ -17,6 +17,7 @@ class ValidationServiceProvider extends ServiceProvider
         Validator::extend('probabilitySum', 'App\Validators\TableValidator@probabilitySum');
         Validator::extend('decision_type', 'App\Validators\TableValidator@decisionType');
         Validator::extend('password', 'App\Validators\UserValidator@password');
+        Validator::extend('current_password', 'App\Validators\UserValidator@currentPassword');
         Validator::extend('username', 'App\Validators\UserValidator@username');
         Validator::extend('last_name', 'App\Validators\UserValidator@lastName');
         Validator::extend('uniqueExceptUser', 'App\Validators\UserValidator@unique');

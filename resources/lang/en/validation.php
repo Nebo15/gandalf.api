@@ -74,6 +74,9 @@ return [
     'url'                  => 'The :attribute format is invalid.',
     'timezone'             => 'The :attribute must be a valid zone.',
     # custom
+    'uniqueExceptUser' => 'The :attribute has already been taken.',
+    'password' => 'Password must contain characters in the lower and upper case and integer',
+    'current_password' => 'Incorrect password',
     'condition_type' => 'Condition value consist invalid type',
     'conditions_count' => 'Different amount of the Rule.conditions and Field.keys',
     'conditions_field' => 'Condition key must exist in Fields.keys',

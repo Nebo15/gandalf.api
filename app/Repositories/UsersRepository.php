@@ -9,7 +9,6 @@ use App\Models\User;
 use App\Events\Users\Create;
 use App\Events\Users\Update;
 use Nebo15\REST\AbstractRepository;
-use Illuminate\Auth\Access\AuthorizationException;
 use Nebo15\LumenApplicationable\ApplicationableHelper;
 use Nebo15\LumenApplicationable\Contracts\Applicationable;
 
@@ -28,12 +27,6 @@ class UsersRepository extends AbstractRepository
     {
         /** @var User $user */
         $user = $id ? $this->read($id) : $this->getModel()->newInstance();
-        if ($id and
-            array_key_exists('password', $values) and
-            !$user->getPasswordHasher()->check($values['current_password'], $user->password)
-        ) {
-            throw new AuthorizationException;
-        }
 
         if ($user instanceof Applicationable) {
             ApplicationableHelper::addApplication($user);
