@@ -56,6 +56,7 @@ class UsersCest
         $user = $I->createAndLoginUser();
         $I->createProjectAndSetHeader();
         $user_edited_data = [
+            'email' => $user->email,
             'last_name' => 'LastName',
             'first_name' => $user->first_name . 'edited',
             'username' => $user->username . 'edited',
@@ -71,7 +72,7 @@ class UsersCest
 
         # change email
 
-        $I->sendPUT('api/v1/users/current', ['email' => 'new@email.com']);
+        $I->sendPUT('api/v1/users/current', ['email' => 'new@email.com', 'username' => $user->username . 'edited']);
         $I->assertResponseDataFields(['email' => $user->email, 'temporary_email' => 'new@email.com']);
 
         $I->loginClient($I->getCurrentClient());

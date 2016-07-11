@@ -19,6 +19,7 @@ class ValidationServiceProvider extends ServiceProvider
         Validator::extend('password', 'App\Validators\UserValidator@password');
         Validator::extend('username', 'App\Validators\UserValidator@username');
         Validator::extend('last_name', 'App\Validators\UserValidator@lastName');
+        Validator::extend('uniqueExceptUser', 'App\Validators\UserValidator@unique');
         Validator::extend('mongoId', 'App\Validators\GeneralValidator@mongoId');
         Validator::extend('betweenString', 'App\Validators\GeneralValidator@betweenString');
         Validator::extend('json', 'App\Validators\GeneralValidator@json');
