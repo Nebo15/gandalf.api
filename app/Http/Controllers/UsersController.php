@@ -40,7 +40,7 @@ class UsersController extends AbstractController
             'last_name' => 'sometimes|required|string|between:2,32|alpha',
             'email' => 'sometimes|required|uniqueExceptUser:email|email',
             'password' => 'sometimes|required|between:6,32|password',
-            'current_password' => 'required_with:password',
+            'current_password' => 'required_with:password|current_password',
         ],
         'createResetPasswordToken' => [
             'email' => 'required|email',

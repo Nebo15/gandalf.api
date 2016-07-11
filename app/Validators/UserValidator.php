@@ -2,6 +2,7 @@
 namespace App\Validators;
 
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class UserValidator
 {
@@ -27,11 +28,23 @@ class UserValidator
         }
         $field = $parameters[0];
         /** @var User $user */
-        $user = \Auth::user();
+        if (!$user = \Auth::user()) {
+            throw new AuthorizationException;
+        }
         if ($user->$field == $value) {
             return true;
         }
 
         return 0 == User::where($field, $value)->get(['_id'])->count();
+    }
+
+    public function currentPassword($attribute, $value)
+    {
+        /** @var User $user */
+        if (!$user = \Auth::user()) {
+            throw new AuthorizationException;
+        }
+
+        return $user->getPasswordHasher()->check($value, $user->password);
     }
 }

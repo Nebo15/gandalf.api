@@ -158,9 +158,15 @@ class UsersCest
             }
         }
         # change password
-        $I->sendPUT('api/v1/users/current', ['password' => $I->getPassword()]);
-        $I->seeResponseCodeIs(422);
-        $I->seeResponseContains('current_password');
+        $data = [
+            ['password' => $I->getPassword()],
+            ['password' => $I->getPassword(), 'current_password' => 'invalid password']
+        ];
+        foreach ($data as $item) {
+            $I->sendPUT('api/v1/users/current', $item);
+            $I->seeResponseCodeIs(422);
+            $I->seeResponseContains('current_password');
+        }
     }
 
     public function find(ApiTester $I, $scenario)
