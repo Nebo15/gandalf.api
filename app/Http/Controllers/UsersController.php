@@ -35,10 +35,10 @@ class UsersController extends AbstractController
             'password' => 'required|between:6,32|password',
         ],
         'updateUser' => [
-            'username' => 'sometimes|required|unique:users,username|between:2,32|username',
+            'username' => 'sometimes|required|uniqueExceptUser:username|between:2,32|username',
             'first_name' => 'sometimes|required|string|between:2,32|alpha',
             'last_name' => 'sometimes|required|string|between:2,32|alpha',
-            'email' => 'sometimes|required|unique:users,email|email',
+            'email' => 'sometimes|required|uniqueExceptUser:email|email',
             'password' => 'sometimes|required|between:6,32|password',
             'current_password' => 'required_with:password',
         ],
