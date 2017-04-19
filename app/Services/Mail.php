@@ -67,7 +67,7 @@ class Mail
                 config('services.postmark.templates.invite'),
                 [
                     'email' => $invitation->email,
-                    'project_name' => $invitation->project->title,
+                    'project_name' => $invitation->project['title'],
                     'action_url' => config('services.link.invite'),
                 ]
             );
