@@ -13,4 +13,3 @@ sudo ln -s $PWD/.travis/conf/nginx.conf /etc/nginx/nginx.conf
 
 # Link project config
 sudo -Hu www-data ln -s $PWD/config/nginx/travis.conf /etc/nginx/sites-enabled/testserver.conf
-Contact GitHub API Training Shop Blog About
