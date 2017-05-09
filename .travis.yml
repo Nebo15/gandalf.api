@@ -30,9 +30,9 @@ before_script:
   - sudo ln -s $PWD /www/gandalf.api
   - sudo adduser www-data travis
   # Install and configure nginx
-  - ./.travis/scripts/install_nginx.sh
+  - bash ./.travis/scripts/install_nginx.sh
   # Install and configure PHP
-  - ./.travis/scripts/install_php.sh
+  - bash ./.travis/scripts/install_php.sh
   # Disable XDebug
   - phpenv config-rm xdebug.ini
   # Configure file paths and application environment
@@ -52,8 +52,8 @@ script:
   - vendor/bin/codecept run
   - vendor/bin/phpcs ./app --standard=PSR2 --warning-severity=0
   # Run Docker container
-  - sudo ./bin/build.sh
-  - sudo ./bin/start.sh
+  - sudo bash ./bin/build.sh
+  - sudo bash ./bin/start.sh
   - sleep 5
   - docker ps
   - RUNNING_CONTAINERS=`docker ps | wc -l`;
