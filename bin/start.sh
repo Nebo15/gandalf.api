@@ -27,7 +27,7 @@ while getopts "i" opt; do
   esac
 done
 
-docker run -p 9000:9001 \
+docker run -p 9001:9000 \
        --env-file .env \
        ${OPTS} \
        --add-host=$HOST_NAME:$HOST_IP \
