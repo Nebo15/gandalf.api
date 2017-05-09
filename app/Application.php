@@ -1,7 +1,9 @@
 <?php
 namespace App;
+
 use Monolog\Handler\StreamHandler;
 use Monolog\Formatter\LineFormatter;
+
 class Application extends \Laravel\Lumen\Application
 {
     protected function getMonologHandler()
