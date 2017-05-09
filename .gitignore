@@ -3,3 +3,4 @@
 .idea
 tests/_output/*
 dump.tar.gz
+.DS_Store
