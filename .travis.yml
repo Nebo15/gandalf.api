@@ -60,6 +60,7 @@ script:
   - if [ "${RUNNING_CONTAINERS//[[:space:]]/}" == "1" ]; then echo "[E] Container is not started!" && false; fi;
   # Send request to the container
   - curl http://gandalf-docker.dev:8080/ -v
+  - docker logs gandalf.api --details --since 5h
 after_failure:
   - ls -l /etc/nginx
   - ls -l /etc/nginx/sites-enabled
