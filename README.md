@@ -153,22 +153,13 @@ Boolean supports:
 
 # Installation Guide
 
-You can use [Vagrant](https://www.vagrantup.com/) to intialize a development environment. Simply install it, ```cd``` into your project directory and run:
+## Docker
 
-```
-vagrant up
-```
+Gandalf can be deployed as Docker containers, they can be found in official DockerHub repos:
 
-Also you can notice that we use [Puppet](https://puppetlabs.com/puppet/puppet-open-source) as our configuration tool. Scripts located in [/puppet](https://github.com/Nebo15/gandalf.api/tree/master/puppet) directory of this repo. You can deploy code to your server and simply run:
-
-```
-set -o nounset -o errexit -o pipefail -o errtrace
-trap 'error "${BASH_SOURCE}" "${LINENO}"' ERR
-echo 127.0.0.1 gandalf.yourdomain.com | sudo tee -a /etc/hosts
-sudo /bin/bash puppet/initial/init.sh -u "www-data"
-```
-
-And your server will be ready for production use!
+- [nebo15/gandalf.api](https://hub.docker.com/r/nebo15/gandalf.api/) - REST API back-end.
+- [nebo15/gandalf.web](https://hub.docker.com/r/nebo15/gandalf.web/) - Management front-end.
+- [nebo15/alpine-mongodb](https://hub.docker.com/r/nebo15/alpine-mongodb/) - Nebo #15 MongoDB container. Feel free to use any MongoDB containers instead.
 
 # Full Docs
 
