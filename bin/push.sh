@@ -1,7 +1,6 @@
 #!/bin/bash
 # This setup works with Travis-CI.
 # You need to specify $DOCKER_HUB_ACCOUNT, $DOCKER_USERNAME and $DOCKER_PASSWORD before using this script.
-
 echo "Logging in into Docker Hub";
 docker login -u=$DOCKER_USERNAME -p=$DOCKER_PASSWORD;
 
@@ -21,7 +20,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   git commit -m "Increment version [ci skip]";
 
   if [ "$TRAVIS_BRANCH" == "$RELEASE_BRANCH" ]; then
-    ./bin/ci/release.sh -a $DOCKER_HUB_ACCOUNT -t $TRAVIS_BRANCH -l;
+    ./bin/release.sh -a $DOCKER_HUB_ACCOUNT -t $TRAVIS_BRANCH -l;
   fi;
 
   if [[ "$MAIN_BRANCHES" =~ "$TRAVIS_BRANCH" ]]; then
