@@ -1,7 +1,7 @@
 <?php
 
 const APPLICATION_NAME = "gandalf.api";
-const APPLICATION_VERSION = "1.1.2";
+const APPLICATION_VERSION = "1.1.3";
 
 require_once __DIR__.'/../vendor/autoload.php';
 
