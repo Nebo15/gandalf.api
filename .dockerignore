@@ -1,0 +1,27 @@
+.travis
+vendor
+storage
+bin
+tests
+
+# Ignore git artifacts
+.git
+.gitignore
+
+# Ignore Docker artifacts
+Dockerfile
+.dockerignore
+
+# Ignore markdown description
+README.md
+LICENSE.md
+
+# Other
+docker-compose.yml
+codeception.yml
+Vagrantfile
+phpunit.xml
+apidoc.json
+apiary.apib
+_ide_helper.php
+.env

@@ -1,5 +1,8 @@
 <?php
 
+const APPLICATION_NAME = "gandalf.api";
+const APPLICATION_VERSION = "1.1.0";
+
 require_once __DIR__.'/../vendor/autoload.php';
 
 try {
@@ -19,7 +22,7 @@ try {
 |
 */
 
-$app = new Laravel\Lumen\Application(
+$app = new App\Application(
     realpath(__DIR__ . '/../')
 );
 unset($app->availableBindings['validator']);
@@ -88,7 +91,9 @@ $app->register(App\Providers\ObserverServiceProvider::class);
 $app->register(Nebo15\REST\ServiceProvider::class);
 $app->register(Nebo15\Changelog\ServiceProvider::class);
 $app->register(App\Providers\ValidationServiceProvider::class);
-$app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+if (env('APP_ENV') !== 'prod') {
+    $app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+}
 $app->register(App\Providers\BugsnagServiceProvider::class);
 $app->register(\Nebo15\LumenMixpanel\MixpanelServiceProvider::class);
 $app->register(\Nebo15\LumenIntercom\IntercomServiceProvider::class);
