@@ -78,4 +78,4 @@ after_failure:
   - docker logs gandalf.api --details --since 5h
 after_success:
   # Submit Docker container to Docker Hub and create GitHub Release by pushing tag with a changelog
- - ./bin/ci/push.sh
+ - ./bin/push.sh
