@@ -13,7 +13,7 @@ class Hasher
             '',
             (new BcryptHasher())->make(
                 self::generateRandomString($length),
-                ['salt' => mcrypt_create_iv(22, MCRYPT_DEV_URANDOM)]
+                ['salt' => random_bytes(22)]
             )
         );
 
