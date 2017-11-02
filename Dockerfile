@@ -1,4 +1,4 @@
-FROM nebo15/alpine-php:7.0
+FROM nebo15/alpine-php:php-7.0
 
 MAINTAINER Nebo#15 support@nebo15.com
 
