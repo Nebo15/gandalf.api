@@ -6,6 +6,5 @@ return [
     ],
     'consumer' => [
         'consumer' => env('TOKEN_CONSUMER_PW'),
-        'bell' => env('TOKEN_BELL_PW'),
     ]
 ];

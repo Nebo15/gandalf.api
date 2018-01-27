@@ -1,6 +1,6 @@
 FROM nebo15/alpine-php:php-7.0
 
-MAINTAINER Nebo#15 support@nebo15.com
+MAINTAINER Nebo #15 support@nebo15.com
 
 ENV HOME=/app
 
