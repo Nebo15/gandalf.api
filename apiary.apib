@@ -189,29 +189,27 @@ You can retry request on a latest table version by clicking "Debug" in request w
 
 # Installation Guide
 
-Both Front-End and Back-End contains:
+## Docker
 
-- Vagrantfile that allows to easily run local copy of Gandalf on your computer.
-- Puppet scripts that allows to install on any Ubuntu server all software that is required for Gandalf.
+Gandalf can be deployed as Docker containers, they can be found in official DockerHub repos:
 
-## Starting with Vagrant
+- [nebo15/gandalf.api](https://hub.docker.com/r/nebo15/gandalf.api/) - REST API back-end.
+- [nebo15/gandalf.web](https://hub.docker.com/r/nebo15/gandalf.web/) - Management front-end.
+- [nebo15/alpine-mongodb](https://hub.docker.com/r/nebo15/alpine-mongodb/) - Nebo #15 MongoDB container. Feel free to use any MongoDB containers instead.
 
-You can use [Vagrant](https://www.vagrantup.com/) to intialize a development environment. Simply install it, ```cd``` into your project directory and run:
+## Docker Compose
 
-```
-vagrant up
-```
+See [docker-compose.yml](https://github.com/Nebo15/gandalf.api/blob/master/docker-compose.yml) in API repo.
 
-## Configuring production environment
+## Environment Variables
 
-We use [Puppet](https://puppetlabs.com/puppet/puppet-open-source) as our configuration tool. Scripts located in [/puppet](https://github.com/Nebo15/gandalf.api/tree/master/puppet) directory of this repo. You can deploy code to your server and simply run:
+## Back-End
 
-```
-set -o nounset -o errexit -o pipefail -o errtrace
-trap 'error "${BASH_SOURCE}" "${LINENO}"' ERR
-echo 127.0.0.1 gandalf.yourdomain.com | sudo tee -a /etc/hosts
-sudo /bin/bash puppet/initial/init.sh -u "www-data"
-```
+See [.env.example](https://github.com/Nebo15/gandalf.api/blob/master/.env.example) in project repo.
+
+## Front-End
+
+See [README.md](https://github.com/nebo15/gandalf.web#configurations) in project repo.
 
 # Story behind Gandalf
 
@@ -292,7 +290,7 @@ You can see in response properties digits `variants.0.rules`, this is an array i
 
 # Group User
 
-## Users [/api/v1/admin/users]
+## Users [/api/v1/projects/users]
 
 ### List All Users [GET]
 
@@ -319,7 +317,7 @@ You can see in response properties digits `variants.0.rules`, this is an array i
             + code: 200 (number) - HTTP response code
         + data (User)
 
-## Validate Username [/api/v1/admin/users/username]
+## Validate Username [/api/v1/projects/users/username]
 ### Validate Username [GET]
 
 + Parameters
@@ -832,12 +830,12 @@ Rollback Table to some state that described in passed Changelog
 + `decision_type`: alpha_num,numeric,string,json (enum[string], required) - Validation rule for Variant.default_decision and Rule.than fields
 + title: Table title (string) - Table title
 + description: Table title (string) - Table description
-+ variants: (array[VariantList])
++ variants: (array[VariantList], fixed)
 
 ### Table (TableList)
 + variants_probability: first,random,percent(enum[string]) - Variants check strategy
-+ fields (array[Field])
-+ variants (array[Variant])
++ fields (array[Field], fixed)
++ variants (array[Variant], fixed)
 
 ### Field
 + _id: 56c31536a60ad644060041af (string) - MongoID
@@ -858,14 +856,14 @@ Rollback Table to some state that described in passed Changelog
 + default_title: No one Rule matched (string) - When Table processing does not match any rule, this field will be set by default to Decision.title
 + default_description: No one Rule matched (string) - When Table processing does not match any rule, this field will be set by default to Decision.description
 + probability: 30 (number) - Required when **Table.variants_probability == variants_probability**, percent of probability. Sum of all probabilities should be equal to 100
-+ rules (array[Rule], required)
++ rules (array[Rule], required, fixed)
 
 ### Rule
 + _id: 56c31536a60ad644060041af (string) - MongoID
 + than: Approve (string, required)
 + title: Rule title (string, required)
 + description: Rule description (string, required)
-+ conditions (array[Condition], required)
++ conditions (array[Condition], required, fixed)
 
 ### Condition
 + _id: 56c31536a60ad644060041af (string) - MongoID
@@ -874,13 +872,13 @@ Rollback Table to some state that described in passed Changelog
 + value: unemployed | 1000 | true (string, required)
 
 ### TableWithAnalytics (Table)
-+ variants (array[VariantWithAnalytics])
++ variants (array[VariantWithAnalytics], fixed)
 
 ### VariantWithAnalytics (Variant)
-+ rules (array[RuleWithAnalytics], required)
++ rules (array[RuleWithAnalytics], fixed, required)
 
 ### RuleWithAnalytics (Rule)
-+ conditions (array[ConditionWithAnalytics], required)
++ conditions (array[ConditionWithAnalytics], fixed, required)
 
 ### ConditionWithAnalytics (Condition)
 + probability: 0.67 (number) - Probability value between 0-1, where 1 is 100% matched result
@@ -913,8 +911,8 @@ Rollback Table to some state that described in passed Changelog
 ### Decision (DecisionConsumer)
 + meta: custom, meta, data (array) - Custom meta data
 + default_decision: Decline (string, required) - Value from Table.default_decision
-+ fields (array[Field])
-+ rules (array[DecisionRule])
++ fields (array[Field], fixed)
++ rules (array[DecisionRule], fixed)
 
 ### DecisionRule (Rule)
 + decision: Approve (string) - Matched Rule decision or Variant.default_decision
@@ -945,8 +943,8 @@ Rollback Table to some state that described in passed Changelog
 + settings:
     + customField: some value (string) - Custom settings
     + show_meta: false (boolean) - Custom settings
-+ users (array[ProjectUser])
-+ consumers (array[Consumer])
++ users (array[ProjectUser], fixed)
++ consumers (array[Consumer], fixed)
 
 ### ProjectUser
 + _id: 56c31536a60ad644060041af (string) - MongoID
@@ -972,8 +970,8 @@ Rollback Table to some state that described in passed Changelog
 + email: email@example.com (string) - User email
 + created_at: 2016-02-16 14:15:30 (string)
 + updated_at: 2016-02-16 14:15:30 (string)
-+ access_tokens (array[AccessToken])
-+ refresh_tokens (array[RefreshToken])
++ access_tokens (array[AccessToken], fixed)
++ refresh_tokens (array[RefreshToken], fixed)
 
 ### UserInvitation
 + role: manager (string) Role of user in project
