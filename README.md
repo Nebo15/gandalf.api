@@ -39,7 +39,7 @@ In a result you will get a total of all scores and you can make further decision
 
 # Support
 
-This project is continuously supported on behalf of our customers and as part of our own [SASS-service](https://gandalf.nebo15.com/). We recommend to use it, but feel free to create your own installation of Gandalf.
+This project is continuously supported on behalf of our customers and as part of our own [SASS-service](https://gndf.io/). We recommend to use it, but feel free to create your own installation of Gandalf.
 
 Feel free to submit tickets in our GitHub repos, we will respond shortly. And if you want some custom conditions, like 99.9% SLA - [contact us](mailto:support@nebo15.com).
 
