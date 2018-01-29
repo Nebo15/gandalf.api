@@ -27,3 +27,16 @@ services:
       - 27017:27017
     volumes:
       - /data/db
+  web:
+    image: nebo15/gandalf.web:latest
+    container_name: gandalf_web
+    ports:
+      - 8080:8080
+    environment:
+      - API_ENDPOINT="http://php/"
+      - API_CLIENTID="clientid"
+      - API_CLIENTSECRET="clientsecret"
+    depends_on:
+      - php
+    links:
+      - php
